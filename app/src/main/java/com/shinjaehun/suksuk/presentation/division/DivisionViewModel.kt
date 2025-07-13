@@ -1,44 +1,41 @@
 package com.shinjaehun.suksuk.presentation.division
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
 
 class DivisionViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(DivisionUiState())
     val uiState: StateFlow<DivisionUiState> = _uiState
 
-    fun onDigitInput(digit: Int) {
-        if (_uiState.value.isFinished) return
-        val current = _uiState.value
-        val newInput = (current.userInput + digit).take(2)
-        _uiState.update { it.copy(userInput = newInput) }
+    init { resetProblem() }
 
-        if (newInput.length == 2 || newInput.toIntOrNull() == current.correctAnswer) {
-            checkAnswer(newInput.toIntOrNull())
-        }
+    fun onDigitInput(d: Int) {
+        _uiState.update { it.copy(userInput = (it.userInput + d).take(2), feedback = null) }
     }
 
     fun onClear() {
         _uiState.update { it.copy(userInput = "", feedback = null) }
     }
 
-    private fun checkAnswer(input: Int?) {
-        if (input == _uiState.value.correctAnswer) {
-            _uiState.update {
-                it.copy(
-                    isFinished = true,
-                    feedback = "정답입니다!"
-                )
-            }
-        } else {
-            _uiState.update {
-                it.copy(
-                    feedback = "다시 시도해보세요",
-                    userInput = ""
-                )
+    fun onEnter() {
+        viewModelScope.launch {
+            val state = _uiState.value
+            val answer = state.dividend / state.divisor
+            val input = state.userInput.toIntOrNull()
+            if (input == answer) {
+                _uiState.update { it.copy(feedback = "정답! 입력: \$input, 몫: \$answer") }
+            } else {
+                _uiState.update { it.copy(feedback = "오답, 다시 시도하세요") }
             }
         }
+    }
+
+    fun resetProblem() {
+        _uiState.value = DivisionUiState()
     }
 }

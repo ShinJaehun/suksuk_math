@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.shinjaehun.suksuk.domain.model.DivisionProblem
 import com.shinjaehun.suksuk.presentation.division.DivisionStageScreen
-import com.shinjaehun.suksuk.presentation.division21.Division21Screen
 import com.shinjaehun.suksuk.ui.theme.SukSukTheme
 import dagger.hilt.android.AndroidEntryPoint
 
