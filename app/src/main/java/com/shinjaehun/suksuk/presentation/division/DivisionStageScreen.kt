@@ -206,7 +206,7 @@ fun DivisionStageScreen(viewModel: DivisionViewModel = androidx.lifecycle.viewmo
 //                .fillMaxWidth()
 //                .padding(horizontal = 24.dp, vertical = 24.dp) // 전체적인 패딩
 //        ) {
-            // createRefs()를 사용하여 각 Composable에 대한 참조 생성
+        // createRefs()를 사용하여 각 Composable에 대한 참조 생성
 //            val (
 //                divisorTextRef, dividendTextRef, quotientTextRef, productTextRef,
 //             horizontalLineRef, // 필요하다면 가로선 참조
@@ -426,7 +426,7 @@ fun DivisionStageScreen(viewModel: DivisionViewModel = androidx.lifecycle.viewmo
 //                }
 //            }
 
-            // 5. Horizontal Line (Product 위 가로선)
+        // 5. Horizontal Line (Product 위 가로선)
 //            if (uiState.showProduct) {
 //                Image(
 //                    painter = painterResource(id = R.drawable.ic_horizontal_line),
@@ -592,218 +592,412 @@ fun DivisionStageScreen(viewModel: DivisionViewModel = androidx.lifecycle.viewmo
 //            }
 //        }
 
+//        ConstraintLayout(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(horizontal = 30.dp, vertical = 30.dp) // 전체 패딩 유지
+//        ) {
+//            val (divisorTextRef, divisionBracketRef, dividendRowRef,
+//                quotientOneTextRef, quotientTenTextRef,
+//                productLineRef, productTextRef
+//            ) = createRefs()
+//
+//            val quotientString = uiState.quotient.toString()
+//            val dividendString = uiState.dividend.toString() // 피제수 문자열 길이 참조용
+//            val carryingString = listOf("4", "10")
+//
+//            val productionString = dividendString
+//            val productionCarryingString = carryingString
+//
+//            // 나눗셈 기호: 전체적으로 위로 올림
+//            Image(
+//                painter = painterResource(id = R.drawable.ic_division_bracket_short),
+//                contentDescription = "Division Bracket",
+//                contentScale = ContentScale.FillBounds,
+//                modifier = Modifier.constrainAs(divisionBracketRef) {
+//                    top.linkTo(parent.top, margin = 70.dp) // 기존 100.dp에서 감소 (위로 이동)
+//                    start.linkTo(parent.start, margin = 60.dp)
+//                    width = Dimension.value(150.dp)
+//                    height = Dimension.value(120.dp)
+//                }
+//            )
+//
+//            // 피제수 Row:
+//            Row(
+//                modifier = Modifier.constrainAs(dividendRowRef) {
+//                    // divisionBracketRef가 위로 이동했으므로, top 마진 재조정
+//                    top.linkTo(divisionBracketRef.top, margin = 25.dp) // 기존 35.dp에서 감소 (상대적 위치 유지 또는 미세조정)
+//                    start.linkTo(divisionBracketRef.start, margin = 45.dp)
+//                    width = Dimension.wrapContent
+//                },
+//                verticalAlignment = Alignment.Top
+//            ) {
+//
+//                dividendString.forEachIndexed { index, digitChar ->
+//                    val carryingNumberPosition = dividendString.length - 1 - index
+//                    val carryingNumber = if (carryingNumberPosition < carryingString.size)
+//                        carryingString.reversed()[carryingNumberPosition] else ""
+//
+//                    Column(
+//                        horizontalAlignment = Alignment.CenterHorizontally,
+//                        modifier = Modifier.padding(horizontal = 8.dp)
+//                    ) {
+//                        // 보조 숫자: 크기 증가
+//                        Text(
+//                            text = carryingNumber,
+//                            fontSize = 18.sp, // 기존 12.sp에서 증가
+//                            color = Color.Gray,
+//                            textAlign = TextAlign.Center,
+//                            modifier = Modifier.height(22.dp) // 기존 16.sp에서 증가 (fontSize에 맞게)
+//                        )
+//                        Text(
+//                            text = digitChar.toString(),
+//                            fontSize = 60.sp,
+//                            textAlign = TextAlign.Center
+//                        )
+//                        Text(
+//                            text = digitChar.toString(),
+//                            fontSize = 60.sp,
+//                            textAlign = TextAlign.Center
+//                        )
+//                    }
+//                }
+//            }
+//
+//            // 제수 (Divisor)
+//            Column(
+//                modifier = Modifier.constrainAs(divisorTextRef) {
+//                    top.linkTo(dividendRowRef.top)
+//                    end.linkTo(divisionBracketRef.start, margin = (-10).dp)
+//                    width = Dimension.wrapContent
+//                },
+//                horizontalAlignment = Alignment.End
+//            ) {
+//                // Spacer 높이를 새로운 보조 숫자 높이에 맞게 조정
+//                Spacer(modifier = Modifier.height(22.dp)) // 기존 16.sp에서 증가
+//                Text(
+//                    text = uiState.divisor.toString(),
+//                    fontSize = 60.sp,
+//                    textAlign = TextAlign.End
+//                )
+//            }
+//
+//            // 몫 (Quotient)
+//            val quotientOneChar = if (quotientString.isNotEmpty()) quotientString.last() else ' '
+//            Text(
+//                text = quotientOneChar.toString(),
+//                fontSize = 60.sp,
+//                textAlign = TextAlign.Center,
+//                modifier = Modifier
+//                    .padding(horizontal = 8.dp)
+//                    .constrainAs(quotientOneTextRef) {
+//                        end.linkTo(dividendRowRef.end)
+//                        // divisionBracketRef가 위로 이동했으므로, bottom 마진 재조정
+//                        bottom.linkTo(divisionBracketRef.top, margin = (-2).dp) // 기존 -5.dp에서 조정 (더 가깝게)
+//                    }
+//            )
+//
+//            if (quotientString.length > 1) {
+//                val quotientTenChar = quotientString[quotientString.length - 2]
+//                Text(
+//                    text = quotientTenChar.toString(),
+//                    fontSize = 60.sp,
+//                    textAlign = TextAlign.Center,
+//                    modifier = Modifier
+//                        .padding(horizontal = 8.dp)
+//                        .constrainAs(quotientTenTextRef) {
+//                            end.linkTo(quotientOneTextRef.start)
+//                            baseline.linkTo(quotientOneTextRef.baseline)
+//                        }
+//                )
+//            } else if (uiState.dividend.toString().length > 1 && quotientString.length == 1) {
+//                Text(
+//                    text = " ",
+//                    fontSize = 60.sp,
+//                    textAlign = TextAlign.Center,
+//                    modifier = Modifier
+//                        .padding(horizontal = 8.dp)
+//                        .constrainAs(quotientTenTextRef) {
+//                            end.linkTo(quotientOneTextRef.start)
+//                            baseline.linkTo(quotientOneTextRef.baseline)
+//                        }
+//                )
+//            }
+//
+//            Image(
+//                painter = painterResource(id = R.drawable.ic_horizontal_line),
+//                contentDescription = "Product Line",
+//                contentScale = ContentScale.FillBounds,
+//                modifier = Modifier.constrainAs(productLineRef) {
+//                    // 피제수(dividendRowRef)의 아래에 위치
+//                    top.linkTo(dividendRowRef.bottom, margin = 8.dp) // 기존 4.dp에서 증가 (폰트 커짐 고려)
+//                    // 가로선의 시작점은 몫/피제수의 시작점에 맞춤
+//                    // 몫이 여러 자리일 경우, 가장 왼쪽 몫 숫자(quotientTenTextRef 또는 quotientOneTextRef)의 시작점에 맞추거나,
+//                    // 피제수(dividendRowRef)의 시작점에 맞출 수 있습니다.
+//                    // 여기서는 피제수의 시작점에 맞추겠습니다. (몫의 정렬 방식에 따라 달라질 수 있음)
+//                    start.linkTo(dividendRowRef.start)
+//                    // 가로선의 끝점은 피제수의 끝점에 맞춤
+//                    end.linkTo(dividendRowRef.end)
+//                    height = Dimension.value(5.dp) // 선 두께는 유지하거나 약간 증가 (예: 1dp -> 2dp)
+//                    width = Dimension.fillToConstraints // start와 end 제약 사이를 채움
+//                }
+//            )
+//
+//            Row(
+//                modifier = Modifier.constrainAs(productTextRef) {
+//                    top.linkTo(productLineRef.bottom, margin = 8.dp) // 가로선 아래에 위치
+//                    start.linkTo(dividendRowRef.start) // 피제수 시작점에 맞춤
+//                    // Product Row의 너비는 내용에 맞게
+//                    width = Dimension.wrapContent
+//                    // 만약 Product도 피제수처럼 오른쪽 정렬을 원한다면 end 제약도 추가
+//                    // end.linkTo(dividendRowRef.end)
+//                    // width = Dimension.fillToConstraints (start와 end를 모두 사용시)
+//                }
+//            ) {
+//                // 임시로 피제수 값을 Product로 사용
+//                // 피제수와 자릿수를 맞추기 위해 padStart 등을 사용할 수 있으나,
+//                // 여기서는 피제수와 동일한 값을 사용하므로 자릿수가 이미 맞다고 가정합니다.
+//                // 만약 실제 Product 값이 피제수보다 자릿수가 적을 수 있다면,
+//                // val dividendLength = uiState.dividend.toString().length
+//                // val actualProductString = yourActualProductValue.toString().padStart(dividendLength, ' ')
+//                // 와 같이 처리해야 합니다.
+//
+//                productionString.forEachIndexed { index, digitChar ->
+//                    Column(
+//                        horizontalAlignment = Alignment.CenterHorizontally,
+//                        modifier = Modifier.padding(horizontal = 8.dp)
+//                    ) {
+//                        Text(
+//                            text = digitChar.toString(),
+//                            fontSize = 60.sp,
+//                            textAlign = TextAlign.Center
+//                        )
+//                    }
+//                }
+//            }
+//
+//
+//
+//        }
+
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 30.dp, vertical = 30.dp) // 전체 패딩 유지
+                .padding(horizontal = 30.dp, vertical = 30.dp)
         ) {
-            val (divisorTextRef, divisionBracketRef, dividendRowRef,
-                quotientOneTextRef, quotientTenTextRef,
-                productLineRef, productTextRef
+            val (
+                divisorRef, bracketRef, dividendRowRef,
+                quotientTenRef, quotientOneRef,
+                multiply1Ref, subtract1Ref, bringDownRef,
+                quotient2Ref, multiply2RowRef, remainderRef
             ) = createRefs()
 
-            val quotientString = uiState.quotient.toString()
-            val dividendString = uiState.dividend.toString() // 피제수 문자열 길이 참조용
-            val carryingString = listOf("4", "10")
-
-            val productionString = dividendString
-            val productionCarryingString = carryingString
-
-            // 나눗셈 기호: 전체적으로 위로 올림
+            // Division Bracket
             Image(
                 painter = painterResource(id = R.drawable.ic_division_bracket_short),
                 contentDescription = "Division Bracket",
                 contentScale = ContentScale.FillBounds,
-                modifier = Modifier.constrainAs(divisionBracketRef) {
-                    top.linkTo(parent.top, margin = 70.dp) // 기존 100.dp에서 감소 (위로 이동)
+                modifier = Modifier.constrainAs(bracketRef) {
+                    top.linkTo(parent.top, margin = 70.dp)
                     start.linkTo(parent.start, margin = 60.dp)
                     width = Dimension.value(150.dp)
                     height = Dimension.value(120.dp)
                 }
             )
-
-            // 피제수 Row:
+            val dividendString = uiState.dividend.toString().padStart(2, ' ')
             Row(
                 modifier = Modifier.constrainAs(dividendRowRef) {
-                    // divisionBracketRef가 위로 이동했으므로, top 마진 재조정
-                    top.linkTo(divisionBracketRef.top, margin = 25.dp) // 기존 35.dp에서 감소 (상대적 위치 유지 또는 미세조정)
-                    start.linkTo(divisionBracketRef.start, margin = 45.dp)
+                    top.linkTo(bracketRef.top, margin = 25.dp)
+                    start.linkTo(bracketRef.start, margin = 45.dp)
                     width = Dimension.wrapContent
-                },
-                verticalAlignment = Alignment.Top
+                }
             ) {
-
-                dividendString.forEachIndexed { index, digitChar ->
-                    val carryingNumberPosition = dividendString.length - 1 - index
-                    val carryingNumber = if (carryingNumberPosition < carryingString.size)
-                        carryingString.reversed()[carryingNumberPosition] else ""
-
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
+                dividendString.forEach { digit ->
+                    Text(
+                        text = digit.toString(),
+                        fontSize = 60.sp,
+                        textAlign = TextAlign.Center,
                         modifier = Modifier.padding(horizontal = 8.dp)
-                    ) {
-                        // 보조 숫자: 크기 증가
-                        Text(
-                            text = carryingNumber,
-                            fontSize = 18.sp, // 기존 12.sp에서 증가
-                            color = Color.Gray,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.height(22.dp) // 기존 16.sp에서 증가 (fontSize에 맞게)
-                        )
-                        Text(
-                            text = digitChar.toString(),
-                            fontSize = 60.sp,
-                            textAlign = TextAlign.Center
-                        )
-                        Text(
-                            text = digitChar.toString(),
-                            fontSize = 60.sp,
-                            textAlign = TextAlign.Center
-                        )
-                    }
+                    )
                 }
             }
 
-            // 제수 (Divisor)
-            Column(
-                modifier = Modifier.constrainAs(divisorTextRef) {
-                    top.linkTo(dividendRowRef.top)
-                    end.linkTo(divisionBracketRef.start, margin = (-10).dp)
-                    width = Dimension.wrapContent
-                },
-                horizontalAlignment = Alignment.End
-            ) {
-                // Spacer 높이를 새로운 보조 숫자 높이에 맞게 조정
-                Spacer(modifier = Modifier.height(22.dp)) // 기존 16.sp에서 증가
-                Text(
-                    text = uiState.divisor.toString(),
-                    fontSize = 60.sp,
-                    textAlign = TextAlign.End
-                )
-            }
-
-            // 몫 (Quotient)
-            val quotientOneChar = if (quotientString.isNotEmpty()) quotientString.last() else ' '
+            // Divisor
             Text(
-                text = quotientOneChar.toString(),
+                text = uiState.divisor.toString(),
                 fontSize = 60.sp,
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.End,
+                modifier = Modifier.constrainAs(divisorRef) {
+                    top.linkTo(dividendRowRef.top)
+                    end.linkTo(bracketRef.start, margin = (-10).dp)
+                    width = Dimension.wrapContent
+                }
+            )
+
+            // 몫(십의 자리)
+            val cellTen = uiState.quotientCells[0]
+            Text(
+                text = if (cellTen.value.isBlank() && cellTen.editable) "?" else cellTen.value,
+                fontSize = 60.sp,
+                color = when {
+                    cellTen.editable -> Color.Blue
+                    cellTen.correct -> Color.Green
+                    else -> Color.Black
+                },
                 modifier = Modifier
                     .padding(horizontal = 8.dp)
-                    .constrainAs(quotientOneTextRef) {
-                        end.linkTo(dividendRowRef.end)
-                        // divisionBracketRef가 위로 이동했으므로, bottom 마진 재조정
-                        bottom.linkTo(divisionBracketRef.top, margin = (-2).dp) // 기존 -5.dp에서 조정 (더 가깝게)
+                    .constrainAs(quotientTenRef) {
+                        end.linkTo(quotientOneRef.start)
+                        baseline.linkTo(quotientOneRef.baseline)
                     }
             )
 
-            if (quotientString.length > 1) {
-                val quotientTenChar = quotientString[quotientString.length - 2]
-                Text(
-                    text = quotientTenChar.toString(),
-                    fontSize = 60.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                        .constrainAs(quotientTenTextRef) {
-                            end.linkTo(quotientOneTextRef.start)
-                            baseline.linkTo(quotientOneTextRef.baseline)
-                        }
-                )
-            } else if (uiState.dividend.toString().length > 1 && quotientString.length == 1) {
-                Text(
-                    text = " ",
-                    fontSize = 60.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                        .constrainAs(quotientTenTextRef) {
-                            end.linkTo(quotientOneTextRef.start)
-                            baseline.linkTo(quotientOneTextRef.baseline)
-                        }
-                )
-            }
-
-            Image(
-                painter = painterResource(id = R.drawable.ic_horizontal_line),
-                contentDescription = "Product Line",
-                contentScale = ContentScale.FillBounds,
-                modifier = Modifier.constrainAs(productLineRef) {
-                    // 피제수(dividendRowRef)의 아래에 위치
-                    top.linkTo(dividendRowRef.bottom, margin = 8.dp) // 기존 4.dp에서 증가 (폰트 커짐 고려)
-                    // 가로선의 시작점은 몫/피제수의 시작점에 맞춤
-                    // 몫이 여러 자리일 경우, 가장 왼쪽 몫 숫자(quotientTenTextRef 또는 quotientOneTextRef)의 시작점에 맞추거나,
-                    // 피제수(dividendRowRef)의 시작점에 맞출 수 있습니다.
-                    // 여기서는 피제수의 시작점에 맞추겠습니다. (몫의 정렬 방식에 따라 달라질 수 있음)
-                    start.linkTo(dividendRowRef.start)
-                    // 가로선의 끝점은 피제수의 끝점에 맞춤
-                    end.linkTo(dividendRowRef.end)
-                    height = Dimension.value(5.dp) // 선 두께는 유지하거나 약간 증가 (예: 1dp -> 2dp)
-                    width = Dimension.fillToConstraints // start와 end 제약 사이를 채움
-                }
+            // 몫(일의 자리)
+            val cellOne = uiState.quotientCells[1]
+            Text(
+                text = if (cellOne.value.isBlank() && cellOne.editable) "?" else cellOne.value,
+                fontSize = 60.sp,
+                color = when {
+                    cellOne.editable -> Color.Blue
+                    cellOne.correct -> Color.Green
+                    else -> Color.Black
+                },
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .constrainAs(quotientOneRef) {
+                        end.linkTo(dividendRowRef.end)
+                        bottom.linkTo(bracketRef.top, margin = (-2).dp)
+                    }
             )
 
+            // 1차 곱셈(7)
+            val mul1 = uiState.multiply1Cell
+            Text(
+                text = if (mul1.value.isBlank() && mul1.editable) "?" else mul1.value,
+                fontSize = 36.sp,
+                color = when {
+                    mul1.editable -> Color.Green
+                    mul1.correct -> Color.Green
+                    else -> Color.Black
+                },
+                modifier = Modifier
+                    .constrainAs(multiply1Ref) {
+                        top.linkTo(dividendRowRef.bottom, margin = 24.dp)
+                        start.linkTo(dividendRowRef.start)
+                    }
+            )
+
+            // 1차 뺄셈(2)
+            val sub1 = uiState.subtract1Cell
+            Text(
+                text = if (sub1.value.isBlank() && sub1.editable) "?" else sub1.value,
+                fontSize = 36.sp,
+                color = when {
+                    sub1.editable -> Color.Red
+                    sub1.correct -> Color.Green
+                    else -> Color.Black
+                },
+                modifier = Modifier
+                    .constrainAs(subtract1Ref) {
+                        top.linkTo(multiply1Ref.bottom, margin = 8.dp)
+                        start.linkTo(multiply1Ref.start)
+                    }
+            )
+
+            // bringDown(2), 뺄셈 오른쪽
+            val bringDown = uiState.bringDownCell
+            Text(
+                text = if (bringDown.value.isBlank() && bringDown.editable) "?" else bringDown.value,
+                fontSize = 36.sp,
+                color = when {
+                    bringDown.editable -> Color.Magenta
+                    bringDown.correct -> Color.Green
+                    else -> Color.Black
+                },
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .constrainAs(bringDownRef) {
+                        top.linkTo(subtract1Ref.top)
+                        start.linkTo(subtract1Ref.end, margin = 16.dp)
+                    }
+            )
+
+            // 2차 곱셈(21), 두 칸: 22 아래
             Row(
-                modifier = Modifier.constrainAs(productTextRef) {
-                    top.linkTo(productLineRef.bottom, margin = 8.dp) // 가로선 아래에 위치
-                    start.linkTo(dividendRowRef.start) // 피제수 시작점에 맞춤
-                    // Product Row의 너비는 내용에 맞게
-                    width = Dimension.wrapContent
-                    // 만약 Product도 피제수처럼 오른쪽 정렬을 원한다면 end 제약도 추가
-                    // end.linkTo(dividendRowRef.end)
-                    // width = Dimension.fillToConstraints (start와 end를 모두 사용시)
+                modifier = Modifier.constrainAs(multiply2RowRef) {
+                    top.linkTo(subtract1Ref.bottom, margin = 40.dp)
+                    start.linkTo(subtract1Ref.start)
                 }
             ) {
-                // 임시로 피제수 값을 Product로 사용
-                // 피제수와 자릿수를 맞추기 위해 padStart 등을 사용할 수 있으나,
-                // 여기서는 피제수와 동일한 값을 사용하므로 자릿수가 이미 맞다고 가정합니다.
-                // 만약 실제 Product 값이 피제수보다 자릿수가 적을 수 있다면,
-                // val dividendLength = uiState.dividend.toString().length
-                // val actualProductString = yourActualProductValue.toString().padStart(dividendLength, ' ')
-                // 와 같이 처리해야 합니다.
-
-                productionString.forEachIndexed { index, digitChar ->
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(horizontal = 8.dp)
-                    ) {
-                        Text(
-                            text = digitChar.toString(),
-                            fontSize = 60.sp,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
+                val mul2Ten = uiState.multiply2Ten
+                val mul2One = uiState.multiply2One
+                Text(
+                    text = if (mul2Ten.value.isBlank() && mul2Ten.editable) "?" else mul2Ten.value,
+                    fontSize = 36.sp,
+                    color = when {
+                        mul2Ten.editable -> Color.Green
+                        mul2Ten.correct -> Color.Green
+                        else -> Color.Black
+                    },
+                    modifier = Modifier.padding(horizontal = 4.dp)
+                )
+                Spacer(Modifier.width(20.dp))
+                Text(
+                    text = if (mul2One.value.isBlank() && mul2One.editable) "?" else mul2One.value,
+                    fontSize = 36.sp,
+                    color = when {
+                        mul2One.editable -> Color.Green
+                        mul2One.correct -> Color.Green
+                        else -> Color.Black
+                    },
+                    modifier = Modifier.padding(horizontal = 4.dp)
+                )
             }
 
-
-
+            // 나머지(1) 한 칸만!
+            val remainderCell = uiState.remainderCell
+            Text(
+                text = if (remainderCell.value.isBlank() && remainderCell.editable) "?" else remainderCell.value,
+                fontSize = 36.sp,
+                color = when {
+                    remainderCell.editable -> Color.Magenta
+                    remainderCell.correct -> Color.Green
+                    else -> Color.Black
+                },
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .constrainAs(remainderRef) {
+                        top.linkTo(multiply2RowRef.bottom, margin = 20.dp)
+                        start.linkTo(multiply2RowRef.start, margin = 16.dp)
+                    }
+            )
         }
 
-        // TODO: Add ansFirstLine visibility and subsequent steps
-
-        // Number pad and feedback
-        Column(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 32.dp)
-        ) {
-            NumberPad(
-                onNumber = viewModel::onDigitInput,
-                onClear = viewModel::onClear,
-                onEnter = viewModel::onEnter
-            )
-            uiState.feedback?.let {
-                Spacer(Modifier.height(16.dp))
-                Text(
-                    text = it,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+        // Number pad & feedback
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 32.dp)
+            ) {
+                NumberPad(
+                    onNumber = viewModel::onDigitInput,
+                    onClear = viewModel::onClear,
+                    onEnter = viewModel::onEnter
                 )
+                uiState.feedback?.let {
+                    Spacer(Modifier.height(16.dp))
+                    Text(
+                        text = it,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+                }
             }
         }
     }
 }
+
 
 
 @Composable
