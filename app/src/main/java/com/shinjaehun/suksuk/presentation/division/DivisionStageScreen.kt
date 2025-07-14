@@ -57,7 +57,7 @@ fun DivisionStageScreen(viewModel: DivisionViewModel = androidx.lifecycle.viewmo
     val dividendOneCoverVisible = remember { mutableStateOf(false) }
     val ansFirstLineVisible = remember { mutableStateOf(false) }
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
@@ -780,6 +780,223 @@ fun DivisionStageScreen(viewModel: DivisionViewModel = androidx.lifecycle.viewmo
 //
 //        }
 
+//        ConstraintLayout(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(horizontal = 30.dp, vertical = 30.dp)
+//        ) {
+//            val (
+//                divisorRef, bracketRef, dividendRowRef,
+//                quotientTenRef, quotientOneRef,
+//                multiply1Ref, subtract1Ref, bringDownRef,
+//                quotient2Ref, multiply2RowRef, remainderRef
+//            ) = createRefs()
+//
+//            // Division Bracket
+//            Image(
+//                painter = painterResource(id = R.drawable.ic_division_bracket_short),
+//                contentDescription = "Division Bracket",
+//                contentScale = ContentScale.FillBounds,
+//                modifier = Modifier.constrainAs(bracketRef) {
+//                    top.linkTo(parent.top, margin = 70.dp)
+//                    start.linkTo(parent.start, margin = 60.dp)
+//                    width = Dimension.value(150.dp)
+//                    height = Dimension.value(120.dp)
+//                }
+//            )
+//            val dividendString = uiState.dividend.toString().padStart(2, ' ')
+//            Row(
+//                modifier = Modifier.constrainAs(dividendRowRef) {
+//                    top.linkTo(bracketRef.top, margin = 25.dp)
+//                    start.linkTo(bracketRef.start, margin = 45.dp)
+//                    width = Dimension.wrapContent
+//                }
+//            ) {
+//                dividendString.forEach { digit ->
+//                    Text(
+//                        text = digit.toString(),
+//                        fontSize = 60.sp,
+//                        textAlign = TextAlign.Center,
+//                        modifier = Modifier.padding(horizontal = 8.dp)
+//                    )
+//                }
+//            }
+//
+//            // Divisor
+//            Text(
+//                text = uiState.divisor.toString(),
+//                fontSize = 60.sp,
+//                textAlign = TextAlign.End,
+//                modifier = Modifier.constrainAs(divisorRef) {
+//                    top.linkTo(dividendRowRef.top)
+//                    end.linkTo(bracketRef.start, margin = (-10).dp)
+//                    width = Dimension.wrapContent
+//                }
+//            )
+//
+//            // 몫(십의 자리)
+//            val cellTen = uiState.quotientCells[0]
+//            Text(
+//                text = if (cellTen.value.isBlank() && cellTen.editable) "?" else cellTen.value,
+//                fontSize = 60.sp,
+//                color = when {
+//                    cellTen.editable -> Color.Blue
+//                    cellTen.correct -> Color.Green
+//                    else -> Color.Black
+//                },
+//                modifier = Modifier
+//                    .padding(horizontal = 8.dp)
+//                    .constrainAs(quotientTenRef) {
+//                        end.linkTo(quotientOneRef.start)
+//                        baseline.linkTo(quotientOneRef.baseline)
+//                    }
+//            )
+//
+//            // 몫(일의 자리)
+//            val cellOne = uiState.quotientCells[1]
+//            Text(
+//                text = if (cellOne.value.isBlank() && cellOne.editable) "?" else cellOne.value,
+//                fontSize = 60.sp,
+//                color = when {
+//                    cellOne.editable -> Color.Blue
+//                    cellOne.correct -> Color.Green
+//                    else -> Color.Black
+//                },
+//                modifier = Modifier
+//                    .padding(horizontal = 8.dp)
+//                    .constrainAs(quotientOneRef) {
+//                        end.linkTo(dividendRowRef.end)
+//                        bottom.linkTo(bracketRef.top, margin = (-2).dp)
+//                    }
+//            )
+//
+//            // 1차 곱셈(7)
+//            val mul1 = uiState.multiply1Cell
+//            Text(
+//                text = if (mul1.value.isBlank() && mul1.editable) "?" else mul1.value,
+//                fontSize = 36.sp,
+//                color = when {
+//                    mul1.editable -> Color.Green
+//                    mul1.correct -> Color.Green
+//                    else -> Color.Black
+//                },
+//                modifier = Modifier
+//                    .constrainAs(multiply1Ref) {
+//                        top.linkTo(dividendRowRef.bottom, margin = 24.dp)
+//                        start.linkTo(dividendRowRef.start)
+//                    }
+//            )
+//
+//            // 1차 뺄셈(2)
+//            val sub1 = uiState.subtract1Cell
+//            Text(
+//                text = if (sub1.value.isBlank() && sub1.editable) "?" else sub1.value,
+//                fontSize = 36.sp,
+//                color = when {
+//                    sub1.editable -> Color.Red
+//                    sub1.correct -> Color.Green
+//                    else -> Color.Black
+//                },
+//                modifier = Modifier
+//                    .constrainAs(subtract1Ref) {
+//                        top.linkTo(multiply1Ref.bottom, margin = 8.dp)
+//                        start.linkTo(multiply1Ref.start)
+//                    }
+//            )
+//
+//            // bringDown(2), 뺄셈 오른쪽
+//            val bringDown = uiState.bringDownCell
+//            Text(
+//                text = if (bringDown.value.isBlank() && bringDown.editable) "?" else bringDown.value,
+//                fontSize = 36.sp,
+//                color = when {
+//                    bringDown.editable -> Color.Magenta
+//                    bringDown.correct -> Color.Green
+//                    else -> Color.Black
+//                },
+//                modifier = Modifier
+//                    .padding(horizontal = 8.dp)
+//                    .constrainAs(bringDownRef) {
+//                        top.linkTo(subtract1Ref.top)
+//                        start.linkTo(subtract1Ref.end, margin = 16.dp)
+//                    }
+//            )
+//
+//            // 2차 곱셈(21), 두 칸: 22 아래
+//            Row(
+//                modifier = Modifier.constrainAs(multiply2RowRef) {
+//                    top.linkTo(subtract1Ref.bottom, margin = 40.dp)
+//                    start.linkTo(subtract1Ref.start)
+//                }
+//            ) {
+//                val mul2Ten = uiState.multiply2Ten
+//                val mul2One = uiState.multiply2One
+//                Text(
+//                    text = if (mul2Ten.value.isBlank() && mul2Ten.editable) "?" else mul2Ten.value,
+//                    fontSize = 36.sp,
+//                    color = when {
+//                        mul2Ten.editable -> Color.Green
+//                        mul2Ten.correct -> Color.Green
+//                        else -> Color.Black
+//                    },
+//                    modifier = Modifier.padding(horizontal = 4.dp)
+//                )
+//                Spacer(Modifier.width(20.dp))
+//                Text(
+//                    text = if (mul2One.value.isBlank() && mul2One.editable) "?" else mul2One.value,
+//                    fontSize = 36.sp,
+//                    color = when {
+//                        mul2One.editable -> Color.Green
+//                        mul2One.correct -> Color.Green
+//                        else -> Color.Black
+//                    },
+//                    modifier = Modifier.padding(horizontal = 4.dp)
+//                )
+//            }
+//
+//            // 나머지(1) 한 칸만!
+//            val remainderCell = uiState.remainderCell
+//            Text(
+//                text = if (remainderCell.value.isBlank() && remainderCell.editable) "?" else remainderCell.value,
+//                fontSize = 36.sp,
+//                color = when {
+//                    remainderCell.editable -> Color.Magenta
+//                    remainderCell.correct -> Color.Green
+//                    else -> Color.Black
+//                },
+//                modifier = Modifier
+//                    .padding(horizontal = 8.dp)
+//                    .constrainAs(remainderRef) {
+//                        top.linkTo(multiply2RowRef.bottom, margin = 20.dp)
+//                        start.linkTo(multiply2RowRef.start, margin = 16.dp)
+//                    }
+//            )
+//        }
+//
+//        // Number pad & feedback
+//        Box(modifier = Modifier.fillMaxSize()) {
+//            Column(
+//                modifier = Modifier
+//                    .align(Alignment.BottomCenter)
+//                    .padding(bottom = 32.dp)
+//            ) {
+//                NumberPad(
+//                    onNumber = viewModel::onDigitInput,
+//                    onClear = viewModel::onClear,
+//                    onEnter = viewModel::onEnter
+//                )
+//                uiState.feedback?.let {
+//                    Spacer(Modifier.height(16.dp))
+//                    Text(
+//                        text = it,
+//                        color = MaterialTheme.colorScheme.primary,
+//                        modifier = Modifier.align(Alignment.CenterHorizontally)
+//                    )
+//                }
+//            }
+//        }
+//    }
+
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxWidth()
@@ -788,31 +1005,39 @@ fun DivisionStageScreen(viewModel: DivisionViewModel = androidx.lifecycle.viewmo
             val (
                 divisorRef, bracketRef, dividendRowRef,
                 quotientTenRef, quotientOneRef,
-                multiply1Ref, subtract1Ref, bringDownRef,
-                quotient2Ref, multiply2RowRef, remainderRef
+                multiply1CellRef,
+                subtract1CellRef, bringDownCellRef,
+                multiply2RowRef,
+                remainderCellRef,
             ) = createRefs()
 
-            // Division Bracket
+            // 1. Division Bracket (나누기 기호) - 사용자가 제안한 고정 위치/크기 사용
             Image(
-                painter = painterResource(id = R.drawable.ic_division_bracket_short),
+                painter = painterResource(id = R.drawable.ic_division_bracket_short), // 실제 리소스 확인
                 contentDescription = "Division Bracket",
-                contentScale = ContentScale.FillBounds,
+                contentScale = ContentScale.FillBounds, // 비율 유지를 위해 Fit 또는 Crop 고려
                 modifier = Modifier.constrainAs(bracketRef) {
-                    top.linkTo(parent.top, margin = 70.dp)
-                    start.linkTo(parent.start, margin = 60.dp)
-                    width = Dimension.value(150.dp)
-                    height = Dimension.value(120.dp)
+                    top.linkTo(parent.top, margin = 70.dp)     // 화면 상단에서 70dp 아래
+                    start.linkTo(parent.start, margin = 60.dp) // 화면 좌측에서 60dp 오른쪽
+                    width = Dimension.value(150.dp)            // 너비 150dp
+                    height = Dimension.value(120.dp)           // 높이 120dp
                 }
             )
+
+            // 숫자들의 시작 위치를 결정할 기준 마진
+            val numbersStartMargin = 110.dp
+            val numbersTopMargin = 95.dp   // 이 값을 조절하여 숫자 그룹 전체의 세로 위치 변경
+
+            // 1. Dividend Row (피제수)
             val dividendString = uiState.dividend.toString().padStart(2, ' ')
             Row(
                 modifier = Modifier.constrainAs(dividendRowRef) {
-                    top.linkTo(bracketRef.top, margin = 25.dp)
-                    start.linkTo(bracketRef.start, margin = 45.dp)
+                    top.linkTo(parent.top, margin = numbersTopMargin) // 세로 위치 마진 적용
+                    start.linkTo(parent.start, margin = numbersStartMargin) // 가로 위치 마진 적용
                     width = Dimension.wrapContent
-                }
+                },
             ) {
-                dividendString.forEach { digit ->
+                dividendString.forEachIndexed { index, digit ->
                     Text(
                         text = digit.toString(),
                         fontSize = 60.sp,
@@ -822,180 +1047,156 @@ fun DivisionStageScreen(viewModel: DivisionViewModel = androidx.lifecycle.viewmo
                 }
             }
 
-            // Divisor
+            // 2. Divisor (제수)
             Text(
                 text = uiState.divisor.toString(),
                 fontSize = 60.sp,
                 textAlign = TextAlign.End,
                 modifier = Modifier.constrainAs(divisorRef) {
-                    top.linkTo(dividendRowRef.top)
-                    end.linkTo(bracketRef.start, margin = (-10).dp)
+                    baseline.linkTo(dividendRowRef.baseline) // 피제수와 기준선 정렬
+                    end.linkTo(bracketRef.start, margin = (-8).dp) // 브라켓 시작점에서 8dp 왼쪽
                     width = Dimension.wrapContent
                 }
             )
 
-            // 몫(십의 자리)
+            // 4. Quotient (몫) - 십의 자리 (bracketRef보다 먼저 정의되어야 bracketRef.end에서 참조 가능할 수 있음)
+            // 또는 bracketRef.end를 dividendRowRef.end 기준으로 설정
             val cellTen = uiState.quotientCells[0]
             Text(
                 text = if (cellTen.value.isBlank() && cellTen.editable) "?" else cellTen.value,
                 fontSize = 60.sp,
-                color = when {
-                    cellTen.editable -> Color.Blue
-                    cellTen.correct -> Color.Green
-                    else -> Color.Black
-                },
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .constrainAs(quotientTenRef) {
-                        end.linkTo(quotientOneRef.start)
-                        baseline.linkTo(quotientOneRef.baseline)
-                    }
+                color = when { cellTen.editable -> Color.Blue; cellTen.correct -> Color.Green; else -> Color.Black },
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 8.dp).constrainAs(quotientTenRef) {
+                    start.linkTo(dividendRowRef.start) // 피제수 십의 자리 위
+                    top.linkTo(bracketRef.top, margin = (-70).dp) // 피제수 바로 위
+                }
             )
 
-            // 몫(일의 자리)
+            // 4. Quotient (몫) - 일의 자리
             val cellOne = uiState.quotientCells[1]
             Text(
                 text = if (cellOne.value.isBlank() && cellOne.editable) "?" else cellOne.value,
                 fontSize = 60.sp,
-                color = when {
-                    cellOne.editable -> Color.Blue
-                    cellOne.correct -> Color.Green
-                    else -> Color.Black
-                },
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .constrainAs(quotientOneRef) {
-                        end.linkTo(dividendRowRef.end)
-                        bottom.linkTo(bracketRef.top, margin = (-2).dp)
-                    }
+                color = when { cellOne.editable -> Color.Blue; cellOne.correct -> Color.Green; else -> Color.Black },
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 8.dp).constrainAs(quotientOneRef) {
+                    start.linkTo(quotientTenRef.end) // 몫 십의 자리 오른쪽
+                    baseline.linkTo(quotientTenRef.baseline) // 같은 높이
+                }
             )
 
-            // 1차 곱셈(7)
+            // --- 나머지 계산 과정들 ---
+            // 5.1. 1차 곱셈 결과 (multiply1CellRef)
             val mul1 = uiState.multiply1Cell
             Text(
                 text = if (mul1.value.isBlank() && mul1.editable) "?" else mul1.value,
-                fontSize = 36.sp,
-                color = when {
-                    mul1.editable -> Color.Green
-                    mul1.correct -> Color.Green
-                    else -> Color.Black
-                },
-                modifier = Modifier
-                    .constrainAs(multiply1Ref) {
-                        top.linkTo(dividendRowRef.bottom, margin = 24.dp)
-                        start.linkTo(dividendRowRef.start)
-                    }
+                fontSize = 60.sp,
+                color = when { mul1.editable -> Color.Green; mul1.correct -> Color.Green; else -> Color.Black },
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 8.dp).constrainAs(multiply1CellRef) {
+                    top.linkTo(dividendRowRef.bottom, margin = 8.dp)
+                    start.linkTo(dividendRowRef.start)
+                }
             )
 
-            // 1차 뺄셈(2)
+            // 5.2. 1차 뺄셈 결과 (subtract1CellRef)
             val sub1 = uiState.subtract1Cell
             Text(
                 text = if (sub1.value.isBlank() && sub1.editable) "?" else sub1.value,
-                fontSize = 36.sp,
-                color = when {
-                    sub1.editable -> Color.Red
-                    sub1.correct -> Color.Green
-                    else -> Color.Black
-                },
-                modifier = Modifier
-                    .constrainAs(subtract1Ref) {
-                        top.linkTo(multiply1Ref.bottom, margin = 8.dp)
-                        start.linkTo(multiply1Ref.start)
-                    }
+                fontSize = 60.sp,
+                color = when { sub1.editable -> Color.Red; sub1.correct -> Color.Green; else -> Color.Black },
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 8.dp).constrainAs(subtract1CellRef) {
+                    top.linkTo(multiply1CellRef.bottom, margin = 8.dp)
+                    start.linkTo(multiply1CellRef.start)
+                }
             )
 
-            // bringDown(2), 뺄셈 오른쪽
+            // 5.3. 내려쓴 숫자 (bringDownCellRef)
             val bringDown = uiState.bringDownCell
             Text(
                 text = if (bringDown.value.isBlank() && bringDown.editable) "?" else bringDown.value,
-                fontSize = 36.sp,
-                color = when {
-                    bringDown.editable -> Color.Magenta
-                    bringDown.correct -> Color.Green
-                    else -> Color.Black
-                },
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .constrainAs(bringDownRef) {
-                        top.linkTo(subtract1Ref.top)
-                        start.linkTo(subtract1Ref.end, margin = 16.dp)
-                    }
+                fontSize = 60.sp,
+                color = when { bringDown.editable -> Color.Magenta; bringDown.correct -> Color.Green; else -> Color.Black },
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 8.dp).constrainAs(bringDownCellRef) {
+                    top.linkTo(subtract1CellRef.top) // 1차 뺄셈 결과와 같은 높이
+                    start.linkTo(subtract1CellRef.end, margin = 0.dp) // 1차 뺄셈 결과 오른쪽
+                    end.linkTo(quotientOneRef.end) // 몫의 일의 자리와 오른쪽 끝 정렬
+                }
             )
 
-            // 2차 곱셈(21), 두 칸: 22 아래
+            // 5.4. 2차 곱셈 결과 (multiply2RowRef)
             Row(
                 modifier = Modifier.constrainAs(multiply2RowRef) {
-                    top.linkTo(subtract1Ref.bottom, margin = 40.dp)
-                    start.linkTo(subtract1Ref.start)
-                }
+                    top.linkTo(subtract1CellRef.bottom, margin = 8.dp) // 1차 뺄셈/내려쓴 숫자 줄 아래
+                    end.linkTo(bringDownCellRef.end) // 내려쓴 숫자와 오른쪽 끝 정렬
+                    width = Dimension.wrapContent
+                },
+                horizontalArrangement = Arrangement.End
             ) {
                 val mul2Ten = uiState.multiply2Ten
                 val mul2One = uiState.multiply2One
                 Text(
                     text = if (mul2Ten.value.isBlank() && mul2Ten.editable) "?" else mul2Ten.value,
-                    fontSize = 36.sp,
-                    color = when {
-                        mul2Ten.editable -> Color.Green
-                        mul2Ten.correct -> Color.Green
-                        else -> Color.Black
-                    },
-                    modifier = Modifier.padding(horizontal = 4.dp)
+                    fontSize = 60.sp,
+                    color = when { mul2Ten.editable -> Color.Green; mul2Ten.correct -> Color.Green; else -> Color.Black },
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 8.dp)
                 )
-                Spacer(Modifier.width(20.dp))
                 Text(
                     text = if (mul2One.value.isBlank() && mul2One.editable) "?" else mul2One.value,
-                    fontSize = 36.sp,
-                    color = when {
-                        mul2One.editable -> Color.Green
-                        mul2One.correct -> Color.Green
-                        else -> Color.Black
-                    },
-                    modifier = Modifier.padding(horizontal = 4.dp)
+                    fontSize = 60.sp,
+                    color = when { mul2One.editable -> Color.Green; mul2One.correct -> Color.Green; else -> Color.Black },
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(horizontal = 8.dp)
                 )
             }
 
-            // 나머지(1) 한 칸만!
-            val remainderCell = uiState.remainderCell
+            // 5.5. 나머지 (remainderCellRef)
+            val remainder = uiState.remainderCell
             Text(
-                text = if (remainderCell.value.isBlank() && remainderCell.editable) "?" else remainderCell.value,
-                fontSize = 36.sp,
+                text = if (remainder.value.isBlank() && remainder.editable) "?" else remainder.value,
+                fontSize = 60.sp,
                 color = when {
-                    remainderCell.editable -> Color.Magenta
-                    remainderCell.correct -> Color.Green
-                    else -> Color.Black
+                    remainder.editable -> Color.Magenta; remainder.correct -> Color.Green; else -> Color.Black
                 },
+                textAlign = TextAlign.Center,
                 modifier = Modifier
                     .padding(horizontal = 8.dp)
-                    .constrainAs(remainderRef) {
-                        top.linkTo(multiply2RowRef.bottom, margin = 20.dp)
-                        start.linkTo(multiply2RowRef.start, margin = 16.dp)
+                    .constrainAs(remainderCellRef) {
+                        top.linkTo(multiply2RowRef.bottom, margin = 8.dp) // 2차 곱셈 결과 아래
+                        end.linkTo(multiply2RowRef.end) // 2차 곱셈 결과와 오른쪽 끝 정렬
+                        width = Dimension.wrapContent
                     }
             )
-        }
 
-        // Number pad & feedback
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 32.dp)
-            ) {
-                NumberPad(
-                    onNumber = viewModel::onDigitInput,
-                    onClear = viewModel::onClear,
-                    onEnter = viewModel::onEnter
+        } // end of ConstraintLayout
+
+        // Number pad & feedback (ConstraintLayout 외부, Column 내부에 배치)
+        Spacer(modifier = Modifier.weight(1f)) // 남은 공간을 차지하여 NumberPad를 아래로 밀어냄
+        Column(
+            modifier = Modifier
+                .fillMaxWidth() // 너비를 꽉 채움
+                .padding(bottom = 32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally // 내부 아이템들 중앙 정렬
+        ) {
+            NumberPad(
+                onNumber = { viewModel.onDigitInput(it) }, // viewModel 사용 예시
+                onClear = { viewModel.onClear() },
+                onEnter = { viewModel.onEnter() }
+            )
+            uiState.feedback?.let {
+                Spacer(Modifier.height(16.dp))
+                Text(
+                    text = it,
+                    color = MaterialTheme.colorScheme.primary, // 테마 색상 사용
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
-                uiState.feedback?.let {
-                    Spacer(Modifier.height(16.dp))
-                    Text(
-                        text = it,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
-                }
             }
         }
-    }
+    } // end of parent Column
 }
 
 
