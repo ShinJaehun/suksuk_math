@@ -16,17 +16,21 @@ class DivisionViewModel : ViewModel() {
 
     fun onDigitInput(num: Int) {
         val state = _uiState.value
-        // 2차 곱셈은 두 칸, 그 외 한 칸만
         if (state.stage == 5) {
-            if (inputBuffer.length < 2) {
-                inputBuffer += num.toString()
-                updateEditableCell(inputBuffer)
+            inputBuffer = if (inputBuffer.length < 2) {
+                inputBuffer + num.toString()
+            } else {
+                inputBuffer.substring(1) + num.toString()
             }
+            val ten = if (inputBuffer.length > 0) inputBuffer[0].toString() else ""
+            val one = if (inputBuffer.length > 1) inputBuffer[1].toString() else ""
+            _uiState.value = state.copy(
+                multiply2Ten = state.multiply2Ten.copy(value = ten, editable = true),
+                multiply2One = state.multiply2One.copy(value = one, editable = true)
+            )
         } else {
-            if (inputBuffer.length < 1) {
-                inputBuffer = num.toString()
-                updateEditableCell(inputBuffer)
-            }
+            inputBuffer = num.toString()
+            updateEditableCell(inputBuffer)
         }
     }
 
