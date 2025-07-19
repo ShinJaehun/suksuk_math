@@ -67,14 +67,6 @@ import kotlin.random.Random
 //    FINISHED
 //}
 
-
-// 셀 상태 클래스
-data class InputCell(
-    val value: String = "",
-    val editable: Boolean = false,
-    val correct: Boolean = false
-)
-
 // UI 상태
 //data class DivisionUiState(
 //    val dividend: Int = 92,
@@ -115,6 +107,13 @@ data class InputCell(
 //    val stage: Int = 0,
 //    val feedback: String? = null
 //)
+
+// 셀 상태 클래스
+data class InputCell(
+    val value: String = "",
+    val editable: Boolean = false,
+    val correct: Boolean = false
+)
 
 data class DivisionUiState(
     val divisor: Int = 7,
