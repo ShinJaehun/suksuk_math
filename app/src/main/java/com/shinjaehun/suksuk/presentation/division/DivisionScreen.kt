@@ -280,64 +280,6 @@ fun DivisionScreen(
     }
 }
 
-
-// DivisionPhasesState의 현재 단계와 입력값을 기반으로, 화면에서 사용할 InputCell 리스트 생성
-fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): DivisionUiState {
-    val inputs = state.inputs
-    val phase = state.phases.getOrNull(state.currentPhaseIndex)
-
-    return DivisionUiState(
-        divisor = state.divisor,
-        dividend = state.dividend,
-        quotientCells = listOf(
-            InputCell(
-                value = if (phase is DivisionPhase.InputQuotientTens && currentInput.isNotEmpty())
-                    currentInput else inputs.getOrNull(0) ?: "",
-                editable = phase is DivisionPhase.InputQuotientTens
-            ),
-            InputCell(
-                value = if (phase is DivisionPhase.InputQuotientOnes && currentInput.isNotEmpty())
-                    currentInput else inputs.getOrNull(4) ?: "",
-                editable = phase is DivisionPhase.InputQuotientOnes
-            )
-        ),
-        multiply1Cell = InputCell(
-            value = if (phase is DivisionPhase.InputFirstProduct && currentInput.isNotEmpty())
-                currentInput else inputs.getOrNull(1) ?: "",
-            editable = phase is DivisionPhase.InputFirstProduct
-        ),
-        subtract1Cell = InputCell(
-            value = if (phase is DivisionPhase.InputFirstSubtraction && currentInput.isNotEmpty())
-                currentInput else inputs.getOrNull(2) ?: "",
-            editable = phase is DivisionPhase.InputFirstSubtraction
-        ),
-        bringDownCell = InputCell(
-            value = if (phase is DivisionPhase.InputBringDown && currentInput.isNotEmpty())
-                currentInput else inputs.getOrNull(3) ?: "",
-            editable = phase is DivisionPhase.InputBringDown
-        ),
-        multiply2Ten = InputCell(
-            value = if (phase is DivisionPhase.InputSecondProduct && currentInput.isNotEmpty())
-                currentInput else inputs.getOrNull(5) ?: "",
-            editable = phase is DivisionPhase.InputSecondProduct
-        ),
-        multiply2One = InputCell(), // 필요시 구현
-        subtract2Cell = InputCell(
-            value = if (phase is DivisionPhase.InputSecondSubtraction && currentInput.isNotEmpty())
-                currentInput else inputs.getOrNull(6) ?: "",
-            editable = phase is DivisionPhase.InputSecondSubtraction
-        ),
-        remainderCell = InputCell(
-            value = if (phase is DivisionPhase.Complete && currentInput.isNotEmpty())
-                currentInput else inputs.getOrNull(7) ?: "",
-            editable = phase is DivisionPhase.Complete
-        ),
-        stage = state.currentPhaseIndex,
-        feedback = state.feedback
-    )
-}
-
-
 @Composable
 fun NumberPad(onNumber: (Int) -> Unit, onClear: () -> Unit, onEnter: () -> Unit) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
