@@ -37,14 +37,37 @@ sealed interface DivisionPhase {
     object InputBorrowedFromFirstSub : DivisionPhase
 }
 
-data class DivisionUiState(
+data class DivisionPhasesState(
     val dividend: Int,
     val divisor: Int,
     val currentPhaseIndex: Int = 0,
     val phases: List<DivisionPhase> = emptyList(),
-    val inputs: MutableList<String> = mutableListOf(),
+    val inputs: List<String> = emptyList(),
     val feedback: String? = null,
     val pattern: UXPattern? = null
 )
 
 enum class UXPattern { A, B, C, D }
+
+
+// 셀 상태 클래스
+data class InputCell(
+    val value: String = "",
+    val editable: Boolean = false,
+    val correct: Boolean = false
+)
+
+data class DivisionUiState(
+    val divisor: Int = 7,
+    val dividend: Int = 92,
+    val quotientCells: List<InputCell> = listOf(InputCell(editable = true), InputCell()),
+    val multiply1Cell: InputCell = InputCell(),
+    val subtract1Cell: InputCell = InputCell(),
+    val bringDownCell: InputCell = InputCell(),
+    val multiply2Ten: InputCell = InputCell(),
+    val multiply2One: InputCell = InputCell(),
+    val subtract2Cell: InputCell = InputCell(),
+    val remainderCell: InputCell = InputCell(),
+    val stage: Int = 0,
+    val feedback: String? = null
+)

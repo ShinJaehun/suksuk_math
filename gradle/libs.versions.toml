@@ -7,7 +7,7 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.9.1"
 activityCompose = "1.10.1"
-composeBom = "2025.06.01"
+composeBom = "2025.07.00"
 
 ksp = "2.0.21-1.0.28"
 hilt = "2.55"
@@ -39,6 +39,8 @@ androidx-room-compiler = { group = "androidx.room", name = "room-compiler", vers
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintlayout" }
+material3 = { module = "androidx.compose.material3:material3" }
+ui = { module = "androidx.compose.ui:ui" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

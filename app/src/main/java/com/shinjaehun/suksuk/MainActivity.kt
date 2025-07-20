@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.shinjaehun.suksuk.domain.model.DivisionProblem
+import com.shinjaehun.suksuk.presentation.division.DivisionScreen
 import com.shinjaehun.suksuk.presentation.division.DivisionViewModel
 //import com.shinjaehun.suksuk.presentation.division.DivisionStageScreen
 import com.shinjaehun.suksuk.ui.theme.SukSukTheme
@@ -20,7 +21,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @SuppressLint("ViewModelConstructorInComposable")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -28,8 +28,8 @@ class MainActivity : ComponentActivity() {
 //            Division21Screen()
 //            DivisionStageScreen()
 
-            val viewmodel = DivisionViewModel()
-            viewmodel.runAllTests()
+            DivisionScreen()
+
         }
     }
 }
