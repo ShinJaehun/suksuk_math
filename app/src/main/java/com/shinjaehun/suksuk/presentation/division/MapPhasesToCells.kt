@@ -84,13 +84,137 @@ package com.shinjaehun.suksuk.presentation.division
 //}
 
 
+//fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): DivisionUiState {
+//    val inputs = state.inputs
+//    val phase = state.phases.getOrNull(state.currentPhaseIndex)
+//    val isComplete = phase == null || phase is DivisionPhase.Complete
+//
+////    println("mapPhasesToCells called!")
+////    println("  phase=$phase, currentPhaseIndex=${state.currentPhaseIndex}, inputs=$inputs, currentInput='$currentInput', isComplete=$isComplete")
+//
+//    val relatedCells = when (phase) {
+//        DivisionPhase.InputQuotientTens      -> listOf("divisor", "dividendTens")
+//        DivisionPhase.InputFirstProduct      -> listOf("divisor", "quotientTens")
+//        DivisionPhase.InputFirstSubtraction  -> listOf("dividendTens", "multiply1")
+//        DivisionPhase.InputBringDown         -> listOf("dividendOnes")
+//        DivisionPhase.InputQuotientOnes      -> listOf("divisor", "subtract1", "bringDown")
+//        DivisionPhase.InputSecondProductTens -> listOf("divisor", "subtract1", "bringDown")
+//        DivisionPhase.InputSecondProductOnes -> listOf("divisor", "subtract1", "bringDown")
+//        DivisionPhase.InputSecondSubtraction -> listOf("subtract1", "bringDown", "multiply2Tens", "multiply2Ones")
+//        else -> emptyList()
+//    }
+//
+//    fun cellValue(idx: Int, editing: Boolean): String =
+//        if (editing)
+//            if (currentInput.isEmpty()) "?" else currentInput
+//        else
+//            inputs.getOrNull(idx) ?: ""
+//
+//    return DivisionUiState(
+//        divisor = InputCell(
+//            value = state.divisor.toString(),
+//            highlight = when {
+//                "divisor" in relatedCells -> Highlight.Related
+//                else -> Highlight.None
+//            }
+//        ),
+//        dividendTens = InputCell(
+//            value = state.dividend.toString().padStart(2, '0')[0].toString(),
+//            highlight = when {
+//                "dividendTens" in relatedCells -> Highlight.Related
+//                else -> Highlight.None
+//            }
+//        ),
+//        dividendOnes = InputCell(
+//            value = state.dividend.toString().padStart(2, '0')[1].toString(),
+//            highlight = when {
+//                "dividendOnes" in relatedCells -> Highlight.Related
+//                else -> Highlight.None
+//            }
+//        ),
+//        quotientTens = InputCell(
+//            value = cellValue(0, phase is DivisionPhase.InputQuotientTens && !isComplete),
+//            editable = phase is DivisionPhase.InputQuotientTens && !isComplete,
+//            highlight = when {
+//                phase is DivisionPhase.InputQuotientTens && !isComplete -> Highlight.Editing
+//                "quotientTens" in relatedCells -> Highlight.Related
+//                else -> Highlight.None
+//            }
+//        ),
+//        multiply1 = InputCell(
+//            value = cellValue(1, phase is DivisionPhase.InputFirstProduct && !isComplete),
+//            editable = phase is DivisionPhase.InputFirstProduct && !isComplete,
+//            highlight = when {
+//                phase is DivisionPhase.InputFirstProduct && !isComplete -> Highlight.Editing
+//                "multiply1" in relatedCells -> Highlight.Related
+//                else -> Highlight.None
+//            }
+//        ),
+//        subtract1 = InputCell(
+//            value = cellValue(2, phase is DivisionPhase.InputFirstSubtraction && !isComplete),
+//            editable = phase is DivisionPhase.InputFirstSubtraction && !isComplete,
+//            highlight = when {
+//                phase is DivisionPhase.InputFirstSubtraction && !isComplete -> Highlight.Editing
+//                "subtract1" in relatedCells -> Highlight.Related
+//                else -> Highlight.None
+//            }
+//        ),
+//        bringDown = InputCell(
+//            value = cellValue(3, phase is DivisionPhase.InputBringDown && !isComplete),
+//            editable = phase is DivisionPhase.InputBringDown && !isComplete,
+//            highlight = when {
+//                phase is DivisionPhase.InputBringDown && !isComplete -> Highlight.Editing
+//                "bringDown" in relatedCells -> Highlight.Related
+//                else -> Highlight.None
+//            }
+//        ),
+//        quotientOnes = InputCell(
+//            value = cellValue(4, phase is DivisionPhase.InputQuotientOnes && !isComplete),
+//            editable = phase is DivisionPhase.InputQuotientOnes && !isComplete,
+//            highlight = when {
+//                phase is DivisionPhase.InputQuotientOnes && !isComplete -> Highlight.Editing
+//                "quotientOnes" in relatedCells -> Highlight.Related
+//                else -> Highlight.None
+//            }
+//        ),
+//        multiply2Tens = InputCell(
+//            value = cellValue(5, phase is DivisionPhase.InputSecondProductTens && !isComplete),
+//            editable = phase is DivisionPhase.InputSecondProductTens && !isComplete,
+//            highlight = when {
+//                phase is DivisionPhase.InputSecondProductTens && !isComplete -> Highlight.Editing
+//                "multiply2Tens" in relatedCells -> Highlight.Related
+//                else -> Highlight.None
+//            }
+//        ),
+//        multiply2Ones = InputCell(
+//            value = cellValue(6, phase is DivisionPhase.InputSecondProductOnes && !isComplete),
+//            editable = phase is DivisionPhase.InputSecondProductOnes && !isComplete,
+//            highlight = when {
+//                phase is DivisionPhase.InputSecondProductOnes && !isComplete -> Highlight.Editing
+//                "multiply2Ones" in relatedCells -> Highlight.Related
+//                else -> Highlight.None
+//            }
+//        ),
+//        remainder = InputCell(
+//            value = cellValue(7, phase is DivisionPhase.InputSecondSubtraction && !isComplete),
+//            editable = phase is DivisionPhase.InputSecondSubtraction && !isComplete,
+//            highlight = when {
+//                phase is DivisionPhase.InputSecondSubtraction && !isComplete -> Highlight.Editing
+//                "subtract2" in relatedCells -> Highlight.Related
+//                else -> Highlight.None
+//            }
+//        ),
+//        dividendTenBorrow = InputCell(),
+//        subtract1Borrow = InputCell(),
+//        stage = state.currentPhaseIndex,
+//        feedback = state.feedback
+//    )
+//}
+
 fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): DivisionUiState {
     val inputs = state.inputs
     val phase = state.phases.getOrNull(state.currentPhaseIndex)
     val isComplete = phase == null || phase is DivisionPhase.Complete
-
-//    println("mapPhasesToCells called!")
-//    println("  phase=$phase, currentPhaseIndex=${state.currentPhaseIndex}, inputs=$inputs, currentInput='$currentInput', isComplete=$isComplete")
 
     val relatedCells = when (phase) {
         DivisionPhase.InputQuotientTens      -> listOf("divisor", "dividendTens")
@@ -110,102 +234,48 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
         else
             inputs.getOrNull(idx) ?: ""
 
+    // makeCell: 공통 InputCell 생성
+    fun makeCell(
+        name: String,
+        idx: Int,
+        editing: Boolean,
+        editable: Boolean = editing
+    ) = InputCell(
+        value = cellValue(idx, editing && !isComplete),
+        editable = editable,
+        highlight = when {
+            editing && !isComplete -> Highlight.Editing
+            name in relatedCells -> Highlight.Related
+            else -> Highlight.None
+        }
+    )
+
+    // dividend, divisor는 입력 가능성이 없으므로 value만 별도 처리
+    val dividendStr = state.dividend.toString().padStart(2, '0')
+
     return DivisionUiState(
         divisor = InputCell(
             value = state.divisor.toString(),
-            highlight = when {
-                "divisor" in relatedCells -> Highlight.Related
-                else -> Highlight.None
-            }
+            highlight = if ("divisor" in relatedCells) Highlight.Related else Highlight.None
         ),
         dividendTens = InputCell(
-            value = state.dividend.toString().padStart(2, '0')[0].toString(),
-            highlight = when {
-                "dividendTens" in relatedCells -> Highlight.Related
-                else -> Highlight.None
-            }
+            value = dividendStr[0].toString(),
+            highlight = if ("dividendTens" in relatedCells) Highlight.Related else Highlight.None
         ),
         dividendOnes = InputCell(
-            value = state.dividend.toString().padStart(2, '0')[1].toString(),
-            highlight = when {
-                "dividendOnes" in relatedCells -> Highlight.Related
-                else -> Highlight.None
-            }
+            value = dividendStr[1].toString(),
+            highlight = if ("dividendOnes" in relatedCells) Highlight.Related else Highlight.None
         ),
-        quotientTens = InputCell(
-            value = cellValue(0, phase is DivisionPhase.InputQuotientTens && !isComplete),
-            editable = phase is DivisionPhase.InputQuotientTens && !isComplete,
-            highlight = when {
-                phase is DivisionPhase.InputQuotientTens && !isComplete -> Highlight.Editing
-                "quotientTens" in relatedCells -> Highlight.Related
-                else -> Highlight.None
-            }
-        ),
-        multiply1 = InputCell(
-            value = cellValue(1, phase is DivisionPhase.InputFirstProduct && !isComplete),
-            editable = phase is DivisionPhase.InputFirstProduct && !isComplete,
-            highlight = when {
-                phase is DivisionPhase.InputFirstProduct && !isComplete -> Highlight.Editing
-                "multiply1" in relatedCells -> Highlight.Related
-                else -> Highlight.None
-            }
-        ),
-        subtract1 = InputCell(
-            value = cellValue(2, phase is DivisionPhase.InputFirstSubtraction && !isComplete),
-            editable = phase is DivisionPhase.InputFirstSubtraction && !isComplete,
-            highlight = when {
-                phase is DivisionPhase.InputFirstSubtraction && !isComplete -> Highlight.Editing
-                "subtract1" in relatedCells -> Highlight.Related
-                else -> Highlight.None
-            }
-        ),
-        bringDown = InputCell(
-            value = cellValue(3, phase is DivisionPhase.InputBringDown && !isComplete),
-            editable = phase is DivisionPhase.InputBringDown && !isComplete,
-            highlight = when {
-                phase is DivisionPhase.InputBringDown && !isComplete -> Highlight.Editing
-                "bringDown" in relatedCells -> Highlight.Related
-                else -> Highlight.None
-            }
-        ),
-        quotientOnes = InputCell(
-            value = cellValue(4, phase is DivisionPhase.InputQuotientOnes && !isComplete),
-            editable = phase is DivisionPhase.InputQuotientOnes && !isComplete,
-            highlight = when {
-                phase is DivisionPhase.InputQuotientOnes && !isComplete -> Highlight.Editing
-                "quotientOnes" in relatedCells -> Highlight.Related
-                else -> Highlight.None
-            }
-        ),
-        multiply2Tens = InputCell(
-            value = cellValue(5, phase is DivisionPhase.InputSecondProductTens && !isComplete),
-            editable = phase is DivisionPhase.InputSecondProductTens && !isComplete,
-            highlight = when {
-                phase is DivisionPhase.InputSecondProductTens && !isComplete -> Highlight.Editing
-                "multiply2Tens" in relatedCells -> Highlight.Related
-                else -> Highlight.None
-            }
-        ),
-        multiply2Ones = InputCell(
-            value = cellValue(6, phase is DivisionPhase.InputSecondProductOnes && !isComplete),
-            editable = phase is DivisionPhase.InputSecondProductOnes && !isComplete,
-            highlight = when {
-                phase is DivisionPhase.InputSecondProductOnes && !isComplete -> Highlight.Editing
-                "multiply2Ones" in relatedCells -> Highlight.Related
-                else -> Highlight.None
-            }
-        ),
-        remainder = InputCell(
-            value = cellValue(7, phase is DivisionPhase.InputSecondSubtraction && !isComplete),
-            editable = phase is DivisionPhase.InputSecondSubtraction && !isComplete,
-            highlight = when {
-                phase is DivisionPhase.InputSecondSubtraction && !isComplete -> Highlight.Editing
-                "subtract2" in relatedCells -> Highlight.Related
-                else -> Highlight.None
-            }
-        ),
+        quotientTens   = makeCell("quotientTens",   0, phase is DivisionPhase.InputQuotientTens),
+        multiply1      = makeCell("multiply1",      1, phase is DivisionPhase.InputFirstProduct),
+        subtract1      = makeCell("subtract1",      2, phase is DivisionPhase.InputFirstSubtraction),
+        bringDown      = makeCell("bringDown",      3, phase is DivisionPhase.InputBringDown),
+        quotientOnes   = makeCell("quotientOnes",   4, phase is DivisionPhase.InputQuotientOnes),
+        multiply2Tens  = makeCell("multiply2Tens",  5, phase is DivisionPhase.InputSecondProductTens),
+        multiply2Ones  = makeCell("multiply2Ones",  6, phase is DivisionPhase.InputSecondProductOnes),
+        remainder      = makeCell("subtract2",      7, phase is DivisionPhase.InputSecondSubtraction),
         dividendTenBorrow = InputCell(),
-        subtract1Borrow = InputCell(),
+        subtract1Borrow   = InputCell(),
         stage = state.currentPhaseIndex,
         feedback = state.feedback
     )
