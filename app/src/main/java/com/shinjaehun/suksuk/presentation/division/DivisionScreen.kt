@@ -84,8 +84,9 @@ fun DivisionScreen(
             )
 
             // dividend tens
+            val dividendTensCell = uiState.dividendTens
             NumberText(
-                text = uiState.dividend.toString()[0].toString(),
+                cell = dividendTensCell,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
@@ -108,8 +109,9 @@ fun DivisionScreen(
             )
 
             // dividend ones
+            val dividendOnesCell = uiState.dividendOnes
             NumberText(
-                text = uiState.dividend.toString()[1].toString(),
+                cell = dividendOnesCell,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
@@ -120,8 +122,9 @@ fun DivisionScreen(
             )
 
             // divisor
+            val divisorCell = uiState.divisor
             NumberText(
-                text = uiState.divisor.toString(),
+                cell = divisorCell,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
@@ -134,7 +137,7 @@ fun DivisionScreen(
             // 몫(십의 자리)
             val quotientTensCell = uiState.quotientTens
             NumberText(
-                text = quotientTensCell.value,
+                cell = quotientTensCell,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
@@ -147,7 +150,7 @@ fun DivisionScreen(
             // 몫(일의 자리)
             val quotientOnesCell = uiState.quotientOnes
             NumberText(
-                text = quotientOnesCell.value,
+                cell = quotientOnesCell,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
@@ -160,7 +163,7 @@ fun DivisionScreen(
             // 1차 곱셈(7)
             val multiply1Cell = uiState.multiply1
             NumberText(
-                text = multiply1Cell.value,
+                cell = multiply1Cell,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
@@ -185,7 +188,7 @@ fun DivisionScreen(
             // 1차 뺄셈(2)
             val subtract1Cell = uiState.subtract1
             NumberText(
-                text = subtract1Cell.value,
+                cell = subtract1Cell,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
@@ -210,7 +213,7 @@ fun DivisionScreen(
             // bringDown(2), 뺄셈 오른쪽
             val bringDownCell = uiState.bringDown
             NumberText(
-                text = bringDownCell.value,
+                cell = bringDownCell,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
@@ -223,7 +226,7 @@ fun DivisionScreen(
             // 2차 곱셈(21), 두 칸: 22 아래
             val multiply2TensCell = uiState.multiply2Tens
             NumberText(
-                text = multiply2TensCell.value,
+                cell = multiply2TensCell,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
@@ -235,7 +238,7 @@ fun DivisionScreen(
 
             val multiply2OnesCell = uiState.multiply2Ones
             NumberText(
-                text = multiply2OnesCell.value,
+                cell = multiply2OnesCell,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
@@ -261,7 +264,7 @@ fun DivisionScreen(
             // 나머지(1) 한 칸만!
             val remainderCell = uiState.remainder
             NumberText(
-                text = remainderCell.value,
+                cell = remainderCell,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
@@ -299,18 +302,22 @@ fun DivisionScreen(
 
 @Composable
 fun NumberText(
-    text: String,
-    color: Color = Color.Black,
+    cell: InputCell,
+    defaultColor: Color = Color.Black,
     fontSize: TextUnit = 40.sp,
     width: Dp = 42.dp,
     modifier: Modifier = Modifier
 ) {
-    val inputColor = if (text == "?") Color.Red else color
+    val textColor = when (cell.highlight) {
+        Highlight.Editing -> Color.Red
+        Highlight.Related -> Color(0xFF1976D2) // 파란색 (Material blue)
+        else -> defaultColor
+    }
     Text(
-        text = text,
+        text = cell.value,
         fontSize = fontSize,
         textAlign = TextAlign.Center,
-        color = inputColor,
+        color = textColor,
         modifier = modifier.width(width)
     )
 }

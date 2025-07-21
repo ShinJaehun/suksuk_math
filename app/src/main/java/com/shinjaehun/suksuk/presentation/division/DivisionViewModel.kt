@@ -41,9 +41,7 @@ class DivisionViewModel : ViewModel() {
     }
 
     fun onDigitInput(digit: Int) {
-        if (currentInput.length < 3) { // 최대 3자리 입력 제한 (예시)
-            currentInput += digit
-        }
+        currentInput = digit.toString()
     }
 
     fun onClear() {

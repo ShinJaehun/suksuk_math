@@ -55,12 +55,20 @@ enum class UXPattern { A, B, C, D, E, F }
 data class InputCell(
     val value: String = "",
     val editable: Boolean = false,
-    val correct: Boolean = false
+    val correct: Boolean = false,
+    val highlight: Highlight = Highlight.None
 )
 
+enum class Highlight {
+    None,      // 일반
+    Editing,   // 현재 입력 중(빨간색 ?)
+    Related    // 연관 강조(파란색)
+}
+
 data class DivisionUiState(
-    val divisor: Int,
-    val dividend: Int,
+    val divisor: InputCell = InputCell(),
+    val dividendTens: InputCell = InputCell(),
+    val dividendOnes: InputCell = InputCell(),
     val quotientTens: InputCell = InputCell(),
     val quotientOnes: InputCell = InputCell(),
     val multiply1: InputCell = InputCell(),
