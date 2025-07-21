@@ -61,10 +61,10 @@ fun DivisionScreen(
                 .padding(horizontal = 30.dp, vertical = 30.dp)
         ) {
             val (
-                divisorRef, dividendTenRef, dividendOneRef,
-                quotientTenRef, quotientOneRef,
+                divisorRef, dividendTensRef, dividendOnesRef,
+                quotientTensRef, quotientOnesRef,
                 multiply1Ref, subtract1Ref, bringDownRef,
-                multiply2TenRef, multiply2OneRef, remainderRef
+                multiply2TensRef, multiply2OnesRef, remainderRef
             ) = createRefs()
 
             val (dividendTenBorrowRef, subtract1BorrowRef) = createRefs()
@@ -89,7 +89,7 @@ fun DivisionScreen(
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
-                    .constrainAs(dividendTenRef) {
+                    .constrainAs(dividendTensRef) {
                         top.linkTo(bracketRef.top, margin = 40.dp)
                         start.linkTo(bracketRef.start, margin = 60.dp)
                     }
@@ -102,20 +102,20 @@ fun DivisionScreen(
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
                     .constrainAs(dividendTenBorrowRef) {
-                        start.linkTo(dividendTenRef.start)
-                        bottom.linkTo(dividendTenRef.top)
+                        start.linkTo(dividendTensRef.start)
+                        bottom.linkTo(dividendTensRef.top)
                     }
             )
 
             // dividend ones
             NumberText(
-                text = uiState.dividend.toString()[0].toString(),
+                text = uiState.dividend.toString()[1].toString(),
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
-                    .constrainAs(dividendOneRef) {
-                        start.linkTo(dividendTenRef.end)
-                        baseline.linkTo(dividendTenRef.baseline)
+                    .constrainAs(dividendOnesRef) {
+                        start.linkTo(dividendTensRef.end)
+                        baseline.linkTo(dividendTensRef.baseline)
                     }
             )
 
@@ -126,47 +126,47 @@ fun DivisionScreen(
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
                     .constrainAs(divisorRef) {
-                        end.linkTo(dividendTenRef.start, margin = 40.dp)
-                        baseline.linkTo(dividendTenRef.baseline)
+                        end.linkTo(dividendTensRef.start, margin = 40.dp)
+                        baseline.linkTo(dividendTensRef.baseline)
                     }
             )
 
             // 몫(십의 자리)
-            val cellTen = uiState.quotientCells[0]
+            val quotientTensCell = uiState.quotientTens
             NumberText(
-                text = "?",
+                text = quotientTensCell.value,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
-                    .constrainAs(quotientTenRef) {
-                        start.linkTo(dividendTenRef.start)
-                        bottom.linkTo(dividendTenRef.top, margin = 40.dp)
+                    .constrainAs(quotientTensRef) {
+                        start.linkTo(dividendTensRef.start)
+                        bottom.linkTo(dividendTensRef.top, margin = 40.dp)
                     }
             )
 
             // 몫(일의 자리)
-            val cellOne = uiState.quotientCells[1]
+            val quotientOnesCell = uiState.quotientOnes
             NumberText(
-                text = "?",
+                text = quotientOnesCell.value,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
-                    .constrainAs(quotientOneRef) {
-                        start.linkTo(quotientTenRef.end)
-                        baseline.linkTo(quotientTenRef.baseline)
+                    .constrainAs(quotientOnesRef) {
+                        start.linkTo(quotientTensRef.end)
+                        baseline.linkTo(quotientTensRef.baseline)
                     }
             )
 
             // 1차 곱셈(7)
-            val mul1 = uiState.multiply1Cell
+            val multiply1Cell = uiState.multiply1
             NumberText(
-                text = "?",
+                text = multiply1Cell.value,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
                     .constrainAs(multiply1Ref) {
-                        top.linkTo(dividendTenRef.bottom, margin = 10.dp)
-                        start.linkTo(dividendTenRef.start)
+                        top.linkTo(dividendTensRef.bottom, margin = 10.dp)
+                        start.linkTo(dividendTensRef.start)
                     }
             )
 
@@ -175,23 +175,23 @@ fun DivisionScreen(
                 contentDescription = "Subtraction Line",
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier.constrainAs(subtract1LineRef) {
-                    top.linkTo(dividendTenRef.bottom, margin = 60.dp)
-                    start.linkTo(dividendTenRef.start, margin = (-10).dp)
+                    top.linkTo(dividendTensRef.bottom, margin = 60.dp)
+                    start.linkTo(dividendTensRef.start, margin = (-10).dp)
                     width = Dimension.value(100.dp)
                     height = Dimension.value(4.dp)
                 }
             )
 
             // 1차 뺄셈(2)
-            val sub1 = uiState.subtract1Cell
+            val subtract1Cell = uiState.subtract1
             NumberText(
-                text = "?",
+                text = subtract1Cell.value,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
                     .constrainAs(subtract1Ref) {
-                        top.linkTo(dividendTenRef.bottom, margin = 90.dp)
-                        start.linkTo(dividendTenRef.start)
+                        top.linkTo(dividendTensRef.bottom, margin = 90.dp)
+                        start.linkTo(dividendTensRef.start)
                     }
             )
 
@@ -208,9 +208,9 @@ fun DivisionScreen(
             )
 
             // bringDown(2), 뺄셈 오른쪽
-            val bringDown = uiState.bringDownCell
+            val bringDownCell = uiState.bringDown
             NumberText(
-                text = "?",
+                text = bringDownCell.value,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
@@ -221,27 +221,27 @@ fun DivisionScreen(
             )
 
             // 2차 곱셈(21), 두 칸: 22 아래
-            val mul2Ten = uiState.multiply2Ten
+            val multiply2TensCell = uiState.multiply2Tens
             NumberText(
-                text = "?",
+                text = multiply2TensCell.value,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
-                    .constrainAs(multiply2TenRef) {
-                        top.linkTo(dividendTenRef.bottom, margin = 150.dp)
-                        start.linkTo(dividendTenRef.start)
+                    .constrainAs(multiply2TensRef) {
+                        top.linkTo(dividendTensRef.bottom, margin = 150.dp)
+                        start.linkTo(dividendTensRef.start)
                     }
             )
 
-            val mul2One = uiState.multiply2One
+            val multiply2OnesCell = uiState.multiply2Ones
             NumberText(
-                text = "?",
+                text = multiply2OnesCell.value,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
-                    .constrainAs(multiply2OneRef) {
-                        start.linkTo(multiply2TenRef.end)
-                        baseline.linkTo(multiply2TenRef.baseline)
+                    .constrainAs(multiply2OnesRef) {
+                        start.linkTo(multiply2TensRef.end)
+                        baseline.linkTo(multiply2TensRef.baseline)
                     }
             )
 
@@ -250,8 +250,8 @@ fun DivisionScreen(
                 contentDescription = "Subtraction Line",
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier.constrainAs(subtract2LineRef) {
-                    top.linkTo(dividendTenRef.bottom, margin = 200.dp)
-                    start.linkTo(dividendTenRef.start, margin = (-10).dp)
+                    top.linkTo(dividendTensRef.bottom, margin = 200.dp)
+                    start.linkTo(dividendTensRef.start, margin = (-10).dp)
                     width = Dimension.value(100.dp)
                     height = Dimension.value(4.dp)
                 }
@@ -259,15 +259,15 @@ fun DivisionScreen(
 
 
             // 나머지(1) 한 칸만!
-            val remainderCell = uiState.remainderCell
+            val remainderCell = uiState.remainder
             NumberText(
-                text = "?",
+                text = remainderCell.value,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
                     .constrainAs(remainderRef) {
-                        top.linkTo(dividendTenRef.bottom, margin = 220.dp)
-                        start.linkTo(dividendOneRef.start)
+                        top.linkTo(dividendTensRef.bottom, margin = 220.dp)
+                        start.linkTo(dividendOnesRef.start)
                     }
             )
         }
@@ -305,11 +305,12 @@ fun NumberText(
     width: Dp = 42.dp,
     modifier: Modifier = Modifier
 ) {
+    val inputColor = if (text == "?") Color.Red else color
     Text(
         text = text,
         fontSize = fontSize,
         textAlign = TextAlign.Center,
-        color = color,
+        color = inputColor,
         modifier = modifier.width(width)
     )
 }

@@ -27,7 +27,8 @@ sealed interface DivisionPhase {
     object InputQuotientTens : DivisionPhase
     object InputFirstProduct : DivisionPhase
     object InputBringDown : DivisionPhase
-    object InputSecondProduct : DivisionPhase
+    object InputSecondProductTens : DivisionPhase
+    object InputSecondProductOnes : DivisionPhase
     object InputQuotientOnes : DivisionPhase
     object Complete : DivisionPhase
     object InputFirstSubtraction : DivisionPhase
@@ -47,7 +48,7 @@ data class DivisionPhasesState(
     val pattern: UXPattern? = null
 )
 
-enum class UXPattern { A, B, C, D }
+enum class UXPattern { A, B, C, D, E, F }
 
 
 // 셀 상태 클래스
@@ -58,16 +59,18 @@ data class InputCell(
 )
 
 data class DivisionUiState(
-    val divisor: Int = 7,
-    val dividend: Int = 92,
-    val quotientCells: List<InputCell> = listOf(InputCell(editable = true), InputCell()),
-    val multiply1Cell: InputCell = InputCell(),
-    val subtract1Cell: InputCell = InputCell(),
-    val bringDownCell: InputCell = InputCell(),
-    val multiply2Ten: InputCell = InputCell(),
-    val multiply2One: InputCell = InputCell(),
-    val subtract2Cell: InputCell = InputCell(),
-    val remainderCell: InputCell = InputCell(),
+    val divisor: Int,
+    val dividend: Int,
+    val quotientTens: InputCell = InputCell(),
+    val quotientOnes: InputCell = InputCell(),
+    val multiply1: InputCell = InputCell(),
+    val subtract1: InputCell = InputCell(),
+    val bringDown: InputCell = InputCell(),
+    val multiply2Tens: InputCell = InputCell(),
+    val multiply2Ones: InputCell = InputCell(),
+    val remainder: InputCell = InputCell(),
+    val dividendTenBorrow: InputCell = InputCell(),
+    val subtract1Borrow: InputCell = InputCell(),
     val stage: Int = 0,
     val feedback: String? = null
 )

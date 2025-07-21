@@ -23,16 +23,21 @@ class DivisionViewModel : ViewModel() {
 //    }
 
     init {
-        // 예시 문제로 시작 (Preview용)
-        // startNewProblem(92, 7) // Pattern A
-        startNewProblem(62, 7) // Pattern C
-        // startNewProblem(50, 3) // Pattern B
+        startNewProblem(85, 7) // Pattern A
     }
 
     fun startNewProblem(dividend: Int, divisor: Int) {
         val pattern = detectPattern(dividend, divisor)
         val phases = buildPhasesFor(pattern)
-        _uiState.value = DivisionPhasesState(dividend, divisor, 0, phases, mutableListOf(), null, pattern)
+        _uiState.value = DivisionPhasesState(
+            dividend,
+            divisor,
+            0,
+            phases,
+            mutableListOf(),
+            null,
+            pattern
+        )
     }
 
     fun onDigitInput(digit: Int) {
@@ -84,11 +89,14 @@ class DivisionViewModel : ViewModel() {
             DivisionPhase.InputBringDown -> {
                 input.toIntOrNull() == dividendOnes
             }
-            is DivisionPhase.InputQuotientOnes -> {
+            DivisionPhase.InputQuotientOnes -> {
                 input.toIntOrNull() == quotientOnes
             }
-            DivisionPhase.InputSecondProduct -> {
-                input.toIntOrNull() == state.divisor * quotientOnes
+            DivisionPhase.InputSecondProductTens -> {
+                input.toIntOrNull() == ( state.divisor * quotientOnes ) / 10
+            }
+            DivisionPhase.InputSecondProductOnes -> {
+                input.toIntOrNull() == ( state.divisor * quotientOnes ) % 10
             }
             DivisionPhase.InputBorrowedFromDividend -> {
                 input.toIntOrNull() == dividendTens - 1
@@ -104,14 +112,29 @@ class DivisionViewModel : ViewModel() {
             return
         }
 
-        val newInputs = state.inputs.toMutableList()
-        newInputs.add(input)
-        if (state.currentPhaseIndex + 1 >= state.phases.size) return
-        _uiState.value = state.copy(
-            inputs = newInputs,
-            currentPhaseIndex = state.currentPhaseIndex + 1,
-            feedback = null
-        )
+        val newInputs = state.inputs + input
+
+//        newInputs.add(input)
+//        if (state.currentPhaseIndex + 1 >= state.phases.size) return
+//        _uiState.value = state.copy(
+//            inputs = newInputs,
+//            currentPhaseIndex = state.currentPhaseIndex + 1,
+//            feedback = null
+//        )
+        // 다음 단계로 넘어가면 currentInput 초기화!
+        if (state.currentPhaseIndex + 1 >= state.phases.size) {
+            _uiState.value = state.copy(
+                inputs = newInputs,
+                feedback = "정답입니다!"
+            )
+        } else {
+            _uiState.value = state.copy(
+                inputs = newInputs,
+                currentPhaseIndex = state.currentPhaseIndex + 1,
+                feedback = null
+            )
+            currentInput = ""
+        }
     }
 
     private fun buildPhasesFor(pattern: UXPattern): List<DivisionPhase> {
@@ -122,31 +145,60 @@ class DivisionViewModel : ViewModel() {
                 DivisionPhase.InputFirstSubtraction,
                 DivisionPhase.InputBringDown,
                 DivisionPhase.InputQuotientOnes,
-                DivisionPhase.InputSecondProduct,
+                DivisionPhase.InputSecondProductTens,
+                DivisionPhase.InputSecondProductOnes,
                 DivisionPhase.InputSecondSubtraction,
                 DivisionPhase.Complete
             )
+
             UXPattern.B -> listOf(
                 DivisionPhase.InputQuotientTens,
                 DivisionPhase.InputFirstProduct,
                 DivisionPhase.InputFirstSubtraction,
                 DivisionPhase.InputBringDown,
                 DivisionPhase.InputQuotientOnes,
-                DivisionPhase.InputSecondProduct,
+                DivisionPhase.InputSecondProductOnes,
+                DivisionPhase.InputSecondSubtraction,
+                DivisionPhase.Complete
+            )
+
+            UXPattern.C -> listOf(
+                DivisionPhase.InputQuotientTens,
+                DivisionPhase.InputFirstProduct,
+                DivisionPhase.InputFirstSubtraction,
+                DivisionPhase.InputBringDown,
+                DivisionPhase.InputQuotientOnes,
+                DivisionPhase.InputSecondProductTens,
+                DivisionPhase.InputSecondProductOnes,
                 DivisionPhase.InputBorrowedFromFirstSub,
                 DivisionPhase.InputSecondSubtraction,
                 DivisionPhase.Complete
             )
-            UXPattern.C -> listOf(
+
+            UXPattern.D -> listOf(
+                DivisionPhase.InputQuotientTens,
+                DivisionPhase.InputFirstProduct,
+                DivisionPhase.InputFirstSubtraction,
+                DivisionPhase.InputBringDown,
                 DivisionPhase.InputQuotientOnes,
-                DivisionPhase.InputSecondProduct,
+                DivisionPhase.InputSecondProductOnes,
+                DivisionPhase.InputBorrowedFromFirstSub,
+                DivisionPhase.InputSecondSubtraction,
+                DivisionPhase.Complete
+            )
+
+            UXPattern.E -> listOf(
+                DivisionPhase.InputQuotientOnes,
+                DivisionPhase.InputSecondProductTens,
+                DivisionPhase.InputSecondProductOnes,
                 DivisionPhase.InputBorrowedFromDividend,
                 DivisionPhase.InputTotalSubtraction,
                 DivisionPhase.Complete
             )
-            UXPattern.D -> listOf(
+            UXPattern.F -> listOf(
                 DivisionPhase.InputQuotientOnes,
-                DivisionPhase.InputSecondProduct,
+                DivisionPhase.InputSecondProductTens,
+                DivisionPhase.InputSecondProductOnes,
                 DivisionPhase.InputTotalSubtraction,
                 DivisionPhase.Complete
             )
@@ -161,9 +213,9 @@ class DivisionViewModel : ViewModel() {
         if (tens < divisor) {
             val q = dividend / divisor
             if (ones < divisor * q % 10) {
-                return UXPattern.C
+                return UXPattern.E
             } else {
-                return UXPattern.D
+                return UXPattern.F
             }
         }
 
@@ -172,8 +224,8 @@ class DivisionViewModel : ViewModel() {
         val firstSub = tens - firstProduct
         val bringDowned = firstSub * 10 + ones
 
-        println("ones: $ones")
-        println("firstProduct: ${firstProduct}")
+//        println("ones: $ones")
+//        println("firstProduct: ${firstProduct}")
 
         val secondQuotient = bringDowned / divisor
         val secondProduct = secondQuotient * divisor
@@ -181,11 +233,19 @@ class DivisionViewModel : ViewModel() {
 
         val topDigit = bringDowned % 10
         val bottomDigit = secondProduct % 10
+        val hasBorrow = topDigit < bottomDigit
+        val isSecondMultiplyTwoDigits = secondProduct >= 10
 
         return when {
-            topDigit < bottomDigit -> UXPattern.B
-            bringDowned >= divisor -> UXPattern.A
-            else -> UXPattern.A
+            // C: 받아내림 있음, 두자리 곱셈
+            hasBorrow && isSecondMultiplyTwoDigits -> UXPattern.C
+            // D: 받아내림 있음, 일의자리 곱셈만
+            hasBorrow && !isSecondMultiplyTwoDigits -> UXPattern.D
+            // A: 받아내림 없음, 두자리 곱셈
+            !hasBorrow && isSecondMultiplyTwoDigits -> UXPattern.A
+            // B: 받아내림 없음, 일의자리 곱셈만
+            !hasBorrow && !isSecondMultiplyTwoDigits -> UXPattern.B
+            else -> UXPattern.A // fallback (안 맞는 케이스는 A 처리)
         }
     }
 
@@ -207,34 +267,34 @@ class DivisionViewModel : ViewModel() {
 //        println(if (success) "✅ 성공" else "❌ 실패: 완료되지 않음")
 //        return success
 //    }
-
+//
 //    fun runAllTests() {
 //        val all = listOf(
-//            Triple("Pattern B: 93 ÷ 8", 93, 8) to listOf("1", "8", "1", "3", "1", "8", "0", "5"),
-//            Triple("Pattern B: 50 ÷ 3", 50, 3) to listOf("1", "3", "2", "0", "6", "18", "1", "2"),
-//            Triple("Pattern A: 72 ÷ 6", 72, 6) to listOf("1", "6", "1", "2", "2", "12", "0"),
-//            Triple("Pattern A: 85 ÷ 7", 85, 7) to listOf("1", "7", "1", "5", "2", "14", "1"),
-//            Triple("Pattern C: 53 ÷ 6", 53, 6) to listOf("8", "48", "4", "5"),
-//            Triple("Pattern A: 45 ÷ 4", 45, 4) to listOf("1", "4", "0", "5", "1", "4", "1"),
-//            Triple("Pattern A: 86 ÷ 7", 86, 7) to listOf("1", "7", "1", "6", "2", "14", "2"),
+//            Triple("Pattern D: 93 ÷ 8", 93, 8) to listOf("1", "8", "1", "3", "1", "8", "0", "5"),
+//            Triple("Pattern C: 50 ÷ 3", 50, 3) to listOf("1", "3", "2", "0", "6", "1", "8", "1", "2"),
+//            Triple("Pattern A: 72 ÷ 6", 72, 6) to listOf("1", "6", "1", "2", "2", "1", "2", "0"),
+//            Triple("Pattern A: 85 ÷ 7", 85, 7) to listOf("1", "7", "1", "5", "2", "1", "4", "1"),
+//            Triple("Pattern E: 53 ÷ 6", 53, 6) to listOf("8", "4", "8", "4", "5"),
+//            Triple("Pattern B: 45 ÷ 4", 45, 4) to listOf("1", "4", "0", "5", "1", "4", "1"),
+//            Triple("Pattern A: 86 ÷ 7", 86, 7) to listOf("1", "7", "1", "6", "2", "1", "4", "2"),
 //
-//            Triple("Pattern A: 84 ÷ 4", 84, 4) to listOf("2", "8", "0", "4", "1", "4", "0"),
-//            Triple("Pattern C: 62 ÷ 7", 62, 7) to listOf("8", "56", "5", "6"),
-//            Triple("Pattern A: 92 ÷ 7", 92, 7) to listOf("1", "7", "2", "2", "3", "21", "1"),
-//            Triple("Pattern A: 96 ÷ 4", 96, 4) to listOf("2", "8", "1", "6", "4", "16", "0"),
-//            Triple("Pattern D: 12 ÷ 3", 12, 3) to listOf("4", "12", "0"),
-//            Triple("Pattern D: 24 ÷ 7", 24, 7) to listOf("3", "21", "3"),
+//            Triple("Pattern B: 84 ÷ 4", 84, 4) to listOf("2", "8", "0", "4", "1", "4", "0"),
+//            Triple("Pattern E: 62 ÷ 7", 62, 7) to listOf("8", "5", "6", "5", "6"),
+//            Triple("Pattern A: 92 ÷ 7", 92, 7) to listOf("1", "7", "2", "2", "3", "2", "1", "1"),
+//            Triple("Pattern A: 96 ÷ 4", 96, 4) to listOf("2", "8", "1", "6", "4", "1", "6", "0"),
+//            Triple("Pattern F: 12 ÷ 3", 12, 3) to listOf("4", "1", "2", "0"),
+//            Triple("Pattern F: 24 ÷ 7", 24, 7) to listOf("3", "2", "1", "3"),
 //
-//            Triple("Pattern A: 46 ÷ 3", 46, 3) to listOf("1", "3", "1", "6", "5", "15", "1"),
-//            Triple("Pattern B: 71 ÷ 6", 71, 6) to listOf("1", "6", "1", "1", "1", "6", "0", "5"),
-//            Triple("Pattern B: 90 ÷ 8", 90, 8) to listOf("1", "8", "1", "0", "1", "8", "0", "2"),
-//            Triple("Pattern D: 68 ÷ 9", 68, 9) to listOf("7", "63", "5"),
-//            Triple("Pattern D: 54 ÷ 9", 54, 9) to listOf("6", "54", "0"),
-//            Triple("Pattern D: 81 ÷ 9", 81, 9) to listOf("9", "81", "0"),
-//            Triple("Pattern D: 49 ÷ 5", 49, 5) to listOf("9", "45", "4"),
-//            Triple("Pattern A: 74 ÷ 6", 74, 6) to listOf("1", "6", "1", "4", "2", "12", "2"),
-//            Triple("Pattern A: 57 ÷ 5", 57, 5) to listOf("1", "5", "0", "7", "1", "5", "2"),
-//            Triple("Pattern D: 39 ÷ 4", 39, 4) to listOf("9", "36", "3"),
+//            Triple("Pattern A: 46 ÷ 3", 46, 3) to listOf("1", "3", "1", "6", "5", "1", "5", "1"),
+//            Triple("Pattern D: 71 ÷ 6", 71, 6) to listOf("1", "6", "1", "1", "1", "6", "0", "5"),
+//            Triple("Pattern D: 90 ÷ 8", 90, 8) to listOf("1", "8", "1", "0", "1", "8", "0", "2"),
+//            Triple("Pattern F: 68 ÷ 9", 68, 9) to listOf("7", "6", "3", "5"),
+//            Triple("Pattern F: 54 ÷ 9", 54, 9) to listOf("6", "5", "4", "0"),
+//            Triple("Pattern F: 81 ÷ 9", 81, 9) to listOf("9", "8", "1", "0"),
+//            Triple("Pattern F: 49 ÷ 5", 49, 5) to listOf("9", "4", "5", "4"),
+//            Triple("Pattern A: 74 ÷ 6", 74, 6) to listOf("1", "6", "1", "4", "2", "1", "2", "2"),
+//            Triple("Pattern B: 57 ÷ 5", 57, 5) to listOf("1", "5", "0", "7", "1", "5", "2"),
+//            Triple("Pattern F: 39 ÷ 4", 39, 4) to listOf("9", "3", "6", "3"),
 //
 //            )
 //
