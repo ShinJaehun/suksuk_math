@@ -3,7 +3,6 @@ package com.shinjaehun.suksuk.presentation.division
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,28 +14,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -51,6 +43,7 @@ fun DivisionScreen(
     val phasesState by viewModel.uiState.collectAsState()
     val currentInput = viewModel.currentInput
     val uiState = mapPhasesToCells(phasesState, currentInput)  // 변환 함수 사용!
+    val cellWidth = 42.dp
 
     // 단계별 cover visibility - replace with actual uiState flags
 //    val dividendTenCoverVisible = remember { mutableStateOf(false) }
@@ -68,11 +61,14 @@ fun DivisionScreen(
                 .padding(horizontal = 30.dp, vertical = 30.dp)
         ) {
             val (
-                divisorRef, bracketRef, dividendRowRef,
+                divisorRef, dividendTenRef, dividendOneRef,
                 quotientTenRef, quotientOneRef,
                 multiply1Ref, subtract1Ref, bringDownRef,
-                quotient2Ref, multiply2RowRef, remainderRef
+                multiply2TenRef, multiply2OneRef, remainderRef
             ) = createRefs()
+
+            val (dividendTenBorrowRef, subtract1BorrowRef) = createRefs()
+            val (bracketRef, subtract1LineRef, subtract2LineRef) = createRefs()
 
             // Division Bracket
             Image(
@@ -86,171 +82,192 @@ fun DivisionScreen(
                     height = Dimension.value(120.dp)
                 }
             )
-            val dividendString = uiState.dividend.toString().padStart(2, ' ')
-            Row(
-                modifier = Modifier.constrainAs(dividendRowRef) {
-                    top.linkTo(bracketRef.top, margin = 25.dp)
-                    start.linkTo(bracketRef.start, margin = 45.dp)
-                    width = Dimension.wrapContent
-                }
-            ) {
-                dividendString.forEach { digit ->
-                    Text(
-                        text = digit.toString(),
-                        fontSize = 60.sp,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(horizontal = 8.dp)
-                    )
-                }
-            }
 
-            // Divisor
-            Text(
+            // dividend tens
+            NumberText(
+                text = uiState.dividend.toString()[0].toString(),
+                modifier = Modifier
+                    .width(cellWidth)
+                    .padding(horizontal = 8.dp)
+                    .constrainAs(dividendTenRef) {
+                        top.linkTo(bracketRef.top, margin = 40.dp)
+                        start.linkTo(bracketRef.start, margin = 60.dp)
+                    }
+            )
+
+            // dividend tens borrow
+            BorrowText(
+                text = "?",
+                modifier = Modifier
+                    .width(cellWidth)
+                    .padding(horizontal = 8.dp)
+                    .constrainAs(dividendTenBorrowRef) {
+                        start.linkTo(dividendTenRef.start)
+                        bottom.linkTo(dividendTenRef.top)
+                    }
+            )
+
+            // dividend ones
+            NumberText(
+                text = uiState.dividend.toString()[0].toString(),
+                modifier = Modifier
+                    .width(cellWidth)
+                    .padding(horizontal = 8.dp)
+                    .constrainAs(dividendOneRef) {
+                        start.linkTo(dividendTenRef.end)
+                        baseline.linkTo(dividendTenRef.baseline)
+                    }
+            )
+
+            // divisor
+            NumberText(
                 text = uiState.divisor.toString(),
-                fontSize = 60.sp,
-                textAlign = TextAlign.End,
-                modifier = Modifier.constrainAs(divisorRef) {
-                    top.linkTo(dividendRowRef.top)
-                    end.linkTo(bracketRef.start, margin = (-10).dp)
-                    width = Dimension.wrapContent
-                }
+                modifier = Modifier
+                    .width(cellWidth)
+                    .padding(horizontal = 8.dp)
+                    .constrainAs(divisorRef) {
+                        end.linkTo(dividendTenRef.start, margin = 40.dp)
+                        baseline.linkTo(dividendTenRef.baseline)
+                    }
             )
 
             // 몫(십의 자리)
             val cellTen = uiState.quotientCells[0]
-            Text(
-                text = if (cellTen.value.isBlank() && cellTen.editable) "?" else cellTen.value,
-                fontSize = 60.sp,
-                color = when {
-                    cellTen.editable -> Color.Blue
-                    cellTen.correct -> Color.Green
-                    else -> Color.Black
-                },
+            NumberText(
+                text = "?",
                 modifier = Modifier
+                    .width(cellWidth)
                     .padding(horizontal = 8.dp)
                     .constrainAs(quotientTenRef) {
-                        end.linkTo(quotientOneRef.start)
-                        baseline.linkTo(quotientOneRef.baseline)
+                        start.linkTo(dividendTenRef.start)
+                        bottom.linkTo(dividendTenRef.top, margin = 40.dp)
                     }
             )
 
             // 몫(일의 자리)
             val cellOne = uiState.quotientCells[1]
-            Text(
-                text = if (cellOne.value.isBlank() && cellOne.editable) "?" else cellOne.value,
-                fontSize = 60.sp,
-                color = when {
-                    cellOne.editable -> Color.Blue
-                    cellOne.correct -> Color.Green
-                    else -> Color.Black
-                },
+            NumberText(
+                text = "?",
                 modifier = Modifier
+                    .width(cellWidth)
                     .padding(horizontal = 8.dp)
                     .constrainAs(quotientOneRef) {
-                        end.linkTo(dividendRowRef.end)
-                        bottom.linkTo(bracketRef.top, margin = (-2).dp)
+                        start.linkTo(quotientTenRef.end)
+                        baseline.linkTo(quotientTenRef.baseline)
                     }
             )
 
             // 1차 곱셈(7)
             val mul1 = uiState.multiply1Cell
-            Text(
-                text = if (mul1.value.isBlank() && mul1.editable) "?" else mul1.value,
-                fontSize = 36.sp,
-                color = when {
-                    mul1.editable -> Color.Green
-                    mul1.correct -> Color.Green
-                    else -> Color.Black
-                },
+            NumberText(
+                text = "?",
                 modifier = Modifier
+                    .width(cellWidth)
+                    .padding(horizontal = 8.dp)
                     .constrainAs(multiply1Ref) {
-                        top.linkTo(dividendRowRef.bottom, margin = 24.dp)
-                        start.linkTo(dividendRowRef.start)
+                        top.linkTo(dividendTenRef.bottom, margin = 10.dp)
+                        start.linkTo(dividendTenRef.start)
                     }
+            )
+
+            Image(
+                painter = painterResource(id = R.drawable.ic_horizontal_line),
+                contentDescription = "Subtraction Line",
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier.constrainAs(subtract1LineRef) {
+                    top.linkTo(dividendTenRef.bottom, margin = 60.dp)
+                    start.linkTo(dividendTenRef.start, margin = (-10).dp)
+                    width = Dimension.value(100.dp)
+                    height = Dimension.value(4.dp)
+                }
             )
 
             // 1차 뺄셈(2)
             val sub1 = uiState.subtract1Cell
-            Text(
-                text = if (sub1.value.isBlank() && sub1.editable) "?" else sub1.value,
-                fontSize = 36.sp,
-                color = when {
-                    sub1.editable -> Color.Red
-                    sub1.correct -> Color.Green
-                    else -> Color.Black
-                },
+            NumberText(
+                text = "?",
                 modifier = Modifier
+                    .width(cellWidth)
+                    .padding(horizontal = 8.dp)
                     .constrainAs(subtract1Ref) {
-                        top.linkTo(multiply1Ref.bottom, margin = 8.dp)
-                        start.linkTo(multiply1Ref.start)
+                        top.linkTo(dividendTenRef.bottom, margin = 90.dp)
+                        start.linkTo(dividendTenRef.start)
+                    }
+            )
+
+            // first subtraction borrow
+            BorrowText(
+                text = "?",
+                modifier = Modifier
+                    .width(cellWidth)
+                    .padding(horizontal = 8.dp)
+                    .constrainAs(subtract1BorrowRef) {
+                        start.linkTo(subtract1Ref.start)
+                        bottom.linkTo(subtract1Ref.top)
                     }
             )
 
             // bringDown(2), 뺄셈 오른쪽
             val bringDown = uiState.bringDownCell
-            Text(
-                text = if (bringDown.value.isBlank() && bringDown.editable) "?" else bringDown.value,
-                fontSize = 36.sp,
-                color = when {
-                    bringDown.editable -> Color.Magenta
-                    bringDown.correct -> Color.Green
-                    else -> Color.Black
-                },
+            NumberText(
+                text = "?",
                 modifier = Modifier
+                    .width(cellWidth)
                     .padding(horizontal = 8.dp)
                     .constrainAs(bringDownRef) {
-                        top.linkTo(subtract1Ref.top)
-                        start.linkTo(subtract1Ref.end, margin = 16.dp)
+                        start.linkTo(subtract1Ref.end)
+                        baseline.linkTo(subtract1Ref.baseline)
                     }
             )
 
             // 2차 곱셈(21), 두 칸: 22 아래
-            Row(
-                modifier = Modifier.constrainAs(multiply2RowRef) {
-                    top.linkTo(subtract1Ref.bottom, margin = 40.dp)
-                    start.linkTo(subtract1Ref.start)
+            val mul2Ten = uiState.multiply2Ten
+            NumberText(
+                text = "?",
+                modifier = Modifier
+                    .width(cellWidth)
+                    .padding(horizontal = 8.dp)
+                    .constrainAs(multiply2TenRef) {
+                        top.linkTo(dividendTenRef.bottom, margin = 150.dp)
+                        start.linkTo(dividendTenRef.start)
+                    }
+            )
+
+            val mul2One = uiState.multiply2One
+            NumberText(
+                text = "?",
+                modifier = Modifier
+                    .width(cellWidth)
+                    .padding(horizontal = 8.dp)
+                    .constrainAs(multiply2OneRef) {
+                        start.linkTo(multiply2TenRef.end)
+                        baseline.linkTo(multiply2TenRef.baseline)
+                    }
+            )
+
+            Image(
+                painter = painterResource(id = R.drawable.ic_horizontal_line),
+                contentDescription = "Subtraction Line",
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier.constrainAs(subtract2LineRef) {
+                    top.linkTo(dividendTenRef.bottom, margin = 200.dp)
+                    start.linkTo(dividendTenRef.start, margin = (-10).dp)
+                    width = Dimension.value(100.dp)
+                    height = Dimension.value(4.dp)
                 }
-            ) {
-                val mul2Ten = uiState.multiply2Ten
-                val mul2One = uiState.multiply2One
-                Text(
-                    text = if (mul2Ten.value.isBlank() && mul2Ten.editable) "?" else mul2Ten.value,
-                    fontSize = 36.sp,
-                    color = when {
-                        mul2Ten.editable -> Color.Green
-                        mul2Ten.correct -> Color.Green
-                        else -> Color.Black
-                    },
-                    modifier = Modifier.padding(horizontal = 4.dp)
-                )
-                Spacer(Modifier.width(20.dp))
-                Text(
-                    text = if (mul2One.value.isBlank() && mul2One.editable) "?" else mul2One.value,
-                    fontSize = 36.sp,
-                    color = when {
-                        mul2One.editable -> Color.Green
-                        mul2One.correct -> Color.Green
-                        else -> Color.Black
-                    },
-                    modifier = Modifier.padding(horizontal = 4.dp)
-                )
-            }
+            )
+
 
             // 나머지(1) 한 칸만!
             val remainderCell = uiState.remainderCell
-            Text(
-                text = if (remainderCell.value.isBlank() && remainderCell.editable) "?" else remainderCell.value,
-                fontSize = 36.sp,
-                color = when {
-                    remainderCell.editable -> Color.Magenta
-                    remainderCell.correct -> Color.Green
-                    else -> Color.Black
-                },
+            NumberText(
+                text = "?",
                 modifier = Modifier
+                    .width(cellWidth)
                     .padding(horizontal = 8.dp)
                     .constrainAs(remainderRef) {
-                        top.linkTo(multiply2RowRef.bottom, margin = 20.dp)
-                        start.linkTo(multiply2RowRef.start, margin = 16.dp)
+                        top.linkTo(dividendTenRef.bottom, margin = 220.dp)
+                        start.linkTo(dividendOneRef.start)
                     }
             )
         }
@@ -278,6 +295,40 @@ fun DivisionScreen(
             }
         }
     }
+}
+
+@Composable
+fun NumberText(
+    text: String,
+    color: Color = Color.Black,
+    fontSize: TextUnit = 40.sp,
+    width: Dp = 42.dp,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = text,
+        fontSize = fontSize,
+        textAlign = TextAlign.Center,
+        color = color,
+        modifier = modifier.width(width)
+    )
+}
+
+@Composable
+fun BorrowText(
+    text: String,
+    color: Color = Color.Black,
+    fontSize: TextUnit = 20.sp,
+    width: Dp = 42.dp,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = text,
+        fontSize = fontSize,
+        color = color,
+        textAlign = TextAlign.Center,
+        modifier = modifier.width(width)
+    )
 }
 
 @Composable
@@ -313,9 +364,8 @@ fun CircleButton(label: String, onClick: () -> Unit) {
     }
 }
 
-// Preview for Divide21Screen
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewDivisionStageScreen() {
-//    DivisionScreen()
-//}
+@Preview(showBackground = true)
+@Composable
+fun PreviewDivisionStageScreen() {
+    DivisionScreen()
+}
