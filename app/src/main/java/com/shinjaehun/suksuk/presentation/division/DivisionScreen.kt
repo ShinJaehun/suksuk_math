@@ -97,8 +97,9 @@ fun DivisionScreen(
             )
 
             // dividend tens borrow
+            val dividendTensBorrowCell = uiState.dividendTensBorrow
             BorrowText(
-                text = "?",
+                cell = dividendTensBorrowCell,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
@@ -199,8 +200,9 @@ fun DivisionScreen(
             )
 
             // first subtraction borrow
+            val subtract1BorrowCell = uiState.subtract1Borrow
             BorrowText(
-                text = "?",
+                cell = subtract1BorrowCell,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
@@ -324,16 +326,21 @@ fun NumberText(
 
 @Composable
 fun BorrowText(
-    text: String,
-    color: Color = Color.Black,
+    cell: InputCell,
+    defaultColor: Color = Color.Black,
     fontSize: TextUnit = 20.sp,
     width: Dp = 42.dp,
     modifier: Modifier = Modifier
 ) {
+    val textColor = when (cell.highlight) {
+        Highlight.Editing -> Color.Red
+        Highlight.Related -> Color(0xFF1976D2) // 파란색 (Material blue)
+        else -> defaultColor
+    }
     Text(
-        text = text,
+        text = cell.value,
         fontSize = fontSize,
-        color = color,
+        color = textColor,
         textAlign = TextAlign.Center,
         modifier = modifier.width(width)
     )

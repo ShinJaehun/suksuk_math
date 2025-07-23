@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlin.text.toIntOrNull
-
 class DivisionViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(DivisionPhasesState(0, 0))
     val uiState: StateFlow<DivisionPhasesState> = _uiState
@@ -23,7 +22,9 @@ class DivisionViewModel : ViewModel() {
 //    }
 
     init {
-        startNewProblem(85, 7) // Pattern A
+//        startNewProblem(85, 7) // Pattern A
+//        startNewProblem(93, 8) // Pattern C
+        startNewProblem(50, 3) // Pattern C
     }
 
     fun startNewProblem(dividend: Int, divisor: Int) {
@@ -246,6 +247,7 @@ class DivisionViewModel : ViewModel() {
             else -> UXPattern.A // fallback (안 맞는 케이스는 A 처리)
         }
     }
+
 
 //    fun testExample(name: String, dividend: Int, divisor: Int, expectedInputs: List<String>): Boolean {
 //        val pattern = detectPattern(dividend, divisor)

@@ -77,7 +77,7 @@ data class DivisionUiState(
     val multiply2Tens: InputCell = InputCell(),
     val multiply2Ones: InputCell = InputCell(),
     val remainder: InputCell = InputCell(),
-    val dividendTenBorrow: InputCell = InputCell(),
+    val dividendTensBorrow: InputCell = InputCell(),
     val subtract1Borrow: InputCell = InputCell(),
     val stage: Int = 0,
     val feedback: String? = null
