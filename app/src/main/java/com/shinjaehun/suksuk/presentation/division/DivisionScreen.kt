@@ -63,7 +63,7 @@ fun DivisionScreen(
             val (
                 divisorRef, dividendTensRef, dividendOnesRef,
                 quotientTensRef, quotientOnesRef,
-                multiply1Ref, subtract1Ref, bringDownRef,
+                multiply1TensRef, multiply1OnesRef, subtract1TensRef, subtract1OnesRef,
                 multiply2TensRef, multiply2OnesRef, remainderRef
             ) = createRefs()
 
@@ -97,7 +97,7 @@ fun DivisionScreen(
             )
 
             // dividend tens borrow
-            val dividendTensBorrowCell = uiState.dividendTensBorrow
+            val dividendTensBorrowCell = uiState.borrowDividendTens
             BorrowText(
                 cell = dividendTensBorrowCell,
                 modifier = Modifier
@@ -162,15 +162,27 @@ fun DivisionScreen(
             )
 
             // 1차 곱셈(7)
-            val multiply1Cell = uiState.multiply1
+            val multiply1TensCell = uiState.multiply1Tens
             NumberText(
-                cell = multiply1Cell,
+                cell = multiply1TensCell,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
-                    .constrainAs(multiply1Ref) {
+                    .constrainAs(multiply1TensRef) {
                         top.linkTo(dividendTensRef.bottom, margin = 10.dp)
                         start.linkTo(dividendTensRef.start)
+                    }
+            )
+
+            val multiply1OnesCell = uiState.multiply1Ones
+            NumberText(
+                cell = multiply1OnesCell,
+                modifier = Modifier
+                    .width(cellWidth)
+                    .padding(horizontal = 8.dp)
+                    .constrainAs(multiply1OnesRef) {
+                        start.linkTo(multiply1TensRef.end)
+                        baseline.linkTo(multiply1TensRef.baseline)
                     }
             )
 
@@ -187,41 +199,41 @@ fun DivisionScreen(
             )
 
             // 1차 뺄셈(2)
-            val subtract1Cell = uiState.subtract1
+            val subtract1Cell = uiState.subtract1Tens
             NumberText(
                 cell = subtract1Cell,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
-                    .constrainAs(subtract1Ref) {
+                    .constrainAs(subtract1TensRef) {
                         top.linkTo(dividendTensRef.bottom, margin = 90.dp)
                         start.linkTo(dividendTensRef.start)
                     }
             )
 
             // first subtraction borrow
-            val subtract1BorrowCell = uiState.subtract1Borrow
+            val subtract1BorrowCell = uiState.borrowSubtract1Tens
             BorrowText(
                 cell = subtract1BorrowCell,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
                     .constrainAs(subtract1BorrowRef) {
-                        start.linkTo(subtract1Ref.start)
-                        bottom.linkTo(subtract1Ref.top)
+                        start.linkTo(subtract1TensRef.start)
+                        bottom.linkTo(subtract1TensRef.top)
                     }
             )
 
             // bringDown(2), 뺄셈 오른쪽
-            val bringDownCell = uiState.bringDown
+            val bringDownCell = uiState.subtract1Ones
             NumberText(
                 cell = bringDownCell,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
-                    .constrainAs(bringDownRef) {
-                        start.linkTo(subtract1Ref.end)
-                        baseline.linkTo(subtract1Ref.baseline)
+                    .constrainAs(subtract1OnesRef) {
+                        start.linkTo(subtract1TensRef.end)
+                        baseline.linkTo(subtract1TensRef.baseline)
                     }
             )
 
@@ -264,7 +276,7 @@ fun DivisionScreen(
 
 
             // 나머지(1) 한 칸만!
-            val remainderCell = uiState.remainder
+            val remainderCell = uiState.remainderOnes
             NumberText(
                 cell = remainderCell,
                 modifier = Modifier

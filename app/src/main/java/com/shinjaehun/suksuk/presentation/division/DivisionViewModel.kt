@@ -23,8 +23,11 @@ class DivisionViewModel : ViewModel() {
 
     init {
 //        startNewProblem(85, 7) // Pattern A
-//        startNewProblem(93, 8) // Pattern C
-        startNewProblem(50, 3) // Pattern C
+//        startNewProblem(45, 4) // Pattern B // sub1이 0인데 입력 후에 공백으로 처리?
+//        startNewProblem(84, 4) // Pattern B
+//        startNewProblem(50, 3) // Pattern C // borrow 입력 후 borrow 취소선 적용 + 일의 자리 위에 10 보여주기
+//        startNewProblem(93, 8) // Pattern D // 혹시 borrow하려는 cell이 10이면 굳이 1 대신 0을 입력할 필요 없이 뺄셈 진행?
+        startNewProblem(62, 7) // Pattern E
     }
 
     fun startNewProblem(dividend: Int, divisor: Int) {
@@ -73,34 +76,37 @@ class DivisionViewModel : ViewModel() {
             DivisionPhase.InputQuotientTens -> {
                 input.toIntOrNull() == dividendTens / state.divisor
             }
-            DivisionPhase.InputFirstProduct -> {
+            DivisionPhase.InputMultiply1Tens -> {
                 input.toIntOrNull() == firstProduct
             }
-            DivisionPhase.InputFirstSubtraction -> {
+            DivisionPhase.InputMultiply1Ones -> {
+                input.toIntOrNull() == firstProduct /////////////////////////////////////////////////////
+            }
+            DivisionPhase.InputSubtract1Tens -> {
                 input.toIntOrNull() == dividendTens - firstProduct
             }
-            DivisionPhase.InputSecondSubtraction -> {
+            DivisionPhase.InputRemainderOnes -> {
                 input.toIntOrNull() == firstSubtractionResult - state.divisor * quotientOnes
             }
             DivisionPhase.InputTotalSubtraction -> {
                 input.toIntOrNull() == state.dividend - quotient * state.divisor
             }
-            DivisionPhase.InputBringDown -> {
+            DivisionPhase.InputSubtract1Ones -> {
                 input.toIntOrNull() == dividendOnes
             }
             DivisionPhase.InputQuotientOnes -> {
                 input.toIntOrNull() == quotientOnes
             }
-            DivisionPhase.InputSecondProductTens -> {
+            DivisionPhase.InputMultiply2Tens -> {
                 input.toIntOrNull() == ( state.divisor * quotientOnes ) / 10
             }
-            DivisionPhase.InputSecondProductOnes -> {
+            DivisionPhase.InputMultiply2Ones -> {
                 input.toIntOrNull() == ( state.divisor * quotientOnes ) % 10
             }
-            DivisionPhase.InputBorrowedFromDividend -> {
+            DivisionPhase.InputBorrowFromDividendTens -> {
                 input.toIntOrNull() == dividendTens - 1
             }
-            DivisionPhase.InputBorrowedFromFirstSub -> {
+            DivisionPhase.InputBorrowFromSubtract1Tens -> {
                 input.toIntOrNull() == firstSubtractionResult / 10 - 1
             }
             DivisionPhase.Complete -> false
@@ -140,64 +146,64 @@ class DivisionViewModel : ViewModel() {
         return when (pattern) {
             UXPattern.A -> listOf(
                 DivisionPhase.InputQuotientTens,
-                DivisionPhase.InputFirstProduct,
-                DivisionPhase.InputFirstSubtraction,
-                DivisionPhase.InputBringDown,
+                DivisionPhase.InputMultiply1Tens,
+                DivisionPhase.InputSubtract1Tens,
+                DivisionPhase.InputSubtract1Ones,
                 DivisionPhase.InputQuotientOnes,
-                DivisionPhase.InputSecondProductTens,
-                DivisionPhase.InputSecondProductOnes,
-                DivisionPhase.InputSecondSubtraction,
+                DivisionPhase.InputMultiply2Tens,
+                DivisionPhase.InputMultiply2Ones,
+                DivisionPhase.InputRemainderOnes,
                 DivisionPhase.Complete
             )
 
             UXPattern.B -> listOf(
                 DivisionPhase.InputQuotientTens,
-                DivisionPhase.InputFirstProduct,
-                DivisionPhase.InputFirstSubtraction,
-                DivisionPhase.InputBringDown,
+                DivisionPhase.InputMultiply1Tens,
+                DivisionPhase.InputSubtract1Tens,
+                DivisionPhase.InputSubtract1Ones,
                 DivisionPhase.InputQuotientOnes,
-                DivisionPhase.InputSecondProductOnes,
-                DivisionPhase.InputSecondSubtraction,
+                DivisionPhase.InputMultiply2Ones,
+                DivisionPhase.InputRemainderOnes,
                 DivisionPhase.Complete
             )
 
             UXPattern.C -> listOf(
                 DivisionPhase.InputQuotientTens,
-                DivisionPhase.InputFirstProduct,
-                DivisionPhase.InputFirstSubtraction,
-                DivisionPhase.InputBringDown,
+                DivisionPhase.InputMultiply1Tens,
+                DivisionPhase.InputSubtract1Tens,
+                DivisionPhase.InputSubtract1Ones,
                 DivisionPhase.InputQuotientOnes,
-                DivisionPhase.InputSecondProductTens,
-                DivisionPhase.InputSecondProductOnes,
-                DivisionPhase.InputBorrowedFromFirstSub,
-                DivisionPhase.InputSecondSubtraction,
+                DivisionPhase.InputMultiply2Tens,
+                DivisionPhase.InputMultiply2Ones,
+                DivisionPhase.InputBorrowFromSubtract1Tens,
+                DivisionPhase.InputRemainderOnes,
                 DivisionPhase.Complete
             )
 
             UXPattern.D -> listOf(
                 DivisionPhase.InputQuotientTens,
-                DivisionPhase.InputFirstProduct,
-                DivisionPhase.InputFirstSubtraction,
-                DivisionPhase.InputBringDown,
+                DivisionPhase.InputMultiply1Tens,
+                DivisionPhase.InputSubtract1Tens,
+                DivisionPhase.InputSubtract1Ones,
                 DivisionPhase.InputQuotientOnes,
-                DivisionPhase.InputSecondProductOnes,
-                DivisionPhase.InputBorrowedFromFirstSub,
-                DivisionPhase.InputSecondSubtraction,
+                DivisionPhase.InputMultiply2Ones,
+                DivisionPhase.InputBorrowFromSubtract1Tens,
+                DivisionPhase.InputRemainderOnes,
                 DivisionPhase.Complete
             )
 
             UXPattern.E -> listOf(
                 DivisionPhase.InputQuotientOnes,
-                DivisionPhase.InputSecondProductTens,
-                DivisionPhase.InputSecondProductOnes,
-                DivisionPhase.InputBorrowedFromDividend,
+                DivisionPhase.InputMultiply1Tens,
+                DivisionPhase.InputMultiply1Ones,
+                DivisionPhase.InputBorrowFromDividendTens,
                 DivisionPhase.InputTotalSubtraction,
                 DivisionPhase.Complete
             )
             UXPattern.F -> listOf(
                 DivisionPhase.InputQuotientOnes,
-                DivisionPhase.InputSecondProductTens,
-                DivisionPhase.InputSecondProductOnes,
+                DivisionPhase.InputMultiply1Tens,
+                DivisionPhase.InputMultiply1Ones,
                 DivisionPhase.InputTotalSubtraction,
                 DivisionPhase.Complete
             )

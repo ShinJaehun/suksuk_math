@@ -25,17 +25,18 @@ package com.shinjaehun.suksuk.presentation.division
 // 상태 패턴 정의
 sealed interface DivisionPhase {
     object InputQuotientTens : DivisionPhase
-    object InputFirstProduct : DivisionPhase
-    object InputBringDown : DivisionPhase
-    object InputSecondProductTens : DivisionPhase
-    object InputSecondProductOnes : DivisionPhase
     object InputQuotientOnes : DivisionPhase
-    object Complete : DivisionPhase
-    object InputFirstSubtraction : DivisionPhase
-    object InputSecondSubtraction : DivisionPhase
+    object InputMultiply1Tens : DivisionPhase
+    object InputMultiply1Ones : DivisionPhase
+    object InputMultiply2Tens : DivisionPhase
+    object InputMultiply2Ones : DivisionPhase
+    object InputSubtract1Tens : DivisionPhase
+    object InputSubtract1Ones : DivisionPhase
+    object InputRemainderOnes : DivisionPhase
     object InputTotalSubtraction : DivisionPhase
-    object InputBorrowedFromDividend : DivisionPhase
-    object InputBorrowedFromFirstSub : DivisionPhase
+    object InputBorrowFromDividendTens : DivisionPhase ///////////////////////
+    object InputBorrowFromSubtract1Tens : DivisionPhase
+    object Complete : DivisionPhase
 }
 
 data class DivisionPhasesState(
@@ -71,14 +72,15 @@ data class DivisionUiState(
     val dividendOnes: InputCell = InputCell(),
     val quotientTens: InputCell = InputCell(),
     val quotientOnes: InputCell = InputCell(),
-    val multiply1: InputCell = InputCell(),
-    val subtract1: InputCell = InputCell(),
-    val bringDown: InputCell = InputCell(),
+    val multiply1Tens: InputCell = InputCell(),
+    val multiply1Ones: InputCell = InputCell(),
+    val subtract1Tens: InputCell = InputCell(),
+    val subtract1Ones: InputCell = InputCell(),
     val multiply2Tens: InputCell = InputCell(),
     val multiply2Ones: InputCell = InputCell(),
-    val remainder: InputCell = InputCell(),
-    val dividendTensBorrow: InputCell = InputCell(),
-    val subtract1Borrow: InputCell = InputCell(),
+    val remainderOnes: InputCell = InputCell(),
+    val borrowDividendTens: InputCell = InputCell(),
+    val borrowSubtract1Tens: InputCell = InputCell(),
     val stage: Int = 0,
     val feedback: String? = null
 )
