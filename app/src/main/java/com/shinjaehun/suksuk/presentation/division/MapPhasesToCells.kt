@@ -23,11 +23,28 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
         else -> emptyList()
     }
 
-    fun cellValue(idx: Int, editing: Boolean): String =
-        if (editing)
-            if (currentInput.isEmpty()) "?" else currentInput
-        else
-            inputs.getOrNull(idx) ?: ""
+//    fun cellValue(idx: Int, editing: Boolean): String =
+//        if (editing)
+//            if (currentInput.isEmpty()) "?" else currentInput
+//        else
+//            inputs.getOrNull(idx) ?: ""
+
+    fun cellValue(idx: Int, editable: Boolean): String {
+        val input = state.inputs.getOrNull(idx)
+        val phaseForIdx = state.phases.getOrNull(idx)
+
+        return when {
+            input != null -> {
+                // 입력된 값이 있는 경우
+                if (phaseForIdx == DivisionPhase.InputSubtract1Tens && input == "0") "" else input
+            }
+            editable -> {
+                // 입력 중이지만 아직 입력이 없으면 "?" 또는 currentInput
+                if (currentInput.isEmpty()) "?" else currentInput
+            }
+            else -> ""
+        }
+    }
 
     // phase별로 몇 번째 입력값인지 미리 정해둠(패턴마다 phase, 입력 순서가 1:1)
     // 편의상 phase index를 각 칸에 할당!
@@ -49,7 +66,7 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
         idx: Int,
         editing: Boolean,
         editable: Boolean = editing,
-        crossedOut: Boolean = false
+        crossedOut: Boolean = false,
     ) = InputCell(
         value = cellValue(idx, editing && !isComplete),
         editable = editable,
@@ -95,39 +112,71 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
             value = dividendStr[1].toString(),
             highlight = if ("dividendOnes" in relatedCells) Highlight.Related else Highlight.None
         ),
-        borrowed10DividendOnes = makeFixedCell("borrowed10DividendOnes", hasBorrowedFromDividend, "10"),
-        quotientTens   = makeCell("quotientTens", quotientTensIdx, phase == DivisionPhase.InputQuotientTens),
-        multiply1Tens      = makeCell(
-            "multiply1Tens",
-            multiply1TensIdx,
-            phase == DivisionPhase.InputMultiply1 || phase == DivisionPhase.InputMultiply1Tens
+        borrowed10DividendOnes = makeFixedCell(
+            name = "borrowed10DividendOnes",
+            show = hasBorrowedFromDividend,
+            value = "10"
         ),
-        multiply1Ones      = makeCell("multiply1Ones", multiply1OnesIdx, phase == DivisionPhase.InputMultiply1Ones),
-        subtract1Tens      = makeCell(
-            "subtract1Tens",
-            subtract1TensIdx,
-            phase == DivisionPhase.InputSubtract1Tens,
+        quotientTens = makeCell(
+            name = "quotientTens",
+            idx = quotientTensIdx,
+            editing = phase == DivisionPhase.InputQuotientTens
+        ),
+        multiply1Tens = makeCell(
+            name = "multiply1Tens",
+            idx = multiply1TensIdx,
+            editing = phase == DivisionPhase.InputMultiply1 || phase == DivisionPhase.InputMultiply1Tens
+        ),
+        multiply1Ones = makeCell(
+            name = "multiply1Ones",
+            idx = multiply1OnesIdx,
+            editing = phase == DivisionPhase.InputMultiply1Ones
+        ),
+        subtract1Tens = makeCell(
+            name = "subtract1Tens",
+            idx = subtract1TensIdx,
+            editing = phase == DivisionPhase.InputSubtract1Tens,
             crossedOut = hasBorrowedFromSub1
         ),
-        subtract1Ones      = makeCell(
-            "subtract1Ones",
-            subtract1OnesIdx,
-            phase == DivisionPhase.InputSubtract1 || phase == DivisionPhase.InputSubtract1Ones,
+        subtract1Ones = makeCell(
+            name = "subtract1Ones",
+            idx = subtract1OnesIdx,
+            editing = phase == DivisionPhase.InputSubtract1 || phase == DivisionPhase.InputSubtract1Ones
         ),
-        borrowed10Subtract1Ones = makeFixedCell("borrowed10Subtract1Ones", hasBorrowedFromSub1, "10"),
-        quotientOnes   = makeCell("quotientOnes", quotientOnesIdx, phase == DivisionPhase.InputQuotientOnes),
-        multiply2Tens  = makeCell("multiply2Tens", multiply2TensIdx, phase == DivisionPhase.InputMultiply2Tens),
-        multiply2Ones  = makeCell("multiply2Ones", multiply2OnesIdx, phase == DivisionPhase.InputMultiply2Ones),
-        subtract2Ones      = makeCell("subtract2Ones", subtract2OnesIdx, phase == DivisionPhase.InputSubtract2Ones),
+        borrowed10Subtract1Ones = makeFixedCell(
+            name = "borrowed10Subtract1Ones",
+            show = hasBorrowedFromSub1,
+            value = "10"
+        ),
+        quotientOnes = makeCell(
+            name = "quotientOnes",
+            idx = quotientOnesIdx,
+            editing = phase == DivisionPhase.InputQuotientOnes
+        ),
+        multiply2Tens = makeCell(
+            name = "multiply2Tens",
+            idx = multiply2TensIdx,
+            editing = phase == DivisionPhase.InputMultiply2Tens
+        ),
+        multiply2Ones = makeCell(
+            name = "multiply2Ones",
+            idx = multiply2OnesIdx,
+            editing = phase == DivisionPhase.InputMultiply2Ones
+        ),
+        subtract2Ones = makeCell(
+            name = "subtract2Ones",
+            idx = subtract2OnesIdx,
+            editing = phase == DivisionPhase.InputSubtract2Ones
+        ),
         borrowDividendTens = makeCell(
-            "dividendTensBorrow",
-            borrowedFromDividendIdx,
-            phase == DivisionPhase.InputBorrowFromDividendTens
+            name = "dividendTensBorrow",
+            idx = borrowedFromDividendIdx,
+            editing = phase == DivisionPhase.InputBorrowFromDividendTens
         ),
-        borrowSubtract1Tens   = makeCell(
-            "subtract1Borrow",
-            borrowedFromSubIdx,
-            phase == DivisionPhase.InputBorrowFromSubtract1Tens
+        borrowSubtract1Tens = makeCell(
+            name = "subtract1Borrow",
+            idx = borrowedFromSubIdx,
+            editing = phase == DivisionPhase.InputBorrowFromSubtract1Tens
         ),
         stage = state.currentPhaseIndex,
         feedback = state.feedback
