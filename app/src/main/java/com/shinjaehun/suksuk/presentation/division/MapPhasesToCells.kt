@@ -11,13 +11,13 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
         DivisionPhase.InputMultiply1 -> listOf("divisor", "quotientTens")
         DivisionPhase.InputMultiply1Tens      -> listOf("divisor", "quotientOnes")
         DivisionPhase.InputMultiply1Ones      -> listOf("divisor", "quotientOnes")
-        DivisionPhase.InputSubtract1 -> listOf("dividendOnes", "multiply1Ones", "dividendTensBorrow")
+        DivisionPhase.InputSubtract1 -> listOf("dividendOnes", "multiply1Ones", "borrowed10DividendOnes")
         DivisionPhase.InputSubtract1Tens  -> listOf("dividendTens", "multiply1Tens")
         DivisionPhase.InputSubtract1Ones         -> listOf("dividendOnes")
         DivisionPhase.InputQuotientOnes      -> listOf("divisor", "subtract1Tens", "subtract1Ones")
         DivisionPhase.InputMultiply2Tens -> listOf("divisor", "subtract1Tens", "subtract1Ones")
         DivisionPhase.InputMultiply2Ones -> listOf("divisor", "subtract1Tens", "subtract1Ones")
-        DivisionPhase.InputSubtract2Ones -> listOf("subtract1Ones", "multiply2Ones", "subtract1Borrow")
+        DivisionPhase.InputSubtract2Ones -> listOf("subtract1Ones", "multiply2Ones", "borrowed10Subtract1Ones")
         DivisionPhase.InputBorrowFromSubtract1Tens -> listOf("subtract1Tens")
         DivisionPhase.InputBorrowFromDividendTens -> listOf("dividendTens")
         else -> emptyList()
@@ -39,7 +39,7 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
     val quotientOnesIdx      = state.phases.indexOfFirst { it == DivisionPhase.InputQuotientOnes }
     val multiply2TensIdx     = state.phases.indexOfFirst { it == DivisionPhase.InputMultiply2Tens }
     val multiply2OnesIdx     = state.phases.indexOfFirst { it == DivisionPhase.InputMultiply2Ones }
-    val borrowedFromFirstSubIdx = state.phases.indexOfFirst { it == DivisionPhase.InputBorrowFromSubtract1Tens }
+    val borrowedFromSubIdx = state.phases.indexOfFirst { it == DivisionPhase.InputBorrowFromSubtract1Tens }
     val borrowedFromDividendIdx = state.phases.indexOfFirst { it == DivisionPhase.InputBorrowFromDividendTens }
     val subtract2OnesIdx         = state.phases.indexOfFirst { it == DivisionPhase.InputSubtract2Ones }
 
@@ -48,7 +48,8 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
         name: String,
         idx: Int,
         editing: Boolean,
-        editable: Boolean = editing
+        editable: Boolean = editing,
+        crossedOut: Boolean = false
     ) = InputCell(
         value = cellValue(idx, editing && !isComplete),
         editable = editable,
@@ -56,11 +57,29 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
             editing && !isComplete -> Highlight.Editing
             name in relatedCells -> Highlight.Related
             else -> Highlight.None
-        }
+        },
+        isCrossedOut = crossedOut
     )
+
+    fun makeFixedCell(
+        name: String,
+        show: Boolean,
+        value: String
+    ): InputCell {
+        return if (show)
+            InputCell(
+                value = value,
+                highlight = if (name in relatedCells) Highlight.Related else Highlight.None
+            )
+        else
+            InputCell()
+    }
 
     // dividend, divisor는 입력 가능성이 없으므로 value만 별도 처리
     val dividendStr = state.dividend.toString().padStart(2, '0')
+
+    val hasBorrowedFromDividend = state.inputs.getOrNull(borrowedFromDividendIdx) != null
+    val hasBorrowedFromSub1 = state.inputs.getOrNull(borrowedFromSubIdx) != null
 
     return DivisionUiState(
         divisor = InputCell(
@@ -69,12 +88,14 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
         ),
         dividendTens = InputCell(
             value = dividendStr[0].toString(),
-            highlight = if ("dividendTens" in relatedCells) Highlight.Related else Highlight.None
+            highlight = if ("dividendTens" in relatedCells) Highlight.Related else Highlight.None,
+            isCrossedOut = hasBorrowedFromDividend
         ),
         dividendOnes = InputCell(
             value = dividendStr[1].toString(),
             highlight = if ("dividendOnes" in relatedCells) Highlight.Related else Highlight.None
         ),
+        borrowed10DividendOnes = makeFixedCell("borrowed10DividendOnes", hasBorrowedFromDividend, "10"),
         quotientTens   = makeCell("quotientTens", quotientTensIdx, phase == DivisionPhase.InputQuotientTens),
         multiply1Tens      = makeCell(
             "multiply1Tens",
@@ -82,18 +103,32 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
             phase == DivisionPhase.InputMultiply1 || phase == DivisionPhase.InputMultiply1Tens
         ),
         multiply1Ones      = makeCell("multiply1Ones", multiply1OnesIdx, phase == DivisionPhase.InputMultiply1Ones),
-        subtract1Tens      = makeCell("subtract1Tens", subtract1TensIdx, phase == DivisionPhase.InputSubtract1Tens),
+        subtract1Tens      = makeCell(
+            "subtract1Tens",
+            subtract1TensIdx,
+            phase == DivisionPhase.InputSubtract1Tens,
+            crossedOut = hasBorrowedFromSub1
+        ),
         subtract1Ones      = makeCell(
             "subtract1Ones",
             subtract1OnesIdx,
-            phase == DivisionPhase.InputSubtract1 || phase == DivisionPhase.InputSubtract1Ones
+            phase == DivisionPhase.InputSubtract1 || phase == DivisionPhase.InputSubtract1Ones,
         ),
+        borrowed10Subtract1Ones = makeFixedCell("borrowed10Subtract1Ones", hasBorrowedFromSub1, "10"),
         quotientOnes   = makeCell("quotientOnes", quotientOnesIdx, phase == DivisionPhase.InputQuotientOnes),
         multiply2Tens  = makeCell("multiply2Tens", multiply2TensIdx, phase == DivisionPhase.InputMultiply2Tens),
         multiply2Ones  = makeCell("multiply2Ones", multiply2OnesIdx, phase == DivisionPhase.InputMultiply2Ones),
         subtract2Ones      = makeCell("subtract2Ones", subtract2OnesIdx, phase == DivisionPhase.InputSubtract2Ones),
-        borrowDividendTens = makeCell("dividendTensBorrow", borrowedFromDividendIdx, phase == DivisionPhase.InputBorrowFromDividendTens),
-        borrowSubtract1Tens   = makeCell("subtract1Borrow", borrowedFromFirstSubIdx, phase == DivisionPhase.InputBorrowFromSubtract1Tens),
+        borrowDividendTens = makeCell(
+            "dividendTensBorrow",
+            borrowedFromDividendIdx,
+            phase == DivisionPhase.InputBorrowFromDividendTens
+        ),
+        borrowSubtract1Tens   = makeCell(
+            "subtract1Borrow",
+            borrowedFromSubIdx,
+            phase == DivisionPhase.InputBorrowFromSubtract1Tens
+        ),
         stage = state.currentPhaseIndex,
         feedback = state.feedback
     )

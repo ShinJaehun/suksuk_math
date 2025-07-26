@@ -68,7 +68,10 @@ fun DivisionScreen(
                 multiply2TensRef, multiply2OnesRef, remainderRef
             ) = createRefs()
 
-            val (dividendTenBorrowRef, subtract1BorrowRef) = createRefs()
+            val (
+                dividendTenBorrowRef, subtract1BorrowRef,
+                dividendOnesBorrowed10Ref, subtract1OnesBorrowed10Ref
+            ) = createRefs()
             val (bracketRef, subtract1LineRef, subtract2LineRef) = createRefs()
 
             // Division Bracket
@@ -121,6 +124,19 @@ fun DivisionScreen(
                         start.linkTo(dividendTensRef.end)
                         baseline.linkTo(dividendTensRef.baseline)
                     }
+            )
+
+            val dividendOnesBorrowed10Cell = uiState.borrowed10DividendOnes
+            BorrowText(
+                cell = dividendOnesBorrowed10Cell,
+                modifier = Modifier
+                    .width(cellWidth)
+                    .padding(horizontal = 8.dp)
+                    .constrainAs(dividendOnesBorrowed10Ref) {
+                        start.linkTo(dividendOnesRef.start)
+                        bottom.linkTo(dividendOnesRef.top)
+                    }
+                    .testTag("borrowed-dividend-cell")
             )
 
             // divisor
@@ -200,9 +216,9 @@ fun DivisionScreen(
             )
 
             // 1차 뺄셈(2)
-            val subtract1Cell = uiState.subtract1Tens
+            val subtract1TensCell = uiState.subtract1Tens
             NumberText(
-                cell = subtract1Cell,
+                cell = subtract1TensCell,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
@@ -226,9 +242,9 @@ fun DivisionScreen(
             )
 
             // bringDown(2), 뺄셈 오른쪽
-            val bringDownCell = uiState.subtract1Ones
+            val subtract1OnesCell = uiState.subtract1Ones
             NumberText(
-                cell = bringDownCell,
+                cell = subtract1OnesCell,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
@@ -236,6 +252,19 @@ fun DivisionScreen(
                         start.linkTo(subtract1TensRef.end)
                         baseline.linkTo(subtract1TensRef.baseline)
                     }
+            )
+
+            val subtract1Borrowed10Cell = uiState.borrowed10Subtract1Ones
+            BorrowText(
+                cell = subtract1Borrowed10Cell,
+                modifier = Modifier
+                    .width(cellWidth)
+                    .padding(horizontal = 8.dp)
+                    .constrainAs(subtract1OnesBorrowed10Ref) {
+                        start.linkTo(subtract1OnesRef.start)
+                        bottom.linkTo(subtract1OnesRef.top)
+                    }
+                    .testTag("borrowed-sub1-cell")
             )
 
             // 2차 곱셈(21), 두 칸: 22 아래
@@ -331,13 +360,28 @@ fun NumberText(
         Highlight.Related -> Color(0xFF1976D2) // 파란색 (Material blue)
         else -> defaultColor
     }
-    Text(
-        text = cell.value,
-        fontSize = fontSize,
-        textAlign = TextAlign.Center,
-        color = textColor,
-        modifier = modifier.width(width)
-    )
+
+    Box(
+        modifier = modifier.width(width),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = cell.value,
+            fontSize = fontSize,
+            color = textColor,
+            textAlign = TextAlign.Center,
+        )
+
+        if (cell.isCrossedOut) {
+            Image(
+                painter = painterResource(R.drawable.ic_strikethrough_line),
+                contentDescription = "취소선",
+                modifier = Modifier
+                    .matchParentSize()
+//                    .padding(horizontal = 2.dp)
+            )
+        }
+    }
 }
 
 @Composable
@@ -370,7 +414,11 @@ fun NumberPad(onNumber: (Int) -> Unit, onClear: () -> Unit, onEnter: () -> Unit)
                 row.forEach { num ->
                     when (num) {
                         -1 -> CircleButton(label = "⟲", onClick = onClear)
-                        -2 -> CircleButton(label = "↵", modifier = Modifier.testTag("numpad-enter"), onClick = onEnter)
+                        -2 -> CircleButton(
+                            label = "↵",
+                            modifier = Modifier.testTag("numpad-enter"),
+                            onClick = onEnter
+                        )
                         else -> CircleButton(
                             label = num.toString(),
                             modifier = Modifier.testTag("numpad-$num")

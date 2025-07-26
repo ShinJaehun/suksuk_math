@@ -27,9 +27,11 @@ class DivisionViewModel : ViewModel() {
 //        startNewProblem(45, 4) // Pattern B // sub1이 0인데 입력 후에 공백으로 처리?
 //        startNewProblem(84, 4) // Pattern B
 //        startNewProblem(50, 3) // Pattern C // borrow 입력 후 borrow 취소선 적용 + 일의 자리 위에 10 보여주기
+//        startNewProblem(90, 7) // Pattern C
+//        startNewProblem(70, 6) // Pattern C borrow cell 1이라서...
 //        startNewProblem(93, 8) // Pattern D // 혹시 borrow하려는 cell이 10이면 굳이 1 대신 0을 입력할 필요 없이 뺄셈 진행?
-//        startNewProblem(62, 7) // Pattern E
-        startNewProblem(39, 4) // Pattern F
+        startNewProblem(62, 7) // Pattern E
+//        startNewProblem(39, 4) // Pattern F
     }
 
     fun startNewProblem(dividend: Int, divisor: Int) {

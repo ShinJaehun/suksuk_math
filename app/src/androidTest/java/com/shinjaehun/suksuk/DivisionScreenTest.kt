@@ -2,6 +2,7 @@ package com.shinjaehun.suksuk
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextContains
+import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
@@ -135,5 +136,24 @@ class DivisionScreenTest {
         }
         composeTestRule.onNodeWithTag("feedback").assertIsDisplayed()
         composeTestRule.onNodeWithTag("feedback").assertTextContains("정답입니다!")
+    }
+
+    @Test
+    fun testBorrowInputShows10AboveOnes_UITest() {
+        val viewModel = DivisionViewModel()
+        composeTestRule.setContent { DivisionScreen(viewModel = viewModel) }
+        composeTestRule.runOnIdle { viewModel.startNewProblem(93, 8) }
+
+        // 받아내림 입력 전까지 시나리오 입력
+        val scenario = listOf("1", "8", "1", "3", "1", "8", "0")
+        for (i in scenario.indices) {
+            composeTestRule.onNodeWithTag("numpad-${scenario[i]}").performClick()
+            composeTestRule.onNodeWithTag("numpad-enter").performClick()
+        }
+
+        // 받아내림 입력 후 '10'이 나타나는지 체크
+        composeTestRule.onNodeWithTag("borrowed-sub1-cell").assertTextEquals("10")
+        // 혹은 '10'을 포함하는지 체크
+        // composeTestRule.onNodeWithTag("borrow-cell").assertTextContains("10")
     }
 }

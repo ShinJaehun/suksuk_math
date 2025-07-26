@@ -1,27 +1,5 @@
 package com.shinjaehun.suksuk.presentation.division
 
-//sealed interface DivisionPhase {
-//    object InputTensQuotient : DivisionPhase
-//    object InputTensProduct : DivisionPhase
-//    data class InputSubtractionResult(val minuend: Int, val subtrahend: Int) : DivisionPhase
-//    object InputBringDown : DivisionPhase
-//    data class InputOnesQuotient(val dividendPortion: Int) : DivisionPhase
-//    object InputOnesProduct : DivisionPhase
-//    data class InputBorrowedFromDividend(val expected: Int) : DivisionPhase
-//    data class InputBorrowedFromFirstSub(val expected: Int) : DivisionPhase
-//    object Complete : DivisionPhase
-//}
-//
-//data class DivisionUiState(
-//    val dividend: Int,
-//    val divisor: Int,
-//    val currentPhaseIndex: Int = 0,
-//    val phases: List<DivisionPhase> = emptyList(),
-//    val inputs: MutableList<String> = mutableListOf(),
-//    val feedback: String? = null,
-//    val pattern: UXPattern? = null
-//)
-
 // 상태 패턴 정의
 sealed interface DivisionPhase {
     object InputQuotientTens : DivisionPhase
@@ -59,7 +37,8 @@ data class InputCell(
     val value: String = "",
     val editable: Boolean = false,
     val correct: Boolean = false,
-    val highlight: Highlight = Highlight.None
+    val highlight: Highlight = Highlight.None,
+    val isCrossedOut: Boolean = false
 )
 
 enum class Highlight {
@@ -83,6 +62,8 @@ data class DivisionUiState(
     val subtract2Ones: InputCell = InputCell(),
     val borrowDividendTens: InputCell = InputCell(),
     val borrowSubtract1Tens: InputCell = InputCell(),
+    val borrowed10DividendOnes: InputCell = InputCell(),
+    val borrowed10Subtract1Ones: InputCell = InputCell(),
     val stage: Int = 0,
     val feedback: String? = null
 )
