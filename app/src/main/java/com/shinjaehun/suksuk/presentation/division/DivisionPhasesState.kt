@@ -16,7 +16,7 @@ sealed interface DivisionPhase {
 //    object InputTotalSubtraction : DivisionPhase
     object InputBorrowFromDividendTens : DivisionPhase ///////////////////////
     object InputBorrowFromSubtract1Tens : DivisionPhase
-//    object Complete : DivisionPhase // 얘가 있으니까 여기까지 도달하는데 뭔가 입력을 하거나 추가 처리가 필요함...
+    object Complete : DivisionPhase // 얘가 있으니까 여기까지 도달하는데 뭔가 입력을 하거나 추가 처리가 필요함...
 }
 
 data class DivisionPhasesState(

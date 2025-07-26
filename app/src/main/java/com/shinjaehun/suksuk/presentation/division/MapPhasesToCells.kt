@@ -179,6 +179,9 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
             editing = phase == DivisionPhase.InputBorrowFromSubtract1Tens
         ),
         stage = state.currentPhaseIndex,
-        feedback = state.feedback
+        feedback = when {
+            phase == DivisionPhase.Complete -> "정답입니다!"
+            else -> state.feedback
+        }
     )
 }

@@ -66,6 +66,14 @@ class DivisionViewModel : ViewModel() {
         val state = _uiState.value
         val phase = state.phases.getOrNull(state.currentPhaseIndex) ?: return
 
+//        if (phase == DivisionPhase.Complete) {
+//            _uiState.value = state.copy(
+//                feedback = "정답입니다!"
+//            )
+//            currentInput = ""
+//            return
+//        }
+
         val dividendTens = state.dividend / 10
         val dividendOnes = state.dividend % 10
 
@@ -122,7 +130,7 @@ class DivisionViewModel : ViewModel() {
             DivisionPhase.InputBorrowFromSubtract1Tens -> {
                 input.toIntOrNull() == subtractDividendMDST / 10 - 1
             }
-//            DivisionPhase.Complete -> false
+            DivisionPhase.Complete -> false
         }
 
         if (!isCorrect) {
@@ -140,22 +148,33 @@ class DivisionViewModel : ViewModel() {
 //            feedback = null
 //        )
         // 다음 단계로 넘어가면 currentInput 초기화!
-        if (state.currentPhaseIndex + 1 >= state.phases.size) {
-            println("currentPhaseIndex: ${_uiState.value.currentPhaseIndex}, currentPhase: ${_uiState.value.phases.getOrNull(_uiState.value.currentPhaseIndex)}")
-            _uiState.value = state.copy(
-                inputs = newInputs,
+//        if (state.currentPhaseIndex + 1 >= state.phases.size) {
+//            println("currentPhaseIndex: ${_uiState.value.currentPhaseIndex}, currentPhase: ${_uiState.value.phases.getOrNull(_uiState.value.currentPhaseIndex)}")
+//            _uiState.value = state.copy(
+//                inputs = newInputs,
 //                currentPhaseIndex = state.currentPhaseIndex + 1,
-                feedback = "정답입니다!"
-            )
-        } else {
-            println("currentPhaseIndex: ${_uiState.value.currentPhaseIndex}, currentPhase: ${_uiState.value.phases.getOrNull(_uiState.value.currentPhaseIndex)}")
-            _uiState.value = state.copy(
-                inputs = newInputs,
-                currentPhaseIndex = state.currentPhaseIndex + 1,
-                feedback = null
-            )
-            currentInput = ""
-        }
+//                feedback = "정답입니다!"
+//            )
+//            currentInput = ""
+//        } else {
+//            println("currentPhaseIndex: ${_uiState.value.currentPhaseIndex}, currentPhase: ${_uiState.value.phases.getOrNull(_uiState.value.currentPhaseIndex)}")
+//            _uiState.value = state.copy(
+//                inputs = newInputs,
+//                currentPhaseIndex = state.currentPhaseIndex + 1,
+//                feedback = null
+//            )
+//            currentInput = ""
+//        }
+
+        val isNotLast = state.currentPhaseIndex + 1 < state.phases.size
+
+        _uiState.value = state.copy(
+            inputs = newInputs,
+            currentPhaseIndex = state.currentPhaseIndex + 1,
+            feedback = null // ← 여기서는 항상 null로 넘김
+        )
+        currentInput = ""
+        println("→ 이동 후 Phase: ${state.phases.getOrNull(state.currentPhaseIndex + 1)}")
 
     }
 
@@ -170,7 +189,7 @@ class DivisionViewModel : ViewModel() {
                 DivisionPhase.InputMultiply2Tens,
                 DivisionPhase.InputMultiply2Ones,
                 DivisionPhase.InputSubtract2Ones,
-//                DivisionPhase.Complete
+                DivisionPhase.Complete
             )
 
             UXPattern.B -> listOf(
@@ -181,7 +200,7 @@ class DivisionViewModel : ViewModel() {
                 DivisionPhase.InputQuotientOnes,
                 DivisionPhase.InputMultiply2Ones,
                 DivisionPhase.InputSubtract2Ones,
-//                DivisionPhase.Complete
+                DivisionPhase.Complete
             )
 
             UXPattern.C -> listOf(
@@ -194,7 +213,7 @@ class DivisionViewModel : ViewModel() {
                 DivisionPhase.InputMultiply2Ones,
                 DivisionPhase.InputBorrowFromSubtract1Tens,
                 DivisionPhase.InputSubtract2Ones,
-//                DivisionPhase.Complete
+                DivisionPhase.Complete
             )
 
             UXPattern.D -> listOf(
@@ -206,7 +225,7 @@ class DivisionViewModel : ViewModel() {
                 DivisionPhase.InputMultiply2Ones,
                 DivisionPhase.InputBorrowFromSubtract1Tens,
                 DivisionPhase.InputSubtract2Ones,
-//                DivisionPhase.Complete
+                DivisionPhase.Complete
             )
 
             UXPattern.E -> listOf(
@@ -216,7 +235,7 @@ class DivisionViewModel : ViewModel() {
                 DivisionPhase.InputBorrowFromDividendTens,
                 DivisionPhase.InputSubtract1,
 //                DivisionPhase.InputTotalSubtraction,
-//                DivisionPhase.Complete
+                DivisionPhase.Complete
             )
             UXPattern.F -> listOf(
                 DivisionPhase.InputQuotientOnes,
@@ -224,7 +243,7 @@ class DivisionViewModel : ViewModel() {
                 DivisionPhase.InputMultiply1Ones,
                 DivisionPhase.InputSubtract1,
 //                DivisionPhase.InputTotalSubtraction,
-//                DivisionPhase.Complete
+                DivisionPhase.Complete
             )
         }
     }
