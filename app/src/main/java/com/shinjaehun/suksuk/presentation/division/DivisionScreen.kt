@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.style.TextAlign
@@ -306,7 +307,10 @@ fun DivisionScreen(
                     Text(
                         text = it,
                         color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .testTag("feedback")
+
                     )
                 }
             }
@@ -366,8 +370,11 @@ fun NumberPad(onNumber: (Int) -> Unit, onClear: () -> Unit, onEnter: () -> Unit)
                 row.forEach { num ->
                     when (num) {
                         -1 -> CircleButton(label = "⟲", onClick = onClear)
-                        -2 -> CircleButton(label = "↵", onClick = onEnter)
-                        else -> CircleButton(label = num.toString()) { onNumber(num) }
+                        -2 -> CircleButton(label = "↵", modifier = Modifier.testTag("numpad-enter"), onClick = onEnter)
+                        else -> CircleButton(
+                            label = num.toString(),
+                            modifier = Modifier.testTag("numpad-$num")
+                        ) { onNumber(num) }
                     }
                     Spacer(Modifier.width(8.dp))
                 }
@@ -378,9 +385,9 @@ fun NumberPad(onNumber: (Int) -> Unit, onClear: () -> Unit, onEnter: () -> Unit)
 }
 
 @Composable
-fun CircleButton(label: String, onClick: () -> Unit) {
+fun CircleButton(label: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Box(
-        Modifier
+        modifier
             .size(48.dp)
             .clickable { onClick() }
             .background(MaterialTheme.colorScheme.primaryContainer, shape = CircleShape)

@@ -12,7 +12,7 @@ import org.junit.Test
 class DivisionViewModelTest {
 
     @Test
-    fun `여러 문제 케이스 한번에 검증`() = runTest {
+    fun twoDigitDivByOneDigitTest() = runTest {
         val cases = listOf(
             Triple("Pattern D: 93 ÷ 8", 93 to 8, listOf("1", "8", "1", "3", "1", "8", "0", "5")),
             Triple("Pattern C: 50 ÷ 3", 50 to 3, listOf("1", "3", "2", "0", "6", "1", "8", "1", "2")),
