@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlin.text.toIntOrNull
+
 class DivisionViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(DivisionPhasesState(0, 0))
     val uiState: StateFlow<DivisionPhasesState> = _uiState
@@ -27,7 +28,8 @@ class DivisionViewModel : ViewModel() {
 //        startNewProblem(84, 4) // Pattern B
 //        startNewProblem(50, 3) // Pattern C // borrow 입력 후 borrow 취소선 적용 + 일의 자리 위에 10 보여주기
 //        startNewProblem(93, 8) // Pattern D // 혹시 borrow하려는 cell이 10이면 굳이 1 대신 0을 입력할 필요 없이 뺄셈 진행?
-        startNewProblem(62, 7) // Pattern E
+//        startNewProblem(62, 7) // Pattern E
+        startNewProblem(39, 4) // Pattern F
     }
 
     fun startNewProblem(dividend: Int, divisor: Int) {
@@ -69,30 +71,39 @@ class DivisionViewModel : ViewModel() {
         val quotientTens = quotient / 10
         val quotientOnes = quotient % 10
 
-        val firstProduct = state.divisor * quotientTens
-        val firstSubtractionResult = state.dividend - (state.divisor * quotientTens * 10)
+        val multiplyQuotientTens = state.divisor * quotientTens
+        val subtractDividendMDST = state.dividend - (state.divisor * quotientTens * 10)
+
+        val multiplyQuotientTotalTens = state.divisor * quotientOnes / 10
+        val multiplyQuotientTotalOnes = state.divisor * quotientOnes % 10
 
         val isCorrect = when (phase) {
             DivisionPhase.InputQuotientTens -> {
                 input.toIntOrNull() == dividendTens / state.divisor
             }
+            DivisionPhase.InputMultiply1 -> {
+                input.toIntOrNull() == multiplyQuotientTens
+            }
             DivisionPhase.InputMultiply1Tens -> {
-                input.toIntOrNull() == firstProduct
+                input.toIntOrNull() == multiplyQuotientTotalTens
             }
             DivisionPhase.InputMultiply1Ones -> {
-                input.toIntOrNull() == firstProduct /////////////////////////////////////////////////////
+                input.toIntOrNull() == multiplyQuotientTotalOnes
             }
             DivisionPhase.InputSubtract1Tens -> {
-                input.toIntOrNull() == dividendTens - firstProduct
+                input.toIntOrNull() == dividendTens - multiplyQuotientTens
             }
-            DivisionPhase.InputRemainderOnes -> {
-                input.toIntOrNull() == firstSubtractionResult - state.divisor * quotientOnes
+            DivisionPhase.InputSubtract2Ones -> {
+                input.toIntOrNull() == subtractDividendMDST - state.divisor * quotientOnes
             }
-            DivisionPhase.InputTotalSubtraction -> {
-                input.toIntOrNull() == state.dividend - quotient * state.divisor
-            }
+//            DivisionPhase.InputTotalSubtraction -> {
+//                input.toIntOrNull() == state.dividend - quotient * state.divisor
+//            }
             DivisionPhase.InputSubtract1Ones -> {
                 input.toIntOrNull() == dividendOnes
+            }
+            DivisionPhase.InputSubtract1 -> {
+                input.toIntOrNull() == state.dividend - (state.divisor * quotient)
             }
             DivisionPhase.InputQuotientOnes -> {
                 input.toIntOrNull() == quotientOnes
@@ -107,9 +118,9 @@ class DivisionViewModel : ViewModel() {
                 input.toIntOrNull() == dividendTens - 1
             }
             DivisionPhase.InputBorrowFromSubtract1Tens -> {
-                input.toIntOrNull() == firstSubtractionResult / 10 - 1
+                input.toIntOrNull() == subtractDividendMDST / 10 - 1
             }
-            DivisionPhase.Complete -> false
+//            DivisionPhase.Complete -> false
         }
 
         if (!isCorrect) {
@@ -128,11 +139,14 @@ class DivisionViewModel : ViewModel() {
 //        )
         // 다음 단계로 넘어가면 currentInput 초기화!
         if (state.currentPhaseIndex + 1 >= state.phases.size) {
+            println("currentPhaseIndex: ${_uiState.value.currentPhaseIndex}, currentPhase: ${_uiState.value.phases.getOrNull(_uiState.value.currentPhaseIndex)}")
             _uiState.value = state.copy(
                 inputs = newInputs,
+//                currentPhaseIndex = state.currentPhaseIndex + 1,
                 feedback = "정답입니다!"
             )
         } else {
+            println("currentPhaseIndex: ${_uiState.value.currentPhaseIndex}, currentPhase: ${_uiState.value.phases.getOrNull(_uiState.value.currentPhaseIndex)}")
             _uiState.value = state.copy(
                 inputs = newInputs,
                 currentPhaseIndex = state.currentPhaseIndex + 1,
@@ -140,56 +154,57 @@ class DivisionViewModel : ViewModel() {
             )
             currentInput = ""
         }
+
     }
 
     private fun buildPhasesFor(pattern: UXPattern): List<DivisionPhase> {
         return when (pattern) {
             UXPattern.A -> listOf(
                 DivisionPhase.InputQuotientTens,
-                DivisionPhase.InputMultiply1Tens,
+                DivisionPhase.InputMultiply1,
                 DivisionPhase.InputSubtract1Tens,
                 DivisionPhase.InputSubtract1Ones,
                 DivisionPhase.InputQuotientOnes,
                 DivisionPhase.InputMultiply2Tens,
                 DivisionPhase.InputMultiply2Ones,
-                DivisionPhase.InputRemainderOnes,
-                DivisionPhase.Complete
+                DivisionPhase.InputSubtract2Ones,
+//                DivisionPhase.Complete
             )
 
             UXPattern.B -> listOf(
                 DivisionPhase.InputQuotientTens,
-                DivisionPhase.InputMultiply1Tens,
+                DivisionPhase.InputMultiply1,
                 DivisionPhase.InputSubtract1Tens,
                 DivisionPhase.InputSubtract1Ones,
                 DivisionPhase.InputQuotientOnes,
                 DivisionPhase.InputMultiply2Ones,
-                DivisionPhase.InputRemainderOnes,
-                DivisionPhase.Complete
+                DivisionPhase.InputSubtract2Ones,
+//                DivisionPhase.Complete
             )
 
             UXPattern.C -> listOf(
                 DivisionPhase.InputQuotientTens,
-                DivisionPhase.InputMultiply1Tens,
+                DivisionPhase.InputMultiply1,
                 DivisionPhase.InputSubtract1Tens,
                 DivisionPhase.InputSubtract1Ones,
                 DivisionPhase.InputQuotientOnes,
                 DivisionPhase.InputMultiply2Tens,
                 DivisionPhase.InputMultiply2Ones,
                 DivisionPhase.InputBorrowFromSubtract1Tens,
-                DivisionPhase.InputRemainderOnes,
-                DivisionPhase.Complete
+                DivisionPhase.InputSubtract2Ones,
+//                DivisionPhase.Complete
             )
 
             UXPattern.D -> listOf(
                 DivisionPhase.InputQuotientTens,
-                DivisionPhase.InputMultiply1Tens,
+                DivisionPhase.InputMultiply1,
                 DivisionPhase.InputSubtract1Tens,
                 DivisionPhase.InputSubtract1Ones,
                 DivisionPhase.InputQuotientOnes,
                 DivisionPhase.InputMultiply2Ones,
                 DivisionPhase.InputBorrowFromSubtract1Tens,
-                DivisionPhase.InputRemainderOnes,
-                DivisionPhase.Complete
+                DivisionPhase.InputSubtract2Ones,
+//                DivisionPhase.Complete
             )
 
             UXPattern.E -> listOf(
@@ -197,15 +212,17 @@ class DivisionViewModel : ViewModel() {
                 DivisionPhase.InputMultiply1Tens,
                 DivisionPhase.InputMultiply1Ones,
                 DivisionPhase.InputBorrowFromDividendTens,
-                DivisionPhase.InputTotalSubtraction,
-                DivisionPhase.Complete
+                DivisionPhase.InputSubtract1,
+//                DivisionPhase.InputTotalSubtraction,
+//                DivisionPhase.Complete
             )
             UXPattern.F -> listOf(
                 DivisionPhase.InputQuotientOnes,
                 DivisionPhase.InputMultiply1Tens,
                 DivisionPhase.InputMultiply1Ones,
-                DivisionPhase.InputTotalSubtraction,
-                DivisionPhase.Complete
+                DivisionPhase.InputSubtract1,
+//                DivisionPhase.InputTotalSubtraction,
+//                DivisionPhase.Complete
             )
         }
     }
@@ -253,7 +270,6 @@ class DivisionViewModel : ViewModel() {
             else -> UXPattern.A // fallback (안 맞는 케이스는 A 처리)
         }
     }
-
 
 //    fun testExample(name: String, dividend: Int, divisor: Int, expectedInputs: List<String>): Boolean {
 //        val pattern = detectPattern(dividend, divisor)

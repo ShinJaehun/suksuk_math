@@ -276,7 +276,7 @@ fun DivisionScreen(
 
 
             // 나머지(1) 한 칸만!
-            val remainderCell = uiState.remainderOnes
+            val remainderCell = uiState.subtract2Ones
             NumberText(
                 cell = remainderCell,
                 modifier = Modifier

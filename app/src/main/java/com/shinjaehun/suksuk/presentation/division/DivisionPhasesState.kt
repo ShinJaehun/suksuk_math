@@ -26,17 +26,19 @@ package com.shinjaehun.suksuk.presentation.division
 sealed interface DivisionPhase {
     object InputQuotientTens : DivisionPhase
     object InputQuotientOnes : DivisionPhase
+    object InputMultiply1: DivisionPhase
     object InputMultiply1Tens : DivisionPhase
     object InputMultiply1Ones : DivisionPhase
     object InputMultiply2Tens : DivisionPhase
     object InputMultiply2Ones : DivisionPhase
+    object InputSubtract1 : DivisionPhase
     object InputSubtract1Tens : DivisionPhase
     object InputSubtract1Ones : DivisionPhase
-    object InputRemainderOnes : DivisionPhase
-    object InputTotalSubtraction : DivisionPhase
+    object InputSubtract2Ones : DivisionPhase
+//    object InputTotalSubtraction : DivisionPhase
     object InputBorrowFromDividendTens : DivisionPhase ///////////////////////
     object InputBorrowFromSubtract1Tens : DivisionPhase
-    object Complete : DivisionPhase
+//    object Complete : DivisionPhase // 얘가 있으니까 여기까지 도달하는데 뭔가 입력을 하거나 추가 처리가 필요함...
 }
 
 data class DivisionPhasesState(
@@ -78,7 +80,7 @@ data class DivisionUiState(
     val subtract1Ones: InputCell = InputCell(),
     val multiply2Tens: InputCell = InputCell(),
     val multiply2Ones: InputCell = InputCell(),
-    val remainderOnes: InputCell = InputCell(),
+    val subtract2Ones: InputCell = InputCell(),
     val borrowDividendTens: InputCell = InputCell(),
     val borrowSubtract1Tens: InputCell = InputCell(),
     val stage: Int = 0,
