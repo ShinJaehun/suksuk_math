@@ -4,16 +4,17 @@ package com.shinjaehun.suksuk.presentation.division
 sealed interface DivisionPhase {
     object InputQuotientTens : DivisionPhase
     object InputQuotientOnes : DivisionPhase
+    object InputQuotient : DivisionPhase
     object InputMultiply1: DivisionPhase
     object InputMultiply1Tens : DivisionPhase
     object InputMultiply1Ones : DivisionPhase
-    object InputMultiply2Tens : DivisionPhase
-    object InputMultiply2Ones : DivisionPhase
-    object InputSubtract1 : DivisionPhase
+    object InputSubtract1Result : DivisionPhase
     object InputSubtract1Tens : DivisionPhase
     object InputSubtract1Ones : DivisionPhase
-    object InputSubtract2Ones : DivisionPhase
-//    object InputTotalSubtraction : DivisionPhase
+    object InputBringDownFromDividendOnes : DivisionPhase
+    object InputMultiply2Tens : DivisionPhase
+    object InputMultiply2Ones : DivisionPhase
+    object InputSubtract2Result : DivisionPhase
     object InputBorrowFromDividendTens : DivisionPhase ///////////////////////
     object InputBorrowFromSubtract1Tens : DivisionPhase
     object Complete : DivisionPhase // 얘가 있으니까 여기까지 도달하는데 뭔가 입력을 하거나 추가 처리가 필요함...
@@ -67,3 +68,22 @@ data class DivisionUiState(
     val stage: Int = 0,
     val feedback: String? = null
 )
+
+enum class CellName {
+    Divisor,
+    DividendTens,
+    DividendOnes,
+    QuotientTens,
+    QuotientOnes,
+    Multiply1Tens,
+    Multiply1Ones,
+    Subtract1Tens,
+    Subtract1Ones,
+    Borrowed10DividendOnes,
+    Borrowed10Subtract1Ones,
+    Multiply2Tens,
+    Multiply2Ones,
+    Subtract2Ones,
+    BorrowDividendTens,
+    BorrowSubtract1Tens
+}
