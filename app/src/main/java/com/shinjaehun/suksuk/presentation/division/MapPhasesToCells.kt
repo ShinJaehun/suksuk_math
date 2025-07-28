@@ -1,5 +1,7 @@
 package com.shinjaehun.suksuk.presentation.division
 
+import android.util.Log
+
 fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): DivisionUiState {
     val inputs = state.inputs
     val phase = state.phases.getOrNull(state.currentPhaseIndex)
@@ -13,6 +15,7 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
         DivisionPhase.InputMultiply1 ->
             setOf(CellName.Divisor, CellName.QuotientTens)
 
+        DivisionPhase.InputMultiply1Total,
         DivisionPhase.InputMultiply1Tens,
         DivisionPhase.InputMultiply1Ones ->
             setOf(CellName.Divisor, CellName.QuotientOnes)
@@ -35,6 +38,7 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
         DivisionPhase.InputQuotient ->
             setOf(CellName.Divisor, CellName.DividendTens, CellName.DividendOnes)
 
+        DivisionPhase.InputMultiply2Total,
         DivisionPhase.InputMultiply2Tens,
         DivisionPhase.InputMultiply2Ones ->
             setOf(CellName.Divisor, CellName.QuotientOnes)
@@ -62,29 +66,13 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
 //        else
 //            inputs.getOrNull(idx) ?: ""
 
-    fun cellValue(idx: Int, editable: Boolean): String {
-        val input = state.inputs.getOrNull(idx)
-        val phaseForIdx = state.phases.getOrNull(idx)
-
-        return when {
-            input != null -> {
-                // 입력된 값이 있는 경우
-                if (phaseForIdx == DivisionPhase.InputSubtract1Tens && input == "0") "" else input
-            }
-            editable -> {
-                // 입력 중이지만 아직 입력이 없으면 "?" 또는 currentInput
-                if (currentInput.isEmpty()) "?" else currentInput
-            }
-            else -> ""
-        }
-    }
-
     // phase별로 몇 번째 입력값인지 미리 정해둠(패턴마다 phase, 입력 순서가 1:1)
     // 편의상 phase index를 각 칸에 할당!
     val quotientTensIdx      = state.phases.indexOfFirst { it == DivisionPhase.InputQuotientTens }
     val quotientOnesIdx      = state.phases.indexOfFirst { it == DivisionPhase.InputQuotientOnes || it == DivisionPhase.InputQuotient }
     val multiply1TensIdx         = state.phases.indexOfFirst { it == DivisionPhase.InputMultiply1Tens || it == DivisionPhase.InputMultiply1 }
     val multiply1OnesIdx         = state.phases.indexOfFirst { it == DivisionPhase.InputMultiply1Ones }
+
     val subtract1TensIdx         = state.phases.indexOfFirst { it == DivisionPhase.InputSubtract1Tens }
     val subtract1OnesIdx         = state.phases.indexOfFirst { it == DivisionPhase.InputBringDownFromDividendOnes || it == DivisionPhase.InputSubtract1Result }
     val multiply2TensIdx     = state.phases.indexOfFirst { it == DivisionPhase.InputMultiply2Tens }
@@ -92,6 +80,129 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
     val borrowSubtract1TensIdx = state.phases.indexOfFirst { it == DivisionPhase.InputBorrowFromSubtract1Tens }
     val borrowDividendTensIdx = state.phases.indexOfFirst { it == DivisionPhase.InputBorrowFromDividendTens }
     val subtract2OnesIdx         = state.phases.indexOfFirst { it == DivisionPhase.InputSubtract2Result }
+
+    val multiply1TotalIdx = state.phases.indexOfFirst { it == DivisionPhase.InputMultiply1Total }
+    val multiply2TotalIdx = state.phases.indexOfFirst { it == DivisionPhase.InputMultiply2Total }
+
+//    fun cellValue(idx: Int, editable: Boolean): String {
+//        val input = state.inputs.getOrNull(idx)
+//        val phaseForIdx = state.phases.getOrNull(idx)
+//
+//        Log.d("cellValue", "phase=$phase, idx=$idx, editable=$editable, currentInput=$currentInput, input=$input, phaseForIdx=$phaseForIdx")
+//
+//        // 1. 곱셈1 결과 두 자리 입력
+//        if (phase == DivisionPhase.InputMultiply1Total) {
+//            // tens
+//            if (idx == multiply1TensIdx) {
+//                Log.d("cellValue", "[Multiply1Total] tens idx 진입! idx=$idx, editable=$editable, currentInput=$currentInput")
+//                return if (editable)
+//                    if (currentInput.isEmpty()) "?" else currentInput.getOrNull(0)?.toString() ?: "?"
+//                else input ?: ""
+//            }
+//            // ones
+//            if (idx == multiply1OnesIdx) {
+//                Log.d("cellValue", "[Multiply1Total] ones idx 진입! idx=$idx, editable=$editable, currentInput=$currentInput")
+//                return if (editable)
+//                    if (currentInput.length < 2) "?" else currentInput.getOrNull(1)?.toString() ?: "?"
+//                else input ?: ""
+//            }
+//        }
+//
+//        // 2. 곱셈2 결과 두 자리 입력
+//        if (phase == DivisionPhase.InputMultiply2Total) {
+//            if (idx == multiply2TensIdx) {
+//                Log.d("cellValue", "tens idx, currentInput='$currentInput', length=${currentInput.length}")
+//                return if (editable)
+//                    if (currentInput.isEmpty()) "?" else currentInput[0].toString()
+//                else input ?: ""
+//            }
+//            if (idx == multiply2OnesIdx) {
+//                Log.d("cellValue", "ones idx, currentInput='$currentInput', length=${currentInput.length}")
+//                return if (editable)
+//                    if (currentInput.length < 2) "?" else currentInput[1].toString()
+//                else input ?: ""
+//            }
+//        }
+//
+//        // 3. 기타 phase
+//        return when {
+//            input != null -> {
+//                // 입력된 값이 있는 경우, Subtract1Tens에서만 0이면 공백
+//                if (phaseForIdx == DivisionPhase.InputSubtract1Tens && input == "0") "" else input
+//            }
+//            editable -> {
+//                // 입력 중이지만 아직 입력이 없으면 "?" 표시, 아니면 현재 입력 보여줌
+//                if (currentInput.isEmpty()) "?" else currentInput
+//            }
+//            else -> ""
+//        }
+//    }
+
+    fun cellValue(
+        idx: Int,
+        editable: Boolean,
+        cellName: CellName? = null // ← tens/ones 구분용
+    ): String {
+        val input = state.inputs.getOrNull(idx)
+        val phaseForIdx = state.phases.getOrNull(idx)
+
+        Log.d("cellValue", "phase=$phase, idx=$idx, editable=$editable, currentInput=$currentInput, input=$input, phaseForIdx=$phaseForIdx")
+
+        // 두 자리 곱셈 phase (1차)
+        if (phaseForIdx == DivisionPhase.InputMultiply1Total && cellName != null) {
+            if (cellName == CellName.Multiply1Tens) {
+                Log.d("cellValue", "Multiply1Tens: currentInput='$currentInput', input=$input")
+                return if (editable)
+                    if (currentInput.isEmpty()) "?" else currentInput.getOrNull(0)?.toString() ?: "?"
+                else input?.getOrNull(0)?.toString() ?: ""
+            }
+            if (cellName == CellName.Multiply1Ones) {
+                Log.d("cellValue", "Multiply1Ones: currentInput='$currentInput', input=$input")
+                return if (editable)
+                    if (currentInput.length < 2) "?" else currentInput.getOrNull(1)?.toString() ?: "?"
+                else input?.getOrNull(1)?.toString() ?: ""
+            }
+        }
+
+        // 두 자리 곱셈 phase (2차)
+        if (phaseForIdx == DivisionPhase.InputMultiply2Total && cellName != null) {
+            if (cellName == CellName.Multiply2Tens) {
+                Log.d("cellValue", "Multiply2Tens: currentInput='$currentInput', input=$input")
+                return if (editable)
+                    if (currentInput.isEmpty()) "?" else currentInput.getOrNull(0)?.toString() ?: "?"
+                else input?.getOrNull(0)?.toString() ?: ""
+            }
+            if (cellName == CellName.Multiply2Ones) {
+                Log.d("cellValue", "Multiply2Ones: currentInput='$currentInput', input=$input")
+                return if (editable)
+                    if (currentInput.length < 2) "?" else currentInput.getOrNull(1)?.toString() ?: "?"
+                else input?.getOrNull(1)?.toString() ?: ""
+            }
+        }
+
+//        if (phaseForIdx == DivisionPhase.InputMultiply1 && cellName == CellName.Multiply1Tens) {
+//            return if (editable)
+//                if (currentInput.isEmpty()) "?" else currentInput
+//            else input ?: ""
+//        }
+//        if (cellName == CellName.Multiply1Tens && multiply1TensIdx >= 0) {
+//            return when {
+//                editable -> if (currentInput.isEmpty()) "?" else currentInput
+//                else -> state.inputs.getOrNull(multiply1TensIdx) ?: ""
+//            }
+//        }
+
+        // 일반 입력 처리 (0 숨김은 이전 로직 그대로)
+        return when {
+            input != null -> {
+                if (phaseForIdx == DivisionPhase.InputSubtract1Tens && input == "0") "" else input
+            }
+            editable -> {
+                if (currentInput.isEmpty()) "?" else currentInput
+            }
+            else -> ""
+        }
+    }
 
     // makeCell: 공통 InputCell 생성
     fun makeCell(
@@ -101,7 +212,7 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
         editable: Boolean = editing,
         crossOutColor: CrossOutColor = CrossOutColor.None
     ) = InputCell(
-        value = cellValue(idx, editing && !isComplete),
+        value = cellValue(idx, editing && !isComplete, cellName),
         editable = editable,
         highlight = when {
             editing && !isComplete -> Highlight.Editing
@@ -151,6 +262,149 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
     val showBorrowed10Sub1Ones = state.inputs.getOrNull(borrowSubtract1TensIdx) != null
 
     val subtractLines = getSubtractionLinesFromPhaseIndex(state.phases, state.currentPhaseIndex)
+//
+//    val multiply1TensCell: InputCell
+//    val multiply1OnesCell: InputCell
+//
+//    if (multiply1TensIdx >= 0 && phase == DivisionPhase.InputMultiply1Total) { // 2자리 곱셈
+//        multiply1TensCell = makeCell(
+//            cellName = CellName.Multiply1Tens,
+//            idx = multiply1TotalIdx,
+//            editing = true
+//        )
+//        multiply1OnesCell = makeCell(
+//            cellName = CellName.Multiply1Ones,
+//            idx = multiply1TotalIdx,
+//            editing = true
+//        )
+//    } else if (multiply1OnesIdx >= 0) { // 1자리 곱셈
+//        multiply1TensCell = InputCell() // 빈 칸
+//        multiply1OnesCell = makeCell(
+//            cellName = CellName.Multiply1Ones,
+//            idx = multiply1OnesIdx,
+//            editing = phase == DivisionPhase.InputMultiply1Ones
+//        )
+//    } else {
+//        multiply1TensCell = InputCell()
+//        multiply1OnesCell = InputCell()
+//    }
+
+//    multiply1TensCell = if (multiply1TotalIdx >= 0) {
+//        makeCell(
+//            cellName = CellName.Multiply1Tens,
+//            idx = multiply1TotalIdx,
+//            editing = phase == DivisionPhase.InputMultiply1Total
+//        )
+//    } else {
+//        InputCell()
+//    }
+//    multiply1OnesCell = if (multiply1TotalIdx >= 0) {
+//        makeCell(
+//            cellName = CellName.Multiply1Ones,
+//            idx = multiply1TotalIdx,
+//            editing = phase == DivisionPhase.InputMultiply1Total
+//        )
+//    } else if (multiply1OnesIdx >= 0) {
+//        makeCell(
+//            cellName = CellName.Multiply1Ones,
+//            idx = multiply1OnesIdx,
+//            editing = phase == DivisionPhase.InputMultiply1Ones
+//        )
+//    } else {
+//        InputCell()
+//    }
+
+//    val multiply1TensCell: InputCell
+//    val multiply1OnesCell: InputCell
+//
+//    when {
+//        // 2자리 곱셈 총합 단계(예: 62÷7, 74÷6 등)
+//        phase == DivisionPhase.InputMultiply1Total && multiply1TotalIdx >= 0 -> {
+//            multiply1TensCell = makeCell(
+//                cellName = CellName.Multiply1Tens,
+//                idx = multiply1TotalIdx,
+//                editing = true
+//            )
+//            multiply1OnesCell = makeCell(
+//                cellName = CellName.Multiply1Ones,
+//                idx = multiply1TotalIdx,
+//                editing = true
+//            )
+//        }
+//        // 1자리 곱셈 단계
+//        phase == DivisionPhase.InputMultiply1Ones && multiply1OnesIdx >= 0 -> {
+//            multiply1TensCell = InputCell() // 빈 칸
+//            multiply1OnesCell = makeCell(
+//                cellName = CellName.Multiply1Ones,
+//                idx = multiply1OnesIdx,
+//                editing = true
+//            )
+//        }
+//        // 그 외 모든 경우(곱셈과 무관한 phase)
+//        else -> {
+//            multiply1TensCell = InputCell()
+//            multiply1OnesCell = InputCell()
+//        }
+//    }
+
+
+//    val multiply1TensCell: InputCell
+//    val multiply1OnesCell: InputCell
+//
+//    when {
+//        // 2자리 곱셈 총합 단계
+//        phase == DivisionPhase.InputMultiply1Total && multiply1TotalIdx >= 0 -> {
+//            multiply1TensCell = makeCell(CellName.Multiply1Tens, multiply1TotalIdx, editing = true)
+//            multiply1OnesCell = makeCell(CellName.Multiply1Ones, multiply1TotalIdx, editing = true)
+//        }
+//        // 1자리 곱셈: InputMultiply1Ones 또는 InputMultiply1 모두에서 입력!
+//        (phase == DivisionPhase.InputMultiply1) -> {
+//            multiply1TensCell = makeCell(CellName.Multiply1Tens, multiply1TensIdx, editing = phase == DivisionPhase.InputMultiply1)
+//            multiply1OnesCell = InputCell()
+//        }
+//        else -> {
+//            multiply1TensCell = InputCell()
+//            multiply1OnesCell = InputCell()
+//        }
+//    }
+
+    val multiply1TensCell: InputCell = if (multiply1TotalIdx >= 0) {
+        makeCell(CellName.Multiply1Tens, multiply1TotalIdx, editing = phase == DivisionPhase.InputMultiply1Total)
+    } else {
+        makeCell(CellName.Multiply1Tens, multiply1TensIdx, editing = phase == DivisionPhase.InputMultiply1)
+    }
+
+    val multiply1OnesCell: InputCell = if (multiply1TotalIdx >= 0) {
+        makeCell(CellName.Multiply1Ones, multiply1TotalIdx, editing = phase == DivisionPhase.InputMultiply1Total)
+    } else {
+        makeCell(CellName.Multiply1Ones, multiply1OnesIdx, editing = phase == DivisionPhase.InputMultiply1Ones)
+    }
+
+    val multiply2TensCell: InputCell
+    val multiply2OnesCell: InputCell
+
+    if (multiply2TotalIdx >= 0) { // 2자리 곱셈이 있는 경우
+        multiply2TensCell = makeCell(
+            cellName = CellName.Multiply2Tens,
+            idx = multiply2TotalIdx,
+            editing = phase == DivisionPhase.InputMultiply2Total
+        )
+        multiply2OnesCell = makeCell(
+            cellName = CellName.Multiply2Ones,
+            idx = multiply2TotalIdx,
+            editing = phase == DivisionPhase.InputMultiply2Total
+        )
+    } else if (multiply2OnesIdx >= 0) { // 1자리 곱셈만 있는 경우
+        multiply2TensCell = InputCell() // 빈 셀
+        multiply2OnesCell = makeCell(
+            cellName = CellName.Multiply2Ones,
+            idx = multiply2OnesIdx,
+            editing = phase == DivisionPhase.InputMultiply2Ones
+        )
+    } else { // 곱셈2 자체가 없는 경우 (예외처리)
+        multiply2TensCell = InputCell()
+        multiply2OnesCell = InputCell()
+    }
 
     return DivisionUiState(
         divisor = InputCell(
@@ -176,16 +430,20 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
             idx = quotientTensIdx,
             editing = phase == DivisionPhase.InputQuotientTens
         ),
-        multiply1Tens = makeCell(
-            cellName = CellName.Multiply1Tens,
-            idx = multiply1TensIdx,
-            editing = phase == DivisionPhase.InputMultiply1 || phase == DivisionPhase.InputMultiply1Tens
-        ),
-        multiply1Ones = makeCell(
-            cellName = CellName.Multiply1Ones,
-            idx = multiply1OnesIdx,
-            editing = phase == DivisionPhase.InputMultiply1Ones
-        ),
+//        multiply1Tens = makeCell(
+//            cellName = CellName.Multiply1Tens,
+//            idx = multiply1TensIdx,
+//            editing = phase == DivisionPhase.InputMultiply1 || phase == DivisionPhase.InputMultiply1Tens
+//        ),
+//        multiply1Ones = makeCell(
+//            cellName = CellName.Multiply1Ones,
+//            idx = multiply1OnesIdx,
+//            editing = phase == DivisionPhase.InputMultiply1Ones
+//        ),
+
+        multiply1Tens = multiply1TensCell,
+        multiply1Ones = multiply1OnesCell,
+
         subtract1Tens = makeCell(
             cellName = CellName.Subtract1Tens,
             idx = subtract1TensIdx,
@@ -207,16 +465,59 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
             idx = quotientOnesIdx,
             editing = phase == DivisionPhase.InputQuotientOnes || phase == DivisionPhase.InputQuotient
         ),
-        multiply2Tens = makeCell(
-            cellName = CellName.Multiply2Tens,
-            idx = multiply2TensIdx,
-            editing = phase == DivisionPhase.InputMultiply2Tens
-        ),
-        multiply2Ones = makeCell(
-            cellName = CellName.Multiply2Ones,
-            idx = multiply2OnesIdx,
-            editing = phase == DivisionPhase.InputMultiply2Ones
-        ),
+
+//        multiply2Tens = makeCell(
+//            cellName = CellName.Multiply2Tens,
+//            idx = multiply2TensIdx,
+//            editing = phase == DivisionPhase.InputMultiply2Tens
+//        ),
+//        multiply2Ones = makeCell(
+//            cellName = CellName.Multiply2Ones,
+//            idx = multiply2OnesIdx,
+//            editing = phase == DivisionPhase.InputMultiply2Ones
+//        ),
+
+//        multiply2Tens = if(phase == DivisionPhase.InputMultiply2Total){
+//            makeCell(
+//                cellName = CellName.Multiply2Tens,
+//                idx = multiply2TotalIdx,
+//                editing = true
+//            )
+//        } else {
+//            makeCell(
+//                cellName = CellName.Multiply2Tens,
+//                idx = multiply2TensIdx,
+//                editing = phase == DivisionPhase.InputMultiply2Total
+//            )
+//        },
+//        multiply2Ones = if (phase == DivisionPhase.InputMultiply2Total) {
+//            makeCell(
+//                cellName = CellName.Multiply2Ones,
+//                idx = multiply2TotalIdx,
+//                editing = true
+//            )
+//        } else {
+//            makeCell(
+//                cellName = CellName.Multiply2Ones,
+//                idx = multiply2OnesIdx,
+//                editing = phase == DivisionPhase.InputMultiply2Total
+//            )
+//        },
+
+//        multiply2Tens = makeCell(
+//            cellName = CellName.Multiply2Tens,
+//            idx = multiply2TotalIdx,
+//            editing = phase == DivisionPhase.InputMultiply2Total
+//        ),
+//        multiply2Ones = makeCell(
+//            cellName = CellName.Multiply2Ones,
+//            idx = multiply2TotalIdx,
+//            editing = phase == DivisionPhase.InputMultiply2Total
+//        ),
+
+        multiply2Tens = multiply2TensCell,
+        multiply2Ones = multiply2OnesCell,
+
         subtract2Ones = makeCell(
             cellName = CellName.Subtract2Ones,
             idx = subtract2OnesIdx,
@@ -240,6 +541,8 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
         subtractLines = subtractLines
     )
 }
+
+
 
 fun getSubtractionLinesFromPhaseIndex(
     phases: List<DivisionPhase>,

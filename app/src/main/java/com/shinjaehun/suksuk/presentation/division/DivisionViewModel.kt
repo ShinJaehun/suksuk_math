@@ -20,6 +20,7 @@ class DivisionViewModel(
 
     init {
         if(autoStart){
+            startNewProblem(46, 3) // TensQuotient_NoBorrow_2DigitMul
 //            startNewProblem(85, 7) // TensQuotient_NoBorrow_2DigitMul
 //            startNewProblem(84, 4) // TensQuotient_NoBorrow_1DigitMul
 //            startNewProblem(45, 4) // TensQuotient_NoBorrow_1DigitMul
@@ -28,7 +29,7 @@ class DivisionViewModel(
 //            startNewProblem(70, 6) // TensQuotient_SkipBorrow_1DigitMul
 //            startNewProblem(93, 8) // TensQuotient_SkipBorrow_1DigitMul
 //            startNewProblem(62, 7) // OnesQuotient_Borrow
-            startNewProblem(39, 4) // OnesQuotient_NoBorrow
+//            startNewProblem(39, 4) // OnesQuotient_NoBorrow
 //            startNewProblem(10, 9) // 현재 이러한 경우는 고려하고 있지 않음...
         }
     }
@@ -50,16 +51,37 @@ class DivisionViewModel(
     }
 
     fun onDigitInput(digit: Int) {
-        currentInput = digit.toString()
+        currentInput += digit.toString()
     }
 
     fun onClear() {
         currentInput = ""
     }
 
+
     fun onEnter() {
-        if (currentInput.isNotEmpty()) {
-            submitInput(currentInput)
+        val state = _uiState.value
+        val phase = state.phases.getOrNull(state.currentPhaseIndex) ?: return
+
+        if (currentInput.isEmpty()) {
+            // 아무것도 입력 안했을 때 무시
+            return
+        }
+
+        when (phase) {
+            DivisionPhase.InputMultiply1Total, DivisionPhase.InputMultiply2Total -> {
+                if (currentInput.length == 2) {
+                    // **전체 2자리 입력을 한 번에 전달!**
+                    submitInput(currentInput)
+                    currentInput = ""
+                }
+                // else: 두 자리 안되면 대기 (아니면 에러)
+            }
+            else -> {
+                // 한 칸 입력은 그대로
+                submitInput(currentInput)
+                currentInput = ""
+            }
         }
     }
 
@@ -96,6 +118,9 @@ class DivisionViewModel(
             DivisionPhase.InputMultiply1Ones -> {
                 input.toIntOrNull() == state.divisor * quotientOnes % 10
             }
+            DivisionPhase.InputMultiply1Total -> {
+                input.toIntOrNull() == state.divisor * quotientOnes
+            }
             DivisionPhase.InputSubtract1Tens -> {
                 input.toIntOrNull() == dividendTens - state.divisor * quotientTens
             }
@@ -119,6 +144,15 @@ class DivisionViewModel(
             }
             DivisionPhase.InputMultiply2Ones -> {
                 input.toIntOrNull() == ( state.divisor * quotientOnes ) % 10
+            }
+//            DivisionPhase.InputMultiply2Total -> {
+////                input.toIntOrNull() == state.divisor * quotientOnes
+//                currentInput.length == 2 && currentInput.toIntOrNull() == state.divisor * quotientOnes
+//            }
+//            DivisionPhase.InputMultiply2Tens -> true
+//            DivisionPhase.InputMultiply2Ones -> true
+            DivisionPhase.InputMultiply2Total -> {
+                input.length == 2 && input.toIntOrNull() == state.divisor * quotientOnes
             }
             DivisionPhase.InputBorrowFromDividendTens -> {
                 input.toIntOrNull() == dividendTens - 1
@@ -161,8 +195,9 @@ class DivisionViewModel(
                 DivisionPhase.InputSubtract1Tens,
                 DivisionPhase.InputBringDownFromDividendOnes,
                 DivisionPhase.InputQuotientOnes,
-                DivisionPhase.InputMultiply2Tens,
-                DivisionPhase.InputMultiply2Ones,
+//                DivisionPhase.InputMultiply2Tens,
+//                DivisionPhase.InputMultiply2Ones,
+                DivisionPhase.InputMultiply2Total,
                 DivisionPhase.InputSubtract2Result,
                 DivisionPhase.Complete
             )
@@ -173,8 +208,9 @@ class DivisionViewModel(
                 DivisionPhase.InputSubtract1Tens,
                 DivisionPhase.InputBringDownFromDividendOnes,
                 DivisionPhase.InputQuotientOnes,
-                DivisionPhase.InputMultiply2Tens,
-                DivisionPhase.InputMultiply2Ones,
+//                DivisionPhase.InputMultiply2Tens,
+//                DivisionPhase.InputMultiply2Ones,
+                DivisionPhase.InputMultiply2Total,
                 DivisionPhase.InputBorrowFromSubtract1Tens,
                 DivisionPhase.InputSubtract2Result,
                 DivisionPhase.Complete
@@ -225,18 +261,20 @@ class DivisionViewModel(
 //                DivisionPhase.Complete
 //            )
 
-            DivisionPattern.OnesQuotient_Borrow -> listOf(
+            DivisionPattern.OnesQuotient_Borrow_2DigitMul -> listOf(
                 DivisionPhase.InputQuotient,
-                DivisionPhase.InputMultiply1Tens,
-                DivisionPhase.InputMultiply1Ones,
+//                DivisionPhase.InputMultiply1Tens,
+//                DivisionPhase.InputMultiply1Ones,
+                DivisionPhase.InputMultiply1Total,
                 DivisionPhase.InputBorrowFromDividendTens,
                 DivisionPhase.InputSubtract1Result,
                 DivisionPhase.Complete
             )
-            DivisionPattern.OnesQuotient_NoBorrow -> listOf(
+            DivisionPattern.OnesQuotient_NoBorrow_2DigitMul -> listOf(
                 DivisionPhase.InputQuotient,
-                DivisionPhase.InputMultiply1Tens,
-                DivisionPhase.InputMultiply1Ones,
+//                DivisionPhase.InputMultiply1Tens,
+//                DivisionPhase.InputMultiply1Ones,
+                DivisionPhase.InputMultiply1Total,
                 DivisionPhase.InputSubtract1Result,
                 DivisionPhase.Complete
             )
@@ -287,9 +325,9 @@ class DivisionViewModel(
 
         if (dividendTens < divisor) {
             if (dividendOnes < divisor * quotient % 10) {
-                return DivisionPattern.OnesQuotient_Borrow
+                return DivisionPattern.OnesQuotient_Borrow_2DigitMul
             } else {
-                return DivisionPattern.OnesQuotient_NoBorrow
+                return DivisionPattern.OnesQuotient_NoBorrow_2DigitMul
             }
         }
 

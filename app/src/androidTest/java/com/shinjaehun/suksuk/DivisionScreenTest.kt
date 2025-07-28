@@ -7,10 +7,14 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import com.shinjaehun.suksuk.presentation.division.DivisionPattern
+import com.shinjaehun.suksuk.presentation.division.DivisionPhase
 import com.shinjaehun.suksuk.presentation.division.DivisionScreen
 import com.shinjaehun.suksuk.presentation.division.DivisionViewModel
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertTrue
 import org.junit.Rule
 import org.junit.Test
+
 
 class DivisionScreenTest {
     @get:Rule
@@ -84,7 +88,7 @@ class DivisionScreenTest {
         // Phase: InputSubtract1Tens까지 진행
         viewModel.submitInput("1") // quotientTens
         viewModel.submitInput("7") // multiply1
-        viewModel.submitInput("8") // subtract1Tens 진입 시점
+        viewModel.submitInput("1") // subtract1Tens 진입 시점
 
         composeTestRule.waitForIdle()
 
@@ -113,5 +117,28 @@ class DivisionScreenTest {
         composeTestRule
             .onNodeWithTag("subtraction-line")
             .assertDoesNotExist()
+    }
+
+    @Test
+    fun testPattern_TensQuotient_NoBorrow_2DigitMultiply_Multiply2Total() {
+        val viewModel = DivisionViewModel()
+        viewModel.startNewProblem(90, 7)
+
+        val inputs = listOf(
+            "1",    // InputQuotientTens
+            "7",    // InputMultiply1 (1 × 7)
+            "2",    // InputSubtract1Tens (9 - 7 = 2)
+            "0",    // InputBringDownFromDividendOnes → now 20
+            "2",    // InputQuotientOnes
+            "14",   // ✅ InputMultiply2Total → 핵심
+            "1",
+            "6"     // InputSubtract2Result (20 - 14 = 6)
+        )
+
+        inputs.forEach { viewModel.submitInput(it) }
+
+        // 최종 상태 검사
+        val finalState = viewModel.uiState.value
+        assertEquals(DivisionPhase.Complete, finalState.phases.getOrNull(finalState.currentPhaseIndex))
     }
 }

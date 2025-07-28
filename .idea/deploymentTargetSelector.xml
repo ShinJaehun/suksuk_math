@@ -8,10 +8,10 @@
       <SelectionState runConfigName="DivisionScreenTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="testBorrowInputShows10AboveOnes_UITest()">
+      <SelectionState runConfigName="testUICases()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="DivisionScreenInputTest">
+      <SelectionState runConfigName="testPattern_TensQuotient_NoBorrow_2DigitMultiply_Multiply2Total()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

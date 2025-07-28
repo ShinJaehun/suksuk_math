@@ -8,12 +8,14 @@ sealed interface DivisionPhase {
     object InputMultiply1: DivisionPhase
     object InputMultiply1Tens : DivisionPhase
     object InputMultiply1Ones : DivisionPhase
+    object InputMultiply1Total : DivisionPhase
     object InputSubtract1Result : DivisionPhase
     object InputSubtract1Tens : DivisionPhase
     object InputSubtract1Ones : DivisionPhase
     object InputBringDownFromDividendOnes : DivisionPhase
     object InputMultiply2Tens : DivisionPhase
     object InputMultiply2Ones : DivisionPhase
+    object InputMultiply2Total : DivisionPhase
     object InputSubtract2Result : DivisionPhase
     object InputBorrowFromDividendTens : DivisionPhase ///////////////////////
     object InputBorrowFromSubtract1Tens : DivisionPhase
@@ -35,8 +37,8 @@ enum class DivisionPattern {
     TensQuotient_NoBorrow_1DigitMul,
     TensQuotient_Borrow_2DigitMul,
     TensQuotient_Borrow_1DigitMul,
-    OnesQuotient_Borrow,
-    OnesQuotient_NoBorrow,
+    OnesQuotient_Borrow_2DigitMul,
+    OnesQuotient_NoBorrow_2DigitMul,
     TensQuotient_SkipBorrow_1DigitMul,
 //    TensQuotient_Subtract1TnesZero_1DigitMul
 }
@@ -108,3 +110,9 @@ enum class CellName {
     BorrowDividendTens,
     BorrowSubtract1Tens
 }
+
+data class PhaseCellInfo(
+    val phase: DivisionPhase,
+    val cellName: CellName,
+    val inputIndex: Int
+)

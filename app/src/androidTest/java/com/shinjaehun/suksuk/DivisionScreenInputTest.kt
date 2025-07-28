@@ -74,39 +74,39 @@ class DivisionScreenInputTest {
 
     @Test
     fun testPatternE_53_div_6() =
-        twoDigitDivByOneDigitCase(DivisionPattern.OnesQuotient_Borrow, 53, 6, listOf("8", "4", "8", "4", "5"))
+        twoDigitDivByOneDigitCase(DivisionPattern.OnesQuotient_Borrow_2DigitMul, 53, 6, listOf("8", "4", "8", "4", "5"))
 
     @Test
     fun testPatternE_62_div_7() =
-        twoDigitDivByOneDigitCase(DivisionPattern.OnesQuotient_Borrow, 62, 7, listOf("8", "5", "6", "5", "6"))
+        twoDigitDivByOneDigitCase(DivisionPattern.OnesQuotient_Borrow_2DigitMul, 62, 7, listOf("8", "5", "6", "5", "6"))
 
     @Test
     fun testPatternF_12_div_3() =
-        twoDigitDivByOneDigitCase(DivisionPattern.OnesQuotient_NoBorrow, 12, 3, listOf("4", "1", "2", "0"))
+        twoDigitDivByOneDigitCase(DivisionPattern.OnesQuotient_NoBorrow_2DigitMul, 12, 3, listOf("4", "1", "2", "0"))
 
     @Test
     fun testPatternF_24_div_7() =
-        twoDigitDivByOneDigitCase(DivisionPattern.OnesQuotient_NoBorrow, 24, 7, listOf("3", "2", "1", "3"))
+        twoDigitDivByOneDigitCase(DivisionPattern.OnesQuotient_NoBorrow_2DigitMul, 24, 7, listOf("3", "2", "1", "3"))
 
     @Test
     fun testPatternF_39_div_4() =
-        twoDigitDivByOneDigitCase(DivisionPattern.OnesQuotient_NoBorrow, 39, 4, listOf("9", "3", "6", "3"))
+        twoDigitDivByOneDigitCase(DivisionPattern.OnesQuotient_NoBorrow_2DigitMul, 39, 4, listOf("9", "3", "6", "3"))
 
     @Test
     fun testPatternF_49_div_5() =
-        twoDigitDivByOneDigitCase(DivisionPattern.OnesQuotient_NoBorrow, 49, 5, listOf("9", "4", "5", "4"))
+        twoDigitDivByOneDigitCase(DivisionPattern.OnesQuotient_NoBorrow_2DigitMul, 49, 5, listOf("9", "4", "5", "4"))
 
     @Test
     fun testPatternF_54_div_9() =
-        twoDigitDivByOneDigitCase(DivisionPattern.OnesQuotient_NoBorrow, 54, 9, listOf("6", "5", "4", "0"))
+        twoDigitDivByOneDigitCase(DivisionPattern.OnesQuotient_NoBorrow_2DigitMul, 54, 9, listOf("6", "5", "4", "0"))
 
     @Test
     fun testPatternF_68_div_9() =
-        twoDigitDivByOneDigitCase(DivisionPattern.OnesQuotient_NoBorrow, 68, 9, listOf("7", "6", "3", "5"))
+        twoDigitDivByOneDigitCase(DivisionPattern.OnesQuotient_NoBorrow_2DigitMul, 68, 9, listOf("7", "6", "3", "5"))
 
     @Test
     fun testPatternF_81_div_9() =
-        twoDigitDivByOneDigitCase(DivisionPattern.OnesQuotient_NoBorrow, 81, 9, listOf("9", "8", "1", "0"))
+        twoDigitDivByOneDigitCase(DivisionPattern.OnesQuotient_NoBorrow_2DigitMul, 81, 9, listOf("9", "8", "1", "0"))
 
     private fun twoDigitDivByOneDigitCase(
         pattern: DivisionPattern,
