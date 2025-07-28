@@ -69,4 +69,49 @@ class DivisionScreenTest {
         // 혹은 '10'을 포함하는지 체크
         // composeTestRule.onNodeWithTag("borrow-cell").assertTextContains("10")
     }
+
+
+    @Test
+    fun testSubtractionLineAppearsOnSubtractPhase() {
+        val viewModel = DivisionViewModel().apply {
+            startNewProblem(85, 7) // Pattern A: 1차 뺄셈 있음
+        }
+
+        composeTestRule.setContent {
+            DivisionScreen(viewModel = viewModel)
+        }
+
+        // Phase: InputSubtract1Tens까지 진행
+        viewModel.submitInput("1") // quotientTens
+        viewModel.submitInput("7") // multiply1
+        viewModel.submitInput("8") // subtract1Tens 진입 시점
+
+        composeTestRule.waitForIdle()
+
+        // horizontal_line이 나타나야 함
+        composeTestRule
+            .onNodeWithTag("subtraction-line")
+            .assertExists()
+    }
+
+    @Test
+    fun testSubtractionLineDoesNotAppearBeforeSubtractPhase() {
+        val viewModel = DivisionViewModel().apply {
+            startNewProblem(85, 7)
+        }
+
+        composeTestRule.setContent {
+            DivisionScreen(viewModel = viewModel)
+        }
+
+        // 아직 quotient 입력 중
+        viewModel.submitInput("1") // quotientTens
+
+        composeTestRule.waitForIdle()
+
+        // 이때는 horizontal_line이 없어야 함
+        composeTestRule
+            .onNodeWithTag("subtraction-line")
+            .assertDoesNotExist()
+    }
 }

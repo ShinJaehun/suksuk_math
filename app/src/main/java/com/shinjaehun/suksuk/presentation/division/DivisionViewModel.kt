@@ -23,12 +23,12 @@ class DivisionViewModel(
 //            startNewProblem(85, 7) // TensQuotient_NoBorrow_2DigitMul
 //            startNewProblem(84, 4) // TensQuotient_NoBorrow_1DigitMul
 //            startNewProblem(45, 4) // TensQuotient_NoBorrow_1DigitMul
-            startNewProblem(50, 3) // TensQuotient_Borrow_2DigitMul
+//            startNewProblem(50, 3) // TensQuotient_Borrow_2DigitMul
 //            startNewProblem(90, 7) // TensQuotient_Borrow_2DigitMul
 //            startNewProblem(70, 6) // TensQuotient_SkipBorrow_1DigitMul
 //            startNewProblem(93, 8) // TensQuotient_SkipBorrow_1DigitMul
 //            startNewProblem(62, 7) // OnesQuotient_Borrow
-//            startNewProblem(39, 4) // OnesQuotient_NoBorrow
+            startNewProblem(39, 4) // OnesQuotient_NoBorrow
 //            startNewProblem(10, 9) // 현재 이러한 경우는 고려하고 있지 않음...
         }
     }
@@ -144,7 +144,7 @@ class DivisionViewModel(
             inputs = newInputs,
             currentPhaseIndex = state.currentPhaseIndex + 1,
             feedback = null, // ← 여기서는 항상 null로 넘김
-            pattern = state.pattern
+            pattern = state.pattern,
         )
         println("🔁 emit new state: phase=${_uiState.value.currentPhaseIndex}, inputs=${_uiState.value.inputs}")
 
@@ -242,6 +242,42 @@ class DivisionViewModel(
             )
         }
     }
+
+//    private fun getSubtractionLine(phase: DivisionPhase?): SubtractLine {
+//        return when (phase) {
+//            DivisionPhase.InputSubtract1Tens,
+//            DivisionPhase.InputBorrowFromSubtract1Tens,
+//            DivisionPhase.InputQuotientOnes,
+//            DivisionPhase.InputMultiply2Tens,
+//            DivisionPhase.InputMultiply2Ones,
+//            DivisionPhase.InputBorrowFromSubtract1Tens,
+//            DivisionPhase.InputSubtract2Result,
+//            DivisionPhase.Complete,
+//
+//            DivisionPhase.InputBorrowFromDividendTens,
+//            DivisionPhase.InputSubtract1Result,
+//                    -> SubtractLine.Subtract1
+//
+//            DivisionPhase.InputSubtract1Tens,
+//            DivisionPhase.InputBorrowFromSubtract1Tens,
+//            DivisionPhase.InputQuotientOnes,
+//            DivisionPhase.InputMultiply2Tens,
+//            DivisionPhase.InputMultiply2Ones,
+//            DivisionPhase.InputBorrowFromSubtract1Tens,
+//            DivisionPhase.InputSubtract2Result,
+//            DivisionPhase.Complete,
+//
+//            DivisionPhase.InputBorrowFromDividendTens,
+//            DivisionPhase.InputSubtract1Result,
+//
+//            DivisionPhase.InputBorrowFromSubtract1Tens,
+//            DivisionPhase.InputSubtract2Result,
+//            DivisionPhase.Complete,
+//                    -> SubtractLine.Subtract2
+//
+//            else -> SubtractLine.None
+//        }
+//    }
 
 
     private fun detectPattern(dividend: Int, divisor: Int): DivisionPattern {

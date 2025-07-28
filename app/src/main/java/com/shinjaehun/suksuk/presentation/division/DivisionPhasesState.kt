@@ -27,7 +27,7 @@ data class DivisionPhasesState(
     val phases: List<DivisionPhase> = emptyList(),
     val inputs: List<String> = emptyList(),
     val feedback: String? = null,
-    val pattern: DivisionPattern? = null
+    val pattern: DivisionPattern? = null,
 )
 
 enum class DivisionPattern {
@@ -48,7 +48,7 @@ data class InputCell(
     val editable: Boolean = false,
     val correct: Boolean = false,
     val highlight: Highlight = Highlight.None,
-    val crossOutColor: CrossOutColor = CrossOutColor.None
+    val crossOutColor: CrossOutColor = CrossOutColor.None,
 )
 
 enum class Highlight {
@@ -62,6 +62,11 @@ enum class CrossOutColor {
     Pending,       // 입력 중
     Confirmed      // 입력 후
 }
+
+data class SubtractLines(
+    val showSubtract1: Boolean = false,
+    val showSubtract2: Boolean = false
+)
 
 data class DivisionUiState(
     val divisor: InputCell = InputCell(),
@@ -81,7 +86,8 @@ data class DivisionUiState(
     val borrowed10DividendOnes: InputCell = InputCell(),
     val borrowed10Subtract1Ones: InputCell = InputCell(),
     val stage: Int = 0,
-    val feedback: String? = null
+    val feedback: String? = null,
+    val subtractLines: SubtractLines = SubtractLines()
 )
 
 enum class CellName {

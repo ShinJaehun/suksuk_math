@@ -150,6 +150,8 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
 
     val showBorrowed10Sub1Ones = state.inputs.getOrNull(borrowSubtract1TensIdx) != null
 
+    val subtractLines = getSubtractionLinesFromPhaseIndex(state.phases, state.currentPhaseIndex)
+
     return DivisionUiState(
         divisor = InputCell(
             value = state.divisor.toString(),
@@ -234,6 +236,98 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
         feedback = when {
             phase == DivisionPhase.Complete -> "정답입니다!"
             else -> state.feedback
-        }
+        },
+        subtractLines = subtractLines
     )
 }
+
+fun getSubtractionLinesFromPhaseIndex(
+    phases: List<DivisionPhase>,
+    currentPhaseIndex: Int
+): SubtractLines {
+    // ✅ Subtract1 줄의 시작 후보
+    val subtract1StartIndex = listOf(
+        DivisionPhase.InputSubtract1Tens,
+        DivisionPhase.InputBorrowFromDividendTens,
+        DivisionPhase.InputSubtract1Result
+    ).map { phases.indexOf(it) }
+        .filter { it >= 0 }
+        .minOrNull() ?: Int.MAX_VALUE
+
+    // ✅ Subtract2 줄의 시작 후보
+    val subtract2StartIndex = listOf(
+        DivisionPhase.InputBorrowFromSubtract1Tens,
+        DivisionPhase.InputSubtract2Result
+    ).map { phases.indexOf(it) }
+        .filter { it >= 0 }
+        .minOrNull() ?: Int.MAX_VALUE
+
+    val show1 = subtract1StartIndex != Int.MAX_VALUE && currentPhaseIndex >= subtract1StartIndex
+    val show2 = subtract2StartIndex != Int.MAX_VALUE && currentPhaseIndex >= subtract2StartIndex
+
+    return SubtractLines(showSubtract1 = show1, showSubtract2 = show2)
+}
+
+//fun getSubtractionLinesFromPhaseIndex(
+//    phases: List<DivisionPhase>,
+//    currentPhaseIndex: Int
+//): SubtractLines {
+//    val phase = phases.getOrNull(currentPhaseIndex) ?: return SubtractLines()
+//
+//    val subtract1StartIndex = phases.indexOf(DivisionPhase.InputSubtract1Tens)
+//    val subtract2StartIndex = phases.indexOf(DivisionPhase.InputSubtract2Result)
+//
+//    val show1 = subtract1StartIndex >= 0 && currentPhaseIndex >= subtract1StartIndex
+//    val show2 = subtract2StartIndex >= 0 && currentPhaseIndex >= subtract2StartIndex
+//
+//    return SubtractLines(showSubtract1 = show1, showSubtract2 = show2)
+//}
+
+//
+//fun getSubtractionLineFromPhaseIndex(
+//    phases: List<DivisionPhase>,
+//    currentPhaseIndex: Int
+//): SubtractLine {
+////    val currentPhase = phases.getOrNull(currentPhaseIndex) ?: return SubtractLine.None
+//
+//    // 2차 뺄셈의 시작 index
+//    val subtract2StartIndex = phases.indexOfFirst {
+//        it == DivisionPhase.InputBorrowFromSubtract1Tens ||
+//                it == DivisionPhase.InputSubtract2Result
+//    }
+//
+//    return when {
+//        subtract2StartIndex == -1 -> {
+//            // 2차 뺄셈이 없는 경우 → 1차 줄만 있을 수도 있음
+//            if (phases.contains(DivisionPhase.InputSubtract1Tens)) SubtractLine.Subtract1
+//            else SubtractLine.None
+//        }
+//
+//        currentPhaseIndex < subtract2StartIndex -> SubtractLine.Subtract1
+//        currentPhaseIndex >= subtract2StartIndex -> SubtractLine.Subtract2
+//        else -> SubtractLine.None
+//    }
+//}
+
+//private fun getSubtractLine(phase: DivisionPhase?): SubtractLine {
+//    return when (phase) {
+//        in subtract1Phases -> SubtractLine.Subtract1
+//        in subtract2Phases -> SubtractLine.Subtract2
+//        else -> SubtractLine.None
+//    }
+//}
+//
+//private val subtract1Phases = setOf(
+//    DivisionPhase.InputSubtract1Tens,
+//    DivisionPhase.InputBorrowFromDividendTens,
+//    DivisionPhase.InputSubtract1Result
+//)
+//
+//private val subtract2Phases = setOf(
+//    DivisionPhase.InputQuotientOnes,
+//    DivisionPhase.InputMultiply2Tens,
+//    DivisionPhase.InputMultiply2Ones,
+//    DivisionPhase.InputBorrowFromSubtract1Tens,
+//    DivisionPhase.InputSubtract2Result,
+//    DivisionPhase.Complete
+//)

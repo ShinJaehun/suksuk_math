@@ -203,17 +203,21 @@ fun DivisionScreen(
                     }
             )
 
-            Image(
-                painter = painterResource(id = R.drawable.ic_horizontal_line),
-                contentDescription = "Subtraction Line",
-                contentScale = ContentScale.FillBounds,
-                modifier = Modifier.constrainAs(subtract1LineRef) {
-                    top.linkTo(dividendTensRef.bottom, margin = 60.dp)
-                    start.linkTo(dividendTensRef.start, margin = (-10).dp)
-                    width = Dimension.value(100.dp)
-                    height = Dimension.value(4.dp)
-                }
-            )
+            if(uiState.subtractLines.showSubtract1){
+                Image(
+                    painter = painterResource(id = R.drawable.ic_horizontal_line),
+                    contentDescription = "Subtraction Line",
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier.constrainAs(subtract1LineRef) {
+                        top.linkTo(dividendTensRef.bottom, margin = 60.dp)
+                        start.linkTo(dividendTensRef.start, margin = (-10).dp)
+                        width = Dimension.value(100.dp)
+                        height = Dimension.value(4.dp)
+                    }
+                        .testTag("subtraction-line")
+
+                )
+            }
 
             // 1차 뺄셈(2)
             val subtract1TensCell = uiState.subtract1Tens
@@ -292,17 +296,19 @@ fun DivisionScreen(
                     }
             )
 
-            Image(
-                painter = painterResource(id = R.drawable.ic_horizontal_line),
-                contentDescription = "Subtraction Line",
-                contentScale = ContentScale.FillBounds,
-                modifier = Modifier.constrainAs(subtract2LineRef) {
-                    top.linkTo(dividendTensRef.bottom, margin = 200.dp)
-                    start.linkTo(dividendTensRef.start, margin = (-10).dp)
-                    width = Dimension.value(100.dp)
-                    height = Dimension.value(4.dp)
-                }
-            )
+            if (uiState.subtractLines.showSubtract2){
+                Image(
+                    painter = painterResource(id = R.drawable.ic_horizontal_line),
+                    contentDescription = "Subtraction Line",
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier.constrainAs(subtract2LineRef) {
+                        top.linkTo(dividendTensRef.bottom, margin = 200.dp)
+                        start.linkTo(dividendTensRef.start, margin = (-10).dp)
+                        width = Dimension.value(100.dp)
+                        height = Dimension.value(4.dp)
+                    }
+                )
+            }
 
 
             // 나머지(1) 한 칸만!
