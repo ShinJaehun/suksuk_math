@@ -11,7 +11,7 @@
       <SelectionState runConfigName="testBorrowInputShows10AboveOnes_UITest()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="testUICases()">
+      <SelectionState runConfigName="DivisionScreenInputTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

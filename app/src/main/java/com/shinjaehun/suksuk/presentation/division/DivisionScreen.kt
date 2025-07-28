@@ -372,14 +372,20 @@ fun NumberText(
             textAlign = TextAlign.Center,
         )
 
-        if (cell.isCrossedOut) {
-            Image(
-                painter = painterResource(R.drawable.ic_strikethrough_line),
-                contentDescription = "취소선",
-                modifier = Modifier
-                    .matchParentSize()
-//                    .padding(horizontal = 2.dp)
-            )
+        if (cell.crossOutColor != CrossOutColor.None) {
+            val painter = when(cell.crossOutColor){
+                CrossOutColor.Pending -> painterResource(R.drawable.ic_strikethrough_pending)
+                CrossOutColor.Confirmed -> painterResource(R.drawable.ic_strikethrough_confirmed)
+                else -> null
+            }
+            painter?.let {
+                Image(
+                    painter = it,
+                    contentDescription = "취소선",
+                    modifier = Modifier
+                        .matchParentSize()
+                )
+            }
         }
     }
 }

@@ -39,8 +39,13 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
         DivisionPhase.InputMultiply2Ones ->
             setOf(CellName.Divisor, CellName.QuotientOnes)
 
-        DivisionPhase.InputSubtract2Result ->
-            setOf(CellName.Subtract1Ones, CellName.Multiply2Ones, CellName.Borrowed10Subtract1Ones)
+        DivisionPhase.InputSubtract2Result -> {
+            if(state.pattern == DivisionPattern.TensQuotient_SkipBorrow_1DigitMul) {
+                setOf(CellName.Subtract1Tens, CellName.Subtract1Ones, CellName.Multiply2Tens, CellName.Multiply2Ones, CellName.Borrowed10Subtract1Ones)
+            } else {
+                setOf(CellName.Subtract1Ones, CellName.Multiply2Ones, CellName.Borrowed10Subtract1Ones)
+            }
+        }
 
         DivisionPhase.InputBorrowFromSubtract1Tens ->
             setOf(CellName.Subtract1Tens)
@@ -94,7 +99,7 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
         idx: Int,
         editing: Boolean,
         editable: Boolean = editing,
-        crossedOut: Boolean = false,
+        crossOutColor: CrossOutColor = CrossOutColor.None
     ) = InputCell(
         value = cellValue(idx, editing && !isComplete),
         editable = editable,
@@ -103,7 +108,7 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
             cellName in relatedCells -> Highlight.Related
             else -> Highlight.None
         },
-        isCrossedOut = crossedOut
+        crossOutColor = crossOutColor
     )
 
     fun makeFixedCell(
@@ -123,8 +128,27 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
     // dividend, divisor는 입력 가능성이 없으므로 value만 별도 처리
     val dividendStr = state.dividend.toString().padStart(2, '0')
 
-    val hasBorrowedFromDividend = state.inputs.getOrNull(borrowDividendTensIdx) != null
-    val hasBorrowedFromSub1 = state.inputs.getOrNull(borrowSubtract1TensIdx) != null
+//    val crossOutDividendTens = state.inputs.getOrNull(borrowDividendTensIdx) != null ||
+//                phase == DivisionPhase.InputBorrowFromDividendTens
+
+    val crossOutColorDividendTens = when {
+        state.inputs.getOrNull(borrowDividendTensIdx) != null -> CrossOutColor.Confirmed
+        phase == DivisionPhase.InputBorrowFromDividendTens -> CrossOutColor.Pending
+        else -> CrossOutColor.None
+    }
+
+    val showBorrowed10DividendOnes = state.inputs.getOrNull(borrowDividendTensIdx) != null
+
+//    val crossOutSub1Tens = state.inputs.getOrNull(borrowSubtract1TensIdx) != null ||
+//                phase == DivisionPhase.InputBorrowFromSubtract1Tens
+
+    val crossOutColorSub1Tens = when {
+        state.inputs.getOrNull(borrowSubtract1TensIdx) != null -> CrossOutColor.Confirmed
+        phase == DivisionPhase.InputBorrowFromSubtract1Tens -> CrossOutColor.Pending
+        else -> CrossOutColor.None
+    }
+
+    val showBorrowed10Sub1Ones = state.inputs.getOrNull(borrowSubtract1TensIdx) != null
 
     return DivisionUiState(
         divisor = InputCell(
@@ -134,7 +158,7 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
         dividendTens = InputCell(
             value = dividendStr[0].toString(),
             highlight = if (CellName.DividendTens in relatedCells) Highlight.Related else Highlight.None,
-            isCrossedOut = hasBorrowedFromDividend
+            crossOutColor = crossOutColorDividendTens
         ),
         dividendOnes = InputCell(
             value = dividendStr[1].toString(),
@@ -142,7 +166,7 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
         ),
         borrowed10DividendOnes = makeFixedCell(
             cellName = CellName.Borrowed10DividendOnes,
-            show = hasBorrowedFromDividend,
+            show = showBorrowed10DividendOnes,
             value = "10"
         ),
         quotientTens = makeCell(
@@ -164,7 +188,7 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
             cellName = CellName.Subtract1Tens,
             idx = subtract1TensIdx,
             editing = phase == DivisionPhase.InputSubtract1Tens,
-            crossedOut = hasBorrowedFromSub1
+            crossOutColor = crossOutColorSub1Tens
         ),
         subtract1Ones = makeCell(
             cellName = CellName.Subtract1Ones,
@@ -173,7 +197,7 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
         ),
         borrowed10Subtract1Ones = makeFixedCell(
             cellName = CellName.Borrowed10Subtract1Ones,
-            show = hasBorrowedFromSub1,
+            show = showBorrowed10Sub1Ones,
             value = "10"
         ),
         quotientOnes = makeCell(

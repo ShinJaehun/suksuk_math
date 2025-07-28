@@ -8,7 +8,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlin.text.toIntOrNull
 
-class DivisionViewModel : ViewModel() {
+class DivisionViewModel(
+    private val autoStart: Boolean = true
+) : ViewModel() {
     private val _uiState = MutableStateFlow(DivisionPhasesState(0, 0))
     val uiState: StateFlow<DivisionPhasesState> = _uiState
 
@@ -16,27 +18,26 @@ class DivisionViewModel : ViewModel() {
     var currentInput by mutableStateOf("")
         private set
 
-//    fun startNewProblem(dividend: Int, divisor: Int) {
-//        val pattern = detectPattern(dividend, divisor)
-//        val phases = buildPhasesFor(pattern)
-//        _uiState.value = DivisionUiState(dividend, divisor, 0, phases, mutableListOf(), null, pattern)
-//    }
-
     init {
-//        startNewProblem(85, 7) // Pattern A
-//        startNewProblem(45, 4) // Pattern B // sub1이 0인데 입력 후에 공백으로 처리?
-//        startNewProblem(84, 4) // Pattern B
-//        startNewProblem(50, 3) // Pattern C // borrow 입력 후 borrow 취소선 적용 + 일의 자리 위에 10 보여주기
-//        startNewProblem(90, 7) // Pattern C
-//        startNewProblem(70, 6) // Pattern C borrow cell 1이라서...
-//        startNewProblem(93, 8) // Pattern D // 혹시 borrow하려는 cell이 10이면 굳이 1 대신 0을 입력할 필요 없이 뺄셈 진행?
-//        startNewProblem(62, 7) // Pattern E
-        startNewProblem(39, 4) // Pattern F
+        if(autoStart){
+//            startNewProblem(85, 7) // TensQuotient_NoBorrow_2DigitMul
+//            startNewProblem(84, 4) // TensQuotient_NoBorrow_1DigitMul
+//            startNewProblem(45, 4) // TensQuotient_NoBorrow_1DigitMul
+            startNewProblem(50, 3) // TensQuotient_Borrow_2DigitMul
+//            startNewProblem(90, 7) // TensQuotient_Borrow_2DigitMul
+//            startNewProblem(70, 6) // TensQuotient_SkipBorrow_1DigitMul
+//            startNewProblem(93, 8) // TensQuotient_SkipBorrow_1DigitMul
+//            startNewProblem(62, 7) // OnesQuotient_Borrow
+//            startNewProblem(39, 4) // OnesQuotient_NoBorrow
+//            startNewProblem(10, 9) // 현재 이러한 경우는 고려하고 있지 않음...
+        }
     }
 
     fun startNewProblem(dividend: Int, divisor: Int) {
         val pattern = detectPattern(dividend, divisor)
         val phases = buildPhasesFor(pattern)
+//        println("🔍 [startNewProblem] $dividend ÷ $divisor → pattern=$pattern")
+
         _uiState.value = DivisionPhasesState(
             dividend,
             divisor,
@@ -65,6 +66,7 @@ class DivisionViewModel : ViewModel() {
     fun submitInput(input: String) {
         val state = _uiState.value
         val phase = state.phases.getOrNull(state.currentPhaseIndex) ?: return
+        println("📥 submitInput('$input') at phase=${phase}")
 
 //        if (phase == DivisionPhase.Complete) {
 //            _uiState.value = state.copy(
@@ -80,8 +82,6 @@ class DivisionViewModel : ViewModel() {
         val quotient = state.dividend / state.divisor
         val quotientTens = quotient / 10
         val quotientOnes = quotient % 10
-
-        val subtractDividendMDST = state.dividend - (state.divisor * quotientTens * 10)
 
         val isCorrect = when (phase) {
             DivisionPhase.InputQuotientTens -> {
@@ -124,7 +124,7 @@ class DivisionViewModel : ViewModel() {
                 input.toIntOrNull() == dividendTens - 1
             }
             DivisionPhase.InputBorrowFromSubtract1Tens -> {
-                input.toIntOrNull() == subtractDividendMDST / 10 - 1
+                input.toIntOrNull() == (state.dividend - (state.divisor * quotientTens * 10)) / 10 - 1
             }
             DivisionPhase.InputSubtract2Result -> {
                 input.toIntOrNull() == state.dividend - state.divisor * quotient
@@ -143,16 +143,19 @@ class DivisionViewModel : ViewModel() {
         _uiState.value = state.copy(
             inputs = newInputs,
             currentPhaseIndex = state.currentPhaseIndex + 1,
-            feedback = null // ← 여기서는 항상 null로 넘김
+            feedback = null, // ← 여기서는 항상 null로 넘김
+            pattern = state.pattern
         )
+        println("🔁 emit new state: phase=${_uiState.value.currentPhaseIndex}, inputs=${_uiState.value.inputs}")
+
         currentInput = ""
-        println("→ 이동 후 Phase: ${state.phases.getOrNull(state.currentPhaseIndex + 1)}")
+//        println("→ 이동 후 Phase: ${state.phases.getOrNull(state.currentPhaseIndex + 1)}")
 
     }
 
-    private fun buildPhasesFor(pattern: UXPattern): List<DivisionPhase> {
+    private fun buildPhasesFor(pattern: DivisionPattern): List<DivisionPhase> {
         return when (pattern) {
-            UXPattern.A -> listOf(
+            DivisionPattern.TensQuotient_NoBorrow_2DigitMul -> listOf(
                 DivisionPhase.InputQuotientTens,
                 DivisionPhase.InputMultiply1,
                 DivisionPhase.InputSubtract1Tens,
@@ -164,18 +167,7 @@ class DivisionViewModel : ViewModel() {
                 DivisionPhase.Complete
             )
 
-            UXPattern.B -> listOf(
-                DivisionPhase.InputQuotientTens,
-                DivisionPhase.InputMultiply1,
-                DivisionPhase.InputSubtract1Tens,
-                DivisionPhase.InputBringDownFromDividendOnes,
-                DivisionPhase.InputQuotientOnes,
-                DivisionPhase.InputMultiply2Ones,
-                DivisionPhase.InputSubtract2Result,
-                DivisionPhase.Complete
-            )
-
-            UXPattern.C -> listOf(
+            DivisionPattern.TensQuotient_Borrow_2DigitMul -> listOf(
                 DivisionPhase.InputQuotientTens,
                 DivisionPhase.InputMultiply1,
                 DivisionPhase.InputSubtract1Tens,
@@ -188,7 +180,18 @@ class DivisionViewModel : ViewModel() {
                 DivisionPhase.Complete
             )
 
-            UXPattern.D -> listOf(
+            DivisionPattern.TensQuotient_NoBorrow_1DigitMul -> listOf(
+                DivisionPhase.InputQuotientTens,
+                DivisionPhase.InputMultiply1,
+                DivisionPhase.InputSubtract1Tens,
+                DivisionPhase.InputBringDownFromDividendOnes,
+                DivisionPhase.InputQuotientOnes,
+                DivisionPhase.InputMultiply2Ones,
+                DivisionPhase.InputSubtract2Result,
+                DivisionPhase.Complete
+            )
+
+            DivisionPattern.TensQuotient_Borrow_1DigitMul -> listOf(
                 DivisionPhase.InputQuotientTens,
                 DivisionPhase.InputMultiply1,
                 DivisionPhase.InputSubtract1Tens,
@@ -200,7 +203,29 @@ class DivisionViewModel : ViewModel() {
                 DivisionPhase.Complete
             )
 
-            UXPattern.E -> listOf(
+            DivisionPattern.TensQuotient_SkipBorrow_1DigitMul -> listOf(
+                DivisionPhase.InputQuotientTens,
+                DivisionPhase.InputMultiply1,
+                DivisionPhase.InputSubtract1Tens,
+                DivisionPhase.InputBringDownFromDividendOnes,
+                DivisionPhase.InputQuotientOnes,
+                DivisionPhase.InputMultiply2Ones,
+                DivisionPhase.InputSubtract2Result,
+                DivisionPhase.Complete
+            )
+
+//            DivisionPattern.TensQuotient_Subtract1TnesZero_1DigitMul -> listOf(
+//                DivisionPhase.InputQuotientTens,
+//                DivisionPhase.InputMultiply1,
+//                DivisionPhase.InputSubtract1Tens,
+//                DivisionPhase.InputBringDownFromDividendOnes,
+//                DivisionPhase.InputQuotientOnes,
+//                DivisionPhase.InputMultiply2Ones,
+//                DivisionPhase.InputSubtract2Result,
+//                DivisionPhase.Complete
+//            )
+
+            DivisionPattern.OnesQuotient_Borrow -> listOf(
                 DivisionPhase.InputQuotient,
                 DivisionPhase.InputMultiply1Tens,
                 DivisionPhase.InputMultiply1Ones,
@@ -208,7 +233,7 @@ class DivisionViewModel : ViewModel() {
                 DivisionPhase.InputSubtract1Result,
                 DivisionPhase.Complete
             )
-            UXPattern.F -> listOf(
+            DivisionPattern.OnesQuotient_NoBorrow -> listOf(
                 DivisionPhase.InputQuotient,
                 DivisionPhase.InputMultiply1Tens,
                 DivisionPhase.InputMultiply1Ones,
@@ -219,48 +244,93 @@ class DivisionViewModel : ViewModel() {
     }
 
 
-    private fun detectPattern(dividend: Int, divisor: Int): UXPattern {
-        val tens = dividend / 10
-        val ones = dividend % 10
+    private fun detectPattern(dividend: Int, divisor: Int): DivisionPattern {
+        val dividendTens = dividend / 10
+        val dividendOnes = dividend % 10
+        val quotient = dividend / divisor
 
-        if (tens < divisor) {
-            val q = dividend / divisor
-            if (ones < divisor * q % 10) {
-                return UXPattern.E
+        if (dividendTens < divisor) {
+            if (dividendOnes < divisor * quotient % 10) {
+                return DivisionPattern.OnesQuotient_Borrow
             } else {
-                return UXPattern.F
+                return DivisionPattern.OnesQuotient_NoBorrow
             }
         }
 
-        val firstQuotient = tens / divisor
-        val firstProduct = firstQuotient * divisor
-        val firstSub = tens - firstProduct
-        val bringDowned = firstSub * 10 + ones
+        val quotientTens = quotient / 10
+        val multiply1 = quotientTens * divisor
+        val subtract1Tens = dividendTens - multiply1
+        val subtract1 = subtract1Tens * 10 + dividendOnes
 
 //        println("ones: $ones")
 //        println("firstProduct: ${firstProduct}")
 
-        val secondQuotient = bringDowned / divisor
-        val secondProduct = secondQuotient * divisor
-        val secondSub = bringDowned - secondProduct
+        val quotientOnes = quotient % 10
+        val multiply2 = quotientOnes * divisor
+        val subtract2 = subtract1 - multiply2
 
-        val topDigit = bringDowned % 10
-        val bottomDigit = secondProduct % 10
-        val hasBorrow = topDigit < bottomDigit
-        val isSecondMultiplyTwoDigits = secondProduct >= 10
+//        val topDigit = subtract1 % 10
+//        val bottomDigit = multiply2 % 10
+//        val hasBorrow = topDigit < bottomDigit
+        val subtract1Ones = subtract1 % 10
+        val multiply2Ones = multiply2 % 10
+        val hasBorrow = subtract1Ones < multiply2Ones
+        val isSecondMultiplyTwoDigits = multiply2 >= 10
+
+        val skipBorrow = hasBorrow && (subtract1Tens == 1)
 
         return when {
+//            subtract1Tens == 0 && !isSecondMultiplyTwoDigits -> DivisionPattern.TensQuotient_Subtract1TnesZero_1DigitMul
+            skipBorrow && !isSecondMultiplyTwoDigits -> DivisionPattern.TensQuotient_SkipBorrow_1DigitMul
+
             // C: 받아내림 있음, 두자리 곱셈
-            hasBorrow && isSecondMultiplyTwoDigits -> UXPattern.C
+            hasBorrow && isSecondMultiplyTwoDigits -> DivisionPattern.TensQuotient_Borrow_2DigitMul
             // D: 받아내림 있음, 일의자리 곱셈만
-            hasBorrow && !isSecondMultiplyTwoDigits -> UXPattern.D
+            hasBorrow && !isSecondMultiplyTwoDigits -> DivisionPattern.TensQuotient_Borrow_1DigitMul
             // A: 받아내림 없음, 두자리 곱셈
-            !hasBorrow && isSecondMultiplyTwoDigits -> UXPattern.A
+            !hasBorrow && isSecondMultiplyTwoDigits -> DivisionPattern.TensQuotient_NoBorrow_2DigitMul
             // B: 받아내림 없음, 일의자리 곱셈만
-            !hasBorrow && !isSecondMultiplyTwoDigits -> UXPattern.B
-            else -> UXPattern.A // fallback (안 맞는 케이스는 A 처리)
+            !hasBorrow && !isSecondMultiplyTwoDigits -> DivisionPattern.TensQuotient_NoBorrow_1DigitMul
+            else -> DivisionPattern.TensQuotient_NoBorrow_2DigitMul // fallback (안 맞는 케이스는 A 처리)
         }
     }
+
+//    private fun detectPattern(dividend: Int, divisor: Int): DivisionPattern {
+//        val tens = dividend / 10
+//        val ones = dividend % 10
+//
+//        // 핵심 수정: 첫 몫이 0인지 → OnesQuotient 여부
+//        val firstQuotient = (dividend / 10) / divisor
+//        if (firstQuotient == 0) {
+//            val quotient = dividend / divisor
+//            val product = quotient * divisor
+//            val hasBorrow = (dividend % 10) < (product % 10)
+//            return if (hasBorrow) {
+//                DivisionPattern.OnesQuotient_Borrow
+//            } else {
+//                DivisionPattern.OnesQuotient_NoBorrow
+//            }
+//        }
+//
+//        // TensQuotient 분기
+//        val firstProduct = firstQuotient * divisor
+//        val firstSub = tens - firstProduct
+//        val bringDowned = firstSub * 10 + ones
+//
+//        val secondQuotient = bringDowned / divisor
+//        val secondProduct = secondQuotient * divisor
+//
+//        val hasBorrow = bringDowned < secondProduct
+//        val isSecondMultiplyTwoDigits = secondProduct >= 10
+//
+//        return when {
+//            hasBorrow && isSecondMultiplyTwoDigits -> DivisionPattern.TensQuotient_Borrow_2DigitMul
+//            hasBorrow && !isSecondMultiplyTwoDigits -> DivisionPattern.TensQuotient_Borrow_1DigitMul
+//            !hasBorrow && isSecondMultiplyTwoDigits -> DivisionPattern.TensQuotient_NoBorrow_2DigitMul
+//            else -> DivisionPattern.TensQuotient_NoBorrow_1DigitMul
+//        }
+//    }
+
 
 //    fun testExample(name: String, dividend: Int, divisor: Int, expectedInputs: List<String>): Boolean {
 //        val pattern = detectPattern(dividend, divisor)

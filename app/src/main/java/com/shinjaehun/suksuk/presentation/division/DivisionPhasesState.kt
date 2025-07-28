@@ -27,10 +27,19 @@ data class DivisionPhasesState(
     val phases: List<DivisionPhase> = emptyList(),
     val inputs: List<String> = emptyList(),
     val feedback: String? = null,
-    val pattern: UXPattern? = null
+    val pattern: DivisionPattern? = null
 )
 
-enum class UXPattern { A, B, C, D, E, F }
+enum class DivisionPattern {
+    TensQuotient_NoBorrow_2DigitMul,
+    TensQuotient_NoBorrow_1DigitMul,
+    TensQuotient_Borrow_2DigitMul,
+    TensQuotient_Borrow_1DigitMul,
+    OnesQuotient_Borrow,
+    OnesQuotient_NoBorrow,
+    TensQuotient_SkipBorrow_1DigitMul,
+//    TensQuotient_Subtract1TnesZero_1DigitMul
+}
 
 
 // 셀 상태 클래스
@@ -39,13 +48,19 @@ data class InputCell(
     val editable: Boolean = false,
     val correct: Boolean = false,
     val highlight: Highlight = Highlight.None,
-    val isCrossedOut: Boolean = false
+    val crossOutColor: CrossOutColor = CrossOutColor.None
 )
 
 enum class Highlight {
     None,      // 일반
     Editing,   // 현재 입력 중(빨간색 ?)
     Related    // 연관 강조(파란색)
+}
+
+enum class CrossOutColor {
+    None,          // 취소선 없음
+    Pending,       // 입력 중
+    Confirmed      // 입력 후
 }
 
 data class DivisionUiState(
