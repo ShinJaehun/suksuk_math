@@ -25,7 +25,7 @@ class DivisionViewModel(
 
     init {
         if(autoStart){
-            startNewProblem(46, 3) // TensQuotient_NoBorrow_2DigitMul
+//            startNewProblem(46, 3) // TensQuotient_NoBorrow_2DigitMul
 //            startNewProblem(85, 7) // TensQuotient_NoBorrow_2DigitMul
 //            startNewProblem(84, 4) // TensQuotient_NoBorrow_1DigitMul
 //            startNewProblem(45, 4) // TensQuotient_NoBorrow_1DigitMul
@@ -33,7 +33,7 @@ class DivisionViewModel(
 //            startNewProblem(90, 7) // TensQuotient_Borrow_2DigitMul
 //            startNewProblem(70, 6) // TensQuotient_SkipBorrow_1DigitMul
 //            startNewProblem(93, 8) // TensQuotient_SkipBorrow_1DigitMul
-//            startNewProblem(62, 7) // OnesQuotient_Borrow
+            startNewProblem(62, 7) // OnesQuotient_Borrow
 //            startNewProblem(39, 4) // OnesQuotient_NoBorrow
 //            startNewProblem(10, 9) // 현재 이러한 경우는 고려하고 있지 않음...
         }
@@ -96,12 +96,12 @@ class DivisionViewModel(
 //        println("📥 submitInput('$input') at phase=${phase}")
 
         // for debugging : 전체 UI 상태
-        val previewUiState = mapPhasesToCells(state, input)
-        println("🖼️ 이전 UI 상태:")
-        println(previewUiState.toDebugString(phase))
+//        val previewUiState = mapPhasesToCells(state, input)
+//        println("🖼️ 이전 UI 상태:")
+//        println(previewUiState.toDebugString(phase))
 
         // for debugging : 입력 상태
-        logPhaseContext(state, input)
+//        logPhaseContext(state, input)
 
         val isCorrect = evaluator.isCorrect(phase, input, state.dividend, state.divisor)
 
@@ -127,84 +127,84 @@ class DivisionViewModel(
     }
 }
 
-fun logPhaseContext(
-    state: DivisionPhasesState,
-    currentInput: String
-) {
-    val currentPhase = state.phases.getOrNull(state.currentPhaseIndex)
-    val currentIndex = state.currentPhaseIndex
-    val allInputs = state.inputs.joinToString()
-
-    val cellNames = guessCellNamesFromPhase(currentPhase)
-
-    println("🧩 입력상황 ▶️")
-    println("   ▶️ PhaseIndex: $currentIndex")
-    println("   ▶️ Phase     : $currentPhase")
-    println("   ▶️ CellNames : ${cellNames.joinToString()}")
-    println("   ▶️ CurrentInput: '$currentInput'")
-    println("   ▶️ All Inputs : [$allInputs]")
-    println("---------------------------------")
-}
-
-fun guessCellNamesFromPhase(phase: DivisionPhase?): List<CellName> = when (phase) {
-    DivisionPhase.InputQuotientTens -> listOf(CellName.QuotientTens)
-    DivisionPhase.InputQuotientOnes, DivisionPhase.InputQuotient -> listOf(CellName.QuotientOnes)
-
-    DivisionPhase.InputMultiply1Tens, DivisionPhase.InputMultiply1 -> listOf(CellName.Multiply1Tens)
-    DivisionPhase.InputMultiply1Ones -> listOf(CellName.Multiply1Ones)
-    DivisionPhase.InputMultiply1Total -> listOf(CellName.Multiply1Tens, CellName.Multiply1Ones)
-
-    DivisionPhase.InputSubtract1Tens -> listOf(CellName.Subtract1Tens)
-    DivisionPhase.InputSubtract1Ones, DivisionPhase.InputSubtract1Result -> listOf(CellName.Subtract1Ones)
-
-    DivisionPhase.InputMultiply2Tens -> listOf(CellName.Multiply2Tens)
-    DivisionPhase.InputMultiply2Ones -> listOf(CellName.Multiply2Ones)
-    DivisionPhase.InputMultiply2Total -> listOf(CellName.Multiply2Tens, CellName.Multiply2Ones)
-
-    DivisionPhase.InputSubtract2Result -> listOf(CellName.Subtract2Ones)
-
-    DivisionPhase.InputBorrowFromDividendTens -> listOf(CellName.BorrowDividendTens)
-    DivisionPhase.InputBorrowFromSubtract1Tens -> listOf(CellName.BorrowSubtract1Tens)
-
-    DivisionPhase.InputBringDownFromDividendOnes -> listOf(CellName.Subtract1Ones)
-
-    else -> emptyList()
-}
-
-fun DivisionUiState.toDebugString(phase: DivisionPhase?): String {
-    return buildString {
-        appendLine("▶️ Stage: $stage")
-        appendLine("▶️ Phase: ${phase}")
-        appendLine("▶️ Divisor: ${divisor.value}, highlight=${divisor.highlight}, editable=${divisor.editable}")
-        appendLine("▶️ Dividend: ${dividendTens.value}${dividendOnes.value}")
-        appendLine("    - DividendTens: highlight=${dividendTens.highlight}, crossOut=${dividendTens.crossOutColor}")
-        appendLine("    - DividendOnes: highlight=${dividendOnes.highlight}")
-        appendLine("    - Borrowed10DividendOnes: ${borrowed10DividendOnes.value}")
-
-        appendLine("▶️ Quotient: ${quotientTens.value}${quotientOnes.value}")
-        appendLine("    - QuotientTens: editable=${quotientTens.editable}, highlight=${quotientTens.highlight}")
-        appendLine("    - QuotientOnes: editable=${quotientOnes.editable}, highlight=${quotientOnes.highlight}")
-
-        appendLine("▶️ Multiply1: ${multiply1Tens.value}${multiply1Ones.value}")
-        appendLine("    - Multiply1Tens: editable=${multiply1Tens.editable}, highlight=${multiply1Tens.highlight}")
-        appendLine("    - Multiply1Ones: editable=${multiply1Ones.editable}, highlight=${multiply1Ones.highlight}")
-
-        appendLine("▶️ Subtract1: ${subtract1Tens.value}${subtract1Ones.value}")
-        appendLine("    - Subtract1Tens: editable=${subtract1Tens.editable}, crossOut=${subtract1Tens.crossOutColor}")
-        appendLine("    - Subtract1Ones: editable=${subtract1Ones.editable}")
-        appendLine("    - Borrowed10Subtract1Ones: ${borrowed10Subtract1Ones.value}")
-
-        appendLine("▶️ Multiply2: ${multiply2Tens.value}${multiply2Ones.value}")
-        appendLine("    - Multiply2Tens: editable=${multiply2Tens.editable}")
-        appendLine("    - Multiply2Ones: editable=${multiply2Ones.editable}")
-
-        appendLine("▶️ Subtract2: ${subtract2Ones.value}, editable=${subtract2Ones.editable}")
-
-        appendLine("▶️ Borrowing:")
-        appendLine("    - From DividendTens: ${borrowDividendTens.value}, editable=${borrowDividendTens.editable}")
-        appendLine("    - From Subtract1Tens: ${borrowSubtract1Tens.value}, editable=${borrowSubtract1Tens.editable}")
-
-        appendLine("▶️ SubtractLines: $subtractLines")
-        appendLine("▶️ Feedback: $feedback")
-    }
-}
+//fun logPhaseContext(
+//    state: DivisionPhasesState,
+//    currentInput: String
+//) {
+//    val currentPhase = state.phases.getOrNull(state.currentPhaseIndex)
+//    val currentIndex = state.currentPhaseIndex
+//    val allInputs = state.inputs.joinToString()
+//
+//    val cellNames = guessCellNamesFromPhase(currentPhase)
+//
+//    println("🧩 입력상황 ▶️")
+//    println("   ▶️ PhaseIndex: $currentIndex")
+//    println("   ▶️ Phase     : $currentPhase")
+//    println("   ▶️ CellNames : ${cellNames.joinToString()}")
+//    println("   ▶️ CurrentInput: '$currentInput'")
+//    println("   ▶️ All Inputs : [$allInputs]")
+//    println("---------------------------------")
+//}
+//
+//fun guessCellNamesFromPhase(phase: DivisionPhase?): List<CellName> = when (phase) {
+//    DivisionPhase.InputQuotientTens -> listOf(CellName.QuotientTens)
+//    DivisionPhase.InputQuotientOnes, DivisionPhase.InputQuotient -> listOf(CellName.QuotientOnes)
+//
+//    DivisionPhase.InputMultiply1Tens, DivisionPhase.InputMultiply1 -> listOf(CellName.Multiply1Tens)
+//    DivisionPhase.InputMultiply1Ones -> listOf(CellName.Multiply1Ones)
+//    DivisionPhase.InputMultiply1Total -> listOf(CellName.Multiply1Tens, CellName.Multiply1Ones)
+//
+//    DivisionPhase.InputSubtract1Tens -> listOf(CellName.Subtract1Tens)
+//    DivisionPhase.InputSubtract1Ones, DivisionPhase.InputSubtract1Result -> listOf(CellName.Subtract1Ones)
+//
+//    DivisionPhase.InputMultiply2Tens -> listOf(CellName.Multiply2Tens)
+//    DivisionPhase.InputMultiply2Ones -> listOf(CellName.Multiply2Ones)
+//    DivisionPhase.InputMultiply2Total -> listOf(CellName.Multiply2Tens, CellName.Multiply2Ones)
+//
+//    DivisionPhase.InputSubtract2Result -> listOf(CellName.Subtract2Ones)
+//
+//    DivisionPhase.InputBorrowFromDividendTens -> listOf(CellName.BorrowDividendTens)
+//    DivisionPhase.InputBorrowFromSubtract1Tens -> listOf(CellName.BorrowSubtract1Tens)
+//
+//    DivisionPhase.InputBringDownFromDividendOnes -> listOf(CellName.Subtract1Ones)
+//
+//    else -> emptyList()
+//}
+//
+//fun DivisionUiState.toDebugString(phase: DivisionPhase?): String {
+//    return buildString {
+//        appendLine("▶️ Stage: $stage")
+//        appendLine("▶️ Phase: ${phase}")
+//        appendLine("▶️ Divisor: ${divisor.value}, highlight=${divisor.highlight}, editable=${divisor.editable}")
+//        appendLine("▶️ Dividend: ${dividendTens.value}${dividendOnes.value}")
+//        appendLine("    - DividendTens: highlight=${dividendTens.highlight}, crossOut=${dividendTens.crossOutColor}")
+//        appendLine("    - DividendOnes: highlight=${dividendOnes.highlight}")
+//        appendLine("    - Borrowed10DividendOnes: ${borrowed10DividendOnes.value}")
+//
+//        appendLine("▶️ Quotient: ${quotientTens.value}${quotientOnes.value}")
+//        appendLine("    - QuotientTens: editable=${quotientTens.editable}, highlight=${quotientTens.highlight}")
+//        appendLine("    - QuotientOnes: editable=${quotientOnes.editable}, highlight=${quotientOnes.highlight}")
+//
+//        appendLine("▶️ Multiply1: ${multiply1Tens.value}${multiply1Ones.value}")
+//        appendLine("    - Multiply1Tens: editable=${multiply1Tens.editable}, highlight=${multiply1Tens.highlight}")
+//        appendLine("    - Multiply1Ones: editable=${multiply1Ones.editable}, highlight=${multiply1Ones.highlight}")
+//
+//        appendLine("▶️ Subtract1: ${subtract1Tens.value}${subtract1Ones.value}")
+//        appendLine("    - Subtract1Tens: editable=${subtract1Tens.editable}, crossOut=${subtract1Tens.crossOutColor}")
+//        appendLine("    - Subtract1Ones: editable=${subtract1Ones.editable}")
+//        appendLine("    - Borrowed10Subtract1Ones: ${borrowed10Subtract1Ones.value}")
+//
+//        appendLine("▶️ Multiply2: ${multiply2Tens.value}${multiply2Ones.value}")
+//        appendLine("    - Multiply2Tens: editable=${multiply2Tens.editable}")
+//        appendLine("    - Multiply2Ones: editable=${multiply2Ones.editable}")
+//
+//        appendLine("▶️ Subtract2: ${subtract2Ones.value}, editable=${subtract2Ones.editable}")
+//
+//        appendLine("▶️ Borrowing:")
+//        appendLine("    - From DividendTens: ${borrowDividendTens.value}, editable=${borrowDividendTens.editable}")
+//        appendLine("    - From Subtract1Tens: ${borrowSubtract1Tens.value}, editable=${borrowSubtract1Tens.editable}")
+//
+//        appendLine("▶️ SubtractLines: $subtractLines")
+//        appendLine("▶️ Feedback: $feedback")
+//    }
+//}

@@ -44,17 +44,18 @@ class PhaseBuilder {
                 DivisionPhase.Complete
             )
 
-            DivisionPattern.TensQuotient_Borrow_1DigitMul -> listOf(
-                DivisionPhase.InputQuotientTens,
-                DivisionPhase.InputMultiply1,
-                DivisionPhase.InputSubtract1Tens,
-                DivisionPhase.InputBringDownFromDividendOnes,
-                DivisionPhase.InputQuotientOnes,
-                DivisionPhase.InputMultiply2Ones,
-                DivisionPhase.InputBorrowFromSubtract1Tens,
-                DivisionPhase.InputSubtract2Result,
-                DivisionPhase.Complete
-            )
+            // 아마 존재하지 않을 듯...
+//            DivisionPattern.TensQuotient_Borrow_1DigitMul -> listOf(
+//                DivisionPhase.InputQuotientTens,
+//                DivisionPhase.InputMultiply1,
+//                DivisionPhase.InputSubtract1Tens,
+//                DivisionPhase.InputBringDownFromDividendOnes,
+//                DivisionPhase.InputQuotientOnes,
+//                DivisionPhase.InputMultiply2Ones,
+//                DivisionPhase.InputBorrowFromSubtract1Tens,
+//                DivisionPhase.InputSubtract2Result,
+//                DivisionPhase.Complete
+//            )
 
             DivisionPattern.TensQuotient_SkipBorrow_1DigitMul -> listOf(
                 DivisionPhase.InputQuotientTens,
@@ -66,17 +67,6 @@ class PhaseBuilder {
                 DivisionPhase.InputSubtract2Result,
                 DivisionPhase.Complete
             )
-
-//            DivisionPattern.TensQuotient_Subtract1TnesZero_1DigitMul -> listOf(
-//                DivisionPhase.InputQuotientTens,
-//                DivisionPhase.InputMultiply1,
-//                DivisionPhase.InputSubtract1Tens,
-//                DivisionPhase.InputBringDownFromDividendOnes,
-//                DivisionPhase.InputQuotientOnes,
-//                DivisionPhase.InputMultiply2Ones,
-//                DivisionPhase.InputSubtract2Result,
-//                DivisionPhase.Complete
-//            )
 
             DivisionPattern.OnesQuotient_Borrow_2DigitMul -> listOf(
                 DivisionPhase.InputQuotient,

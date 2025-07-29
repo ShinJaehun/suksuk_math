@@ -28,6 +28,8 @@ class DivisionViewModelTest {
 
             Triple(50, 3, DivisionPattern.TensQuotient_Borrow_2DigitMul),
             Triple(90, 7, DivisionPattern.TensQuotient_Borrow_2DigitMul),
+            Triple(70, 4, DivisionPattern.TensQuotient_Borrow_2DigitMul),
+
 
             Triple(70, 6, DivisionPattern.TensQuotient_SkipBorrow_1DigitMul),
             Triple(71, 6, DivisionPattern.TensQuotient_SkipBorrow_1DigitMul),

@@ -45,7 +45,7 @@ object PatternDetector {
             // C: 받아내림 있음, 두자리 곱셈
             hasBorrow && isSecondMultiplyTwoDigits -> DivisionPattern.TensQuotient_Borrow_2DigitMul
             // D: 받아내림 있음, 일의자리 곱셈만
-            hasBorrow && !isSecondMultiplyTwoDigits -> DivisionPattern.TensQuotient_Borrow_1DigitMul
+//            hasBorrow && !isSecondMultiplyTwoDigits -> DivisionPattern.TensQuotient_Borrow_1DigitMul
             // A: 받아내림 없음, 두자리 곱셈
             !hasBorrow && isSecondMultiplyTwoDigits -> DivisionPattern.TensQuotient_NoBorrow_2DigitMul
             // B: 받아내림 없음, 일의자리 곱셈만
