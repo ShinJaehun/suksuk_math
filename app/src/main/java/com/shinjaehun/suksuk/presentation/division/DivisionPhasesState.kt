@@ -48,7 +48,6 @@ enum class DivisionPattern {
 data class InputCell(
     val value: String = "",
     val editable: Boolean = false,
-    val correct: Boolean = false,
     val highlight: Highlight = Highlight.None,
     val crossOutColor: CrossOutColor = CrossOutColor.None,
 )
@@ -111,8 +110,13 @@ enum class CellName {
     BorrowSubtract1Tens
 }
 
-data class PhaseCellInfo(
+data class DivisionStepUiLayout(
     val phase: DivisionPhase,
-    val cellName: CellName,
-    val inputIndex: Int
+    val cellConfigs: Map<CellName, CellConfig> = emptyMap(),
+    val showSubtractLine: Boolean = false,
+)
+data class CellConfig(
+    val editable: Boolean = false,
+    val highlight: Highlight = Highlight.None,
+    val crossOutColor: CrossOutColor = CrossOutColor.None,
 )

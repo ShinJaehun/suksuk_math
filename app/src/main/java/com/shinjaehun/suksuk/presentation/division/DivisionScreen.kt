@@ -46,7 +46,8 @@ fun DivisionScreen(
     val currentInput = viewModel.currentInput
 
     val currentUiState = remember(phasesState, currentInput) {
-        mapPhasesToCells(phasesState, currentInput)
+//        mapPhasesToCells(phasesState, currentInput)
+        DivisionUiStateMapper.mapToUiState(phasesState, currentInput)
     }
 
     val cellWidth = 42.dp

@@ -1,15 +1,13 @@
 package com.shinjaehun.suksuk.presentation.division
 
-import android.util.Log
-
 fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): DivisionUiState {
 //    val inputs = state.inputs
-    val phase = state.phases.getOrNull(state.currentPhaseIndex)
+    val currentPhase = state.phases.getOrNull(state.currentPhaseIndex)
 
 //    val isComplete = phase == null || phase is DivisionPhase.Complete
     val isComplete = state.currentPhaseIndex >= state.phases.size
 
-    val relatedCells: Set<CellName> = when (phase) {
+    val relatedCells: Set<CellName> = when (currentPhase) {
         DivisionPhase.InputQuotientTens ->
             setOf(CellName.Divisor, CellName.DividendTens)
 
@@ -245,7 +243,7 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
 
     val crossOutColorDividendTens = when {
         state.inputs.getOrNull(borrowDividendTensIdx) != null -> CrossOutColor.Confirmed
-        phase == DivisionPhase.InputBorrowFromDividendTens -> CrossOutColor.Pending
+        currentPhase == DivisionPhase.InputBorrowFromDividendTens -> CrossOutColor.Pending
         else -> CrossOutColor.None
     }
 
@@ -256,7 +254,7 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
 
     val crossOutColorSub1Tens = when {
         state.inputs.getOrNull(borrowSubtract1TensIdx) != null -> CrossOutColor.Confirmed
-        phase == DivisionPhase.InputBorrowFromSubtract1Tens -> CrossOutColor.Pending
+        currentPhase == DivisionPhase.InputBorrowFromSubtract1Tens -> CrossOutColor.Pending
         else -> CrossOutColor.None
     }
 
@@ -370,15 +368,15 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
 //    }
 
     val multiply1TensCell: InputCell = if (multiply1TotalIdx >= 0) {
-        makeCell(CellName.Multiply1Tens, multiply1TotalIdx, editing = phase == DivisionPhase.InputMultiply1Total)
+        makeCell(CellName.Multiply1Tens, multiply1TotalIdx, editing = currentPhase == DivisionPhase.InputMultiply1Total)
     } else {
-        makeCell(CellName.Multiply1Tens, multiply1TensIdx, editing = phase == DivisionPhase.InputMultiply1)
+        makeCell(CellName.Multiply1Tens, multiply1TensIdx, editing = currentPhase == DivisionPhase.InputMultiply1)
     }
 
     val multiply1OnesCell: InputCell = if (multiply1TotalIdx >= 0) {
-        makeCell(CellName.Multiply1Ones, multiply1TotalIdx, editing = phase == DivisionPhase.InputMultiply1Total)
+        makeCell(CellName.Multiply1Ones, multiply1TotalIdx, editing = currentPhase == DivisionPhase.InputMultiply1Total)
     } else {
-        makeCell(CellName.Multiply1Ones, multiply1OnesIdx, editing = phase == DivisionPhase.InputMultiply1Ones)
+        makeCell(CellName.Multiply1Ones, multiply1OnesIdx, editing = currentPhase == DivisionPhase.InputMultiply1Ones)
     }
 
     val multiply2TensCell: InputCell
@@ -388,19 +386,19 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
         multiply2TensCell = makeCell(
             cellName = CellName.Multiply2Tens,
             idx = multiply2TotalIdx,
-            editing = phase == DivisionPhase.InputMultiply2Total
+            editing = currentPhase == DivisionPhase.InputMultiply2Total
         )
         multiply2OnesCell = makeCell(
             cellName = CellName.Multiply2Ones,
             idx = multiply2TotalIdx,
-            editing = phase == DivisionPhase.InputMultiply2Total
+            editing = currentPhase == DivisionPhase.InputMultiply2Total
         )
     } else if (multiply2OnesIdx >= 0) { // 1자리 곱셈만 있는 경우
         multiply2TensCell = InputCell() // 빈 셀
         multiply2OnesCell = makeCell(
             cellName = CellName.Multiply2Ones,
             idx = multiply2OnesIdx,
-            editing = phase == DivisionPhase.InputMultiply2Ones
+            editing = currentPhase == DivisionPhase.InputMultiply2Ones
         )
     } else { // 곱셈2 자체가 없는 경우 (예외처리)
         multiply2TensCell = InputCell()
@@ -429,7 +427,7 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
         quotientTens = makeCell(
             cellName = CellName.QuotientTens,
             idx = quotientTensIdx,
-            editing = phase == DivisionPhase.InputQuotientTens
+            editing = currentPhase == DivisionPhase.InputQuotientTens
         ),
 //        multiply1Tens = makeCell(
 //            cellName = CellName.Multiply1Tens,
@@ -448,13 +446,13 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
         subtract1Tens = makeCell(
             cellName = CellName.Subtract1Tens,
             idx = subtract1TensIdx,
-            editing = phase == DivisionPhase.InputSubtract1Tens,
+            editing = currentPhase == DivisionPhase.InputSubtract1Tens,
             crossOutColor = crossOutColorSub1Tens
         ),
         subtract1Ones = makeCell(
             cellName = CellName.Subtract1Ones,
             idx = subtract1OnesIdx,
-            editing = phase == DivisionPhase.InputBringDownFromDividendOnes || phase == DivisionPhase.InputSubtract1Result
+            editing = currentPhase == DivisionPhase.InputBringDownFromDividendOnes || currentPhase == DivisionPhase.InputSubtract1Result
         ),
         borrowed10Subtract1Ones = makeFixedCell(
             cellName = CellName.Borrowed10Subtract1Ones,
@@ -464,7 +462,7 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
         quotientOnes = makeCell(
             cellName = CellName.QuotientOnes,
             idx = quotientOnesIdx,
-            editing = phase == DivisionPhase.InputQuotientOnes || phase == DivisionPhase.InputQuotient
+            editing = currentPhase == DivisionPhase.InputQuotientOnes || currentPhase == DivisionPhase.InputQuotient
         ),
 
 //        multiply2Tens = makeCell(
@@ -522,21 +520,21 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
         subtract2Ones = makeCell(
             cellName = CellName.Subtract2Ones,
             idx = subtract2OnesIdx,
-            editing = phase == DivisionPhase.InputSubtract2Result
+            editing = currentPhase == DivisionPhase.InputSubtract2Result
         ),
         borrowDividendTens = makeCell(
             cellName = CellName.BorrowDividendTens,
             idx = borrowDividendTensIdx,
-            editing = phase == DivisionPhase.InputBorrowFromDividendTens
+            editing = currentPhase == DivisionPhase.InputBorrowFromDividendTens
         ),
         borrowSubtract1Tens = makeCell(
             cellName = CellName.BorrowSubtract1Tens,
             idx = borrowSubtract1TensIdx,
-            editing = phase == DivisionPhase.InputBorrowFromSubtract1Tens
+            editing = currentPhase == DivisionPhase.InputBorrowFromSubtract1Tens
         ),
         stage = state.currentPhaseIndex,
         feedback = when {
-            phase == DivisionPhase.Complete -> "정답입니다!"
+            currentPhase == DivisionPhase.Complete -> "정답입니다!"
             else -> state.feedback
         },
         subtractLines = subtractLines
