@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,7 +44,11 @@ fun DivisionScreen(
 ) {
     val phasesState by viewModel.uiState.collectAsState()
     val currentInput = viewModel.currentInput
-    val uiState = mapPhasesToCells(phasesState, currentInput)  // 변환 함수 사용!
+
+    val currentUiState = remember(phasesState, currentInput) {
+        mapPhasesToCells(phasesState, currentInput)
+    }
+
     val cellWidth = 42.dp
 
     // 단계별 cover visibility - replace with actual uiState flags
@@ -88,7 +93,7 @@ fun DivisionScreen(
             )
 
             // dividend tens
-            val dividendTensCell = uiState.dividendTens
+            val dividendTensCell = currentUiState.dividendTens
             NumberText(
                 cell = dividendTensCell,
                 modifier = Modifier
@@ -101,7 +106,7 @@ fun DivisionScreen(
             )
 
             // dividend tens borrow
-            val dividendTensBorrowCell = uiState.borrowDividendTens
+            val dividendTensBorrowCell = currentUiState.borrowDividendTens
             BorrowText(
                 cell = dividendTensBorrowCell,
                 modifier = Modifier
@@ -114,7 +119,7 @@ fun DivisionScreen(
             )
 
             // dividend ones
-            val dividendOnesCell = uiState.dividendOnes
+            val dividendOnesCell = currentUiState.dividendOnes
             NumberText(
                 cell = dividendOnesCell,
                 modifier = Modifier
@@ -126,7 +131,7 @@ fun DivisionScreen(
                     }
             )
 
-            val dividendOnesBorrowed10Cell = uiState.borrowed10DividendOnes
+            val dividendOnesBorrowed10Cell = currentUiState.borrowed10DividendOnes
             BorrowText(
                 cell = dividendOnesBorrowed10Cell,
                 modifier = Modifier
@@ -140,7 +145,7 @@ fun DivisionScreen(
             )
 
             // divisor
-            val divisorCell = uiState.divisor
+            val divisorCell = currentUiState.divisor
             NumberText(
                 cell = divisorCell,
                 modifier = Modifier
@@ -153,7 +158,7 @@ fun DivisionScreen(
             )
 
             // 몫(십의 자리)
-            val quotientTensCell = uiState.quotientTens
+            val quotientTensCell = currentUiState.quotientTens
             NumberText(
                 cell = quotientTensCell,
                 modifier = Modifier
@@ -166,7 +171,7 @@ fun DivisionScreen(
             )
 
             // 몫(일의 자리)
-            val quotientOnesCell = uiState.quotientOnes
+            val quotientOnesCell = currentUiState.quotientOnes
             NumberText(
                 cell = quotientOnesCell,
                 modifier = Modifier
@@ -179,7 +184,7 @@ fun DivisionScreen(
             )
 
             // 1차 곱셈(7)
-            val multiply1TensCell = uiState.multiply1Tens
+            val multiply1TensCell = currentUiState.multiply1Tens
             NumberText(
                 cell = multiply1TensCell,
                 modifier = Modifier
@@ -191,7 +196,7 @@ fun DivisionScreen(
                     }
             )
 
-            val multiply1OnesCell = uiState.multiply1Ones
+            val multiply1OnesCell = currentUiState.multiply1Ones
             NumberText(
                 cell = multiply1OnesCell,
                 modifier = Modifier
@@ -203,7 +208,7 @@ fun DivisionScreen(
                     }
             )
 
-            if(uiState.subtractLines.showSubtract1){
+            if(currentUiState.subtractLines.showSubtract1){
                 Image(
                     painter = painterResource(id = R.drawable.ic_horizontal_line),
                     contentDescription = "Subtraction Line",
@@ -220,7 +225,7 @@ fun DivisionScreen(
             }
 
             // 1차 뺄셈(2)
-            val subtract1TensCell = uiState.subtract1Tens
+            val subtract1TensCell = currentUiState.subtract1Tens
             NumberText(
                 cell = subtract1TensCell,
                 modifier = Modifier
@@ -233,7 +238,7 @@ fun DivisionScreen(
             )
 
             // first subtraction borrow
-            val subtract1BorrowCell = uiState.borrowSubtract1Tens
+            val subtract1BorrowCell = currentUiState.borrowSubtract1Tens
             BorrowText(
                 cell = subtract1BorrowCell,
                 modifier = Modifier
@@ -246,7 +251,7 @@ fun DivisionScreen(
             )
 
             // bringDown(2), 뺄셈 오른쪽
-            val subtract1OnesCell = uiState.subtract1Ones
+            val subtract1OnesCell = currentUiState.subtract1Ones
             NumberText(
                 cell = subtract1OnesCell,
                 modifier = Modifier
@@ -258,7 +263,7 @@ fun DivisionScreen(
                     }
             )
 
-            val subtract1Borrowed10Cell = uiState.borrowed10Subtract1Ones
+            val subtract1Borrowed10Cell = currentUiState.borrowed10Subtract1Ones
             BorrowText(
                 cell = subtract1Borrowed10Cell,
                 modifier = Modifier
@@ -272,7 +277,7 @@ fun DivisionScreen(
             )
 
             // 2차 곱셈(21), 두 칸: 22 아래
-            val multiply2TensCell = uiState.multiply2Tens
+            val multiply2TensCell = currentUiState.multiply2Tens
             NumberText(
                 cell = multiply2TensCell,
                 modifier = Modifier
@@ -284,7 +289,7 @@ fun DivisionScreen(
                     }
             )
 
-            val multiply2OnesCell = uiState.multiply2Ones
+            val multiply2OnesCell = currentUiState.multiply2Ones
             NumberText(
                 cell = multiply2OnesCell,
                 modifier = Modifier
@@ -296,7 +301,7 @@ fun DivisionScreen(
                     }
             )
 
-            if (uiState.subtractLines.showSubtract2){
+            if (currentUiState.subtractLines.showSubtract2){
                 Image(
                     painter = painterResource(id = R.drawable.ic_horizontal_line),
                     contentDescription = "Subtraction Line",
@@ -312,7 +317,7 @@ fun DivisionScreen(
 
 
             // 나머지(1) 한 칸만!
-            val remainderCell = uiState.subtract2Ones
+            val remainderCell = currentUiState.subtract2Ones
             NumberText(
                 cell = remainderCell,
                 modifier = Modifier
@@ -337,7 +342,7 @@ fun DivisionScreen(
                     onClear = viewModel::onClear,
                     onEnter = viewModel::onEnter
                 )
-                uiState.feedback?.let {
+                currentUiState.feedback?.let {
                     Spacer(Modifier.height(16.dp))
                     Text(
                         text = it,

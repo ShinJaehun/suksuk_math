@@ -3,8 +3,9 @@ package com.shinjaehun.suksuk.presentation.division
 import android.util.Log
 
 fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): DivisionUiState {
-    val inputs = state.inputs
+//    val inputs = state.inputs
     val phase = state.phases.getOrNull(state.currentPhaseIndex)
+
 //    val isComplete = phase == null || phase is DivisionPhase.Complete
     val isComplete = state.currentPhaseIndex >= state.phases.size
 
@@ -146,18 +147,18 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
         val input = state.inputs.getOrNull(idx)
         val phaseForIdx = state.phases.getOrNull(idx)
 
-        Log.d("cellValue", "phase=$phase, idx=$idx, editable=$editable, currentInput=$currentInput, input=$input, phaseForIdx=$phaseForIdx")
+//        Log.d("cellValue", "phase=$phase, idx=$idx, editable=$editable, currentInput=$currentInput, input=$input, phaseForIdx=$phaseForIdx")
 
         // 두 자리 곱셈 phase (1차)
         if (phaseForIdx == DivisionPhase.InputMultiply1Total && cellName != null) {
             if (cellName == CellName.Multiply1Tens) {
-                Log.d("cellValue", "Multiply1Tens: currentInput='$currentInput', input=$input")
+//                Log.d("cellValue", "Multiply1Tens: currentInput='$currentInput', input=$input")
                 return if (editable)
                     if (currentInput.isEmpty()) "?" else currentInput.getOrNull(0)?.toString() ?: "?"
                 else input?.getOrNull(0)?.toString() ?: ""
             }
             if (cellName == CellName.Multiply1Ones) {
-                Log.d("cellValue", "Multiply1Ones: currentInput='$currentInput', input=$input")
+//                Log.d("cellValue", "Multiply1Ones: currentInput='$currentInput', input=$input")
                 return if (editable)
                     if (currentInput.length < 2) "?" else currentInput.getOrNull(1)?.toString() ?: "?"
                 else input?.getOrNull(1)?.toString() ?: ""
@@ -167,13 +168,13 @@ fun mapPhasesToCells(state: DivisionPhasesState, currentInput: String): Division
         // 두 자리 곱셈 phase (2차)
         if (phaseForIdx == DivisionPhase.InputMultiply2Total && cellName != null) {
             if (cellName == CellName.Multiply2Tens) {
-                Log.d("cellValue", "Multiply2Tens: currentInput='$currentInput', input=$input")
+//                Log.d("cellValue", "Multiply2Tens: currentInput='$currentInput', input=$input")
                 return if (editable)
                     if (currentInput.isEmpty()) "?" else currentInput.getOrNull(0)?.toString() ?: "?"
                 else input?.getOrNull(0)?.toString() ?: ""
             }
             if (cellName == CellName.Multiply2Ones) {
-                Log.d("cellValue", "Multiply2Ones: currentInput='$currentInput', input=$input")
+//                Log.d("cellValue", "Multiply2Ones: currentInput='$currentInput', input=$input")
                 return if (editable)
                     if (currentInput.length < 2) "?" else currentInput.getOrNull(1)?.toString() ?: "?"
                 else input?.getOrNull(1)?.toString() ?: ""
