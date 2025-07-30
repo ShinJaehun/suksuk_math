@@ -46,24 +46,17 @@ enum class DivisionPattern {
 // 셀 상태 클래스
 data class InputCell(
     val cellName: CellName = CellName.None,
+    val inputIdx: Int = -1,
     val value: String? = null,
     val editable: Boolean = false,
     val highlight: Highlight = Highlight.None,
     val crossOutColor: CrossOutColor = CrossOutColor.None,
 )
 
-// 기능 중복
-//data class CellConfig(
-//    val value: String? = null,
-//    val editable: Boolean = false,
-//    val highlight: Highlight = Highlight.None,
-//    val crossOutColor: CrossOutColor = CrossOutColor.None,
-//)
-
-
 data class DivisionStepUiLayout(
     val phase: DivisionPhase,
     val cells: Map<CellName, InputCell> = emptyMap(),
+    val inputIndices: Map<CellName, Int?> = emptyMap(),
     val showSubtractLine: Boolean = false,
 )
 

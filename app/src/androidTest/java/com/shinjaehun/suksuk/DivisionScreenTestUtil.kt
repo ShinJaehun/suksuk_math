@@ -9,6 +9,29 @@ import com.shinjaehun.suksuk.presentation.division.DivisionPattern
 import com.shinjaehun.suksuk.presentation.division.DivisionScreen
 import com.shinjaehun.suksuk.presentation.division.DivisionViewModel
 
+//fun ComposeContentTestRule.twoDigitDivByOneDigitCase(
+//    pattern: DivisionPattern,
+//    dividend: Int,
+//    divisor: Int,
+//    inputs: List<String>,
+//) {
+//    val viewModel = DivisionViewModel(autoStart = false)
+//    this.setContent {
+//        DivisionScreen(viewModel = viewModel)
+//    }
+//    this.runOnIdle {
+//        viewModel.startNewProblem(dividend, divisor)
+//    }
+//    for (i in inputs.indices) {
+//        this.onNodeWithTag("numpad-${inputs[i]}").performClick()
+//        this.onNodeWithTag("numpad-enter").performClick()
+//        if (i < inputs.lastIndex)
+//            this.onNodeWithTag("feedback").assertDoesNotExist()
+//    }
+//    this.onNodeWithTag("feedback").assertIsDisplayed()
+//    this.onNodeWithTag("feedback").assertTextContains("정답입니다!")
+//}
+
 fun ComposeContentTestRule.twoDigitDivByOneDigitCase(
     pattern: DivisionPattern,
     dividend: Int,
@@ -22,17 +45,30 @@ fun ComposeContentTestRule.twoDigitDivByOneDigitCase(
     this.runOnIdle {
         viewModel.startNewProblem(dividend, divisor)
     }
-    for (i in inputs.indices) {
-        this.onNodeWithTag("numpad-${inputs[i]}").performClick()
-        this.onNodeWithTag("numpad-enter").performClick()
+    var i = 0
+    while (i < inputs.size) {
+        val input = inputs[i]
+        if (input.length == 1) {
+            // 한 자리 입력 (numpad-N → enter)
+            this.onNodeWithTag("numpad-$input").performClick()
+            this.onNodeWithTag("numpad-enter").performClick()
+            i++
+        } else if (input.length == 2) {
+            // 두 자리 입력 (numpad-N → numpad-M → enter)
+            this.onNodeWithTag("numpad-${input[0]}").performClick()
+            this.onNodeWithTag("numpad-${input[1]}").performClick()
+            this.onNodeWithTag("numpad-enter").performClick()
+            i++
+        } else {
+            error("지원하지 않는 입력: $input")
+        }
+
         if (i < inputs.lastIndex)
             this.onNodeWithTag("feedback").assertDoesNotExist()
     }
     this.onNodeWithTag("feedback").assertIsDisplayed()
     this.onNodeWithTag("feedback").assertTextContains("정답입니다!")
 }
-
-
 
 // 두 자리 입력을 따로 처리하지 않는구나...
 

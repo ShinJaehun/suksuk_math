@@ -62,10 +62,24 @@ class DivisionScreenTest {
         composeTestRule.runOnIdle { viewModel.startNewProblem(50, 3) }
 
         // 받아내림 입력 전까지 시나리오 입력
-        val scenario = listOf("1", "3", "2", "0", "6", "1", "8", "1")
-        for (i in scenario.indices) {
-            composeTestRule.onNodeWithTag("numpad-${scenario[i]}").performClick()
-            composeTestRule.onNodeWithTag("numpad-enter").performClick()
+//        val scenario = listOf("1", "3", "2", "0", "6", "1", "8", "1")
+//        for (i in scenario.indices) {
+//            composeTestRule.onNodeWithTag("numpad-${scenario[i]}").performClick()
+//            composeTestRule.onNodeWithTag("numpad-enter").performClick()
+//        }
+        val steps = listOf(
+            "1" to true,   // 입력 → 엔터
+            "3" to true,
+            "2" to true,
+            "0" to true,
+            "6" to true,
+            "1" to false,  // 두 자리 입력 시작 ("1" → "8" → 엔터)
+            "8" to true,
+            "1" to true
+        )
+        for ((num, shouldEnter) in steps) {
+            composeTestRule.onNodeWithTag("numpad-$num").performClick()
+            if (shouldEnter) composeTestRule.onNodeWithTag("numpad-enter").performClick()
         }
 
         // 받아내림 입력 후 '10'이 나타나는지 체크

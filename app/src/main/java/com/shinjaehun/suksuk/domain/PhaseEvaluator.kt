@@ -30,7 +30,8 @@ class PhaseEvaluator {
                 inputValue == divisor * quotientOnes % 10
             }
             DivisionPhase.InputMultiply1Total -> {
-                inputValue == divisor * quotientOnes
+//                inputValue == divisor * quotientOnes
+                input.length == 2 && input[0].toString().toIntOrNull() == divisor * quotient / 10 && input[1].toString().toIntOrNull() == divisor * quotient % 10
             }
             DivisionPhase.InputSubtract1Tens -> {
                 inputValue == dividendTens - divisor * quotientTens
@@ -66,7 +67,8 @@ class PhaseEvaluator {
 //            }
 
             DivisionPhase.InputMultiply2Total -> {
-                input.length == 2 && inputValue == divisor * quotientOnes
+//                input.length == 2 && inputValue == divisor * quotientOnes
+                input.length == 2 && input[0].toString().toIntOrNull() == divisor * quotientOnes / 10 && input[1].toString().toIntOrNull() == divisor * quotientOnes % 10
             }
             DivisionPhase.InputBorrowFromDividendTens -> {
                 inputValue == dividendTens - 1

@@ -28,12 +28,13 @@ class DivisionViewModel(
 //            startNewProblem(46, 3) // TensQuotient_NoBorrow_2DigitMul
 //            startNewProblem(85, 7) // TensQuotient_NoBorrow_2DigitMul
 //            startNewProblem(84, 4) // TensQuotient_NoBorrow_1DigitMul
-            startNewProblem(45, 4) // TensQuotient_NoBorrow_1DigitMul
+//            startNewProblem(45, 4) // TensQuotient_NoBorrow_1DigitMul
 //            startNewProblem(50, 3) // TensQuotient_Borrow_2DigitMul
 //            startNewProblem(90, 7) // TensQuotient_Borrow_2DigitMul
 //            startNewProblem(70, 6) // TensQuotient_SkipBorrow_1DigitMul
 //            startNewProblem(93, 8) // TensQuotient_SkipBorrow_1DigitMul
 //            startNewProblem(62, 7) // OnesQuotient_Borrow
+            startNewProblem(53, 6)
 //            startNewProblem(39, 4) // OnesQuotient_NoBorrow
 //            startNewProblem(10, 9) // 현재 이러한 경우는 고려하고 있지 않음...
         }
@@ -56,8 +57,18 @@ class DivisionViewModel(
     }
 
     fun onDigitInput(digit: Int) {
-        currentInput += digit.toString()
+//        currentInput += digit.toString()
+        val state = _uiState.value
+        val phase = state.phases.getOrNull(state.currentPhaseIndex) ?: return
+
+        val maxLength = when (phase) {
+            DivisionPhase.InputMultiply1Total, DivisionPhase.InputMultiply2Total -> 2
+            else -> 1
+        }
+        currentInput = (currentInput + digit).takeLast(maxLength)
+
     }
+
 
     fun onClear() {
         currentInput = ""
@@ -73,21 +84,8 @@ class DivisionViewModel(
             return
         }
 
-        when (phase) {
-            DivisionPhase.InputMultiply1Total, DivisionPhase.InputMultiply2Total -> {
-                if (currentInput.length == 2) {
-                    // **전체 2자리 입력을 한 번에 전달!**
-                    submitInput(currentInput)
-                    currentInput = ""
-                }
-                // else: 두 자리 안되면 대기 (아니면 에러)
-            }
-            else -> {
-                // 한 칸 입력은 그대로
-                submitInput(currentInput)
-                currentInput = ""
-            }
-        }
+        submitInput(currentInput)
+        currentInput = ""
     }
 
     fun submitInput(input: String) {
@@ -103,27 +101,38 @@ class DivisionViewModel(
         // for debugging : 입력 상태
 //        logPhaseContext(state, input)
 
-        val isCorrect = evaluator.isCorrect(phase, input, state.dividend, state.divisor)
+        if (phase == DivisionPhase.InputMultiply1Total || phase == DivisionPhase.InputMultiply2Total) {
+            val isCorrect = evaluator.isCorrect(phase, input, state.dividend, state.divisor)
+            if (!isCorrect) {
+                _uiState.value = state.copy(feedback = "오답입니다. 다시 시도해 보세요")
+                return
+            }
 
-        if (!isCorrect) {
-            _uiState.value = state.copy(feedback = "오답입니다. 다시 시도해 보세요")
+            // 입력 분해하여 저장
+            val newInputs = state.inputs + input[0].toString() + input[1].toString()
+            _uiState.value = state.copy(
+                inputs = newInputs,
+                currentPhaseIndex = state.currentPhaseIndex + 1,
+                feedback = null,
+                pattern = state.pattern,
+            )
+            currentInput = ""
             return
+        } else {
+            val isCorrect = evaluator.isCorrect(phase, input, state.dividend, state.divisor)
+            if (!isCorrect) {
+                _uiState.value = state.copy(feedback = "오답입니다. 다시 시도해 보세요")
+                return
+            }
+            val newInputs = state.inputs + input
+            _uiState.value = state.copy(
+                inputs = newInputs,
+                currentPhaseIndex = state.currentPhaseIndex + 1,
+                feedback = null,
+                pattern = state.pattern,
+            )
+            currentInput = ""
         }
-
-        val newInputs = state.inputs + input
-
-        _uiState.value = state.copy(
-            inputs = newInputs,
-            currentPhaseIndex = state.currentPhaseIndex + 1,
-            feedback = null,
-            pattern = state.pattern,
-        )
-//        println("🔁 emit new state: phase=${_uiState.value.currentPhaseIndex}, inputs=${_uiState.value.inputs}")
-
-        currentInput = ""
-//        println("→ 이동 후 Phase: ${state.phases.getOrNull(state.currentPhaseIndex + 1)}")
-
-
     }
 }
 
