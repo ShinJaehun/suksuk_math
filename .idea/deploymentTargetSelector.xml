@@ -8,10 +8,10 @@
       <SelectionState runConfigName="DivisionScreenInputTensQuotientBorrow2DigitMulTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="testPattern_70_div_4()">
+      <SelectionState runConfigName="Tests in 'com.shinjaehun.suksuk'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="Tests in 'com.shinjaehun.suksuk'">
+      <SelectionState runConfigName="DivisionScreenInputTensQuotientNoBorrow1DigitMulTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
