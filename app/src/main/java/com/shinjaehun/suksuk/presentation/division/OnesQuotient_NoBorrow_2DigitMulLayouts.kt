@@ -40,6 +40,11 @@ val onesQuotientNoBorrow2DigitMulLayouts = listOf(
 //            CellName.Subtract1Ones to 3
 //        ),
         showSubtractLine = true
+    ),
+    DivisionStepUiLayout(
+        phase = DivisionPhase.Complete,
+        cells = emptyMap(),
+        feedback = "정답입니다!"
     )
 
 )

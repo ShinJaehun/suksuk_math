@@ -66,5 +66,10 @@ val tensQuotientSkipBorrow1DigitMulLayouts = listOf(
                 CellName.Multiply2Ones to InputCell(cellName = CellName.Multiply2Ones, highlight = Highlight.Related)
         ),
         showSubtractLine = true
+    ),
+    DivisionStepUiLayout(
+        phase = DivisionPhase.Complete,
+        cells = emptyMap(),
+        feedback = "정답입니다!"
     )
 )

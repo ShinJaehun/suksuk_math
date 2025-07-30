@@ -39,5 +39,10 @@ val onesQuotientBorrow2DigitMulLayouts = listOf(
                 CellName.DividendOnes to InputCell(cellName = CellName.DividendOnes, highlight = Highlight.Related)
         ),
         showSubtractLine = true
+    ),
+    DivisionStepUiLayout(
+        phase = DivisionPhase.Complete,
+        cells = emptyMap(),
+        feedback = "정답입니다!"
     )
 )

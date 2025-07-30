@@ -6,12 +6,10 @@ import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
-import com.shinjaehun.suksuk.presentation.division.DivisionPattern
 import com.shinjaehun.suksuk.presentation.division.DivisionPhase
 import com.shinjaehun.suksuk.presentation.division.DivisionScreen
 import com.shinjaehun.suksuk.presentation.division.DivisionViewModel
 import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
@@ -152,7 +150,7 @@ class DivisionScreenTest {
         inputs.forEach { viewModel.submitInput(it) }
 
         // 최종 상태 검사
-        val finalState = viewModel.uiState.value
+        val finalState = viewModel.phaseState.value
         assertEquals(DivisionPhase.Complete, finalState.phases.getOrNull(finalState.currentPhaseIndex))
     }
 

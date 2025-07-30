@@ -42,7 +42,7 @@ fun DivisionScreen(
     viewModel: DivisionViewModel = viewModel(),
     previewAll: Boolean = false
 ) {
-    val phasesState by viewModel.uiState.collectAsState()
+    val phasesState by viewModel.phaseState.collectAsState()
     val currentInput = viewModel.currentInput
 
     val currentUiState = remember(phasesState, currentInput) {

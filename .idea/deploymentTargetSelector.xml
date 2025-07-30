@@ -11,13 +11,13 @@
       <SelectionState runConfigName="DivisionScreenInputOnesQuotientBorrow2DigitMulTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="DivisionScreenInputTensQuotientNoBorrow2DigitMulTest">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="DivisionScreenInputTensQuotientSkipBorrow1DigitMul">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="testBorrowInputShows10AboveOnes_UITest()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="DivisionScreenInputTensQuotientNoBorrow1DigitMulTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

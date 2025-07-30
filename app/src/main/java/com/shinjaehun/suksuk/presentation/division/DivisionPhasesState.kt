@@ -58,6 +58,7 @@ data class DivisionStepUiLayout(
     val cells: Map<CellName, InputCell> = emptyMap(),
     val inputIndices: Map<CellName, Int?> = emptyMap(),
     val showSubtractLine: Boolean = false,
+    val feedback: String? = null,
 )
 
 enum class Highlight {

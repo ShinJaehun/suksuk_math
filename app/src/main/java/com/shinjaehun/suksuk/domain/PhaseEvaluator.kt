@@ -20,12 +20,13 @@ class PhaseEvaluator {
             DivisionPhase.InputQuotientTens -> {
                 inputValue == dividendTens / divisor
             }
+            DivisionPhase.InputMultiply1Tens,
             DivisionPhase.InputMultiply1 -> {
                 inputValue == divisor * quotientTens
             }
-            DivisionPhase.InputMultiply1Tens -> {
-                inputValue == divisor * quotientOnes / 10
-            }
+//            DivisionPhase.InputMultiply1Tens -> { // 내가 뭔 짓을 하다가 이걸 이렇게 바꿔놓은거지???????????????????????
+//                inputValue == divisor * quotientOnes / 10
+//            }
             DivisionPhase.InputMultiply1Ones -> {
                 inputValue == divisor * quotientOnes % 10
             }

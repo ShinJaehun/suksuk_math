@@ -33,6 +33,7 @@ class DivisionUiStateBuilder private constructor() {
             var currInputIdx = 0
             for (i in 0..stepIdx) {
                 val layout = layouts.getOrNull(i) ?: continue
+                println("🔵 accumulatedCells ▶️ step[$i] phase=${layout.phase} inputIndices=${layout.inputIndices}")
 
                 layout.inputIndices?.forEach { (cellName, idx) ->
                     // 최초 기록만 유지(덮어쓰지 않음)
@@ -73,6 +74,7 @@ class DivisionUiStateBuilder private constructor() {
             val inputIdx = cell.inputIdx
             // 입력값 바인딩: inputIdx가 유효하고, 입력값이 있을 때
             val valueFromInput = if (inputIdx != null && inputIdx >= 0) state.inputs.getOrNull(inputIdx) else null
+            println("🟡 makeCell ▶️ cell=$cellName idx=${cell.inputIdx} valueFromInput=$valueFromInput editable=${cell.editable} currentInput=$currentInput phaseIdx=$stepIdx")
 
 //            println("cell=$cellName idx=${cell.inputIdx} cell=$cell editable=${cell.editable} input=${state.inputs.getOrNull(cell.inputIdx)} currentInput=$currentInput phaseIdx=$stepIdx")
 
@@ -130,10 +132,7 @@ class DivisionUiStateBuilder private constructor() {
                 borrowed10DividendOnes = makeCell(CellName.Borrowed10DividendOnes),
                 borrowed10Subtract1Ones = makeCell(CellName.Borrowed10Subtract1Ones),
                 stage = state.currentPhaseIndex,
-                feedback = when {
-                    state.phases.getOrNull(state.currentPhaseIndex) == DivisionPhase.Complete -> "정답입니다!"
-                    else -> state.feedback
-                },
+                feedback = layouts.find { it.phase == state.phases.getOrNull(state.currentPhaseIndex) }?.feedback,
                 subtractLines = getSubtractionLinesFromPhaseIndex(state.phases, state.currentPhaseIndex)
             )
         }
