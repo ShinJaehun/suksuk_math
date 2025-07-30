@@ -2,15 +2,20 @@ package com.shinjaehun.suksuk.presentation.division
 
 object DivisionPatternUiLayoutRegistry {
 
-    val alwaysVisibleCells = listOf(
-        CellName.Divisor,
-        CellName.DividendTens,
-        CellName.DividendOnes
-    )
-    val defaultAlwaysVisibleConfig = CellConfig(editable = false, highlight = Highlight.None)
-    fun mergeWithAlwaysVisibleCells(stepSpecific: Map<CellName, CellConfig>): Map<CellName, CellConfig> {
-        return alwaysVisibleCells.associateWith { defaultAlwaysVisibleConfig } + stepSpecific
-    }
+//    val alwaysVisibleCells = listOf(
+//        CellName.Divisor,
+//        CellName.DividendTens,
+//        CellName.DividendOnes
+//    )
+//    val defaultAlwaysVisibleCell = InputCell(
+//        editable = false,
+//        highlight = Highlight.None
+//    )
+//    fun mergeWithAlwaysVisibleCells(stepSpecific: Map<CellName, InputCell>): Map<CellName, InputCell> {
+//        return alwaysVisibleCells.associateWith { cellName ->
+//            defaultAlwaysVisibleCell.copy(cellName = cellName)
+//        } + stepSpecific
+//    }
 
     private val layouts: Map<DivisionPattern, List<DivisionStepUiLayout>> = mapOf(
         DivisionPattern.TensQuotient_NoBorrow_2DigitMul to tensQuotientNoBorrow2DigitMulLayouts,

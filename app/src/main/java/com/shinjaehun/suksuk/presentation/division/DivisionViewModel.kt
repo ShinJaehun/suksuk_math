@@ -28,12 +28,12 @@ class DivisionViewModel(
 //            startNewProblem(46, 3) // TensQuotient_NoBorrow_2DigitMul
 //            startNewProblem(85, 7) // TensQuotient_NoBorrow_2DigitMul
 //            startNewProblem(84, 4) // TensQuotient_NoBorrow_1DigitMul
-//            startNewProblem(45, 4) // TensQuotient_NoBorrow_1DigitMul
+            startNewProblem(45, 4) // TensQuotient_NoBorrow_1DigitMul
 //            startNewProblem(50, 3) // TensQuotient_Borrow_2DigitMul
 //            startNewProblem(90, 7) // TensQuotient_Borrow_2DigitMul
 //            startNewProblem(70, 6) // TensQuotient_SkipBorrow_1DigitMul
 //            startNewProblem(93, 8) // TensQuotient_SkipBorrow_1DigitMul
-            startNewProblem(62, 7) // OnesQuotient_Borrow
+//            startNewProblem(62, 7) // OnesQuotient_Borrow
 //            startNewProblem(39, 4) // OnesQuotient_NoBorrow
 //            startNewProblem(10, 9) // 현재 이러한 경우는 고려하고 있지 않음...
         }

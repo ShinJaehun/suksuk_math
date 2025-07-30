@@ -1,6 +1,6 @@
 package com.shinjaehun.suksuk.presentation.division
 
-class DivisionUiStateMapper private constructor() {
+class DivisionUiStateBuilder private constructor() {
 
     companion object {
         fun mapToUiState(state: DivisionPhasesState, currentInput: String): DivisionUiState {
@@ -39,18 +39,32 @@ class DivisionUiStateMapper private constructor() {
         private val multiply1TotalIdx = state.phases.indexOfFirst { it == DivisionPhase.InputMultiply1Total }
         private val multiply2TotalIdx = state.phases.indexOfFirst { it == DivisionPhase.InputMultiply2Total }
 
-        private val accumulatedConfigs: Map<CellName, CellConfig> by lazy {
+        val alwaysVisibleCells = listOf(
+            CellName.Divisor,
+            CellName.DividendTens,
+            CellName.DividendOnes
+        )
+
+        private val accumulatedCells: Map<CellName, InputCell> by lazy {
             // 1. [핵심] 현재 단계까지 등장한 모든 셀 config 누적
-            val result = mutableMapOf<CellName, CellConfig>()
+            val result = mutableMapOf<CellName, InputCell>()
             for (i in 0..stepIdx) {
-                layouts.getOrNull(i)?.cellConfigs?.forEach { (cell, config) ->
+                layouts.getOrNull(i)?.cells?.forEach { (cell, config) ->
                     // 현재 단계는 강조/편집 설정, 이전 단계는 모두 읽기 전용 & highlight 없음으로
                     if (i == stepIdx) {
-                        result[cell] = config
+                        result[cell] = InputCell(
+                            cellName = cell,
+                            value = config.value,
+                            editable = config.editable,
+                            highlight = config.highlight,
+                            crossOutColor = config.crossOutColor
+                        )
                     } else {
                         // crossOutColor Pending이었던건 Confirmed로 바꾼다
                         val fixedCrossOut = if (config.crossOutColor == CrossOutColor.Pending) CrossOutColor.Confirmed else config.crossOutColor
-                        result[cell] = config.copy(
+                        result[cell] = InputCell(
+                            cellName = cell,
+                            value = config.value,
                             editable = false,
                             highlight = Highlight.None,
                             crossOutColor = fixedCrossOut
@@ -58,45 +72,56 @@ class DivisionUiStateMapper private constructor() {
                     }
                 }
             }
+            alwaysVisibleCells.forEach { cellName ->
+                if(result[cellName] == null) {
+                    result[cellName] = InputCell(cellName = cellName, editable = false, highlight = Highlight.None)
+                }
+            }
             result
         }
 
 
         private fun makeCell(cellName: CellName, idx: Int): InputCell {
-            val config = accumulatedConfigs[cellName] ?: return InputCell()
-            println("cell=$cellName idx=$idx config=$config editable=${config.editable} input=${state.inputs.getOrNull(idx)} currentInput=$currentInput phaseIdx=$stepIdx")
+            val cell = accumulatedCells[cellName] ?: InputCell(cellName = CellName.None)
+            println("cell=$cellName idx=$idx cell=$cell editable=${cell.editable} input=${state.inputs.getOrNull(idx)} currentInput=$currentInput phaseIdx=$stepIdx")
 
-            val rawValue = config.value
-                ?: when (cellName) {
-                CellName.Divisor -> state.divisor.toString()
-                CellName.DividendTens -> state.dividend.toString().padStart(2, '0')[0].toString()
-                CellName.DividendOnes -> state.dividend.toString().padStart(2, '0')[1].toString()
+            val value = when (cellName) {
+//                CellName.Divisor -> cell.value.ifEmpty { state.divisor.toString() }
+//                CellName.DividendTens -> cell.value.ifEmpty { state.dividend.toString().padStart(2, '0')[0].toString() }
+//                CellName.DividendOnes -> cell.value.ifEmpty { state.dividend.toString().padStart(2, '0')[1].toString() }
 
-                // 두 자리 곱셈 (Tens/Ones)
-                CellName.Multiply1Tens -> getMultiplyCellValue(cellName, idx, multiply1TotalIdx, multiply1TensIdx, 0, config)
-                CellName.Multiply1Ones -> getMultiplyCellValue(cellName, idx, multiply1TotalIdx, multiply1OnesIdx, 1, config)
-                CellName.Multiply2Tens -> getMultiplyCellValue(cellName, idx, multiply2TotalIdx, multiply2TensIdx, 0, config)
-                CellName.Multiply2Ones -> getMultiplyCellValue(cellName, idx, multiply2TotalIdx, multiply2OnesIdx, 1, config)
+                CellName.Divisor -> cell.value ?: state.divisor.toString()
+                CellName.DividendTens -> cell.value ?: state.dividend.toString().padStart(2, '0')[0].toString()
+                CellName.DividendOnes -> cell.value ?: state.dividend.toString().padStart(2, '0')[1].toString()
 
+                CellName.Multiply1Tens -> getMultiplyCellValue(cellName, idx, multiply1TotalIdx, multiply1TensIdx, 0, cell)
+                CellName.Multiply1Ones -> getMultiplyCellValue(cellName, idx, multiply1TotalIdx, multiply1OnesIdx, 1, cell)
+                CellName.Multiply2Tens -> getMultiplyCellValue(cellName, idx, multiply2TotalIdx, multiply2TensIdx, 0, cell)
+                CellName.Multiply2Ones -> getMultiplyCellValue(cellName, idx, multiply2TotalIdx, multiply2OnesIdx, 1, cell)
                 else -> {
                     val input = state.inputs.getOrNull(idx)
                     when {
+                        cell.value == "" -> ""                 // 가장 우선!
+//                        cell.value.isNotEmpty() -> cell.value
+                        cell.value != null -> cell.value
                         input != null -> input
-                        config.editable -> if (currentInput.isEmpty()) "?" else currentInput
+                        cell.editable -> if (currentInput.isEmpty()) "?" else currentInput
                         else -> ""
                     }
                 }
             }
-            val value =
-                if (cellName == CellName.Subtract1Tens && rawValue == "0" && !config.editable) ""
-                else rawValue
 
+//            // 이 로직을 TensQuotient_NoBorrow_1DigitMulLayouts에서 직접 처리함.
+//            val value =
+//                if (cellName == CellName.Subtract1Tens && rawValue == "0" && !cell.editable) ""
+//                else rawValue
+//
 
             return InputCell(
                 value = value,
-                editable = config.editable,
-                highlight = config.highlight,
-                crossOutColor = config.crossOutColor
+                editable = cell.editable,
+                highlight = cell.highlight,
+                crossOutColor = cell.crossOutColor
             )
         }
 
@@ -107,14 +132,14 @@ class DivisionUiStateMapper private constructor() {
             totalIdx: Int,
             singleIdx: Int,
             digit: Int, // 0: Tens, 1: Ones
-            config: CellConfig?
+            cell: InputCell?
         ): String {
-            println("GMCV: cellName=$cellName idx=$idx totalIdx=$totalIdx singleIdx=$singleIdx digit=$digit config.editable=${config?.editable} input=${state.inputs.getOrNull(idx)} currentInput=$currentInput")
+            println("GMCV: cellName=$cellName idx=$idx totalIdx=$totalIdx singleIdx=$singleIdx digit=$digit config.editable=${cell?.editable} input=${state.inputs.getOrNull(idx)} currentInput=$currentInput")
             return when {
                 totalIdx >= 0 && idx == totalIdx -> {
                     val input = state.inputs.getOrNull(idx)
                     if (input.isNullOrEmpty()) {
-                        if (config?.editable == true) {
+                        if (cell?.editable == true) {
                             if (currentInput.isEmpty()) "?" else currentInput.getOrNull(digit)?.toString() ?: "?"
                         } else ""
                     } else input.getOrNull(digit)?.toString() ?: ""
@@ -127,7 +152,7 @@ class DivisionUiStateMapper private constructor() {
 //                        } else ""
 //                    } else input ?: ""
                     when {
-                        input.isNullOrEmpty() && config?.editable == true ->
+                        input.isNullOrEmpty() && cell?.editable == true ->
                             if (currentInput.isEmpty()) "?" else currentInput   // <- 이게 반드시 있어야 함!
                         input.isNullOrEmpty() -> ""
                         else -> input

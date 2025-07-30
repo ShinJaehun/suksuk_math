@@ -45,10 +45,26 @@ enum class DivisionPattern {
 
 // 셀 상태 클래스
 data class InputCell(
-    val value: String = "",
+    val cellName: CellName = CellName.None,
+    val value: String? = null,
     val editable: Boolean = false,
     val highlight: Highlight = Highlight.None,
     val crossOutColor: CrossOutColor = CrossOutColor.None,
+)
+
+// 기능 중복
+//data class CellConfig(
+//    val value: String? = null,
+//    val editable: Boolean = false,
+//    val highlight: Highlight = Highlight.None,
+//    val crossOutColor: CrossOutColor = CrossOutColor.None,
+//)
+
+
+data class DivisionStepUiLayout(
+    val phase: DivisionPhase,
+    val cells: Map<CellName, InputCell> = emptyMap(),
+    val showSubtractLine: Boolean = false,
 )
 
 enum class Highlight {
@@ -91,6 +107,7 @@ data class DivisionUiState(
 )
 
 enum class CellName {
+    None,
     Divisor,
     DividendTens,
     DividendOnes,
@@ -108,15 +125,3 @@ enum class CellName {
     BorrowDividendTens,
     BorrowSubtract1Tens
 }
-
-data class DivisionStepUiLayout(
-    val phase: DivisionPhase,
-    val cellConfigs: Map<CellName, CellConfig> = emptyMap(),
-    val showSubtractLine: Boolean = false,
-)
-data class CellConfig(
-    val value: String? = null,
-    val editable: Boolean = false,
-    val highlight: Highlight = Highlight.None,
-    val crossOutColor: CrossOutColor = CrossOutColor.None,
-)

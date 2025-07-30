@@ -47,7 +47,7 @@ fun DivisionScreen(
 
     val currentUiState = remember(phasesState, currentInput) {
 //        mapPhasesToCells(phasesState, currentInput)
-        DivisionUiStateMapper.mapToUiState(phasesState, currentInput)
+        DivisionUiStateBuilder.mapToUiState(phasesState, currentInput)
     }
 
     val cellWidth = 42.dp
@@ -378,7 +378,7 @@ fun NumberText(
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = cell.value,
+            text = cell.value ?: "",
             fontSize = fontSize,
             color = textColor,
             textAlign = TextAlign.Center,
@@ -416,7 +416,7 @@ fun BorrowText(
         else -> defaultColor
     }
     Text(
-        text = cell.value,
+        text = cell.value ?: "",
         fontSize = fontSize,
         color = textColor,
         textAlign = TextAlign.Center,
