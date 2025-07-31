@@ -8,6 +8,7 @@ import com.shinjaehun.suksuk.presentation.division.DivisionPattern
 import com.shinjaehun.suksuk.presentation.division.DivisionPatternUiLayoutRegistry
 import com.shinjaehun.suksuk.presentation.division.DivisionPhase
 import com.shinjaehun.suksuk.presentation.division.DivisionViewModel
+import com.shinjaehun.suksuk.presentation.division.FeedbackMessageProvider
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.test.runTest
@@ -27,6 +28,7 @@ class DivisionViewModelTest {
         val phaseEvaluator = PhaseEvaluator()
         val patternDetector = PatternDetector
         val uiLayoutRegistry = DivisionPatternUiLayoutRegistry
+        val feedbackProvider = FeedbackMessageProvider()
 
         // 직접 생성!
         viewModel = DivisionViewModel(
@@ -34,6 +36,7 @@ class DivisionViewModelTest {
             phaseEvaluator,
             patternDetector,
             uiLayoutRegistry,
+            feedbackProvider
         )
     }
 
@@ -146,10 +149,20 @@ class DivisionViewModelTest {
                         actualPattern
                     )
 
+//                    for (i in inputs.indices) {
+//                        viewModel.submitInput(inputs[i])
+//                        state = awaitItem()
+//                        assertEquals("$name: ${i + 1}번째 입력 오답! (${inputs[i]})", null, state.feedback)
+//                    }
+
                     for (i in inputs.indices) {
                         viewModel.submitInput(inputs[i])
                         state = awaitItem()
-                        assertEquals("$name: ${i + 1}번째 입력 오답! (${inputs[i]})", null, state.feedback)
+                        if (state.phases.getOrNull(state.currentPhaseIndex) == DivisionPhase.Complete) {
+                            assertEquals("$name: 마지막 phase에서 feedback은 정답입니다!", "정답입니다!", state.feedback)
+                        } else {
+                            assertEquals("$name: ${i + 1}번째 입력 오답! (${inputs[i]})", null, state.feedback)
+                        }
                     }
 
                     val isCompletePhase = state.phases.getOrNull(state.currentPhaseIndex) == DivisionPhase.Complete
