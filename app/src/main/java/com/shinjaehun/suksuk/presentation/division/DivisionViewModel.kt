@@ -17,8 +17,9 @@ import javax.inject.Inject
 class DivisionViewModel @Inject constructor (
     private val savedStateHandle: SavedStateHandle,
     private val phaseEvaluator: PhaseEvaluator,
-    private val patternDetector: PatternDetector,
-    private val uiLayoutRegistry: DivisionPatternUiLayoutRegistry,
+//    private val patternDetector: PatternDetector,
+//    private val uiLayoutRegistry: DivisionPatternUiLayoutRegistry,
+    private val domainStateFactory: DivisionDomainStateFactory,
     private val feedbackProvider: FeedbackMessageProvider
 ) : ViewModel() {
     private val autoStart: Boolean = savedStateHandle["autoStart"] ?: true
@@ -56,19 +57,22 @@ class DivisionViewModel @Inject constructor (
 //        println("🔍 [startNewProblem] $dividend ÷ $divisor → pattern=$pattern")
 
 //        val layouts: List<DivisionStepUiLayout> = DivisionPatternUiLayoutRegistry.getStepLayouts(pattern)
-        val pattern = patternDetector.detectPattern(dividend, divisor)
-        val layouts: List<DivisionStepUiLayout> = uiLayoutRegistry.getStepLayouts(pattern)
-        val phases: List<DivisionPhase> = layouts.map { it.phase }
+//        val pattern = patternDetector.detectPattern(dividend, divisor)
+//        val layouts: List<DivisionStepUiLayout> = uiLayoutRegistry.getStepLayouts(pattern)
+//        val phases: List<DivisionPhase> = layouts.map { it.phase }
+//
+//        _domainState.value = DivisionDomainState(
+//            dividend,
+//            divisor,
+//            0,
+//            phases,
+//            mutableListOf(),
+//            null,
+//            pattern
+//        )
 
-        _domainState.value = DivisionDomainState(
-            dividend,
-            divisor,
-            0,
-            phases,
-            mutableListOf(),
-            null,
-            pattern
-        )
+        _domainState.value = domainStateFactory.create(dividend, divisor)
+
     }
 
     fun onDigitInput(digit: Int) {

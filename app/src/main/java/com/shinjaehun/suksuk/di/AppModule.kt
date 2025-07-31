@@ -2,12 +2,14 @@ package com.shinjaehun.suksuk.di
 
 import com.shinjaehun.suksuk.domain.PatternDetector
 import com.shinjaehun.suksuk.domain.PhaseEvaluator
+import com.shinjaehun.suksuk.presentation.division.DivisionDomainStateFactory
 import com.shinjaehun.suksuk.presentation.division.DivisionPatternUiLayoutRegistry
 import com.shinjaehun.suksuk.presentation.division.DivisionUiStateBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -26,5 +28,12 @@ object AppModule {
 
     @Provides
     fun provideUiLayoutRegistry(): DivisionPatternUiLayoutRegistry = DivisionPatternUiLayoutRegistry
+
+    @Singleton
+    @Provides
+    fun provideDomainStateFactory(
+        registry: DivisionPatternUiLayoutRegistry,
+        detector: PatternDetector
+    ): DivisionDomainStateFactory = DivisionDomainStateFactory(registry, detector)
 
 }

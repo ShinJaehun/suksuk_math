@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.shinjaehun.suksuk.domain.PatternDetector
 import com.shinjaehun.suksuk.domain.PhaseEvaluator
+import com.shinjaehun.suksuk.presentation.division.DivisionDomainStateFactory
 import com.shinjaehun.suksuk.presentation.division.DivisionPattern
 import com.shinjaehun.suksuk.presentation.division.DivisionPatternUiLayoutRegistry
 import com.shinjaehun.suksuk.presentation.division.DivisionPhase
@@ -21,7 +22,6 @@ class DivisionViewModelTest {
 
     @Before
     fun setup() {
-        // 테스트용 SavedStateHandle (autoStart를 false로 세팅)
         val savedStateHandle = SavedStateHandle(mapOf("autoStart" to false))
 
         // AppModule에서 제공하는 객체는 그냥 new 가능
@@ -30,12 +30,15 @@ class DivisionViewModelTest {
         val uiLayoutRegistry = DivisionPatternUiLayoutRegistry
         val feedbackProvider = FeedbackMessageProvider()
 
-        // 직접 생성!
+        val domainStateFactory = DivisionDomainStateFactory(
+            uiLayoutRegistry,
+            patternDetector
+        )
+
         viewModel = DivisionViewModel(
             savedStateHandle,
             phaseEvaluator,
-            patternDetector,
-            uiLayoutRegistry,
+            domainStateFactory,
             feedbackProvider
         )
     }

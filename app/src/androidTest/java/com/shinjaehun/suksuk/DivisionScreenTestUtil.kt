@@ -8,6 +8,7 @@ import androidx.compose.ui.test.performClick
 import androidx.lifecycle.SavedStateHandle
 import com.shinjaehun.suksuk.domain.PatternDetector
 import com.shinjaehun.suksuk.domain.PhaseEvaluator
+import com.shinjaehun.suksuk.presentation.division.DivisionDomainStateFactory
 import com.shinjaehun.suksuk.presentation.division.DivisionPattern
 import com.shinjaehun.suksuk.presentation.division.DivisionPatternUiLayoutRegistry
 import com.shinjaehun.suksuk.presentation.division.DivisionScreen
@@ -44,18 +45,22 @@ fun ComposeContentTestRule.twoDigitDivByOneDigitCase(
     inputs: List<String>,
 ) {
     val savedStateHandle = SavedStateHandle(mapOf("autoStart" to false))
-    // 2. 의존성 직접 생성 (혹은 모킹)
+
+    // AppModule에서 제공하는 객체는 그냥 new 가능
     val phaseEvaluator = PhaseEvaluator()
     val patternDetector = PatternDetector
     val uiLayoutRegistry = DivisionPatternUiLayoutRegistry
     val feedbackProvider = FeedbackMessageProvider()
 
-    // 3. ViewModel 직접 생성
+    val domainStateFactory = DivisionDomainStateFactory(
+        uiLayoutRegistry,
+        patternDetector
+    )
+
     val viewModel = DivisionViewModel(
         savedStateHandle,
         phaseEvaluator,
-        patternDetector,
-        uiLayoutRegistry,
+        domainStateFactory,
         feedbackProvider
     )
 

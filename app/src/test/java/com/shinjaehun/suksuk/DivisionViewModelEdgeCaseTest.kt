@@ -3,6 +3,7 @@ package com.shinjaehun.suksuk
 import androidx.lifecycle.SavedStateHandle
 import com.shinjaehun.suksuk.domain.PatternDetector
 import com.shinjaehun.suksuk.domain.PhaseEvaluator
+import com.shinjaehun.suksuk.presentation.division.DivisionDomainStateFactory
 import com.shinjaehun.suksuk.presentation.division.DivisionPatternUiLayoutRegistry
 import com.shinjaehun.suksuk.presentation.division.DivisionViewModel
 import com.shinjaehun.suksuk.presentation.division.FeedbackMessageProvider
@@ -18,15 +19,22 @@ class DivisionViewModelEdgeCaseTest {
     @Before
     fun setup() {
         val savedStateHandle = SavedStateHandle(mapOf("autoStart" to false))
+
+        // AppModule에서 제공하는 객체는 그냥 new 가능
         val phaseEvaluator = PhaseEvaluator()
         val patternDetector = PatternDetector
         val uiLayoutRegistry = DivisionPatternUiLayoutRegistry
         val feedbackProvider = FeedbackMessageProvider()
+
+        val domainStateFactory = DivisionDomainStateFactory(
+            uiLayoutRegistry,
+            patternDetector
+        )
+
         viewModel = DivisionViewModel(
             savedStateHandle,
             phaseEvaluator,
-            patternDetector,
-            uiLayoutRegistry,
+            domainStateFactory,
             feedbackProvider
         )
     }

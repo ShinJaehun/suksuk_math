@@ -16,6 +16,7 @@ import androidx.compose.ui.test.performClick
 import androidx.lifecycle.SavedStateHandle
 import com.shinjaehun.suksuk.domain.PatternDetector
 import com.shinjaehun.suksuk.domain.PhaseEvaluator
+import com.shinjaehun.suksuk.presentation.division.DivisionDomainStateFactory
 import com.shinjaehun.suksuk.presentation.division.DivisionPatternUiLayoutRegistry
 import com.shinjaehun.suksuk.presentation.division.DivisionPhase
 import com.shinjaehun.suksuk.presentation.division.DivisionScreen
@@ -44,12 +45,15 @@ class DivisionScreenTest {
         val uiLayoutRegistry = DivisionPatternUiLayoutRegistry
         val feedbackProvider = FeedbackMessageProvider()
 
-        // 직접 생성!
+        val domainStateFactory = DivisionDomainStateFactory(
+            uiLayoutRegistry,
+            patternDetector
+        )
+
         viewModel = DivisionViewModel(
             savedStateHandle,
             phaseEvaluator,
-            patternDetector,
-            uiLayoutRegistry,
+            domainStateFactory,
             feedbackProvider
         )
     }
