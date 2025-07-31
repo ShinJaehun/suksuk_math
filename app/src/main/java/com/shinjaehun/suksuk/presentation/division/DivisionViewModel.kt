@@ -19,6 +19,7 @@ class DivisionViewModel @Inject constructor (
     private val phaseEvaluator: PhaseEvaluator,
     private val patternDetector: PatternDetector,
     private val uiLayoutRegistry: DivisionPatternUiLayoutRegistry,
+    private val feedbackProvider: FeedbackMessageProvider
 ) : ViewModel() {
     private val autoStart: Boolean = savedStateHandle["autoStart"] ?: true
 //    private val autoStart = true
@@ -119,10 +120,14 @@ class DivisionViewModel @Inject constructor (
 //        // for debugging : 입력 상태
 //        logPhaseContext(state, input)
 
+        val nextPhaseIndex = state.currentPhaseIndex + 1
+        val nextPhase = state.phases.getOrNull(nextPhaseIndex)
+        val feedback = feedbackProvider.getSuccessMessage(nextPhase ?: DivisionPhase.Complete)
+
         if (phase == DivisionPhase.InputMultiply1Total || phase == DivisionPhase.InputMultiply2Total) {
             val isCorrect = phaseEvaluator.isCorrect(phase, input, state.dividend, state.divisor)
             if (!isCorrect) {
-                _domainState.value = state.copy(feedback = "다시 시도해 보세요")
+                _domainState.value = state.copy(feedback = feedbackProvider.getWrongMessage(phase))
                 return
             }
 
@@ -130,8 +135,8 @@ class DivisionViewModel @Inject constructor (
             val newInputs = state.inputs + input[0].toString() + input[1].toString()
             _domainState.value = state.copy(
                 inputs = newInputs,
-                currentPhaseIndex = state.currentPhaseIndex + 1,
-                feedback = null,
+                currentPhaseIndex = nextPhaseIndex,
+                feedback = feedback,
                 pattern = state.pattern,
             )
             currentInput = ""
@@ -139,14 +144,14 @@ class DivisionViewModel @Inject constructor (
         } else {
             val isCorrect = phaseEvaluator.isCorrect(phase, input, state.dividend, state.divisor)
             if (!isCorrect) {
-                _domainState.value = state.copy(feedback = "다시 시도해 보세요")
+                _domainState.value = state.copy(feedback = feedbackProvider.getWrongMessage(phase))
                 return
             }
             val newInputs = state.inputs + input
             _domainState.value = state.copy(
                 inputs = newInputs,
-                currentPhaseIndex = state.currentPhaseIndex + 1,
-                feedback = null,
+                currentPhaseIndex = nextPhaseIndex,
+                feedback = feedback,
                 pattern = state.pattern,
             )
             currentInput = ""

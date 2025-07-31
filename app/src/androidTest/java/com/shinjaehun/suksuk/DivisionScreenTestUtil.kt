@@ -12,6 +12,7 @@ import com.shinjaehun.suksuk.presentation.division.DivisionPattern
 import com.shinjaehun.suksuk.presentation.division.DivisionPatternUiLayoutRegistry
 import com.shinjaehun.suksuk.presentation.division.DivisionScreen
 import com.shinjaehun.suksuk.presentation.division.DivisionViewModel
+import com.shinjaehun.suksuk.presentation.division.FeedbackMessageProvider
 
 //fun ComposeContentTestRule.twoDigitDivByOneDigitCase(
 //    pattern: DivisionPattern,
@@ -47,6 +48,7 @@ fun ComposeContentTestRule.twoDigitDivByOneDigitCase(
     val phaseEvaluator = PhaseEvaluator()
     val patternDetector = PatternDetector
     val uiLayoutRegistry = DivisionPatternUiLayoutRegistry
+    val feedbackProvider = FeedbackMessageProvider()
 
     // 3. ViewModel 직접 생성
     val viewModel = DivisionViewModel(
@@ -54,6 +56,7 @@ fun ComposeContentTestRule.twoDigitDivByOneDigitCase(
         phaseEvaluator,
         patternDetector,
         uiLayoutRegistry,
+        feedbackProvider
     )
 
     this.setContent {

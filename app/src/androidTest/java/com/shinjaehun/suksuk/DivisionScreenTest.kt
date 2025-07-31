@@ -20,6 +20,7 @@ import com.shinjaehun.suksuk.presentation.division.DivisionPatternUiLayoutRegist
 import com.shinjaehun.suksuk.presentation.division.DivisionPhase
 import com.shinjaehun.suksuk.presentation.division.DivisionScreen
 import com.shinjaehun.suksuk.presentation.division.DivisionViewModel
+import com.shinjaehun.suksuk.presentation.division.FeedbackMessageProvider
 import junit.framework.TestCase.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -41,6 +42,7 @@ class DivisionScreenTest {
         val phaseEvaluator = PhaseEvaluator()
         val patternDetector = PatternDetector
         val uiLayoutRegistry = DivisionPatternUiLayoutRegistry
+        val feedbackProvider = FeedbackMessageProvider()
 
         // 직접 생성!
         viewModel = DivisionViewModel(
@@ -48,6 +50,7 @@ class DivisionScreenTest {
             phaseEvaluator,
             patternDetector,
             uiLayoutRegistry,
+            feedbackProvider
         )
     }
 

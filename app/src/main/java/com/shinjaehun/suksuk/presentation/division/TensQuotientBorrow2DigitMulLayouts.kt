@@ -78,6 +78,5 @@ val tensQuotientBorrow2DigitMulLayouts = listOf(
     DivisionStepUiLayout(
         phase = DivisionPhase.Complete,
         cells = emptyMap(),
-        feedback = "정답입니다!"
     )
 )
