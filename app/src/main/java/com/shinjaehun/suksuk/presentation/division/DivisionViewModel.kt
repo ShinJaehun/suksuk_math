@@ -15,13 +15,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DivisionViewModel @Inject constructor (
-//    @Assisted private val savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val phaseEvaluator: PhaseEvaluator,
     private val patternDetector: PatternDetector,
     private val uiLayoutRegistry: DivisionPatternUiLayoutRegistry,
 ) : ViewModel() {
-//    private val autoStart: Boolean = savedStateHandle["autoStart"] ?: true
-    private val autoStart = true
+    private val autoStart: Boolean = savedStateHandle["autoStart"] ?: true
+//    private val autoStart = true
     private val _domainState = MutableStateFlow(DivisionDomainState(0, 0))
     val domainState: StateFlow<DivisionDomainState> = _domainState
 
@@ -122,7 +122,7 @@ class DivisionViewModel @Inject constructor (
         if (phase == DivisionPhase.InputMultiply1Total || phase == DivisionPhase.InputMultiply2Total) {
             val isCorrect = phaseEvaluator.isCorrect(phase, input, state.dividend, state.divisor)
             if (!isCorrect) {
-                _domainState.value = state.copy(feedback = "오답입니다. 다시 시도해 보세요")
+                _domainState.value = state.copy(feedback = "다시 시도해 보세요")
                 return
             }
 
@@ -139,7 +139,7 @@ class DivisionViewModel @Inject constructor (
         } else {
             val isCorrect = phaseEvaluator.isCorrect(phase, input, state.dividend, state.divisor)
             if (!isCorrect) {
-                _domainState.value = state.copy(feedback = "오답입니다. 다시 시도해 보세요")
+                _domainState.value = state.copy(feedback = "다시 시도해 보세요")
                 return
             }
             val newInputs = state.inputs + input

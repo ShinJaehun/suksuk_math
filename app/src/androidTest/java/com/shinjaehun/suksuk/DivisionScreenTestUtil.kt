@@ -5,7 +5,11 @@ import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.lifecycle.SavedStateHandle
+import com.shinjaehun.suksuk.domain.PatternDetector
+import com.shinjaehun.suksuk.domain.PhaseEvaluator
 import com.shinjaehun.suksuk.presentation.division.DivisionPattern
+import com.shinjaehun.suksuk.presentation.division.DivisionPatternUiLayoutRegistry
 import com.shinjaehun.suksuk.presentation.division.DivisionScreen
 import com.shinjaehun.suksuk.presentation.division.DivisionViewModel
 
@@ -38,7 +42,20 @@ fun ComposeContentTestRule.twoDigitDivByOneDigitCase(
     divisor: Int,
     inputs: List<String>,
 ) {
-    val viewModel = DivisionViewModel(autoStart = false)
+    val savedStateHandle = SavedStateHandle(mapOf("autoStart" to false))
+    // 2. 의존성 직접 생성 (혹은 모킹)
+    val phaseEvaluator = PhaseEvaluator()
+    val patternDetector = PatternDetector
+    val uiLayoutRegistry = DivisionPatternUiLayoutRegistry
+
+    // 3. ViewModel 직접 생성
+    val viewModel = DivisionViewModel(
+        savedStateHandle,
+        phaseEvaluator,
+        patternDetector,
+        uiLayoutRegistry,
+    )
+
     this.setContent {
         DivisionScreen(viewModel = viewModel)
     }

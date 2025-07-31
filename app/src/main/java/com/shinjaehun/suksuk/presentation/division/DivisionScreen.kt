@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -39,10 +40,9 @@ import com.shinjaehun.suksuk.R
 
 @Composable
 fun DivisionScreen(
-//    viewModel: DivisionViewModel = viewModel(),
+    viewModel: DivisionViewModel = hiltViewModel(),
     previewAll: Boolean = false
 ) {
-    val viewModel: DivisionViewModel = hiltViewModel()
 
     val domainState by viewModel.domainState.collectAsState()
     val currentInput = viewModel.currentInput
@@ -144,7 +144,7 @@ fun DivisionScreen(
                         start.linkTo(dividendOnesRef.start)
                         bottom.linkTo(dividendOnesRef.top)
                     }
-                    .testTag("borrowed-dividend-cell")
+                    .testTag("borrowed10-dividend-cell")
             )
 
             // divisor
@@ -211,6 +211,7 @@ fun DivisionScreen(
                     }
             )
 
+            println("🔥 subtraction1-line should be shown? ${currentUiState.subtractLines.showSubtract1}")
             if(currentUiState.subtractLines.showSubtract1){
                 Image(
                     painter = painterResource(id = R.drawable.ic_horizontal_line),
@@ -222,8 +223,7 @@ fun DivisionScreen(
                         width = Dimension.value(100.dp)
                         height = Dimension.value(4.dp)
                     }
-                        .testTag("subtraction-line")
-
+                        .testTag("subtraction1-line")
                 )
             }
 
@@ -276,7 +276,7 @@ fun DivisionScreen(
                         start.linkTo(subtract1OnesRef.start)
                         bottom.linkTo(subtract1OnesRef.top)
                     }
-                    .testTag("borrowed-sub1-cell")
+                    .testTag("borrowed10-sub1-cell")
             )
 
             // 2차 곱셈(21), 두 칸: 22 아래
@@ -315,6 +315,7 @@ fun DivisionScreen(
                         width = Dimension.value(100.dp)
                         height = Dimension.value(4.dp)
                     }
+                        .testTag("subtraction2-line")
                 )
             }
 
@@ -384,8 +385,12 @@ fun NumberText(
             fontSize = fontSize,
             color = textColor,
             textAlign = TextAlign.Center,
-        )
+            modifier = Modifier.testTag("${cell.cellName}-cell"),
 
+        )
+//        LaunchedEffect(cell.value) {
+//            println("💬 [SemanticsTest] NumberText(${cell.cellName}) = '${cell.value}'")
+//        }
         if (cell.crossOutColor != CrossOutColor.None) {
             val painter = when(cell.crossOutColor){
                 CrossOutColor.Pending -> painterResource(R.drawable.ic_strikethrough_pending)
@@ -398,6 +403,7 @@ fun NumberText(
                     contentDescription = "취소선",
                     modifier = Modifier
                         .matchParentSize()
+                        .testTag("${cell.cellName}-crossed")
                 )
             }
         }
@@ -423,7 +429,8 @@ fun BorrowText(
         color = textColor,
         textAlign = TextAlign.Center,
         modifier = modifier.width(width)
-    )
+                .testTag("${cell.cellName}-cell"),
+        )
 }
 
 @Composable

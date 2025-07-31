@@ -75,7 +75,8 @@ class DivisionUiStateBuilder private constructor() {
             val inputIdx = cell.inputIdx
             // 입력값 바인딩: inputIdx가 유효하고, 입력값이 있을 때
             val valueFromInput = if (inputIdx != null && inputIdx >= 0) state.inputs.getOrNull(inputIdx) else null
-            println("🟡 makeCell ▶️ cell=$cellName idx=${cell.inputIdx} valueFromInput=$valueFromInput editable=${cell.editable} currentInput=$currentInput phaseIdx=$stepIdx")
+//            println("🟡 makeCell ▶️ cell=$cellName idx=${cell.inputIdx} valueFromInput=$valueFromInput editable=${cell.editable} currentInput=$currentInput phaseIdx=$stepIdx")
+            println("✏️ cellName=$cellName cell=$cell valueFromInput=$valueFromInput currentInput=$currentInput editable=${cell.editable} valueResult=$cell.value")
 
 //            println("cell=$cellName idx=${cell.inputIdx} cell=$cell editable=${cell.editable} input=${state.inputs.getOrNull(cell.inputIdx)} currentInput=$currentInput phaseIdx=$stepIdx")
 
@@ -119,6 +120,7 @@ class DivisionUiStateBuilder private constructor() {
                     !valueFromInput.isNullOrEmpty() -> valueFromInput
                     cell.editable -> if (currentInput.isEmpty()) "?" else currentInput
                     else -> ""
+
                 }
 
             }
@@ -148,7 +150,7 @@ class DivisionUiStateBuilder private constructor() {
                 borrowed10DividendOnes = makeCell(CellName.Borrowed10DividendOnes),
                 borrowed10Subtract1Ones = makeCell(CellName.Borrowed10Subtract1Ones),
                 stage = state.currentPhaseIndex,
-                feedback = layouts.find { it.phase == state.phases.getOrNull(state.currentPhaseIndex) }?.feedback,
+                feedback = state.feedback ?: layouts.find { it.phase == state.phases.getOrNull(state.currentPhaseIndex) }?.feedback,
                 subtractLines = getSubtractionLinesFromPhaseIndex(state.phases, state.currentPhaseIndex)
             )
         }

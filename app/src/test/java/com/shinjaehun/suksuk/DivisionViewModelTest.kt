@@ -1,15 +1,41 @@
 package com.shinjaehun.suksuk
 
+import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
+import com.shinjaehun.suksuk.domain.PatternDetector
+import com.shinjaehun.suksuk.domain.PhaseEvaluator
 import com.shinjaehun.suksuk.presentation.division.DivisionPattern
+import com.shinjaehun.suksuk.presentation.division.DivisionPatternUiLayoutRegistry
 import com.shinjaehun.suksuk.presentation.division.DivisionPhase
 import com.shinjaehun.suksuk.presentation.division.DivisionViewModel
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.test.runTest
+import org.junit.Before
 import org.junit.Test
 
 class DivisionViewModelTest {
+
+    private lateinit var viewModel: DivisionViewModel
+
+    @Before
+    fun setup() {
+        // 테스트용 SavedStateHandle (autoStart를 false로 세팅)
+        val savedStateHandle = SavedStateHandle(mapOf("autoStart" to false))
+
+        // AppModule에서 제공하는 객체는 그냥 new 가능
+        val phaseEvaluator = PhaseEvaluator()
+        val patternDetector = PatternDetector
+        val uiLayoutRegistry = DivisionPatternUiLayoutRegistry
+
+        // 직접 생성!
+        viewModel = DivisionViewModel(
+            savedStateHandle,
+            phaseEvaluator,
+            patternDetector,
+            uiLayoutRegistry,
+        )
+    }
 
     @Test
     fun detectPatternTest() {
@@ -49,7 +75,7 @@ class DivisionViewModelTest {
         )
 
         for ((dividend, divisor, expectedPattern) in cases) {
-            val viewModel = DivisionViewModel(autoStart = false)
+
             viewModel.startNewProblem(dividend, divisor)
             val actualPattern = viewModel.domainState.value.pattern
             println("✅ $dividend ÷ $divisor → expected: $expectedPattern, actual: $actualPattern")
@@ -105,7 +131,6 @@ class DivisionViewModelTest {
             val (dividend, divisor) = pair
             val expectedPatternName = name.substringBefore(":").trim()
 
-            val viewModel = DivisionViewModel(autoStart = false)
             viewModel.domainState.test {
                 try {
                     viewModel.startNewProblem(dividend, divisor)
