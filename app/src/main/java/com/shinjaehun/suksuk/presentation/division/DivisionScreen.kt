@@ -34,20 +34,22 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.shinjaehun.suksuk.R
 
 @Composable
 fun DivisionScreen(
-    viewModel: DivisionViewModel = viewModel(),
+//    viewModel: DivisionViewModel = viewModel(),
     previewAll: Boolean = false
 ) {
-    val phasesState by viewModel.phaseState.collectAsState()
+    val viewModel: DivisionViewModel = hiltViewModel()
+
+    val domainState by viewModel.domainState.collectAsState()
     val currentInput = viewModel.currentInput
 
-    val currentUiState = remember(phasesState, currentInput) {
+    val currentUiState = remember(domainState, currentInput) {
 //        mapPhasesToCells(phasesState, currentInput)
-        DivisionUiStateBuilder.mapToUiState(phasesState, currentInput)
+        DivisionUiStateBuilder.mapToUiState(domainState, currentInput)
     }
 
     val cellWidth = 42.dp

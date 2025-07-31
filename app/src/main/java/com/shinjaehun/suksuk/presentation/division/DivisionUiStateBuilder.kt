@@ -3,7 +3,7 @@ package com.shinjaehun.suksuk.presentation.division
 class DivisionUiStateBuilder private constructor() {
 
     companion object {
-        fun mapToUiState(state: DivisionPhasesState, currentInput: String): DivisionUiState {
+        fun mapToUiState(state: DivisionDomainState, currentInput: String): DivisionUiState {
             if (state.pattern == null) {
                 // DivisionUiState의 모든 필드를 기본값으로 채운 초기값 반환
                 return DivisionUiState()
@@ -13,7 +13,7 @@ class DivisionUiStateBuilder private constructor() {
     }
 
     private class DivisionUiStateBuilderImpl(
-        val state: DivisionPhasesState,
+        val state: DivisionDomainState,
         val currentInput: String
     ){
         private val pattern = state.pattern ?: error("pattern not set!")
@@ -70,6 +70,7 @@ class DivisionUiStateBuilder private constructor() {
 
         private fun makeCell(cellName: CellName): InputCell {
             val cell = accumulatedCells[cellName] ?: InputCell(cellName = CellName.None)
+            val phase = state.phases.getOrNull(state.currentPhaseIndex) ?: DivisionPhase.Complete
 
             val inputIdx = cell.inputIdx
             // 입력값 바인딩: inputIdx가 유효하고, 입력값이 있을 때
@@ -84,25 +85,40 @@ class DivisionUiStateBuilder private constructor() {
                 CellName.DividendTens -> cell.value ?: state.dividend.toString().padStart(2, '0')[0].toString()
                 CellName.DividendOnes -> cell.value ?: state.dividend.toString().padStart(2, '0')[1].toString()
 
-                CellName.Multiply1Tens -> if (cell.editable)
-                    currentInput.getOrNull(0)?.toString() ?: "?"
-                else valueFromInput ?: ""
-                CellName.Multiply1Ones -> if (cell.editable)
-                    currentInput.getOrNull(1)?.toString() ?: "?"
-                else valueFromInput ?: ""
-                CellName.Multiply2Tens -> if (cell.editable)
-                    currentInput.getOrNull(0)?.toString() ?: "?"
-                else valueFromInput ?: ""
-                CellName.Multiply2Ones -> if (cell.editable)
-                    currentInput.getOrNull(1)?.toString() ?: "?"
-                else valueFromInput ?: ""
+                CellName.Multiply1Tens -> when {
+                    phase == DivisionPhase.InputMultiply1Total && cell.editable ->
+                        currentInput.getOrNull(0)?.toString() ?: "?"
+                    phase == DivisionPhase.InputMultiply1Tens && cell.editable ->
+                        currentInput.ifEmpty { "?" }
+                    else -> valueFromInput ?: ""
+                }
+                CellName.Multiply1Ones -> when {
+                    phase == DivisionPhase.InputMultiply1Total && cell.editable ->
+                        currentInput.getOrNull(1)?.toString() ?: "?"
+                    else -> valueFromInput ?: ""
+                }
 
+                CellName.Multiply2Tens -> when {
+                    phase == DivisionPhase.InputMultiply2Total && cell.editable ->
+                        currentInput.getOrNull(0)?.toString() ?: "?"
+                    else -> valueFromInput ?: ""
+                }
+                CellName.Multiply2Ones -> when {
+                    phase == DivisionPhase.InputMultiply2Total && cell.editable ->
+                        currentInput.getOrNull(1)?.toString() ?: "?"
+                    phase == DivisionPhase.InputMultiply2Ones && cell.editable ->
+                        currentInput.ifEmpty { "?" }
+
+                    else -> valueFromInput ?: ""
+                }
+
+                // 나머지 셀
                 else -> when {
-                        cell.value == "" -> ""
-                        cell.value != null -> cell.value
-                        !valueFromInput.isNullOrEmpty() -> valueFromInput
-                        cell.editable -> if (currentInput.isEmpty()) "?" else currentInput
-                        else -> ""
+                    cell.value == "" -> ""
+                    cell.value != null -> cell.value
+                    !valueFromInput.isNullOrEmpty() -> valueFromInput
+                    cell.editable -> if (currentInput.isEmpty()) "?" else currentInput
+                    else -> ""
                 }
 
             }

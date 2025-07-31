@@ -13,28 +13,28 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 
-@Composable
-fun Division21Screen(
-    viewModel: Division21ViewModel = hiltViewModel(),
-) {
-    val state by viewModel.uiState.collectAsState()
-
-    Column(modifier = Modifier.padding(16.dp)) {
-        Text("문제: ${state.problem.dividend} ÷ ${state.problem.divisor}")
-
-        OutlinedTextField(
-            value = state.userInput,
-            onValueChange = { viewModel.onInputChange(it) },
-            label = { Text("정답을 입력하세요") }
-        )
-
-        Button(onClick = { viewModel.checkAnswer() }) {
-            Text("정답 확인")
-        }
-
-        state.result?.let {
-            Text(if (it) "정답입니다." else "틀렸습니다.")
-        }
-    }
-
-}
+//@Composable
+//fun Division21Screen(
+//    viewModel: Division21ViewModel = hiltViewModel(),
+//) {
+//    val state by viewModel.uiState.collectAsState()
+//
+//    Column(modifier = Modifier.padding(16.dp)) {
+//        Text("문제: ${state.problem.dividend} ÷ ${state.problem.divisor}")
+//
+//        OutlinedTextField(
+//            value = state.userInput,
+//            onValueChange = { viewModel.onInputChange(it) },
+//            label = { Text("정답을 입력하세요") }
+//        )
+//
+//        Button(onClick = { viewModel.checkAnswer() }) {
+//            Text("정답 확인")
+//        }
+//
+//        state.result?.let {
+//            Text(if (it) "정답입니다." else "틀렸습니다.")
+//        }
+//    }
+//
+//}

@@ -12,7 +12,7 @@ val tensQuotientBorrow2DigitMulLayouts = listOf(
     ),
     // 2단계: 십의자리 × 나누는 수 (곱셈1)
     DivisionStepUiLayout(
-        phase = DivisionPhase.InputMultiply1,
+        phase = DivisionPhase.InputMultiply1Tens,
         cells = mapOf(
                 CellName.Multiply1Tens to InputCell(cellName = CellName.Multiply1Tens, editable = true, highlight = Highlight.Editing),
                 CellName.Divisor to InputCell(cellName = CellName.Divisor, highlight = Highlight.Related),
@@ -43,8 +43,8 @@ val tensQuotientBorrow2DigitMulLayouts = listOf(
         cells = mapOf(
                 CellName.QuotientOnes to InputCell(cellName = CellName.QuotientOnes, editable = true, highlight = Highlight.Editing),
                 CellName.Divisor to InputCell(cellName = CellName.Divisor, highlight = Highlight.Related),
-                CellName.DividendTens to InputCell(cellName = CellName.DividendTens, highlight = Highlight.Related),
-                CellName.DividendOnes to InputCell(cellName = CellName.DividendOnes, highlight = Highlight.Related),
+                CellName.Subtract1Tens to InputCell(cellName = CellName.Subtract1Tens, highlight = Highlight.Related),
+                CellName.Subtract1Ones to InputCell(cellName = CellName.Subtract1Ones, highlight = Highlight.Related),
         )
     ),
 

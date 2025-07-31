@@ -150,7 +150,7 @@ class DivisionScreenTest {
         inputs.forEach { viewModel.submitInput(it) }
 
         // 최종 상태 검사
-        val finalState = viewModel.phaseState.value
+        val finalState = viewModel.domainState.value
         assertEquals(DivisionPhase.Complete, finalState.phases.getOrNull(finalState.currentPhaseIndex))
     }
 

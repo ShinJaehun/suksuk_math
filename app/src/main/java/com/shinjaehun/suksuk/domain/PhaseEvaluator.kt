@@ -20,16 +20,19 @@ class PhaseEvaluator {
             DivisionPhase.InputQuotientTens -> {
                 inputValue == dividendTens / divisor
             }
-            DivisionPhase.InputMultiply1Tens,
-            DivisionPhase.InputMultiply1 -> {
-                inputValue == divisor * quotientTens
-            }
+//            DivisionPhase.InputMultiply1Tens,
+//            DivisionPhase.InputMultiply1 -> {
+//                inputValue == divisor * quotientTens
+//            }
 //            DivisionPhase.InputMultiply1Tens -> { // 내가 뭔 짓을 하다가 이걸 이렇게 바꿔놓은거지???????????????????????
 //                inputValue == divisor * quotientOnes / 10
 //            }
-            DivisionPhase.InputMultiply1Ones -> {
-                inputValue == divisor * quotientOnes % 10
+            DivisionPhase.InputMultiply1Tens -> {
+                inputValue == divisor * quotientTens
             }
+//            DivisionPhase.InputMultiply1Ones -> {
+//                inputValue == divisor * quotientOnes % 10
+//            }
             DivisionPhase.InputMultiply1Total -> {
 //                inputValue == divisor * quotientOnes
                 input.length == 2 && input[0].toString().toIntOrNull() == divisor * quotient / 10 && input[1].toString().toIntOrNull() == divisor * quotient % 10
@@ -52,11 +55,13 @@ class PhaseEvaluator {
             DivisionPhase.InputQuotient -> {
                 inputValue == quotient
             }
-            DivisionPhase.InputMultiply2Tens -> {
-                inputValue == divisor * quotientOnes / 10
-            }
+//            DivisionPhase.InputMultiply2Tens -> {
+//                inputValue == divisor * quotientOnes / 10
+//            }
             DivisionPhase.InputMultiply2Ones -> {
-                inputValue == divisor * quotientOnes % 10
+                val correct = divisor * quotientOnes % 10
+                println("입력값: $inputValue, 정답: $correct")
+                inputValue == correct
             }
 
 //            DivisionPhase.InputMultiply2Tens -> true
@@ -82,6 +87,11 @@ class PhaseEvaluator {
             }
 
             DivisionPhase.Complete -> false
+
+            else -> {
+                println("phase: $phase (not matched)")
+                false
+            }
         }
     }
 }

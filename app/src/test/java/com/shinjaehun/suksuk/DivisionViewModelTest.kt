@@ -51,7 +51,7 @@ class DivisionViewModelTest {
         for ((dividend, divisor, expectedPattern) in cases) {
             val viewModel = DivisionViewModel(autoStart = false)
             viewModel.startNewProblem(dividend, divisor)
-            val actualPattern = viewModel.phaseState.value.pattern
+            val actualPattern = viewModel.domainState.value.pattern
             println("✅ $dividend ÷ $divisor → expected: $expectedPattern, actual: $actualPattern")
 
             assertEquals(
@@ -106,7 +106,7 @@ class DivisionViewModelTest {
             val expectedPatternName = name.substringBefore(":").trim()
 
             val viewModel = DivisionViewModel(autoStart = false)
-            viewModel.phaseState.test {
+            viewModel.domainState.test {
                 try {
                     viewModel.startNewProblem(dividend, divisor)
 

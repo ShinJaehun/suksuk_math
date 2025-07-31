@@ -5,15 +5,15 @@ sealed interface DivisionPhase {
     object InputQuotientTens : DivisionPhase
     object InputQuotientOnes : DivisionPhase
     object InputQuotient : DivisionPhase
-    object InputMultiply1: DivisionPhase
+//    object InputMultiply1: DivisionPhase
     object InputMultiply1Tens : DivisionPhase
-    object InputMultiply1Ones : DivisionPhase
+//    object InputMultiply1Ones : DivisionPhase
     object InputMultiply1Total : DivisionPhase
     object InputSubtract1Result : DivisionPhase
     object InputSubtract1Tens : DivisionPhase
     object InputSubtract1Ones : DivisionPhase
     object InputBringDownFromDividendOnes : DivisionPhase
-    object InputMultiply2Tens : DivisionPhase
+//    object InputMultiply2Tens : DivisionPhase
     object InputMultiply2Ones : DivisionPhase
     object InputMultiply2Total : DivisionPhase
     object InputSubtract2Result : DivisionPhase
@@ -22,7 +22,7 @@ sealed interface DivisionPhase {
     object Complete : DivisionPhase // 얘가 있으니까 여기까지 도달하는데 뭔가 입력을 하거나 추가 처리가 필요함...
 }
 
-data class DivisionPhasesState(
+data class DivisionDomainState(
     val dividend: Int,
     val divisor: Int,
     val currentPhaseIndex: Int = 0,

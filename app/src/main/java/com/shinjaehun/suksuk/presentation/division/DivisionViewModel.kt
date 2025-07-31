@@ -3,20 +3,30 @@ package com.shinjaehun.suksuk.presentation.division
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.shinjaehun.suksuk.domain.PatternDetector
 import com.shinjaehun.suksuk.domain.PhaseEvaluator
+import dagger.assisted.Assisted
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import javax.inject.Inject
 
-class DivisionViewModel(
-    private val autoStart: Boolean = true
+@HiltViewModel
+class DivisionViewModel @Inject constructor (
+//    @Assisted private val savedStateHandle: SavedStateHandle,
+    private val phaseEvaluator: PhaseEvaluator,
+    private val patternDetector: PatternDetector,
+    private val uiLayoutRegistry: DivisionPatternUiLayoutRegistry,
 ) : ViewModel() {
-    private val _phaseState = MutableStateFlow(DivisionPhasesState(0, 0))
-    val phaseState: StateFlow<DivisionPhasesState> = _phaseState
+//    private val autoStart: Boolean = savedStateHandle["autoStart"] ?: true
+    private val autoStart = true
+    private val _domainState = MutableStateFlow(DivisionDomainState(0, 0))
+    val domainState: StateFlow<DivisionDomainState> = _domainState
 
 //    private val phaseBuilder = PhaseBuilder()
-    private val evaluator = PhaseEvaluator()
+//    private val evaluator = PhaseEvaluator()
 
     // ViewModel 내부에 현재 키패드 입력값을 관리하기 위한 상태
     var currentInput by mutableStateOf("")
@@ -24,12 +34,13 @@ class DivisionViewModel(
 
     init {
         if (autoStart) {
-//            startNewProblem(46, 3) // TensQuotient_NoBorrow_2DigitMul
+            startNewProblem(46, 3) // TensQuotient_NoBorrow_2DigitMul
 //            startNewProblem(85, 7) // TensQuotient_NoBorrow_2DigitMul
-//            startNewProblem(84, 4) // TensQuotient_NoBorrow_1DigitMul
-            startNewProblem(45, 4) // TensQuotient_NoBorrow_1DigitMul
 //            startNewProblem(50, 3) // TensQuotient_Borrow_2DigitMul
 //            startNewProblem(90, 7) // TensQuotient_Borrow_2DigitMul
+
+//            startNewProblem(84, 4) // TensQuotient_NoBorrow_1DigitMul
+//            startNewProblem(45, 4) // TensQuotient_NoBorrow_1DigitMul
 //            startNewProblem(70, 6) // TensQuotient_SkipBorrow_1DigitMul
 //            startNewProblem(93, 8) // TensQuotient_SkipBorrow_1DigitMul
 //            startNewProblem(62, 7) // OnesQuotient_Borrow
@@ -39,15 +50,16 @@ class DivisionViewModel(
     }
 
     fun startNewProblem(dividend: Int, divisor: Int) {
-        val pattern = PatternDetector.detectPattern(dividend, divisor)
+//        val pattern = PatternDetector.detectPattern(dividend, divisor)
 //        val phases = phaseBuilder.buildPhasesFor(pattern)
 //        println("🔍 [startNewProblem] $dividend ÷ $divisor → pattern=$pattern")
 
-        val layouts: List<DivisionStepUiLayout> =
-            DivisionPatternUiLayoutRegistry.getStepLayouts(pattern)
+//        val layouts: List<DivisionStepUiLayout> = DivisionPatternUiLayoutRegistry.getStepLayouts(pattern)
+        val pattern = patternDetector.detectPattern(dividend, divisor)
+        val layouts: List<DivisionStepUiLayout> = uiLayoutRegistry.getStepLayouts(pattern)
         val phases: List<DivisionPhase> = layouts.map { it.phase }
 
-        _phaseState.value = DivisionPhasesState(
+        _domainState.value = DivisionDomainState(
             dividend,
             divisor,
             0,
@@ -60,7 +72,9 @@ class DivisionViewModel(
 
     fun onDigitInput(digit: Int) {
 //        currentInput += digit.toString()
-        val state = _phaseState.value
+        println("onDigitInput($digit) phase=${_domainState.value.phases.getOrNull(_domainState.value.currentPhaseIndex)} currentInput(before)=$currentInput")
+
+        val state = _domainState.value
         val phase = state.phases.getOrNull(state.currentPhaseIndex) ?: return
 
         val maxLength = when (phase) {
@@ -68,6 +82,7 @@ class DivisionViewModel(
             else -> 1
         }
         currentInput = (currentInput + digit).takeLast(maxLength)
+        println("currentInput(after)=$currentInput")
 
     }
 
@@ -78,8 +93,12 @@ class DivisionViewModel(
 
 
     fun onEnter() {
+        println("onEnter called! currentInput=$currentInput phase=${_domainState.value.phases.getOrNull(_domainState.value.currentPhaseIndex)}")
+
         if (currentInput.isEmpty()) {
             // 아무것도 입력 안했을 때 무시
+            println("onEnter: currentInput empty, return")
+
             return
         }
 
@@ -88,9 +107,9 @@ class DivisionViewModel(
     }
 //
     fun submitInput(input: String) {
-        val state = _phaseState.value
+        val state = _domainState.value
         val phase = state.phases.getOrNull(state.currentPhaseIndex) ?: return
-//        println("📥 submitInput('$input') at phase=${phase}")
+        println("📥 submitInput('$input') at phase=${phase}")
 //
 //        // for debugging : 전체 UI 상태
 //        val previewUiState = DivisionUiStateBuilder.mapToUiState(state, currentInput)
@@ -101,15 +120,15 @@ class DivisionViewModel(
 //        logPhaseContext(state, input)
 
         if (phase == DivisionPhase.InputMultiply1Total || phase == DivisionPhase.InputMultiply2Total) {
-            val isCorrect = evaluator.isCorrect(phase, input, state.dividend, state.divisor)
+            val isCorrect = phaseEvaluator.isCorrect(phase, input, state.dividend, state.divisor)
             if (!isCorrect) {
-                _phaseState.value = state.copy(feedback = "오답입니다. 다시 시도해 보세요")
+                _domainState.value = state.copy(feedback = "오답입니다. 다시 시도해 보세요")
                 return
             }
 
             // 입력 분해하여 저장
             val newInputs = state.inputs + input[0].toString() + input[1].toString()
-            _phaseState.value = state.copy(
+            _domainState.value = state.copy(
                 inputs = newInputs,
                 currentPhaseIndex = state.currentPhaseIndex + 1,
                 feedback = null,
@@ -118,13 +137,13 @@ class DivisionViewModel(
             currentInput = ""
             return
         } else {
-            val isCorrect = evaluator.isCorrect(phase, input, state.dividend, state.divisor)
+            val isCorrect = phaseEvaluator.isCorrect(phase, input, state.dividend, state.divisor)
             if (!isCorrect) {
-                _phaseState.value = state.copy(feedback = "오답입니다. 다시 시도해 보세요")
+                _domainState.value = state.copy(feedback = "오답입니다. 다시 시도해 보세요")
                 return
             }
             val newInputs = state.inputs + input
-            _phaseState.value = state.copy(
+            _domainState.value = state.copy(
                 inputs = newInputs,
                 currentPhaseIndex = state.currentPhaseIndex + 1,
                 feedback = null,
