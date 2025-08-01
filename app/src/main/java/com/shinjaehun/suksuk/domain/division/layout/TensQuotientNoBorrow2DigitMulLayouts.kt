@@ -1,7 +1,12 @@
-package com.shinjaehun.suksuk.presentation.division
+package com.shinjaehun.suksuk.domain.division.layout
 
-val tensQuotientBorrow2DigitMulLayouts = listOf(
-    // 1단계: 십의자리 몫
+import com.shinjaehun.suksuk.domain.division.model.CellName
+import com.shinjaehun.suksuk.domain.division.model.DivisionPhase
+import com.shinjaehun.suksuk.domain.division.model.Highlight
+import com.shinjaehun.suksuk.domain.division.model.InputCell
+
+val tensQuotientNoBorrow2DigitMulLayouts = listOf(
+    // 1단계
     DivisionStepUiLayout(
         phase = DivisionPhase.InputQuotientTens,
         cells = mapOf(
@@ -10,7 +15,7 @@ val tensQuotientBorrow2DigitMulLayouts = listOf(
                 CellName.Divisor to InputCell(cellName = CellName.Divisor, highlight = Highlight.Related),
         )
     ),
-    // 2단계: 십의자리 × 나누는 수 (곱셈1)
+    // 2단계
     DivisionStepUiLayout(
         phase = DivisionPhase.InputMultiply1Tens,
         cells = mapOf(
@@ -19,7 +24,7 @@ val tensQuotientBorrow2DigitMulLayouts = listOf(
                 CellName.QuotientTens to InputCell(cellName = CellName.QuotientTens, highlight = Highlight.Related),
         )
     ),
-    // 3단계: 십의자리 - 곱셈1 (뺄셈1, Borrow 발생)
+    // ... 이하 동일하게
     DivisionStepUiLayout(
         phase = DivisionPhase.InputSubtract1Tens,
         cells = mapOf(
@@ -29,7 +34,6 @@ val tensQuotientBorrow2DigitMulLayouts = listOf(
         ),
         showSubtractLine = true
     ),
-
     DivisionStepUiLayout(
         phase = DivisionPhase.InputBringDownFromDividendOnes,
         cells = mapOf(
@@ -37,7 +41,6 @@ val tensQuotientBorrow2DigitMulLayouts = listOf(
                 CellName.Subtract1Ones to InputCell(cellName = CellName.Subtract1Ones, editable = true, highlight = Highlight.Editing),
         )
     ),
-
     DivisionStepUiLayout(
         phase = DivisionPhase.InputQuotientOnes,
         cells = mapOf(
@@ -47,7 +50,6 @@ val tensQuotientBorrow2DigitMulLayouts = listOf(
                 CellName.Subtract1Ones to InputCell(cellName = CellName.Subtract1Ones, highlight = Highlight.Related),
         )
     ),
-
     DivisionStepUiLayout(
         phase = DivisionPhase.InputMultiply2Total,
         cells = mapOf(
@@ -57,19 +59,10 @@ val tensQuotientBorrow2DigitMulLayouts = listOf(
                 CellName.QuotientOnes to InputCell(cellName = CellName.QuotientOnes, highlight = Highlight.Related),
         )
     ),
-
-    DivisionStepUiLayout(
-        phase = DivisionPhase.InputBorrowFromSubtract1Tens,
-        cells = mapOf(
-                CellName.BorrowSubtract1Tens to InputCell(cellName = CellName.BorrowSubtract1Tens, editable = true, highlight = Highlight.Editing),
-                CellName.Subtract1Tens to InputCell(cellName = CellName.Subtract1Tens, highlight = Highlight.Related, crossOutColor = CrossOutColor.Pending),
-        )
-    ),
     DivisionStepUiLayout(
         phase = DivisionPhase.InputSubtract2Result,
         cells = mapOf(
                 CellName.Subtract2Ones to InputCell(cellName = CellName.Subtract2Ones, editable = true, highlight = Highlight.Editing),
-                CellName.Borrowed10Subtract1Ones to InputCell(cellName = CellName.Borrowed10Subtract1Ones, editable = false, value = "10", highlight = Highlight.Related),
                 CellName.Subtract1Ones to InputCell(cellName = CellName.Subtract1Ones, highlight = Highlight.Related),
                 CellName.Multiply2Ones to InputCell(cellName = CellName.Multiply2Ones, highlight = Highlight.Related),
         ),

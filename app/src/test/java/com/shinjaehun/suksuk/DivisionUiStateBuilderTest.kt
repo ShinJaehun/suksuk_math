@@ -1,13 +1,10 @@
 package com.shinjaehun.suksuk
 
-import com.shinjaehun.suksuk.presentation.division.DivisionDomainState
-import com.shinjaehun.suksuk.presentation.division.DivisionPattern
-import com.shinjaehun.suksuk.presentation.division.DivisionPhase
+import com.shinjaehun.suksuk.domain.division.model.DivisionDomainState
+import com.shinjaehun.suksuk.domain.division.model.DivisionPattern
+import com.shinjaehun.suksuk.domain.division.model.DivisionPhase
 import com.shinjaehun.suksuk.presentation.division.DivisionUiStateBuilder
 import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertFalse
-import junit.framework.TestCase.assertNull
-import junit.framework.TestCase.assertTrue
 import org.junit.Test
 
 class DivisionUiStateBuilderTest {

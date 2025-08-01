@@ -1,6 +1,6 @@
 package com.shinjaehun.suksuk
 
-import com.shinjaehun.suksuk.presentation.division.DivisionPhase
+import com.shinjaehun.suksuk.domain.division.model.DivisionPhase
 import com.shinjaehun.suksuk.presentation.division.FeedbackMessageProvider
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull

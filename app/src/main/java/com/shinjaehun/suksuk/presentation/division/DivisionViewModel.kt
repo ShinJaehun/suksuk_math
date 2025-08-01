@@ -5,9 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.shinjaehun.suksuk.domain.PatternDetector
-import com.shinjaehun.suksuk.domain.PhaseEvaluator
-import dagger.assisted.Assisted
+import com.shinjaehun.suksuk.domain.division.evaluator.PhaseEvaluator
+import com.shinjaehun.suksuk.domain.division.factory.DivisionDomainStateFactory
+import com.shinjaehun.suksuk.domain.division.model.DivisionDomainState
+import com.shinjaehun.suksuk.domain.division.model.DivisionPhase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

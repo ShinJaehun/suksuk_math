@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
+// legacy code
+
 //@HiltViewModel
 //class Division21ViewModel @Inject constructor(
 //    private val generateProblem: GenerateDivisionProblemUseCase

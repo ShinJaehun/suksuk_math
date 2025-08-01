@@ -1,6 +1,6 @@
-package com.shinjaehun.suksuk.domain
+package com.shinjaehun.suksuk.domain.division.evaluator
 
-import com.shinjaehun.suksuk.presentation.division.DivisionPhase
+import com.shinjaehun.suksuk.domain.division.model.DivisionPhase
 
 class PhaseEvaluator {
     fun isCorrect(phase: DivisionPhase, input: String, dividend:Int, divisor:Int): Boolean {
@@ -35,7 +35,9 @@ class PhaseEvaluator {
 //            }
             DivisionPhase.InputMultiply1Total -> {
 //                inputValue == divisor * quotientOnes
-                input.length == 2 && input[0].toString().toIntOrNull() == divisor * quotient / 10 && input[1].toString().toIntOrNull() == divisor * quotient % 10
+                input.length == 2 &&
+                        input[0].toString().toIntOrNull() == divisor * quotient / 10 &&
+                        input[1].toString().toIntOrNull() == divisor * quotient % 10
             }
             DivisionPhase.InputSubtract1Tens -> {
                 inputValue == dividendTens - divisor * quotientTens
@@ -59,9 +61,10 @@ class PhaseEvaluator {
 //                inputValue == divisor * quotientOnes / 10
 //            }
             DivisionPhase.InputMultiply2Ones -> {
-                val correct = divisor * quotientOnes % 10
-                println("입력값: $inputValue, 정답: $correct")
-                inputValue == correct
+//                val correct = divisor * quotientOnes % 10
+//                println("입력값: $inputValue, 정답: $correct")
+//                inputValue == correct
+                inputValue == divisor * quotientOnes % 10
             }
 
 //            DivisionPhase.InputMultiply2Tens -> true
@@ -74,7 +77,9 @@ class PhaseEvaluator {
 
             DivisionPhase.InputMultiply2Total -> {
 //                input.length == 2 && inputValue == divisor * quotientOnes
-                input.length == 2 && input[0].toString().toIntOrNull() == divisor * quotientOnes / 10 && input[1].toString().toIntOrNull() == divisor * quotientOnes % 10
+                input.length == 2 &&
+                        input[0].toString().toIntOrNull() == divisor * quotientOnes / 10 &&
+                        input[1].toString().toIntOrNull() == divisor * quotientOnes % 10
             }
             DivisionPhase.InputBorrowFromDividendTens -> {
                 inputValue == dividendTens - 1
@@ -88,10 +93,6 @@ class PhaseEvaluator {
 
             DivisionPhase.Complete -> false
 
-            else -> {
-                println("phase: $phase (not matched)")
-                false
-            }
         }
     }
 }

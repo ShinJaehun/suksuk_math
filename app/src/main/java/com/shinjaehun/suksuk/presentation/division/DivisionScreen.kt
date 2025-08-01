@@ -1,38 +1,27 @@
 package com.shinjaehun.suksuk.presentation.division
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -362,116 +351,6 @@ fun DivisionScreen(
     }
 }
 
-@Composable
-fun NumberText(
-    cell: InputCell,
-    defaultColor: Color = Color.Black,
-    fontSize: TextUnit = 40.sp,
-    width: Dp = 42.dp,
-    modifier: Modifier = Modifier
-) {
-    val textColor = when (cell.highlight) {
-        Highlight.Editing -> Color.Red
-        Highlight.Related -> Color(0xFF1976D2) // 파란색 (Material blue)
-        else -> defaultColor
-    }
-
-    Box(
-        modifier = modifier.width(width),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = cell.value ?: "",
-            fontSize = fontSize,
-            color = textColor,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.testTag("${cell.cellName}-cell"),
-
-        )
-//        LaunchedEffect(cell.value) {
-//            println("💬 [SemanticsTest] NumberText(${cell.cellName}) = '${cell.value}'")
-//        }
-        if (cell.crossOutColor != CrossOutColor.None) {
-            val painter = when(cell.crossOutColor){
-                CrossOutColor.Pending -> painterResource(R.drawable.ic_strikethrough_pending)
-                CrossOutColor.Confirmed -> painterResource(R.drawable.ic_strikethrough_confirmed)
-                else -> null
-            }
-            painter?.let {
-                Image(
-                    painter = it,
-                    contentDescription = "취소선",
-                    modifier = Modifier
-                        .matchParentSize()
-                        .testTag("${cell.cellName}-crossed")
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun BorrowText(
-    cell: InputCell,
-    defaultColor: Color = Color.Black,
-    fontSize: TextUnit = 20.sp,
-    width: Dp = 42.dp,
-    modifier: Modifier = Modifier
-) {
-    val textColor = when (cell.highlight) {
-        Highlight.Editing -> Color.Red
-        Highlight.Related -> Color(0xFF1976D2) // 파란색 (Material blue)
-        else -> defaultColor
-    }
-    Text(
-        text = cell.value ?: "",
-        fontSize = fontSize,
-        color = textColor,
-        textAlign = TextAlign.Center,
-        modifier = modifier.width(width)
-                .testTag("${cell.cellName}-cell"),
-        )
-}
-
-@Composable
-fun NumberPad(onNumber: (Int) -> Unit, onClear: () -> Unit, onEnter: () -> Unit) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        listOf(listOf(1, 2, 3), listOf(4, 5, 6), listOf(7, 8, 9), listOf(-1, 0, -2)).forEach { row ->
-            Row {
-                row.forEach { num ->
-                    when (num) {
-                        -1 -> CircleButton(label = "⟲", onClick = onClear)
-                        -2 -> CircleButton(
-                            label = "↵",
-                            modifier = Modifier.testTag("numpad-enter"),
-                            onClick = onEnter
-                        )
-                        else -> CircleButton(
-                            label = num.toString(),
-                            modifier = Modifier.testTag("numpad-$num")
-                        ) { onNumber(num) }
-                    }
-                    Spacer(Modifier.width(8.dp))
-                }
-            }
-            Spacer(Modifier.height(8.dp))
-        }
-    }
-}
-
-@Composable
-fun CircleButton(label: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    Box(
-        modifier
-            .size(48.dp)
-            .clickable { onClick() }
-            .background(MaterialTheme.colorScheme.primaryContainer, shape = CircleShape)
-            .padding(12.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(label, fontSize = 20.sp, color = MaterialTheme.colorScheme.onPrimaryContainer)
-    }
-}
 
 @Preview(showBackground = true)
 @Composable

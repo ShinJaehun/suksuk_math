@@ -1,13 +1,7 @@
 package com.shinjaehun.suksuk
 
-import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.performClick
-import com.shinjaehun.suksuk.presentation.division.DivisionPattern
-import com.shinjaehun.suksuk.presentation.division.DivisionScreen
-import com.shinjaehun.suksuk.presentation.division.DivisionViewModel
+import com.shinjaehun.suksuk.domain.division.model.DivisionPattern
 import org.junit.Rule
 import org.junit.Test
 

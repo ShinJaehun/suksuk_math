@@ -2,12 +2,12 @@ package com.shinjaehun.suksuk
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import com.shinjaehun.suksuk.domain.PatternDetector
-import com.shinjaehun.suksuk.domain.PhaseEvaluator
-import com.shinjaehun.suksuk.presentation.division.DivisionDomainStateFactory
-import com.shinjaehun.suksuk.presentation.division.DivisionPattern
-import com.shinjaehun.suksuk.presentation.division.DivisionPatternUiLayoutRegistry
-import com.shinjaehun.suksuk.presentation.division.DivisionPhase
+import com.shinjaehun.suksuk.domain.division.detector.PatternDetector
+import com.shinjaehun.suksuk.domain.division.evaluator.PhaseEvaluator
+import com.shinjaehun.suksuk.domain.division.factory.DivisionDomainStateFactory
+import com.shinjaehun.suksuk.domain.division.layout.DivisionPatternUiLayoutRegistry
+import com.shinjaehun.suksuk.domain.division.model.DivisionPattern
+import com.shinjaehun.suksuk.domain.division.model.DivisionPhase
 import com.shinjaehun.suksuk.presentation.division.DivisionViewModel
 import com.shinjaehun.suksuk.presentation.division.FeedbackMessageProvider
 import junit.framework.TestCase.assertEquals

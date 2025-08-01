@@ -1,5 +1,15 @@
 package com.shinjaehun.suksuk.presentation.division
 
+import com.shinjaehun.suksuk.domain.division.layout.DivisionPatternUiLayoutRegistry
+import com.shinjaehun.suksuk.domain.division.model.CellName
+import com.shinjaehun.suksuk.domain.division.model.CrossOutColor
+import com.shinjaehun.suksuk.domain.division.model.DivisionDomainState
+import com.shinjaehun.suksuk.domain.division.model.DivisionPhase
+import com.shinjaehun.suksuk.domain.division.model.DivisionUiState
+import com.shinjaehun.suksuk.domain.division.model.Highlight
+import com.shinjaehun.suksuk.domain.division.model.InputCell
+import com.shinjaehun.suksuk.domain.division.model.SubtractLines
+
 class DivisionUiStateBuilder private constructor() {
 
     companion object {

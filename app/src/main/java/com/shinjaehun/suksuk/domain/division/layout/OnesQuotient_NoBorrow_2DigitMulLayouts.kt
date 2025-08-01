@@ -1,4 +1,9 @@
-package com.shinjaehun.suksuk.presentation.division
+package com.shinjaehun.suksuk.domain.division.layout
+
+import com.shinjaehun.suksuk.domain.division.model.CellName
+import com.shinjaehun.suksuk.domain.division.model.DivisionPhase
+import com.shinjaehun.suksuk.domain.division.model.Highlight
+import com.shinjaehun.suksuk.domain.division.model.InputCell
 
 val onesQuotientNoBorrow2DigitMulLayouts = listOf(
     // 1단계: 일의자리 몫(2자리) 입력

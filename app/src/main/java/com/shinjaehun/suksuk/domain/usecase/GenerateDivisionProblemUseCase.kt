@@ -2,6 +2,8 @@ package com.shinjaehun.suksuk.domain.usecase
 
 import kotlin.random.Random
 
+// legacy code
+
 //class GenerateDivisionProblemUseCase {
 //    operator fun invoke(): DivisionProblem {
 //        val divisor = Random.nextInt(2, 10)

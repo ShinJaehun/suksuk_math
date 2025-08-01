@@ -1,7 +1,7 @@
 package com.shinjaehun.suksuk
 
-import com.shinjaehun.suksuk.domain.PhaseEvaluator
-import com.shinjaehun.suksuk.presentation.division.DivisionPhase
+import com.shinjaehun.suksuk.domain.division.evaluator.PhaseEvaluator
+import com.shinjaehun.suksuk.domain.division.model.DivisionPhase
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import org.junit.Test

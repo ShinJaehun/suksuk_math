@@ -27,84 +27,86 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-@Composable
-fun DivisionInputPad(
-    onNumberClick: (Int) -> Unit,
-    onClearClick: () -> Unit,
-//    onEnterClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(210.dp)
-    ) {
-        // Clear 버튼 (좌측)
-        Box(
-            modifier = Modifier
-                .weight(2f)
-                .fillMaxHeight(),
-            contentAlignment = Alignment.Center
-        ) {
-            IconButton(
-                onClick = onClearClick,
-                modifier = Modifier
-                    .size(50.dp)
-                    .background(Color.LightGray, shape = CircleShape)
-            ) {
-                Icon(Icons.Default.Clear, contentDescription = "Clear")
-            }
-        }
+// legacy code
 
-        // 숫자 버튼 (가운데)
-        Column(
-            modifier = Modifier
-                .width(180.dp)
-                .fillMaxHeight(),
-            verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically)
-        ) {
-            listOf(
-                listOf(1, 2, 3),
-                listOf(4, 5, 6),
-                listOf(7, 8, 9),
-                listOf(null, 0, null)
-            ).forEach { row ->
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    row.forEach { number ->
-                        if (number != null) {
-                            Button(
-                                onClick = { onNumberClick(number) },
-                                modifier = Modifier.size(40.dp),
-                                colors = ButtonDefaults.buttonColors()
-                            ) {
-                                Text("$number", fontSize = 20.sp, color = Color.White)
-                            }
-                        } else {
-                            Spacer(modifier = Modifier.size(40.dp))
-                        }
-                    }
-                }
-            }
-        }
-
-        // Enter 버튼 (우측)
-        Box(
-            modifier = Modifier
-                .weight(2f)
-                .fillMaxHeight(),
-            contentAlignment = Alignment.Center
-        ) {
-            IconButton(
-//                onClick = onEnterClick,
-                onClick = {},
-                modifier = Modifier
-                    .size(50.dp)
-                    .background(Color.Green, shape = CircleShape)
-            ) {
-                Icon(Icons.Default.Check, contentDescription = "Enter", tint = Color.White)
-            }
-        }
-    }
-}
+//@Composable
+//fun DivisionInputPad(
+//    onNumberClick: (Int) -> Unit,
+//    onClearClick: () -> Unit,
+////    onEnterClick: () -> Unit
+//) {
+//    Row(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .height(210.dp)
+//    ) {
+//        // Clear 버튼 (좌측)
+//        Box(
+//            modifier = Modifier
+//                .weight(2f)
+//                .fillMaxHeight(),
+//            contentAlignment = Alignment.Center
+//        ) {
+//            IconButton(
+//                onClick = onClearClick,
+//                modifier = Modifier
+//                    .size(50.dp)
+//                    .background(Color.LightGray, shape = CircleShape)
+//            ) {
+//                Icon(Icons.Default.Clear, contentDescription = "Clear")
+//            }
+//        }
+//
+//        // 숫자 버튼 (가운데)
+//        Column(
+//            modifier = Modifier
+//                .width(180.dp)
+//                .fillMaxHeight(),
+//            verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically)
+//        ) {
+//            listOf(
+//                listOf(1, 2, 3),
+//                listOf(4, 5, 6),
+//                listOf(7, 8, 9),
+//                listOf(null, 0, null)
+//            ).forEach { row ->
+//                Row(
+//                    modifier = Modifier.fillMaxWidth(),
+//                    horizontalArrangement = Arrangement.SpaceEvenly
+//                ) {
+//                    row.forEach { number ->
+//                        if (number != null) {
+//                            Button(
+//                                onClick = { onNumberClick(number) },
+//                                modifier = Modifier.size(40.dp),
+//                                colors = ButtonDefaults.buttonColors()
+//                            ) {
+//                                Text("$number", fontSize = 20.sp, color = Color.White)
+//                            }
+//                        } else {
+//                            Spacer(modifier = Modifier.size(40.dp))
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        // Enter 버튼 (우측)
+//        Box(
+//            modifier = Modifier
+//                .weight(2f)
+//                .fillMaxHeight(),
+//            contentAlignment = Alignment.Center
+//        ) {
+//            IconButton(
+////                onClick = onEnterClick,
+//                onClick = {},
+//                modifier = Modifier
+//                    .size(50.dp)
+//                    .background(Color.Green, shape = CircleShape)
+//            ) {
+//                Icon(Icons.Default.Check, contentDescription = "Enter", tint = Color.White)
+//            }
+//        }
+//    }
+//}

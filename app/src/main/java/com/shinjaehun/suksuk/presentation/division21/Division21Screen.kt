@@ -13,6 +13,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 
+// legacy code
+
 //@Composable
 //fun Division21Screen(
 //    viewModel: Division21ViewModel = hiltViewModel(),

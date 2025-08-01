@@ -1,6 +1,6 @@
-package com.shinjaehun.suksuk.domain
+package com.shinjaehun.suksuk.domain.division.detector
 
-import com.shinjaehun.suksuk.presentation.division.DivisionPattern
+import com.shinjaehun.suksuk.domain.division.model.DivisionPattern
 
 object PatternDetector {
     fun detectPattern(dividend: Int, divisor: Int): DivisionPattern {

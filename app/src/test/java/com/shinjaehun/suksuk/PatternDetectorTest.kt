@@ -1,7 +1,7 @@
 package com.shinjaehun.suksuk
 
-import com.shinjaehun.suksuk.domain.PatternDetector
-import com.shinjaehun.suksuk.presentation.division.DivisionPattern
+import com.shinjaehun.suksuk.domain.division.detector.PatternDetector
+import com.shinjaehun.suksuk.domain.division.model.DivisionPattern
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 
