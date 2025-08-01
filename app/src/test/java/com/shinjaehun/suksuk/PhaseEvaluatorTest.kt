@@ -87,8 +87,8 @@ class PhaseEvaluatorTest {
     fun isCorrect_TwoByTwo_NoCarry_Borrow() {
         assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotientOnes, "2", 50, 22))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1Ones, "4", 50, 22))
-        assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1Tens, "5", 50, 22))
-        assertTrue(evaluator.isCorrect(DivisionPhase.InputBorrowFromDividendTens, "1", 50, 22))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1Tens, "4", 50, 22))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputBorrowFromDividendTens, "4", 50, 22))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract1Ones, "6", 50, 22))
     }
 
@@ -107,7 +107,7 @@ class PhaseEvaluatorTest {
         assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotientOnes, "6", 81, 12))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1OnesWithCarry, "12", 81, 12))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1Tens, "7", 81, 12)) // 예시: 실제 구조에 따라
-        assertTrue(evaluator.isCorrect(DivisionPhase.InputBorrowFromDividendTens, "1", 81, 12)) // 예시: 실제 구조에 따라
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputBorrowFromDividendTens, "7", 81, 12)) // 예시: 실제 구조에 따라
         assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract1Ones, "9", 81, 12))
     }
 

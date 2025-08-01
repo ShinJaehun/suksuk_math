@@ -7,6 +7,9 @@ class PhaseEvaluator {
 
         val inputValue = input.toIntOrNull() ?: return false
 
+        val divisorTens = divisor / 10
+        val divisorOnes = divisor % 10
+
         val dividendTens = dividend / 10
         val dividendOnes = dividend % 10
 
@@ -14,7 +17,10 @@ class PhaseEvaluator {
         val quotientTens = quotient / 10
         val quotientOnes = quotient % 10
 
+        val carry = quotientOnes * divisorOnes / 10
         val remainder = dividend - divisor * quotient
+
+
 
         return when (phase) {
             DivisionPhase.InputQuotientTens -> {
@@ -22,15 +28,30 @@ class PhaseEvaluator {
             }
 
             DivisionPhase.InputMultiply1Tens -> {
-                inputValue == divisor * quotientTens
+                if (divisor < 10) {
+                    inputValue == divisor * quotientTens
+                } else {
+                    inputValue == quotientOnes * divisorTens + carry
+                }
             }
+            DivisionPhase.InputMultiply1OnesWithCarry -> {
+                input.length == 2 &&
+                        input[0].toString().toIntOrNull() == carry
+                        input[1].toString().toIntOrNull() == quotientOnes * divisorOnes % 10
+            }
+
             DivisionPhase.InputMultiply1TensAndMultiply1Ones -> {
 //                inputValue == divisor * quotientOnes
                 input.length == 2 &&
                         input[0].toString().toIntOrNull() == divisor * quotient / 10 &&
                         input[1].toString().toIntOrNull() == divisor * quotient % 10
             }
+            DivisionPhase.InputMultiply1Ones -> {
+                inputValue == quotientOnes * divisorOnes
+            }
+
             DivisionPhase.InputSubtract1Tens -> {
+
                 inputValue == dividendTens - divisor * quotientTens
             }
             DivisionPhase.InputSubtract1Ones -> {
@@ -70,8 +91,6 @@ class PhaseEvaluator {
                 inputValue == remainder
             }
 
-            DivisionPhase.InputMultiply1Ones -> { true }
-            DivisionPhase.InputMultiply1OnesWithCarry -> { true }
             DivisionPhase.Complete -> false
         }
     }
