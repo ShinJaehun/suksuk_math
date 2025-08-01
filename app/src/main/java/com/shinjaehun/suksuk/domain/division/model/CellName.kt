@@ -2,7 +2,8 @@ package com.shinjaehun.suksuk.domain.division.model
 
 enum class CellName {
     None,
-    Divisor,
+    DivisorTens,
+    DivisorOnes,
     DividendTens,
     DividendOnes,
     QuotientTens,
@@ -17,5 +18,6 @@ enum class CellName {
     Multiply2Ones,
     Subtract2Ones,
     BorrowDividendTens,
-    BorrowSubtract1Tens
+    BorrowSubtract1Tens,
+    CarryDivisorTens,
 }

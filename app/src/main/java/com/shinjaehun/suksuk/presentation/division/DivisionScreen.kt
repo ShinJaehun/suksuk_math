@@ -137,7 +137,7 @@ fun DivisionScreen(
             )
 
             // divisor
-            val divisorCell = currentUiState.divisor
+            val divisorCell = currentUiState.divisorOnes
             NumberText(
                 cell = divisorCell,
                 modifier = Modifier

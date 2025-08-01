@@ -84,7 +84,7 @@ class DivisionViewModel @Inject constructor (
         val phase = state.phases.getOrNull(state.currentPhaseIndex) ?: return
 
         val maxLength = when (phase) {
-            DivisionPhase.InputMultiply1Total, DivisionPhase.InputMultiply2Total -> 2
+            DivisionPhase.InputMultiply1TensAndMultiply1Ones, DivisionPhase.InputMultiply2TensAndMultiply2Ones -> 2
             else -> 1
         }
         currentInput = (currentInput + digit).takeLast(maxLength)
@@ -129,7 +129,7 @@ class DivisionViewModel @Inject constructor (
         val nextPhase = state.phases.getOrNull(nextPhaseIndex)
         val feedback = feedbackProvider.getSuccessMessage(nextPhase ?: DivisionPhase.Complete)
 
-        if (phase == DivisionPhase.InputMultiply1Total || phase == DivisionPhase.InputMultiply2Total) {
+        if (phase == DivisionPhase.InputMultiply1TensAndMultiply1Ones || phase == DivisionPhase.InputMultiply2TensAndMultiply2Ones) {
             val isCorrect = phaseEvaluator.isCorrect(phase, input, state.dividend, state.divisor)
             if (!isCorrect) {
                 _domainState.value = state.copy(feedback = feedbackProvider.getWrongMessage(phase))

@@ -31,7 +31,7 @@ class DivisionUiStateBuilder private constructor() {
         private val stepIdx = state.currentPhaseIndex
 
         val alwaysVisibleCells = listOf(
-            CellName.Divisor,
+            CellName.DivisorOnes,
             CellName.DividendTens,
             CellName.DividendOnes
         )
@@ -92,30 +92,30 @@ class DivisionUiStateBuilder private constructor() {
 
             val value = when (cellName) {
 
-                CellName.Divisor -> cell.value ?: state.divisor.toString()
+                CellName.DivisorOnes -> cell.value ?: state.divisor.toString()
                 CellName.DividendTens -> cell.value ?: state.dividend.toString().padStart(2, '0')[0].toString()
                 CellName.DividendOnes -> cell.value ?: state.dividend.toString().padStart(2, '0')[1].toString()
 
                 CellName.Multiply1Tens -> when {
-                    phase == DivisionPhase.InputMultiply1Total && cell.editable ->
+                    phase == DivisionPhase.InputMultiply1TensAndMultiply1Ones && cell.editable ->
                         currentInput.getOrNull(0)?.toString() ?: "?"
                     phase == DivisionPhase.InputMultiply1Tens && cell.editable ->
                         currentInput.ifEmpty { "?" }
                     else -> valueFromInput ?: ""
                 }
                 CellName.Multiply1Ones -> when {
-                    phase == DivisionPhase.InputMultiply1Total && cell.editable ->
+                    phase == DivisionPhase.InputMultiply1TensAndMultiply1Ones && cell.editable ->
                         currentInput.getOrNull(1)?.toString() ?: "?"
                     else -> valueFromInput ?: ""
                 }
 
                 CellName.Multiply2Tens -> when {
-                    phase == DivisionPhase.InputMultiply2Total && cell.editable ->
+                    phase == DivisionPhase.InputMultiply2TensAndMultiply2Ones && cell.editable ->
                         currentInput.getOrNull(0)?.toString() ?: "?"
                     else -> valueFromInput ?: ""
                 }
                 CellName.Multiply2Ones -> when {
-                    phase == DivisionPhase.InputMultiply2Total && cell.editable ->
+                    phase == DivisionPhase.InputMultiply2TensAndMultiply2Ones && cell.editable ->
                         currentInput.getOrNull(1)?.toString() ?: "?"
                     phase == DivisionPhase.InputMultiply2Ones && cell.editable ->
                         currentInput.ifEmpty { "?" }
@@ -140,7 +140,7 @@ class DivisionUiStateBuilder private constructor() {
 
         fun mapToUiState(): DivisionUiState {
             return DivisionUiState(
-                divisor = makeCell(CellName.Divisor),
+                divisorOnes = makeCell(CellName.DivisorOnes),
                 dividendTens = makeCell(CellName.DividendTens),
                 dividendOnes = makeCell(CellName.DividendOnes),
                 quotientTens = makeCell(CellName.QuotientTens),
@@ -183,7 +183,7 @@ fun getSubtractionLinesFromPhaseIndex(
     // ✅ Subtract2 줄의 시작 후보
     val subtract2StartIndex = listOf(
         DivisionPhase.InputBorrowFromSubtract1Tens,
-        DivisionPhase.InputSubtract2Result
+        DivisionPhase.InputSubtract2Ones
     ).map { phases.indexOf(it) }
         .filter { it >= 0 }
         .minOrNull() ?: Int.MAX_VALUE

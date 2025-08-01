@@ -17,12 +17,12 @@ class DivisionUiStateBuilderTest {
             currentPhaseIndex = 6, // 마지막 단계까지 완료한 상태
             phases = listOf(
                 DivisionPhase.InputQuotientTens,
-                DivisionPhase.InputMultiply1Total,
+                DivisionPhase.InputMultiply1TensAndMultiply1Ones,
                 DivisionPhase.InputSubtract1Tens,
                 DivisionPhase.InputBringDownFromDividendOnes,
                 DivisionPhase.InputQuotientOnes,
-                DivisionPhase.InputMultiply2Total,
-                DivisionPhase.InputSubtract2Result,
+                DivisionPhase.InputMultiply2TensAndMultiply2Ones,
+                DivisionPhase.InputSubtract2Ones,
                 DivisionPhase.Complete
             ),
             inputs = listOf("1", "3", "1", "6", "5", "1", "5", "1"),
@@ -61,7 +61,7 @@ class DivisionUiStateBuilderTest {
                 DivisionPhase.InputBringDownFromDividendOnes,
                 DivisionPhase.InputQuotientOnes,
                 DivisionPhase.InputMultiply2Ones,
-                DivisionPhase.InputSubtract2Result,
+                DivisionPhase.InputSubtract2Ones,
                 DivisionPhase.Complete
             ),
             inputs = listOf("1", "6", "1", "1", "1", "6", "5"),
@@ -94,7 +94,7 @@ class DivisionUiStateBuilderTest {
                 DivisionPhase.InputBringDownFromDividendOnes,
                 DivisionPhase.InputQuotientOnes,
                 DivisionPhase.InputMultiply2Ones,
-                DivisionPhase.InputSubtract2Result,
+                DivisionPhase.InputSubtract2Ones,
                 DivisionPhase.Complete
             ),
             inputs = listOf("1", "4", "0", "5", "1", "4", "1"),
@@ -126,9 +126,9 @@ class DivisionUiStateBuilderTest {
                 DivisionPhase.InputSubtract1Tens,
                 DivisionPhase.InputBringDownFromDividendOnes,
                 DivisionPhase.InputQuotientOnes,
-                DivisionPhase.InputMultiply2Total,
+                DivisionPhase.InputMultiply2TensAndMultiply2Ones,
                 DivisionPhase.InputBorrowFromSubtract1Tens,
-                DivisionPhase.InputSubtract2Result,
+                DivisionPhase.InputSubtract2Ones,
                 DivisionPhase.Complete
             ),
             inputs = listOf("1", "3", "2", "0", "6", "1", "8", "1", "2"), // "18"이 분리되어 들어감
@@ -157,7 +157,7 @@ class DivisionUiStateBuilderTest {
             currentPhaseIndex = 3,
             phases = listOf(
                 DivisionPhase.InputQuotient,
-                DivisionPhase.InputMultiply1Total,
+                DivisionPhase.InputMultiply1TensAndMultiply1Ones,
                 DivisionPhase.InputSubtract1Result,
                 DivisionPhase.Complete
             ),
@@ -183,7 +183,7 @@ class DivisionUiStateBuilderTest {
             currentPhaseIndex = 4,
             phases = listOf(
                 DivisionPhase.InputQuotient,
-                DivisionPhase.InputMultiply1Total,
+                DivisionPhase.InputMultiply1TensAndMultiply1Ones,
                 DivisionPhase.InputBorrowFromDividendTens,
                 DivisionPhase.InputSubtract1Result,
                 DivisionPhase.Complete
@@ -200,6 +200,64 @@ class DivisionUiStateBuilderTest {
         assertEquals("6", uiState.multiply1Ones.value) // (56의 일의자리)
         assertEquals("5", uiState.borrowDividendTens.value) // borrow 값
         assertEquals("6", uiState.subtract1Ones.value)
+        // assertEquals("정답입니다!", uiState.feedback)
+    }
+
+    @Test
+    fun `mapToUiState maps domain state to correct ui state for 96 div 12 scenario`() {
+        val domainState = DivisionDomainState(
+            dividend = 96,
+            divisor = 12,
+            currentPhaseIndex = 3, // 몫, 곱셈, 뺄셈 완료
+            phases = listOf(
+                DivisionPhase.InputQuotientOnes,
+                DivisionPhase.InputMultiply1OnesWithCarry,
+                DivisionPhase.InputMultiply1Tens,
+                DivisionPhase.InputSubtract1Ones,
+                DivisionPhase.Complete
+            ),
+            inputs = listOf("8", "16", "9", "0"),
+            feedback = null,
+            pattern = DivisionPattern.TwoByTwo_Carry_NoBorrow
+        )
+
+        val uiState = DivisionUiStateBuilder.mapToUiState(domainState, "")
+
+        assertEquals("8", uiState.quotientOnes.value)
+        assertEquals("1", uiState.carryDivisorTens.value)
+        assertEquals("6", uiState.multiply1Ones.value)
+        assertEquals("9", uiState.multiply1Tens.value)
+        assertEquals("0", uiState.subtract1Ones.value)
+        // assertEquals("정답입니다!", uiState.feedback)
+    }
+
+    @Test
+    fun `mapToUiState maps domain state to correct ui state for 81 div 12 scenario`() {
+        val domainState = DivisionDomainState(
+            dividend = 81,
+            divisor = 12,
+            currentPhaseIndex = 5,
+            phases = listOf(
+                DivisionPhase.InputQuotientOnes,
+                DivisionPhase.InputMultiply1OnesWithCarry,
+                DivisionPhase.InputMultiply1Tens,
+                DivisionPhase.InputBorrowFromDividendTens,
+                DivisionPhase.InputSubtract1Ones,
+                DivisionPhase.Complete
+            ),
+            inputs = listOf("6", "12", "7", "1", "9"),
+            feedback = null,
+            pattern = DivisionPattern.TwoByTwo_Carry_Borrow
+        )
+
+        val uiState = DivisionUiStateBuilder.mapToUiState(domainState, "")
+
+        assertEquals("6", uiState.quotientOnes.value)
+        assertEquals("1", uiState.multiply1Tens.value)
+        assertEquals("2", uiState.multiply1Ones.value)
+        assertEquals("7", uiState.borrowDividendTens.value)
+        assertEquals("1", uiState.subtract1Tens.value)
+        assertEquals("9", uiState.subtract1Ones.value)
         // assertEquals("정답입니다!", uiState.feedback)
     }
 }

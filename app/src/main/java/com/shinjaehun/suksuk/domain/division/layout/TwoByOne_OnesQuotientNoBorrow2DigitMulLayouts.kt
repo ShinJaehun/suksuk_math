@@ -13,7 +13,7 @@ val twoByOne_OnesQuotientNoBorrow2DigitMulLayouts = listOf(
                 CellName.QuotientOnes to InputCell(cellName = CellName.QuotientOnes, editable = true, highlight = Highlight.Editing),
                 CellName.DividendTens to InputCell(cellName = CellName.DividendTens, highlight = Highlight.Related),
                 CellName.DividendOnes to InputCell(cellName = CellName.DividendOnes, highlight = Highlight.Related),
-                CellName.Divisor to InputCell(cellName = CellName.Divisor, highlight = Highlight.Related)
+                CellName.DivisorOnes to InputCell(cellName = CellName.DivisorOnes, highlight = Highlight.Related)
         ),
 //        inputIndices = mapOf(
 //            CellName.QuotientOnes to 0
@@ -21,11 +21,11 @@ val twoByOne_OnesQuotientNoBorrow2DigitMulLayouts = listOf(
     ),
     // 2단계: 곱셈(두 자리, 총합 입력)
     DivisionStepUiLayout(
-        phase = DivisionPhase.InputMultiply1Total,
+        phase = DivisionPhase.InputMultiply1TensAndMultiply1Ones,
         cells = mapOf(
                 CellName.Multiply1Tens to InputCell(cellName = CellName.Multiply1Tens, editable = true, highlight = Highlight.Editing),
                 CellName.Multiply1Ones to InputCell(cellName = CellName.Multiply1Ones, editable = true, highlight = Highlight.Editing),
-                CellName.Divisor to InputCell(cellName = CellName.Divisor, highlight = Highlight.Related),
+                CellName.DivisorOnes to InputCell(cellName = CellName.DivisorOnes, highlight = Highlight.Related),
                 CellName.QuotientOnes to InputCell(cellName = CellName.QuotientOnes, highlight = Highlight.Related)
         ),
 //        inputIndices = mapOf(

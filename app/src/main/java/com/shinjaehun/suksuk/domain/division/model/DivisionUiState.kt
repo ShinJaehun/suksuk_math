@@ -1,7 +1,8 @@
 package com.shinjaehun.suksuk.domain.division.model
 
 data class DivisionUiState(
-    val divisor: InputCell = InputCell(),
+    val divisorTens: InputCell = InputCell(),
+    val divisorOnes: InputCell = InputCell(),
     val dividendTens: InputCell = InputCell(),
     val dividendOnes: InputCell = InputCell(),
     val quotientTens: InputCell = InputCell(),
@@ -17,6 +18,9 @@ data class DivisionUiState(
     val borrowSubtract1Tens: InputCell = InputCell(),
     val borrowed10DividendOnes: InputCell = InputCell(),
     val borrowed10Subtract1Ones: InputCell = InputCell(),
+
+    val carryDivisorTens: InputCell = InputCell(),
+
     val stage: Int = 0,
     val feedback: String? = null,
     val subtractLines: SubtractLines = SubtractLines()

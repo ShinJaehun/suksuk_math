@@ -12,7 +12,7 @@ val twoByOne_TensQuotientNoBorrow1DigitMulLayouts = listOf(
         cells = mapOf(
                 CellName.QuotientTens to InputCell(cellName = CellName.QuotientTens, editable = true, highlight = Highlight.Editing),
                 CellName.DividendTens to InputCell(cellName = CellName.DividendTens, highlight = Highlight.Related),
-                CellName.Divisor to InputCell(cellName = CellName.Divisor, highlight = Highlight.Related)
+                CellName.DivisorOnes to InputCell(cellName = CellName.DivisorOnes, highlight = Highlight.Related)
         )
     ),
     // 2단계: 곱셈(십의자리, 한자리 결과)
@@ -20,7 +20,7 @@ val twoByOne_TensQuotientNoBorrow1DigitMulLayouts = listOf(
         phase = DivisionPhase.InputMultiply1Tens,
         cells = mapOf(
                 CellName.Multiply1Tens to InputCell(cellName = CellName.Multiply1Tens, editable = true, highlight = Highlight.Editing),
-                CellName.Divisor to InputCell(cellName = CellName.Divisor, highlight = Highlight.Related),
+                CellName.DivisorOnes to InputCell(cellName = CellName.DivisorOnes, highlight = Highlight.Related),
                 CellName.QuotientTens to InputCell(cellName = CellName.QuotientTens, highlight = Highlight.Related)
         )
     ),
@@ -48,7 +48,7 @@ val twoByOne_TensQuotientNoBorrow1DigitMulLayouts = listOf(
         phase = DivisionPhase.InputQuotientOnes,
         cells = mapOf(
                 CellName.QuotientOnes to InputCell(cellName = CellName.QuotientOnes, editable = true, highlight = Highlight.Editing),
-                CellName.Divisor to InputCell(cellName = CellName.Divisor, highlight = Highlight.Related),
+                CellName.DivisorOnes to InputCell(cellName = CellName.DivisorOnes, highlight = Highlight.Related),
                 CellName.Subtract1Ones to InputCell(cellName = CellName.Subtract1Ones, highlight = Highlight.Related)
         )
     ),
@@ -57,13 +57,13 @@ val twoByOne_TensQuotientNoBorrow1DigitMulLayouts = listOf(
         phase = DivisionPhase.InputMultiply2Ones,
         cells = mapOf(
                 CellName.Multiply2Ones to InputCell(cellName = CellName.Multiply2Ones, editable = true, highlight = Highlight.Editing),
-                CellName.Divisor to InputCell(cellName = CellName.Divisor, highlight = Highlight.Related),
+                CellName.DivisorOnes to InputCell(cellName = CellName.DivisorOnes, highlight = Highlight.Related),
                 CellName.QuotientOnes to InputCell(cellName = CellName.QuotientOnes, highlight = Highlight.Related)
         )
     ),
     // 7단계: 뺄셈(일의자리)
     DivisionStepUiLayout(
-        phase = DivisionPhase.InputSubtract2Result,
+        phase = DivisionPhase.InputSubtract2Ones,
         cells = mapOf(
                 CellName.Subtract2Ones to InputCell(cellName = CellName.Subtract2Ones, editable = true, highlight = Highlight.Editing),
                 CellName.Subtract1Ones to InputCell(cellName = CellName.Subtract1Ones, highlight = Highlight.Related),

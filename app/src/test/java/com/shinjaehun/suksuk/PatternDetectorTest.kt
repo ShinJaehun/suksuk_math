@@ -8,7 +8,7 @@ import org.junit.Test
 class PatternDetectorTest {
 
     @Test
-    fun detectPattern_returns_correct_pattern_for_each_2by1_case() {
+    fun detectPattern_returns_correct_pattern_for_each_TwoByOne_case() {
         val cases = listOf(
             Triple(46, 3, DivisionPattern.TwoByOne_TensQuotient_NoBorrow_2DigitMul),
             Triple(72, 6, DivisionPattern.TwoByOne_TensQuotient_NoBorrow_2DigitMul),
@@ -43,7 +43,27 @@ class PatternDetectorTest {
             Triple(68, 9, DivisionPattern.TwoByOne_OnesQuotient_NoBorrow_2DigitMul),
             Triple(81, 9, DivisionPattern.TwoByOne_OnesQuotient_NoBorrow_2DigitMul)
         )
+        assertPatternCases(cases)
+    }
 
+    @Test
+    fun detectPattern_returns_correct_pattern_for_each_TwoByTwo_case() {
+        val cases = listOf(
+            Triple(68, 34, DivisionPattern.TwoByTwo_NoCarry_NoBorrow),
+            Triple(50, 22, DivisionPattern.TwoByTwo_NoCarry_Borrow),
+
+            Triple(75, 25, DivisionPattern.TwoByTwo_Carry_NoBorrow),
+            Triple(96, 12, DivisionPattern.TwoByTwo_Carry_NoBorrow),
+            Triple(72, 18, DivisionPattern.TwoByTwo_Carry_NoBorrow),
+
+            Triple(80, 28, DivisionPattern.TwoByTwo_Carry_Borrow),
+            Triple(81, 12, DivisionPattern.TwoByTwo_Carry_Borrow),
+            Triple(83, 13, DivisionPattern.TwoByTwo_Carry_Borrow)
+        )
+        assertPatternCases(cases)
+    }
+
+    private fun assertPatternCases(cases: List<Triple<Int, Int, DivisionPattern>>) {
         for ((dividend, divisor, expected) in cases) {
             val actual = PatternDetector.detectPattern(dividend, divisor)
             assertEquals("입력: $dividend ÷ $divisor", expected, actual)
