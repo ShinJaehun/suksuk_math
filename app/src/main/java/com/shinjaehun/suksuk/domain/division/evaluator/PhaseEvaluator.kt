@@ -20,19 +20,10 @@ class PhaseEvaluator {
             DivisionPhase.InputQuotientTens -> {
                 inputValue == dividendTens / divisor
             }
-//            DivisionPhase.InputMultiply1Tens,
-//            DivisionPhase.InputMultiply1 -> {
-//                inputValue == divisor * quotientTens
-//            }
-//            DivisionPhase.InputMultiply1Tens -> { // 내가 뭔 짓을 하다가 이걸 이렇게 바꿔놓은거지???????????????????????
-//                inputValue == divisor * quotientOnes / 10
-//            }
+
             DivisionPhase.InputMultiply1Tens -> {
                 inputValue == divisor * quotientTens
             }
-//            DivisionPhase.InputMultiply1Ones -> {
-//                inputValue == divisor * quotientOnes % 10
-//            }
             DivisionPhase.InputMultiply1TensAndMultiply1Ones -> {
 //                inputValue == divisor * quotientOnes
                 input.length == 2 &&
@@ -57,23 +48,11 @@ class PhaseEvaluator {
             DivisionPhase.InputQuotient -> {
                 inputValue == quotient
             }
-//            DivisionPhase.InputMultiply2Tens -> {
-//                inputValue == divisor * quotientOnes / 10
-//            }
+
             DivisionPhase.InputMultiply2Ones -> {
-//                val correct = divisor * quotientOnes % 10
-//                println("입력값: $inputValue, 정답: $correct")
-//                inputValue == correct
                 inputValue == divisor * quotientOnes % 10
             }
 
-//            DivisionPhase.InputMultiply2Tens -> true
-//            DivisionPhase.InputMultiply2Ones -> true
-
-//            DivisionPhase.InputMultiply2Total -> {
-////                input.toIntOrNull() == state.divisor * quotientOnes
-//                currentInput.length == 2 && currentInput.toIntOrNull() == state.divisor * quotientOnes
-//            }
 
             DivisionPhase.InputMultiply2TensAndMultiply2Ones -> {
 //                input.length == 2 && inputValue == divisor * quotientOnes
@@ -91,8 +70,9 @@ class PhaseEvaluator {
                 inputValue == remainder
             }
 
+            DivisionPhase.InputMultiply1Ones -> { true }
+            DivisionPhase.InputMultiply1OnesWithCarry -> { true }
             DivisionPhase.Complete -> false
-
         }
     }
 }

@@ -4,9 +4,25 @@ import com.shinjaehun.suksuk.domain.division.model.DivisionPattern
 
 object PatternDetector {
     fun detectPattern(dividend: Int, divisor: Int): DivisionPattern {
+        val quotient = dividend / divisor
+
+        if (dividend in 10..99 && divisor in 10..99) {
+            // 곱셈: (몫 × 제수)
+            val multiply1 = (quotient % 10) * (divisor % 10)
+            val hasCarry = multiply1 >= 10
+            val product = quotient * divisor
+            val hasBorrow = (dividend % 10) < (product % 10)
+            return when {
+                !hasCarry && !hasBorrow -> DivisionPattern.TwoByTwo_NoCarry_NoBorrow
+                !hasCarry && hasBorrow  -> DivisionPattern.TwoByTwo_NoCarry_Borrow
+                hasCarry && !hasBorrow  -> DivisionPattern.TwoByTwo_Carry_NoBorrow
+                hasCarry && hasBorrow   -> DivisionPattern.TwoByTwo_Carry_Borrow
+                else -> DivisionPattern.TwoByTwo_NoCarry_NoBorrow // fallback
+            }
+        }
+
         val dividendTens = dividend / 10
         val dividendOnes = dividend % 10
-        val quotient = dividend / divisor
 
         if (dividendTens < divisor) {
             if (dividendOnes < divisor * quotient % 10) {
