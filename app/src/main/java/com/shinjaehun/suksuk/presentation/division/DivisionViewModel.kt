@@ -37,7 +37,7 @@ class DivisionViewModel @Inject constructor (
 
     init {
         if (autoStart) {
-            startNewProblem(46, 3) // TensQuotient_NoBorrow_2DigitMul
+//            startNewProblem(46, 3) // TensQuotient_NoBorrow_2DigitMul
 //            startNewProblem(85, 7) // TensQuotient_NoBorrow_2DigitMul
 //            startNewProblem(50, 3) // TensQuotient_Borrow_2DigitMul
 //            startNewProblem(90, 7) // TensQuotient_Borrow_2DigitMul
@@ -49,6 +49,8 @@ class DivisionViewModel @Inject constructor (
 //            startNewProblem(62, 7) // OnesQuotient_Borrow
 //            startNewProblem(39, 4) // OnesQuotient_NoBorrow
 //            startNewProblem(10, 9) // 현재 이러한 경우는 고려하고 있지 않음...
+//            startNewProblem(48, 19) // 병시나 나머지 두 자리...ㅠㅠ
+            startNewProblem(96, 8)
         }
     }
 
@@ -84,7 +86,9 @@ class DivisionViewModel @Inject constructor (
         val phase = state.phases.getOrNull(state.currentPhaseIndex) ?: return
 
         val maxLength = when (phase) {
-            DivisionPhase.InputMultiply1TensAndMultiply1Ones, DivisionPhase.InputMultiply2TensAndMultiply2Ones -> 2
+            DivisionPhase.InputMultiply1TensAndMultiply1Ones,
+            DivisionPhase.InputMultiply2TensAndMultiply2Ones,
+            DivisionPhase.InputMultiply1OnesWithCarry -> 2
             else -> 1
         }
         currentInput = (currentInput + digit).takeLast(maxLength)
@@ -129,7 +133,9 @@ class DivisionViewModel @Inject constructor (
         val nextPhase = state.phases.getOrNull(nextPhaseIndex)
         val feedback = feedbackProvider.getSuccessMessage(nextPhase ?: DivisionPhase.Complete)
 
-        if (phase == DivisionPhase.InputMultiply1TensAndMultiply1Ones || phase == DivisionPhase.InputMultiply2TensAndMultiply2Ones) {
+        if (phase == DivisionPhase.InputMultiply1TensAndMultiply1Ones ||
+            phase == DivisionPhase.InputMultiply2TensAndMultiply2Ones ||
+            phase == DivisionPhase.InputMultiply1OnesWithCarry ) {
             val isCorrect = phaseEvaluator.isCorrect(phase, input, state.dividend, state.divisor)
             if (!isCorrect) {
                 _domainState.value = state.copy(feedback = feedbackProvider.getWrongMessage(phase))

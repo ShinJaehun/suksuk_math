@@ -1,5 +1,6 @@
 package com.shinjaehun.suksuk.presentation.division
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,7 +26,12 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.SavedStateHandle
 import com.shinjaehun.suksuk.R
+import com.shinjaehun.suksuk.domain.division.detector.PatternDetector
+import com.shinjaehun.suksuk.domain.division.evaluator.PhaseEvaluator
+import com.shinjaehun.suksuk.domain.division.factory.DivisionDomainStateFactory
+import com.shinjaehun.suksuk.domain.division.layout.DivisionPatternUiLayoutRegistry
 
 @Composable
 fun DivisionScreen(
@@ -59,16 +65,20 @@ fun DivisionScreen(
                 .padding(horizontal = 30.dp, vertical = 30.dp)
         ) {
             val (
-                divisorRef, dividendTensRef, dividendOnesRef,
-                quotientTensRef, quotientOnesRef,
-                multiply1TensRef, multiply1OnesRef, subtract1TensRef, subtract1OnesRef,
-                multiply2TensRef, multiply2OnesRef, remainderRef
+                divisorTensRef, divisorOnesRef, dividendTensRef, dividendOnesRef, divisorTensCarryRef
             ) = createRefs()
 
             val (
-                dividendTenBorrowRef, subtract1BorrowRef,
+                quotientTensRef, quotientOnesRef,
+                multiply1TensRef, multiply1OnesRef, subtract1TensRef, subtract1OnesRef,
+                multiply2TensRef, multiply2OnesRef, subtract2OnesRef
+            ) = createRefs()
+
+            val (
+                dividendTenBorrowRef, subtract1TensBorrowRef,
                 dividendOnesBorrowed10Ref, subtract1OnesBorrowed10Ref
             ) = createRefs()
+
             val (bracketRef, subtract1LineRef, subtract2LineRef) = createRefs()
 
             // Division Bracket
@@ -137,15 +147,41 @@ fun DivisionScreen(
             )
 
             // divisor
-            val divisorCell = currentUiState.divisorOnes
+
+            val divisorOnesCell = currentUiState.divisorOnes
             NumberText(
-                cell = divisorCell,
+                cell = divisorOnesCell,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
-                    .constrainAs(divisorRef) {
+                    .constrainAs(divisorOnesRef) {
                         end.linkTo(dividendTensRef.start, margin = 40.dp)
                         baseline.linkTo(dividendTensRef.baseline)
+                    }
+            )
+
+            val divisorTensCell = currentUiState.divisorTens
+            NumberText(
+                cell = divisorTensCell,
+                modifier = Modifier
+                    .width(cellWidth)
+                    .padding(horizontal = 8.dp)
+                    .constrainAs(divisorTensRef) {
+                        end.linkTo(divisorOnesRef.start)
+                        baseline.linkTo(dividendTensRef.baseline)
+                    }
+            )
+
+            // dividend tens borrow
+            val divisorTensCarryCell = currentUiState.carryDivisorTens
+            BorrowText(
+                cell = divisorTensCarryCell,
+                modifier = Modifier
+                    .width(cellWidth)
+                    .padding(horizontal = 8.dp)
+                    .constrainAs(divisorTensCarryRef) {
+                        start.linkTo(divisorTensRef.start)
+                        bottom.linkTo(divisorTensRef.top)
                     }
             )
 
@@ -236,7 +272,7 @@ fun DivisionScreen(
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
-                    .constrainAs(subtract1BorrowRef) {
+                    .constrainAs(subtract1TensBorrowRef) {
                         start.linkTo(subtract1TensRef.start)
                         bottom.linkTo(subtract1TensRef.top)
                     }
@@ -316,7 +352,7 @@ fun DivisionScreen(
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
-                    .constrainAs(remainderRef) {
+                    .constrainAs(subtract2OnesRef) {
                         top.linkTo(dividendTensRef.bottom, margin = 220.dp)
                         start.linkTo(dividendOnesRef.start)
                     }
@@ -352,8 +388,24 @@ fun DivisionScreen(
 }
 
 
+@SuppressLint("ViewModelConstructorInComposable")
 @Preview(showBackground = true)
 @Composable
 fun PreviewDivisionStageScreen() {
-    DivisionScreen()
+
+    val savedStateHandle = SavedStateHandle(mapOf("autoStart" to true))
+    val phaseEvaluator = PhaseEvaluator()
+    val patternDetector = PatternDetector
+    val uiLayoutRegistry = DivisionPatternUiLayoutRegistry
+    val feedbackProvider = FeedbackMessageProvider()
+    val domainStateFactory = DivisionDomainStateFactory(uiLayoutRegistry, patternDetector)
+    val viewModel = DivisionViewModel(
+        savedStateHandle,
+        phaseEvaluator,
+        domainStateFactory,
+        feedbackProvider
+    )
+
+    // 여기서 반드시 넘겨야 함!
+    DivisionScreen(viewModel = viewModel)
 }

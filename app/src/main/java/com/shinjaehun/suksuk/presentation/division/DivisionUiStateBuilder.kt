@@ -31,6 +31,7 @@ class DivisionUiStateBuilder private constructor() {
         private val stepIdx = state.currentPhaseIndex
 
         val alwaysVisibleCells = listOf(
+            CellName.DivisorTens,
             CellName.DivisorOnes,
             CellName.DividendTens,
             CellName.DividendOnes
@@ -92,7 +93,8 @@ class DivisionUiStateBuilder private constructor() {
 
             val value = when (cellName) {
 
-                CellName.DivisorOnes -> cell.value ?: state.divisor.toString()
+                CellName.DivisorTens -> cell.value ?: state.divisor.toString().padStart(2, '0')[0].toString()
+                CellName.DivisorOnes -> cell.value ?: state.divisor.toString().padStart(2, '0')[1].toString()
                 CellName.DividendTens -> cell.value ?: state.dividend.toString().padStart(2, '0')[0].toString()
                 CellName.DividendOnes -> cell.value ?: state.dividend.toString().padStart(2, '0')[1].toString()
 
@@ -148,11 +150,15 @@ class DivisionUiStateBuilder private constructor() {
 
         fun mapToUiState(): DivisionUiState {
             return DivisionUiState(
+                divisorTens = makeCell(CellName.DivisorTens),
                 divisorOnes = makeCell(CellName.DivisorOnes),
+
                 dividendTens = makeCell(CellName.DividendTens),
                 dividendOnes = makeCell(CellName.DividendOnes),
+
                 quotientTens = makeCell(CellName.QuotientTens),
                 quotientOnes = makeCell(CellName.QuotientOnes),
+
                 multiply1Tens = makeCell(CellName.Multiply1Tens),
                 multiply1Ones = makeCell(CellName.Multiply1Ones),
 
