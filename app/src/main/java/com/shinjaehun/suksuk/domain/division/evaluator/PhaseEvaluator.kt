@@ -20,8 +20,6 @@ class PhaseEvaluator {
         val carry = quotientOnes * divisorOnes / 10
         val remainder = dividend - divisor * quotient
 
-
-
         return when (phase) {
             DivisionPhase.InputQuotientTens -> {
                 inputValue == dividendTens / divisor
@@ -35,20 +33,25 @@ class PhaseEvaluator {
                 }
             }
             DivisionPhase.InputMultiply1OnesWithCarry -> {
-                input.length == 2 &&
-                        input[0].toString().toIntOrNull() == carry
-                        input[1].toString().toIntOrNull() == quotientOnes * divisorOnes % 10
+                if (input.length != 2) return false
+                val carryInput = input[0].toString().toIntOrNull()
+                val onesInput = input[1].toString().toIntOrNull()
+                carryInput == carry &&
+                        onesInput == quotientOnes * divisorOnes % 10
             }
 
-            DivisionPhase.InputMultiply1TensAndMultiply1Ones -> {
-//                inputValue == divisor * quotientOnes
-                input.length == 2 &&
-                        input[0].toString().toIntOrNull() == divisor * quotient / 10 &&
-                        input[1].toString().toIntOrNull() == divisor * quotient % 10
-            }
             DivisionPhase.InputMultiply1Ones -> {
                 inputValue == quotientOnes * divisorOnes
             }
+
+            DivisionPhase.InputMultiply1TensAndMultiply1Ones -> {
+                if (input.length != 2) return false
+                val tensInput = input[0].toString().toIntOrNull()
+                val onesInput = input[1].toString().toIntOrNull()
+                tensInput == divisor * quotientOnes / 10 &&
+                        onesInput == divisor * quotientOnes % 10
+            }
+
 
             DivisionPhase.InputSubtract1Tens -> {
 
@@ -57,10 +60,10 @@ class PhaseEvaluator {
             DivisionPhase.InputSubtract1Ones -> {
                 inputValue == remainder
             }
-            DivisionPhase.InputSubtract1Result -> {
-                inputValue == remainder
-            }
-            DivisionPhase.InputBringDownFromDividendOnes -> {
+//            DivisionPhase.InputSubtract1Result -> {
+//                inputValue == remainder
+//            }
+            DivisionPhase.InputMultiply1OnesWithBringDownDividendOnes -> {
                 inputValue == dividendOnes
             }
             DivisionPhase.InputQuotientOnes -> {
@@ -76,10 +79,11 @@ class PhaseEvaluator {
 
 
             DivisionPhase.InputMultiply2TensAndMultiply2Ones -> {
-//                input.length == 2 && inputValue == divisor * quotientOnes
-                input.length == 2 &&
-                        input[0].toString().toIntOrNull() == divisor * quotientOnes / 10 &&
-                        input[1].toString().toIntOrNull() == divisor * quotientOnes % 10
+                if (input.length != 2) return false
+                val tensInput = input[0].toString().toIntOrNull()
+                val onesInput = input[1].toString().toIntOrNull()
+                tensInput == divisor * quotientOnes / 10 &&
+                        onesInput == divisor * quotientOnes % 10
             }
             DivisionPhase.InputBorrowFromDividendTens -> {
                 inputValue == dividendTens - 1

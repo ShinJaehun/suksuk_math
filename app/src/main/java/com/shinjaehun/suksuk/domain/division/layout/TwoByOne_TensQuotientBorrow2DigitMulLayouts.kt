@@ -37,7 +37,7 @@ val twoByOne_TensQuotientBorrow2DigitMulLayouts = listOf(
     ),
 
     DivisionStepUiLayout(
-        phase = DivisionPhase.InputBringDownFromDividendOnes,
+        phase = DivisionPhase.InputMultiply1OnesWithBringDownDividendOnes,
         cells = mapOf(
                 CellName.DividendOnes to InputCell(cellName = CellName.DividendOnes, highlight = Highlight.Related),
                 CellName.Subtract1Ones to InputCell(cellName = CellName.Subtract1Ones, editable = true, highlight = Highlight.Editing),

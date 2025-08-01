@@ -12,6 +12,11 @@ object DivisionPatternUiLayoutRegistry {
         DivisionPattern.TwoByOne_OnesQuotient_NoBorrow_2DigitMul to twoByOne_OnesQuotientNoBorrow2DigitMulLayouts,
         DivisionPattern.TwoByOne_OnesQuotient_Borrow_2DigitMul to twoByOne_OnesQuotientBorrow2DigitMulLayouts,
 
+        DivisionPattern.TwoByTwo_NoCarry_NoBorrow to twoByTwo_NoCarryNoBorrowLayouts,
+        DivisionPattern.TwoByTwo_NoCarry_Borrow to twoByTwo_NoCarryBorrowLayouts,
+        DivisionPattern.TwoByTwo_Carry_NoBorrow to twoByTwo_CarryNoBorrowLayouts,
+        DivisionPattern.TwoByTwo_Carry_Borrow to twoByTwo_CarryBorrowLayouts,
+
     ).mapValues { (_, layoutList) -> layoutList.autoIndexInputs() }
 
     fun getStepLayouts(pattern: DivisionPattern): List<DivisionStepUiLayout> =

@@ -36,7 +36,7 @@ val twoByOne_TensQuotientNoBorrow1DigitMulLayouts = listOf(
     ),
     // 4단계: 일의 자리로 내려옴
     DivisionStepUiLayout(
-        phase = DivisionPhase.InputBringDownFromDividendOnes,
+        phase = DivisionPhase.InputMultiply1OnesWithBringDownDividendOnes,
         cells = mapOf(
                 CellName.DividendOnes to InputCell(cellName = CellName.DividendOnes, highlight = Highlight.Related),
                 CellName.Subtract1Ones to InputCell(cellName = CellName.Subtract1Ones, editable = true, highlight = Highlight.Editing),

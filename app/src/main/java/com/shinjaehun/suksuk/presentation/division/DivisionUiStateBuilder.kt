@@ -100,12 +100,20 @@ class DivisionUiStateBuilder private constructor() {
                     phase == DivisionPhase.InputMultiply1TensAndMultiply1Ones && cell.editable ->
                         currentInput.getOrNull(0)?.toString() ?: "?"
                     phase == DivisionPhase.InputMultiply1Tens && cell.editable ->
-                        currentInput.ifEmpty { "?" }
+                        currentInput.ifEmpty { valueFromInput ?: "?" }
                     else -> valueFromInput ?: ""
                 }
                 CellName.Multiply1Ones -> when {
                     phase == DivisionPhase.InputMultiply1TensAndMultiply1Ones && cell.editable ->
                         currentInput.getOrNull(1)?.toString() ?: "?"
+                    phase == DivisionPhase.InputMultiply1OnesWithCarry && cell.editable ->
+                        currentInput.getOrNull(1)?.toString() ?: "?"
+                    else -> valueFromInput ?: ""
+                }
+
+                CellName.CarryDivisorTens -> when {
+                    phase == DivisionPhase.InputMultiply1OnesWithCarry && cell.editable ->
+                        currentInput.getOrNull(0)?.toString() ?: "?"
                     else -> valueFromInput ?: ""
                 }
 
@@ -155,10 +163,15 @@ class DivisionUiStateBuilder private constructor() {
                 multiply2Ones = makeCell(CellName.Multiply2Ones),
 
                 subtract2Ones = makeCell(CellName.Subtract2Ones),
+
                 borrowDividendTens = makeCell(CellName.BorrowDividendTens),
                 borrowSubtract1Tens = makeCell(CellName.BorrowSubtract1Tens),
+
                 borrowed10DividendOnes = makeCell(CellName.Borrowed10DividendOnes),
                 borrowed10Subtract1Ones = makeCell(CellName.Borrowed10Subtract1Ones),
+
+                carryDivisorTens = makeCell(CellName.CarryDivisorTens),
+
                 stage = state.currentPhaseIndex,
                 feedback = state.feedback ?: layouts.find { it.phase == state.phases.getOrNull(state.currentPhaseIndex) }?.feedback,
                 subtractLines = getSubtractionLinesFromPhaseIndex(state.phases, state.currentPhaseIndex)
@@ -175,7 +188,7 @@ fun getSubtractionLinesFromPhaseIndex(
     val subtract1StartIndex = listOf(
         DivisionPhase.InputSubtract1Tens,
         DivisionPhase.InputBorrowFromDividendTens,
-        DivisionPhase.InputSubtract1Result
+        DivisionPhase.InputSubtract1Ones
     ).map { phases.indexOf(it) }
         .filter { it >= 0 }
         .minOrNull() ?: Int.MAX_VALUE

@@ -37,7 +37,7 @@ val twoByOne_OnesQuotientBorrow2DigitMulLayouts = listOf(
     ),
     // 3단계: 뺄셈(두 자리, 각 자리)
     DivisionStepUiLayout(
-        phase = DivisionPhase.InputSubtract1Result,
+        phase = DivisionPhase.InputSubtract1Ones,
         cells = mapOf(
                 CellName.Subtract1Ones to InputCell(cellName = CellName.Subtract1Ones, editable = true, highlight = Highlight.Editing),
                 CellName.Borrowed10DividendOnes to InputCell(cellName = CellName.Borrowed10DividendOnes, editable = false, value = "10", highlight = Highlight.Related),

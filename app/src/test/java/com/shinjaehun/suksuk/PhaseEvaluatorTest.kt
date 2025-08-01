@@ -15,7 +15,7 @@ class PhaseEvaluatorTest {
         assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotientTens, "1", 46, 3))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1Tens, "3", 46, 3))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract1Tens, "1", 46, 3))
-        assertTrue(evaluator.isCorrect(DivisionPhase.InputBringDownFromDividendOnes, "6", 46, 3))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1OnesWithBringDownDividendOnes, "6", 46, 3))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotientOnes, "5", 46, 3))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply2TensAndMultiply2Ones, "15", 46, 3))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract2Ones, "1", 46, 3))
@@ -27,7 +27,7 @@ class PhaseEvaluatorTest {
         assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotientTens, "1", 50, 3))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1Tens, "3", 50, 3))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract1Tens, "2", 50, 3))
-        assertTrue(evaluator.isCorrect(DivisionPhase.InputBringDownFromDividendOnes, "0", 50, 3))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1OnesWithBringDownDividendOnes, "0", 50, 3))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotientOnes, "6", 50, 3))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply2TensAndMultiply2Ones, "18", 50, 3))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputBorrowFromSubtract1Tens, "1", 50, 3)) // borrow phase
@@ -40,7 +40,7 @@ class PhaseEvaluatorTest {
         assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotientTens, "1", 45, 4))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1Tens, "4", 45, 4))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract1Tens, "0", 45, 4))
-        assertTrue(evaluator.isCorrect(DivisionPhase.InputBringDownFromDividendOnes, "5", 45, 4))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1OnesWithBringDownDividendOnes, "5", 45, 4))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotientOnes, "1", 45, 4))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply2Ones, "4", 45, 4))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract2Ones, "1", 45, 4))
@@ -52,7 +52,7 @@ class PhaseEvaluatorTest {
         assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotientTens, "1", 71, 6))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1Tens, "6", 71, 6))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract1Tens, "1", 71, 6))
-        assertTrue(evaluator.isCorrect(DivisionPhase.InputBringDownFromDividendOnes, "1", 71, 6))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1OnesWithBringDownDividendOnes, "1", 71, 6))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotientOnes, "1", 71, 6))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply2Ones, "6", 71, 6))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract2Ones, "5", 71, 6))
@@ -63,7 +63,7 @@ class PhaseEvaluatorTest {
         // 예: 24 ÷ 7 (몫 3, 곱 21, 뺄셈 3)
         assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotient, "3", 24, 7))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1TensAndMultiply1Ones, "21", 24, 7))
-        assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract1Result, "3", 24, 7))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract1Ones, "3", 24, 7))
     }
 
     @Test
@@ -72,7 +72,7 @@ class PhaseEvaluatorTest {
         assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotient, "8", 62, 7))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1TensAndMultiply1Ones, "56", 62, 7))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputBorrowFromDividendTens, "5", 62, 7))
-        assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract1Result, "6", 62, 7))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract1Ones, "6", 62, 7))
     }
 
     @Test
