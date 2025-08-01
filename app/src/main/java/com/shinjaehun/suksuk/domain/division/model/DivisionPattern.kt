@@ -7,8 +7,8 @@ enum class DivisionPattern {
     TwoByOne_TensQuotient_SkipBorrow_1DigitMul,
     TwoByOne_OnesQuotient_Borrow_2DigitMul,
     TwoByOne_OnesQuotient_NoBorrow_2DigitMul,
-    TwoByTwo_NoCarry_NoBorrow,
-    TwoByTwo_NoCarry_Borrow,
-    TwoByTwo_Carry_NoBorrow,
-    TwoByTwo_Carry_Borrow,
+    TwoByTwo_NoCarry_NoBorrow_1DigitRem,
+    TwoByTwo_NoCarry_Borrow_1DigitRem,
+    TwoByTwo_Carry_NoBorrow_1DigitRem,
+    TwoByTwo_Carry_Borrow_1DigitRem,
 }

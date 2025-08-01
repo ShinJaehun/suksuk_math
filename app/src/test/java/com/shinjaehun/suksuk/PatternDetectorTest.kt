@@ -49,16 +49,21 @@ class PatternDetectorTest {
     @Test
     fun detectPattern_returns_correct_pattern_for_each_TwoByTwo_case() {
         val cases = listOf(
-            Triple(68, 34, DivisionPattern.TwoByTwo_NoCarry_NoBorrow),
-            Triple(50, 22, DivisionPattern.TwoByTwo_NoCarry_Borrow),
+            Triple(68, 34, DivisionPattern.TwoByTwo_NoCarry_NoBorrow_1DigitRem),
+            Triple(48, 24, DivisionPattern.TwoByTwo_NoCarry_NoBorrow_1DigitRem),
+            Triple(49, 24, DivisionPattern.TwoByTwo_NoCarry_NoBorrow_1DigitRem),
 
-            Triple(75, 25, DivisionPattern.TwoByTwo_Carry_NoBorrow),
-            Triple(96, 12, DivisionPattern.TwoByTwo_Carry_NoBorrow),
-            Triple(72, 18, DivisionPattern.TwoByTwo_Carry_NoBorrow),
+            Triple(50, 22, DivisionPattern.TwoByTwo_NoCarry_Borrow_1DigitRem),
+            Triple(30, 11, DivisionPattern.TwoByTwo_NoCarry_Borrow_1DigitRem),
+            Triple(70, 31, DivisionPattern.TwoByTwo_NoCarry_Borrow_1DigitRem),
 
-            Triple(80, 28, DivisionPattern.TwoByTwo_Carry_Borrow),
-            Triple(81, 12, DivisionPattern.TwoByTwo_Carry_Borrow),
-            Triple(83, 13, DivisionPattern.TwoByTwo_Carry_Borrow)
+            Triple(75, 25, DivisionPattern.TwoByTwo_Carry_NoBorrow_1DigitRem),
+            Triple(96, 12, DivisionPattern.TwoByTwo_Carry_NoBorrow_1DigitRem),
+            Triple(72, 18, DivisionPattern.TwoByTwo_Carry_NoBorrow_1DigitRem),
+
+//            Triple(80, 28, DivisionPattern.TwoByTwo_Carry_Borrow),
+            Triple(81, 12, DivisionPattern.TwoByTwo_Carry_Borrow_1DigitRem),
+            Triple(83, 13, DivisionPattern.TwoByTwo_Carry_Borrow_1DigitRem)
         )
         assertPatternCases(cases)
     }

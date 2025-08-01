@@ -218,7 +218,7 @@ class DivisionUiStateBuilderTest {
             ),
             inputs = listOf("8", "1", "6", "9", "0"),
             feedback = null,
-            pattern = DivisionPattern.TwoByTwo_Carry_NoBorrow
+            pattern = DivisionPattern.TwoByTwo_Carry_NoBorrow_1DigitRem
         )
 
         val uiState = DivisionUiStateBuilder.mapToUiState(domainState, "")
@@ -247,7 +247,7 @@ class DivisionUiStateBuilderTest {
             ),
             inputs = listOf("6", "1", "2", "7", "1", "9"),
             feedback = null,
-            pattern = DivisionPattern.TwoByTwo_Carry_Borrow
+            pattern = DivisionPattern.TwoByTwo_Carry_Borrow_1DigitRem
         )
 
         val uiState = DivisionUiStateBuilder.mapToUiState(domainState, "")
@@ -276,7 +276,7 @@ class DivisionUiStateBuilderTest {
             ),
             inputs = listOf("2", "8", "6", "0"),
             feedback = null,
-            pattern = DivisionPattern.TwoByTwo_NoCarry_NoBorrow
+            pattern = DivisionPattern.TwoByTwo_NoCarry_NoBorrow_1DigitRem
         )
 
         val uiState = DivisionUiStateBuilder.mapToUiState(domainState, "")
@@ -304,7 +304,7 @@ class DivisionUiStateBuilderTest {
             ),
             inputs = listOf("2", "4", "4", "4", "6"), // 몫, 곱셈 tens, 곱셈 ones, 빌림, 뺄셈
             feedback = null,
-            pattern = DivisionPattern.TwoByTwo_NoCarry_Borrow
+            pattern = DivisionPattern.TwoByTwo_NoCarry_Borrow_1DigitRem
         )
 
         val uiState = DivisionUiStateBuilder.mapToUiState(domainState, "")

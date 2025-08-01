@@ -13,11 +13,11 @@ object PatternDetector {
             val product = quotient * divisor
             val hasBorrow = (dividend % 10) < (product % 10)
             return when {
-                !hasCarry && !hasBorrow -> DivisionPattern.TwoByTwo_NoCarry_NoBorrow
-                !hasCarry && hasBorrow  -> DivisionPattern.TwoByTwo_NoCarry_Borrow
-                hasCarry && !hasBorrow  -> DivisionPattern.TwoByTwo_Carry_NoBorrow
-                hasCarry && hasBorrow   -> DivisionPattern.TwoByTwo_Carry_Borrow
-                else -> DivisionPattern.TwoByTwo_NoCarry_NoBorrow // fallback
+                !hasCarry && !hasBorrow -> DivisionPattern.TwoByTwo_NoCarry_NoBorrow_1DigitRem
+                !hasCarry && hasBorrow  -> DivisionPattern.TwoByTwo_NoCarry_Borrow_1DigitRem
+                hasCarry && !hasBorrow  -> DivisionPattern.TwoByTwo_Carry_NoBorrow_1DigitRem
+                hasCarry && hasBorrow   -> DivisionPattern.TwoByTwo_Carry_Borrow_1DigitRem
+                else -> DivisionPattern.TwoByTwo_NoCarry_NoBorrow_1DigitRem // fallback
             }
         }
 

@@ -20,7 +20,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-
 class DivisionScreenTest {
     @get:Rule
     val composeTestRule = createComposeRule()
@@ -321,44 +320,6 @@ class DivisionScreenTest {
         // composeTestRule.onNodeWithTag("borrow-cell").assertTextContains("10")
     }
 
-//    @Test
-//    fun testSubtractionLineAppearsOnSubtractPhase() {
-//        composeTestRule.setContent {
-//            DivisionScreen(viewModel = viewModel)
-//        }
-//        composeTestRule.runOnIdle { viewModel.startNewProblem(85, 7) }
-//
-//        // Phase: InputSubtract1Tens까지 진행
-//        viewModel.submitInput("1") // quotientTens
-//        viewModel.submitInput("7") // multiply1
-//        viewModel.submitInput("1") // subtract1Tens 진입 시점
-//
-//        composeTestRule.waitForIdle()
-//
-//        // horizontal_line이 나타나야 함
-//        composeTestRule
-//            .onNodeWithTag("subtraction1-line")
-//            .assertExists()
-//    }
-//
-//    @Test
-//    fun testSubtractionLineDoesNotAppearBeforeSubtractPhase() {
-//        composeTestRule.setContent {
-//            DivisionScreen(viewModel = viewModel)
-//        }
-//        composeTestRule.runOnIdle { viewModel.startNewProblem(85, 7) }
-//
-//        // 아직 quotient 입력 중
-//        viewModel.submitInput("1") // quotientTens
-//
-//        composeTestRule.waitForIdle()
-//
-//        // 이때는 horizontal_line이 없어야 함
-//        composeTestRule
-//            .onNodeWithTag("subtraction1-line")
-//            .assertDoesNotExist()
-//    }
-
     @Test
     fun testSubtractionLineAppearsOnlyOnSubtract1Phase() {
         composeTestRule.setContent {
@@ -441,51 +402,6 @@ class DivisionScreenTest {
         val finalState = viewModel.domainState.value
         assertEquals(DivisionPhase.Complete, finalState.phases.getOrNull(finalState.currentPhaseIndex))
     }
-
-//    private fun assertCell(
-//        tag: String,
-//        isEnabled: Boolean,
-//        isHighlighted: Boolean,
-//        expectedValue: String? = null
-//    ) {
-//        val node = composeTestRule.onNodeWithTag(tag)
-//        if (isEnabled) node.assertIsEnabled() else node.assertIsNotEnabled()
-//        if (isHighlighted) node.assert(hasAnyAncestor(hasTestTag("highlight-editing")))
-//        if (expectedValue != null) node.assertTextEquals(expectedValue)
-//    }
-//
-//    @Test
-//    fun testEachPhase_HighlightAndFixedValue() {
-//        composeTestRule.setContent { DivisionScreen(viewModel = viewModel) }
-//        composeTestRule.runOnIdle { viewModel.startNewProblem(85, 7) }
-//
-//        // 1단계: 몫(quotientTens) 입력
-//        assertCell("quotient-tens-cell", true, false)
-//        assertCell("divisor-cell", false, true)
-//        assertCell("dividend-tens-cell", false, true)
-//
-//        // 몫 입력
-//        composeTestRule.runOnIdle { viewModel.submitInput("1") }
-//
-//        assertCell("multiply1-tens-cell", true, false)
-//        assertCell("quotient-tens-cell", false, true, "1")
-//        assertCell("divisor-cell", false, true)
-//
-//        // 곱셈 입력
-//        composeTestRule.runOnIdle { viewModel.submitInput("7") }
-//
-//        // 뺄셈
-//        assertCell("dividend-tens-cell", false, true)
-//        assertCell("multiply1-tens-cell", false, true, "7")
-//        assertCell("subtract1-tens-cell", true, false)
-//
-//        // 뺄셈 입력
-//        composeTestRule.runOnIdle { viewModel.submitInput("1") }
-//
-//        // subtract1-tens-cell 값 고정
-//        assertCell("subtract1-tens-cell", false, false, "1")
-//        // 이후 단계 추가 시 동일 방식으로 확장 가능!
-//    }
 
     @Test
     fun testEachPhase_PlaceholderAndInputValue() {

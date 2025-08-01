@@ -12,13 +12,13 @@ class DivisionScreenInputTestTwoByOneTensQuotientSkipBorrow1DigitMul {
     // TensQuotient_SkipBorrow_1DigitMul
     @Test
     fun testPattern_71_div_6() =
-        composeTestRule.divisionTwoByOneCase(DivisionPattern.TwoByOne_TensQuotient_SkipBorrow_1DigitMul, 71, 6, listOf("1", "6", "1", "1", "1", "6", "5"))
+        composeTestRule.divisionCase(DivisionPattern.TwoByOne_TensQuotient_SkipBorrow_1DigitMul, 71, 6, listOf("1", "6", "1", "1", "1", "6", "5"))
 
     @Test
     fun testPattern_93_div_8() =
-        composeTestRule.divisionTwoByOneCase(DivisionPattern.TwoByOne_TensQuotient_SkipBorrow_1DigitMul, 93, 8, listOf("1", "8", "1", "3", "1", "8", "5"))
+        composeTestRule.divisionCase(DivisionPattern.TwoByOne_TensQuotient_SkipBorrow_1DigitMul, 93, 8, listOf("1", "8", "1", "3", "1", "8", "5"))
 
     @Test
     fun testPattern_90_div_7() =
-        composeTestRule.divisionTwoByOneCase(DivisionPattern.TwoByOne_TensQuotient_SkipBorrow_1DigitMul, 90, 8, listOf("1", "8", "1", "0", "1", "8", "2"))
+        composeTestRule.divisionCase(DivisionPattern.TwoByOne_TensQuotient_SkipBorrow_1DigitMul, 90, 8, listOf("1", "8", "1", "0", "1", "8", "2"))
 }

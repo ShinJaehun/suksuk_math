@@ -1,11 +1,12 @@
 package com.shinjaehun.suksuk.domain.division.layout
 
 import com.shinjaehun.suksuk.domain.division.model.CellName
+import com.shinjaehun.suksuk.domain.division.model.CrossOutColor
 import com.shinjaehun.suksuk.domain.division.model.DivisionPhase
 import com.shinjaehun.suksuk.domain.division.model.Highlight
 import com.shinjaehun.suksuk.domain.division.model.InputCell
 
-val twoByTwo_NoCarryNoBorrowLayouts = listOf(
+val twoByTwo_CarryBorrowLayouts1DigitRem = listOf(
     DivisionStepUiLayout(
         phase = DivisionPhase.InputQuotient,
         cells = mapOf(
@@ -15,8 +16,9 @@ val twoByTwo_NoCarryNoBorrowLayouts = listOf(
         )
     ),
     DivisionStepUiLayout(
-        phase = DivisionPhase.InputMultiply1Ones,
+        phase = DivisionPhase.InputMultiply1OnesWithCarry,
         cells = mapOf(
+            CellName.CarryDivisorTens to InputCell(cellName = CellName.CarryDivisorTens, editable = true, highlight = Highlight.Editing),
             CellName.Multiply1Ones to InputCell(cellName = CellName.Multiply1Ones, editable = true, highlight = Highlight.Editing),
             CellName.DivisorOnes to InputCell(cellName = CellName.DivisorOnes, highlight = Highlight.Related),
             CellName.QuotientOnes to InputCell(cellName = CellName.QuotientOnes, highlight = Highlight.Related)
@@ -26,8 +28,16 @@ val twoByTwo_NoCarryNoBorrowLayouts = listOf(
         phase = DivisionPhase.InputMultiply1Tens,
         cells = mapOf(
             CellName.Multiply1Tens to InputCell(cellName = CellName.Multiply1Tens, editable = true, highlight = Highlight.Editing),
-            CellName.DivisorTens to InputCell(cellName = CellName.DivisorTens, highlight = Highlight.Related),
+            CellName.CarryDivisorTens to InputCell(cellName = CellName.CarryDivisorTens, highlight = Highlight.Related),
+            CellName.DivisorTens to InputCell(cellName = CellName.DivisorOnes, highlight = Highlight.Related),
             CellName.QuotientOnes to InputCell(cellName = CellName.QuotientOnes, highlight = Highlight.Related)
+        )
+    ),
+    DivisionStepUiLayout(
+        phase = DivisionPhase.InputBorrowFromDividendTens,
+        cells = mapOf(
+            CellName.BorrowDividendTens to InputCell(cellName = CellName.BorrowDividendTens, editable = true, highlight = Highlight.Editing),
+            CellName.DividendTens to InputCell(cellName = CellName.DividendTens, highlight = Highlight.Related, crossOutColor = CrossOutColor.Pending)
         )
     ),
     DivisionStepUiLayout(

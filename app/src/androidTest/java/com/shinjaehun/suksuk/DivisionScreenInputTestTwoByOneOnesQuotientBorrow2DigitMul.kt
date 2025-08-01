@@ -20,9 +20,9 @@ class DivisionScreenInputTestTwoByOneOnesQuotientBorrow2DigitMul {
 
     @Test
     fun testPattern_53_div_6() =
-        composeTestRule.divisionTwoByOneCase(DivisionPattern.TwoByOne_OnesQuotient_Borrow_2DigitMul, 53, 6, listOf("8", "48", "4", "5"))
+        composeTestRule.divisionCase(DivisionPattern.TwoByOne_OnesQuotient_Borrow_2DigitMul, 53, 6, listOf("8", "48", "4", "5"))
 
     @Test
     fun testPattern_62_div_7() =
-        composeTestRule.divisionTwoByOneCase(DivisionPattern.TwoByOne_OnesQuotient_Borrow_2DigitMul, 62, 7, listOf("8", "56", "5", "6"))
+        composeTestRule.divisionCase(DivisionPattern.TwoByOne_OnesQuotient_Borrow_2DigitMul, 62, 7, listOf("8", "56", "5", "6"))
 }

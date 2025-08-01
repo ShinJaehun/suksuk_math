@@ -76,7 +76,7 @@ class PhaseEvaluatorTest {
     }
 
     @Test
-    fun isCorrect_TwoByTwo_NoCarry_NoBorrow() {
+    fun isCorrect_TwoByTwo_NoCarryNoBorrow1DigitRem() {
         assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotientOnes, "2", 68, 34))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1Ones, "8", 68, 34))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1Tens, "6", 68, 34))
@@ -84,7 +84,7 @@ class PhaseEvaluatorTest {
     }
 
     @Test
-    fun isCorrect_TwoByTwo_NoCarry_Borrow() {
+    fun isCorrect_TwoByTwo_NoCarryBorrow1DigitRem() {
         assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotientOnes, "2", 50, 22))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1Ones, "4", 50, 22))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1Tens, "4", 50, 22))
@@ -93,7 +93,7 @@ class PhaseEvaluatorTest {
     }
 
     @Test
-    fun isCorrect_TwoByTwo_Carry_NoBorrow() {
+    fun isCorrect_TwoByTwo_CarryNoBorrow1DigitRem() {
         // 96 ÷ 12 = 8
         assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotientOnes, "8", 96, 12))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1OnesWithCarry, "16", 96, 12))
@@ -102,7 +102,7 @@ class PhaseEvaluatorTest {
     }
 
         @Test
-    fun isCorrect_TwoByTwo_Carry_Borrow() {
+    fun isCorrect_TwoByTwo_CarryBorrow1DigitRem() {
         // 81 ÷ 12 = 6, 6 × 12 = 72, 81 - 72 = 9 (Borrow 발생)
         assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotientOnes, "6", 81, 12))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1OnesWithCarry, "12", 81, 12))

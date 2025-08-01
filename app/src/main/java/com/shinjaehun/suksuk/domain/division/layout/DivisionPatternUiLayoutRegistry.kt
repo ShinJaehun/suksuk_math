@@ -12,10 +12,10 @@ object DivisionPatternUiLayoutRegistry {
         DivisionPattern.TwoByOne_OnesQuotient_NoBorrow_2DigitMul to twoByOne_OnesQuotientNoBorrow2DigitMulLayouts,
         DivisionPattern.TwoByOne_OnesQuotient_Borrow_2DigitMul to twoByOne_OnesQuotientBorrow2DigitMulLayouts,
 
-        DivisionPattern.TwoByTwo_NoCarry_NoBorrow to twoByTwo_NoCarryNoBorrowLayouts,
-        DivisionPattern.TwoByTwo_NoCarry_Borrow to twoByTwo_NoCarryBorrowLayouts,
-        DivisionPattern.TwoByTwo_Carry_NoBorrow to twoByTwo_CarryNoBorrowLayouts,
-        DivisionPattern.TwoByTwo_Carry_Borrow to twoByTwo_CarryBorrowLayouts,
+        DivisionPattern.TwoByTwo_NoCarry_NoBorrow_1DigitRem to twoByTwo_NoCarryNoBorrowLayouts1DigitRem,
+        DivisionPattern.TwoByTwo_NoCarry_Borrow_1DigitRem to twoByTwo_NoCarryBorrowLayouts1DigitRem,
+        DivisionPattern.TwoByTwo_Carry_NoBorrow_1DigitRem to twoByTwo_CarryNoBorrowLayouts1DigitRem,
+        DivisionPattern.TwoByTwo_Carry_Borrow_1DigitRem to twoByTwo_CarryBorrowLayouts1DigitRem,
 
     ).mapValues { (_, layoutList) -> layoutList.autoIndexInputs() }
 
