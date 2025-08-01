@@ -5,12 +5,12 @@ import com.shinjaehun.suksuk.domain.division.model.DivisionPattern
 object DivisionPatternUiLayoutRegistry {
 
     private val layouts: Map<DivisionPattern, List<DivisionStepUiLayout>> = mapOf(
-        DivisionPattern.TensQuotient_NoBorrow_2DigitMul to tensQuotientNoBorrow2DigitMulLayouts,
-        DivisionPattern.TensQuotient_Borrow_2DigitMul to tensQuotientBorrow2DigitMulLayouts,
-        DivisionPattern.TensQuotient_NoBorrow_1DigitMul to tensQuotientNoBorrow1DigitMulLayouts,
-        DivisionPattern.TensQuotient_SkipBorrow_1DigitMul to tensQuotientSkipBorrow1DigitMulLayouts,
-        DivisionPattern.OnesQuotient_NoBorrow_2DigitMul to onesQuotientNoBorrow2DigitMulLayouts,
-        DivisionPattern.OnesQuotient_Borrow_2DigitMul to onesQuotientBorrow2DigitMulLayouts,
+        DivisionPattern.TwoByOne_TensQuotient_NoBorrow_2DigitMul to twoByOne_TensQuotientNoBorrow2DigitMulLayouts,
+        DivisionPattern.TwoByOne_TensQuotient_Borrow_2DigitMul to twoByOne_TensQuotientBorrow2DigitMulLayouts,
+        DivisionPattern.TwoByOne_TensQuotient_NoBorrow_1DigitMul to twoByOne_TensQuotientNoBorrow1DigitMulLayouts,
+        DivisionPattern.TwoByOne_TensQuotient_SkipBorrow_1DigitMul to twoByOne_TensQuotientSkipBorrow1DigitMulLayouts,
+        DivisionPattern.TwoByOne_OnesQuotient_NoBorrow_2DigitMul to twoByOne_OnesQuotientNoBorrow2DigitMulLayouts,
+        DivisionPattern.TwoByOne_OnesQuotient_Borrow_2DigitMul to twoByOne_OnesQuotientBorrow2DigitMulLayouts,
 
     ).mapValues { (_, layoutList) -> layoutList.autoIndexInputs() }
 

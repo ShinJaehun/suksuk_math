@@ -5,7 +5,7 @@ import com.shinjaehun.suksuk.domain.division.model.DivisionPattern
 import org.junit.Rule
 import org.junit.Test
 
-class DivisionScreenInputOnesQuotientBorrow2DigitMulTest {
+class DivisionScreenInputTestTwoByOneOnesQuotientBorrow2DigitMul {
     @get:Rule
     val composeTestRule = createComposeRule()
 
@@ -20,9 +20,9 @@ class DivisionScreenInputOnesQuotientBorrow2DigitMulTest {
 
     @Test
     fun testPattern_53_div_6() =
-        composeTestRule.twoDigitDivByOneDigitCase(DivisionPattern.OnesQuotient_Borrow_2DigitMul, 53, 6, listOf("8", "48", "4", "5"))
+        composeTestRule.divisionTwoByOneCase(DivisionPattern.TwoByOne_OnesQuotient_Borrow_2DigitMul, 53, 6, listOf("8", "48", "4", "5"))
 
     @Test
     fun testPattern_62_div_7() =
-        composeTestRule.twoDigitDivByOneDigitCase(DivisionPattern.OnesQuotient_Borrow_2DigitMul, 62, 7, listOf("8", "56", "5", "6"))
+        composeTestRule.divisionTwoByOneCase(DivisionPattern.TwoByOne_OnesQuotient_Borrow_2DigitMul, 62, 7, listOf("8", "56", "5", "6"))
 }

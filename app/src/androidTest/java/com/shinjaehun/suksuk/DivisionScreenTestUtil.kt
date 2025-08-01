@@ -38,7 +38,7 @@ import com.shinjaehun.suksuk.presentation.division.FeedbackMessageProvider
 //    this.onNodeWithTag("feedback").assertTextContains("정답입니다!")
 //}
 
-fun ComposeContentTestRule.twoDigitDivByOneDigitCase(
+fun ComposeContentTestRule.divisionTwoByOneCase(
     pattern: DivisionPattern,
     dividend: Int,
     divisor: Int,

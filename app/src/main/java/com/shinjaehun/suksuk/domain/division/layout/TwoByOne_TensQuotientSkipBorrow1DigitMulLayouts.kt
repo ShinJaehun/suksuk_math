@@ -5,7 +5,7 @@ import com.shinjaehun.suksuk.domain.division.model.DivisionPhase
 import com.shinjaehun.suksuk.domain.division.model.Highlight
 import com.shinjaehun.suksuk.domain.division.model.InputCell
 
-val tensQuotientNoBorrow1DigitMulLayouts = listOf(
+val twoByOne_TensQuotientSkipBorrow1DigitMulLayouts = listOf(
     // 1단계: 십의자리 몫 입력
     DivisionStepUiLayout(
         phase = DivisionPhase.InputQuotientTens,
@@ -15,7 +15,7 @@ val tensQuotientNoBorrow1DigitMulLayouts = listOf(
                 CellName.Divisor to InputCell(cellName = CellName.Divisor, highlight = Highlight.Related)
         )
     ),
-    // 2단계: 곱셈(십의자리, 한자리 결과)
+    // 2단계: 곱셈(십의자리, 한 자리)
     DivisionStepUiLayout(
         phase = DivisionPhase.InputMultiply1Tens,
         cells = mapOf(
@@ -39,20 +39,20 @@ val tensQuotientNoBorrow1DigitMulLayouts = listOf(
         phase = DivisionPhase.InputBringDownFromDividendOnes,
         cells = mapOf(
                 CellName.DividendOnes to InputCell(cellName = CellName.DividendOnes, highlight = Highlight.Related),
-                CellName.Subtract1Ones to InputCell(cellName = CellName.Subtract1Ones, editable = true, highlight = Highlight.Editing),
-                CellName.Subtract1Tens to InputCell(cellName = CellName.Subtract1Tens, value = "", editable = false, highlight = Highlight.None) // ← 십의 자리 0을 bring down 과정에서 지우기
+                CellName.Subtract1Ones to InputCell(cellName = CellName.Subtract1Ones, editable = true, highlight = Highlight.Editing)
         )
     ),
-    // 5단계: 일의자리 몫
+    // NoBorrow와 거의 비슷한데 여기서 Subtract1Tens가 존재하기 때문에 Related 처리해주는 것만 다름...
     DivisionStepUiLayout(
         phase = DivisionPhase.InputQuotientOnes,
         cells = mapOf(
                 CellName.QuotientOnes to InputCell(cellName = CellName.QuotientOnes, editable = true, highlight = Highlight.Editing),
                 CellName.Divisor to InputCell(cellName = CellName.Divisor, highlight = Highlight.Related),
-                CellName.Subtract1Ones to InputCell(cellName = CellName.Subtract1Ones, highlight = Highlight.Related)
+                CellName.Subtract1Tens to InputCell(cellName = CellName.Subtract1Tens, highlight = Highlight.Related),
+                CellName.Subtract1Ones to InputCell(cellName = CellName.Subtract1Ones, highlight = Highlight.Related),
         )
     ),
-    // 6단계: 곱셈(일의자리)
+    // 8단계: 곱셈(일의자리, 한 자리)
     DivisionStepUiLayout(
         phase = DivisionPhase.InputMultiply2Ones,
         cells = mapOf(
@@ -61,11 +61,12 @@ val tensQuotientNoBorrow1DigitMulLayouts = listOf(
                 CellName.QuotientOnes to InputCell(cellName = CellName.QuotientOnes, highlight = Highlight.Related)
         )
     ),
-    // 7단계: 뺄셈(일의자리)
+    // NoBorrow와 거의 비슷한데 여기서 Subtract1Tens가 존재하기 때문에 Related 처리해주는 것만 다름...
     DivisionStepUiLayout(
         phase = DivisionPhase.InputSubtract2Result,
         cells = mapOf(
                 CellName.Subtract2Ones to InputCell(cellName = CellName.Subtract2Ones, editable = true, highlight = Highlight.Editing),
+                CellName.Subtract1Tens to InputCell(cellName = CellName.Subtract1Tens, highlight = Highlight.Related),
                 CellName.Subtract1Ones to InputCell(cellName = CellName.Subtract1Ones, highlight = Highlight.Related),
                 CellName.Multiply2Ones to InputCell(cellName = CellName.Multiply2Ones, highlight = Highlight.Related)
         ),

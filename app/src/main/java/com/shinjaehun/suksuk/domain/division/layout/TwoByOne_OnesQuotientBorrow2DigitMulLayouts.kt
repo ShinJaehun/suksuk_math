@@ -6,7 +6,7 @@ import com.shinjaehun.suksuk.domain.division.model.DivisionPhase
 import com.shinjaehun.suksuk.domain.division.model.Highlight
 import com.shinjaehun.suksuk.domain.division.model.InputCell
 
-val onesQuotientBorrow2DigitMulLayouts = listOf(
+val twoByOne_OnesQuotientBorrow2DigitMulLayouts = listOf(
     // 1단계: 일의자리 몫(2자리) 입력
     DivisionStepUiLayout(
         phase = DivisionPhase.InputQuotient,

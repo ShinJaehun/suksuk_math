@@ -27,7 +27,7 @@ class DivisionUiStateBuilderTest {
             ),
             inputs = listOf("1", "3", "1", "6", "5", "1", "5", "1"),
             feedback = null,
-            pattern = DivisionPattern.TensQuotient_NoBorrow_2DigitMul
+            pattern = DivisionPattern.TwoByOne_TensQuotient_NoBorrow_2DigitMul
         )
 
         // currentInput은 이 단계에서는 보통 공백이거나, 다음 입력 직전의 값 (여기서는 "")
@@ -66,7 +66,7 @@ class DivisionUiStateBuilderTest {
             ),
             inputs = listOf("1", "6", "1", "1", "1", "6", "5"),
             feedback = null,
-            pattern = DivisionPattern.TensQuotient_SkipBorrow_1DigitMul
+            pattern = DivisionPattern.TwoByOne_TensQuotient_SkipBorrow_1DigitMul
         )
 
         val uiState = DivisionUiStateBuilder.mapToUiState(domainState, "")
@@ -99,7 +99,7 @@ class DivisionUiStateBuilderTest {
             ),
             inputs = listOf("1", "4", "0", "5", "1", "4", "1"),
             feedback = null,
-            pattern = DivisionPattern.TensQuotient_NoBorrow_1DigitMul
+            pattern = DivisionPattern.TwoByOne_TensQuotient_NoBorrow_1DigitMul
         )
 
         val uiState = DivisionUiStateBuilder.mapToUiState(domainState, "")
@@ -133,7 +133,7 @@ class DivisionUiStateBuilderTest {
             ),
             inputs = listOf("1", "3", "2", "0", "6", "1", "8", "1", "2"), // "18"이 분리되어 들어감
             feedback = null,
-            pattern = DivisionPattern.TensQuotient_Borrow_2DigitMul
+            pattern = DivisionPattern.TwoByOne_TensQuotient_Borrow_2DigitMul
         )
 
         val uiState = DivisionUiStateBuilder.mapToUiState(domainState, "")
@@ -163,7 +163,7 @@ class DivisionUiStateBuilderTest {
             ),
             inputs = listOf("3", "2", "1", "3"),
             feedback = null,
-            pattern = DivisionPattern.OnesQuotient_NoBorrow_2DigitMul
+            pattern = DivisionPattern.TwoByOne_OnesQuotient_NoBorrow_2DigitMul
         )
 
         val uiState = DivisionUiStateBuilder.mapToUiState(domainState, "")
@@ -190,7 +190,7 @@ class DivisionUiStateBuilderTest {
             ),
             inputs = listOf("8", "5", "6", "5", "6"),
             feedback = null,
-            pattern = DivisionPattern.OnesQuotient_Borrow_2DigitMul
+            pattern = DivisionPattern.TwoByOne_OnesQuotient_Borrow_2DigitMul
         )
 
         val uiState = DivisionUiStateBuilder.mapToUiState(domainState, "")
@@ -202,6 +202,4 @@ class DivisionUiStateBuilderTest {
         assertEquals("6", uiState.subtract1Ones.value)
         // assertEquals("정답입니다!", uiState.feedback)
     }
-
-
 }

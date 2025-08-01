@@ -10,9 +10,9 @@ object PatternDetector {
 
         if (dividendTens < divisor) {
             if (dividendOnes < divisor * quotient % 10) {
-                return DivisionPattern.OnesQuotient_Borrow_2DigitMul
+                return DivisionPattern.TwoByOne_OnesQuotient_Borrow_2DigitMul
             } else {
-                return DivisionPattern.OnesQuotient_NoBorrow_2DigitMul
+                return DivisionPattern.TwoByOne_OnesQuotient_NoBorrow_2DigitMul
             }
         }
 
@@ -40,17 +40,17 @@ object PatternDetector {
 
         return when {
 //            subtract1Tens == 0 && !isSecondMultiplyTwoDigits -> DivisionPattern.TensQuotient_Subtract1TnesZero_1DigitMul
-            skipBorrow && !isSecondMultiplyTwoDigits -> DivisionPattern.TensQuotient_SkipBorrow_1DigitMul
+            skipBorrow && !isSecondMultiplyTwoDigits -> DivisionPattern.TwoByOne_TensQuotient_SkipBorrow_1DigitMul
 
             // C: 받아내림 있음, 두자리 곱셈
-            hasBorrow && isSecondMultiplyTwoDigits -> DivisionPattern.TensQuotient_Borrow_2DigitMul
+            hasBorrow && isSecondMultiplyTwoDigits -> DivisionPattern.TwoByOne_TensQuotient_Borrow_2DigitMul
             // D: 받아내림 있음, 일의자리 곱셈만
 //            hasBorrow && !isSecondMultiplyTwoDigits -> DivisionPattern.TensQuotient_Borrow_1DigitMul
             // A: 받아내림 없음, 두자리 곱셈
-            !hasBorrow && isSecondMultiplyTwoDigits -> DivisionPattern.TensQuotient_NoBorrow_2DigitMul
+            !hasBorrow && isSecondMultiplyTwoDigits -> DivisionPattern.TwoByOne_TensQuotient_NoBorrow_2DigitMul
             // B: 받아내림 없음, 일의자리 곱셈만
-            !hasBorrow && !isSecondMultiplyTwoDigits -> DivisionPattern.TensQuotient_NoBorrow_1DigitMul
-            else -> DivisionPattern.TensQuotient_NoBorrow_2DigitMul // fallback (안 맞는 케이스는 A 처리)
+            !hasBorrow && !isSecondMultiplyTwoDigits -> DivisionPattern.TwoByOne_TensQuotient_NoBorrow_1DigitMul
+            else -> DivisionPattern.TwoByOne_TensQuotient_NoBorrow_2DigitMul // fallback (안 맞는 케이스는 A 처리)
         }
     }
 }
