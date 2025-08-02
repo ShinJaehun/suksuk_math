@@ -32,6 +32,7 @@ import com.shinjaehun.suksuk.domain.division.detector.PatternDetector
 import com.shinjaehun.suksuk.domain.division.evaluator.PhaseEvaluator
 import com.shinjaehun.suksuk.domain.division.factory.DivisionDomainStateFactory
 import com.shinjaehun.suksuk.domain.division.layout.DivisionPatternUiLayoutRegistry
+import com.shinjaehun.suksuk.domain.division.model.DivisionPattern
 
 @Composable
 fun DivisionScreen(
@@ -42,17 +43,23 @@ fun DivisionScreen(
     val domainState by viewModel.domainState.collectAsState()
     val currentInput = viewModel.currentInput
 
-    val currentUiState = remember(domainState, currentInput) {
-//        mapPhasesToCells(phasesState, currentInput)
-        DivisionUiStateBuilder.mapToUiState(domainState, currentInput)
+    val currentUiState = remember(domainState, currentInput, previewAll) {
+        DivisionUiStateBuilder.mapToUiState(domainState, currentInput, previewAll)
     }
 
     val cellWidth = 42.dp
 
-    // 단계별 cover visibility - replace with actual uiState flags
-//    val dividendTenCoverVisible = remember { mutableStateOf(false) }
-//    val dividendOneCoverVisible = remember { mutableStateOf(false) }
-//    val ansFirstLineVisible = remember { mutableStateOf(false) }
+    val isTwoByOne = when (domainState.pattern) {
+        DivisionPattern.TwoByOne_TensQuotient_NoBorrow_2DigitMul,
+        DivisionPattern.TwoByOne_TensQuotient_Borrow_2DigitMul,
+        DivisionPattern.TwoByOne_TensQuotient_NoBorrow_1DigitMul,
+        DivisionPattern.TwoByOne_TensQuotient_SkipBorrow_1DigitMul,
+        DivisionPattern.TwoByOne_OnesQuotient_Borrow_2DigitMul,
+        DivisionPattern.TwoByOne_OnesQuotient_NoBorrow_2DigitMul -> true
+        else -> false
+    }
+
+    val bracketStartMargin = if (isTwoByOne) 60.dp else 90.dp
 
     Box(
         modifier = Modifier
@@ -71,7 +78,7 @@ fun DivisionScreen(
             val (
                 quotientTensRef, quotientOnesRef,
                 multiply1TensRef, multiply1OnesRef, subtract1TensRef, subtract1OnesRef,
-                multiply2TensRef, multiply2OnesRef, subtract2OnesRef
+                multiply2TensRef, multiply2OnesRef, subtract2TensRef, subtract2OnesRef
             ) = createRefs()
 
             val (
@@ -81,20 +88,18 @@ fun DivisionScreen(
 
             val (bracketRef, subtract1LineRef, subtract2LineRef) = createRefs()
 
-            // Division Bracket
             Image(
                 painter = painterResource(id = R.drawable.ic_division_bracket_short),
                 contentDescription = "Division Bracket",
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier.constrainAs(bracketRef) {
                     top.linkTo(parent.top, margin = 70.dp)
-                    start.linkTo(parent.start, margin = 60.dp)
+                    start.linkTo(parent.start, margin = bracketStartMargin)
                     width = Dimension.value(150.dp)
                     height = Dimension.value(120.dp)
                 }
             )
 
-            // dividend tens
             val dividendTensCell = currentUiState.dividendTens
             NumberText(
                 cell = dividendTensCell,
@@ -107,7 +112,6 @@ fun DivisionScreen(
                     }
             )
 
-            // dividend tens borrow
             val dividendTensBorrowCell = currentUiState.borrowDividendTens
             BorrowText(
                 cell = dividendTensBorrowCell,
@@ -120,7 +124,6 @@ fun DivisionScreen(
                     }
             )
 
-            // dividend ones
             val dividendOnesCell = currentUiState.dividendOnes
             NumberText(
                 cell = dividendOnesCell,
@@ -146,8 +149,6 @@ fun DivisionScreen(
                     .testTag("borrowed10-dividend-cell")
             )
 
-            // divisor
-
             val divisorOnesCell = currentUiState.divisorOnes
             NumberText(
                 cell = divisorOnesCell,
@@ -172,7 +173,6 @@ fun DivisionScreen(
                     }
             )
 
-            // dividend tens borrow
             val divisorTensCarryCell = currentUiState.carryDivisorTens
             BorrowText(
                 cell = divisorTensCarryCell,
@@ -185,7 +185,6 @@ fun DivisionScreen(
                     }
             )
 
-            // 몫(십의 자리)
             val quotientTensCell = currentUiState.quotientTens
             NumberText(
                 cell = quotientTensCell,
@@ -198,7 +197,6 @@ fun DivisionScreen(
                     }
             )
 
-            // 몫(일의 자리)
             val quotientOnesCell = currentUiState.quotientOnes
             NumberText(
                 cell = quotientOnesCell,
@@ -211,7 +209,6 @@ fun DivisionScreen(
                     }
             )
 
-            // 1차 곱셈(7)
             val multiply1TensCell = currentUiState.multiply1Tens
             NumberText(
                 cell = multiply1TensCell,
@@ -252,7 +249,6 @@ fun DivisionScreen(
                 )
             }
 
-            // 1차 뺄셈(2)
             val subtract1TensCell = currentUiState.subtract1Tens
             NumberText(
                 cell = subtract1TensCell,
@@ -265,7 +261,6 @@ fun DivisionScreen(
                     }
             )
 
-            // first subtraction borrow
             val subtract1BorrowCell = currentUiState.borrowSubtract1Tens
             BorrowText(
                 cell = subtract1BorrowCell,
@@ -278,7 +273,6 @@ fun DivisionScreen(
                     }
             )
 
-            // bringDown(2), 뺄셈 오른쪽
             val subtract1OnesCell = currentUiState.subtract1Ones
             NumberText(
                 cell = subtract1OnesCell,
@@ -304,7 +298,6 @@ fun DivisionScreen(
                     .testTag("borrowed10-sub1-cell")
             )
 
-            // 2차 곱셈(21), 두 칸: 22 아래
             val multiply2TensCell = currentUiState.multiply2Tens
             NumberText(
                 cell = multiply2TensCell,
@@ -344,17 +337,27 @@ fun DivisionScreen(
                 )
             }
 
-
-            // 나머지(1) 한 칸만!
-            val remainderCell = currentUiState.subtract2Ones
+            val subtract2TensCell = currentUiState.subtract2Tens
             NumberText(
-                cell = remainderCell,
+                cell = subtract2TensCell,
+                modifier = Modifier
+                    .width(cellWidth)
+                    .padding(horizontal = 8.dp)
+                    .constrainAs(subtract2TensRef) {
+                        top.linkTo(dividendTensRef.bottom, margin = 220.dp)
+                        start.linkTo(dividendTensRef.start)
+                    }
+            )
+
+            val subtract2OnesCell = currentUiState.subtract2Ones
+            NumberText(
+                cell = subtract2OnesCell,
                 modifier = Modifier
                     .width(cellWidth)
                     .padding(horizontal = 8.dp)
                     .constrainAs(subtract2OnesRef) {
-                        top.linkTo(dividendTensRef.bottom, margin = 220.dp)
-                        start.linkTo(dividendOnesRef.start)
+                        start.linkTo(subtract2TensRef.end)
+                        baseline.linkTo(subtract2TensRef.baseline)
                     }
             )
         }
@@ -387,7 +390,6 @@ fun DivisionScreen(
     }
 }
 
-
 @SuppressLint("ViewModelConstructorInComposable")
 @Preview(showBackground = true)
 @Composable
@@ -406,6 +408,5 @@ fun PreviewDivisionStageScreen() {
         feedbackProvider
     )
 
-    // 여기서 반드시 넘겨야 함!
     DivisionScreen(viewModel = viewModel)
 }

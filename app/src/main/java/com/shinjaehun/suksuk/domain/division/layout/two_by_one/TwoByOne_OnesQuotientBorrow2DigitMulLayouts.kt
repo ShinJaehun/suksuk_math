@@ -1,5 +1,6 @@
-package com.shinjaehun.suksuk.domain.division.layout
+package com.shinjaehun.suksuk.domain.division.layout.two_by_one
 
+import com.shinjaehun.suksuk.domain.division.layout.DivisionStepUiLayout
 import com.shinjaehun.suksuk.domain.division.model.CellName
 import com.shinjaehun.suksuk.domain.division.model.CrossOutColor
 import com.shinjaehun.suksuk.domain.division.model.DivisionPhase

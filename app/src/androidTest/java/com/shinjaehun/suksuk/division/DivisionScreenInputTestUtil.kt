@@ -1,4 +1,4 @@
-package com.shinjaehun.suksuk
+package com.shinjaehun.suksuk.division
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextContains
@@ -15,29 +15,6 @@ import com.shinjaehun.suksuk.presentation.division.DivisionScreen
 import com.shinjaehun.suksuk.presentation.division.DivisionViewModel
 import com.shinjaehun.suksuk.presentation.division.FeedbackMessageProvider
 
-//fun ComposeContentTestRule.twoDigitDivByOneDigitCase(
-//    pattern: DivisionPattern,
-//    dividend: Int,
-//    divisor: Int,
-//    inputs: List<String>,
-//) {
-//    val viewModel = DivisionViewModel(autoStart = false)
-//    this.setContent {
-//        DivisionScreen(viewModel = viewModel)
-//    }
-//    this.runOnIdle {
-//        viewModel.startNewProblem(dividend, divisor)
-//    }
-//    for (i in inputs.indices) {
-//        this.onNodeWithTag("numpad-${inputs[i]}").performClick()
-//        this.onNodeWithTag("numpad-enter").performClick()
-//        if (i < inputs.lastIndex)
-//            this.onNodeWithTag("feedback").assertDoesNotExist()
-//    }
-//    this.onNodeWithTag("feedback").assertIsDisplayed()
-//    this.onNodeWithTag("feedback").assertTextContains("정답입니다!")
-//}
-
 fun ComposeContentTestRule.divisionCase(
     pattern: DivisionPattern,
     dividend: Int,
@@ -46,7 +23,6 @@ fun ComposeContentTestRule.divisionCase(
 ) {
     val savedStateHandle = SavedStateHandle(mapOf("autoStart" to false))
 
-    // AppModule에서 제공하는 객체는 그냥 new 가능
     val phaseEvaluator = PhaseEvaluator()
     val patternDetector = PatternDetector
     val uiLayoutRegistry = DivisionPatternUiLayoutRegistry
@@ -74,12 +50,10 @@ fun ComposeContentTestRule.divisionCase(
     while (i < inputs.size) {
         val input = inputs[i]
         if (input.length == 1) {
-            // 한 자리 입력 (numpad-N → enter)
             this.onNodeWithTag("numpad-$input").performClick()
             this.onNodeWithTag("numpad-enter").performClick()
             i++
         } else if (input.length == 2) {
-            // 두 자리 입력 (numpad-N → numpad-M → enter)
             this.onNodeWithTag("numpad-${input[0]}").performClick()
             this.onNodeWithTag("numpad-${input[1]}").performClick()
             this.onNodeWithTag("numpad-enter").performClick()

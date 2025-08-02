@@ -24,7 +24,6 @@ class DivisionViewModelTest {
     fun setup() {
         val savedStateHandle = SavedStateHandle(mapOf("autoStart" to false))
 
-        // AppModule에서 제공하는 객체는 그냥 new 가능
         val phaseEvaluator = PhaseEvaluator()
         val patternDetector = PatternDetector
         val uiLayoutRegistry = DivisionPatternUiLayoutRegistry
@@ -47,37 +46,20 @@ class DivisionViewModelTest {
     fun detectPatternTest() {
         val cases = listOf(
             Triple(46, 3, DivisionPattern.TwoByOne_TensQuotient_NoBorrow_2DigitMul),
-            Triple(72, 6, DivisionPattern.TwoByOne_TensQuotient_NoBorrow_2DigitMul),
-            Triple(74, 6, DivisionPattern.TwoByOne_TensQuotient_NoBorrow_2DigitMul),
-            Triple(85, 7, DivisionPattern.TwoByOne_TensQuotient_NoBorrow_2DigitMul),
-            Triple(86, 7, DivisionPattern.TwoByOne_TensQuotient_NoBorrow_2DigitMul),
-            Triple(92, 7, DivisionPattern.TwoByOne_TensQuotient_NoBorrow_2DigitMul),
-            Triple(96, 4, DivisionPattern.TwoByOne_TensQuotient_NoBorrow_2DigitMul),
-
             Triple(45, 4, DivisionPattern.TwoByOne_TensQuotient_NoBorrow_1DigitMul),
-            Triple(57, 5, DivisionPattern.TwoByOne_TensQuotient_NoBorrow_1DigitMul),
-            Triple(84, 4, DivisionPattern.TwoByOne_TensQuotient_NoBorrow_1DigitMul),
-
             Triple(50, 3, DivisionPattern.TwoByOne_TensQuotient_Borrow_2DigitMul),
-            Triple(90, 7, DivisionPattern.TwoByOne_TensQuotient_Borrow_2DigitMul),
-            Triple(70, 4, DivisionPattern.TwoByOne_TensQuotient_Borrow_2DigitMul),
-
-
             Triple(70, 6, DivisionPattern.TwoByOne_TensQuotient_SkipBorrow_1DigitMul),
-            Triple(71, 6, DivisionPattern.TwoByOne_TensQuotient_SkipBorrow_1DigitMul),
-            Triple(90, 8, DivisionPattern.TwoByOne_TensQuotient_SkipBorrow_1DigitMul),
-            Triple(93, 8, DivisionPattern.TwoByOne_TensQuotient_SkipBorrow_1DigitMul),
-
             Triple(53, 6, DivisionPattern.TwoByOne_OnesQuotient_Borrow_2DigitMul),
-            Triple(62, 7, DivisionPattern.TwoByOne_OnesQuotient_Borrow_2DigitMul),
-
             Triple(12, 3, DivisionPattern.TwoByOne_OnesQuotient_NoBorrow_2DigitMul),
-            Triple(24, 7, DivisionPattern.TwoByOne_OnesQuotient_NoBorrow_2DigitMul),
-            Triple(39, 4, DivisionPattern.TwoByOne_OnesQuotient_NoBorrow_2DigitMul),
-            Triple(49, 5, DivisionPattern.TwoByOne_OnesQuotient_NoBorrow_2DigitMul),
-            Triple(54, 9, DivisionPattern.TwoByOne_OnesQuotient_NoBorrow_2DigitMul),
-            Triple(68, 9, DivisionPattern.TwoByOne_OnesQuotient_NoBorrow_2DigitMul),
-            Triple(81, 9, DivisionPattern.TwoByOne_OnesQuotient_NoBorrow_2DigitMul)
+            Triple(68, 34, DivisionPattern.TwoByTwo_NoCarry_NoBorrow_1DigitRem),
+            Triple(57, 22, DivisionPattern.TwoByTwo_NoCarry_NoBorrow_2DigitRem),
+            Triple(50, 22, DivisionPattern.TwoByTwo_NoCarry_Borrow_1DigitRem),
+            Triple(50, 13, DivisionPattern.TwoByTwo_NoCarry_Borrow_2DigitRem),
+            Triple(75, 25, DivisionPattern.TwoByTwo_Carry_NoBorrow_1DigitRem),
+            Triple(95, 28, DivisionPattern.TwoByTwo_Carry_NoBorrow_2DigitRem),
+            Triple(81, 12, DivisionPattern.TwoByTwo_Carry_Borrow_1DigitRem),
+            Triple(80, 17, DivisionPattern.TwoByTwo_Carry_Borrow_2DigitRem),
+
         )
 
         for ((dividend, divisor, expectedPattern) in cases) {
@@ -95,43 +77,22 @@ class DivisionViewModelTest {
     }
 
     @Test
-    fun twoDigitDivByOneDigitTest() = runTest {
+    fun userInputTest() = runTest {
         val cases = listOf(
-            // TwoByOne_TensQuotient_NoBorrow_2DigitMul
             Triple("TwoByOne_TensQuotient_NoBorrow_2DigitMul: 46 ÷ 3", 46 to 3, listOf("1", "3", "1", "6", "5", "15", "1")),
-            Triple("TwoByOne_TensQuotient_NoBorrow_2DigitMul: 72 ÷ 6", 72 to 6, listOf("1", "6", "1", "2", "2", "12", "0")),
-            Triple("TwoByOne_TensQuotient_NoBorrow_2DigitMul: 74 ÷ 6", 74 to 6, listOf("1", "6", "1", "4", "2", "12", "2")),
-            Triple("TwoByOne_TensQuotient_NoBorrow_2DigitMul: 85 ÷ 7", 85 to 7, listOf("1", "7", "1", "5", "2", "14", "1")),
-            Triple("TwoByOne_TensQuotient_NoBorrow_2DigitMul: 86 ÷ 7", 86 to 7, listOf("1", "7", "1", "6", "2", "14", "2")),
-            Triple("TwoByOne_TensQuotient_NoBorrow_2DigitMul: 92 ÷ 7", 92 to 7, listOf("1", "7", "2", "2", "3", "21", "1")),
-            Triple("TwoByOne_TensQuotient_NoBorrow_2DigitMul: 96 ÷ 4", 96 to 4, listOf("2", "8", "1", "6", "4", "16", "0")),
-
-
-            // TwoByOne_TensQuotient_NoBorrow_1DigitMul
             Triple("TwoByOne_TensQuotient_NoBorrow_1DigitMul: 45 ÷ 4", 45 to 4, listOf("1", "4", "0", "5", "1", "4", "1")),
-            Triple("TwoByOne_TensQuotient_NoBorrow_1DigitMul: 57 ÷ 5", 57 to 5, listOf("1", "5", "0", "7", "1", "5", "2")),
-            Triple("TwoByOne_TensQuotient_NoBorrow_1DigitMul: 84 ÷ 4", 84 to 4, listOf("2", "8", "0", "4", "1", "4", "0")),
-
-            // TwoByOne_TensQuotient_Borrow_2DigitMul
             Triple("TwoByOne_TensQuotient_Borrow_2DigitMul: 50 ÷ 3", 50 to 3, listOf("1", "3", "2", "0", "6", "18", "1", "2")),
-
-            // TwoByOne_TensQuotient_SkipBorrow_1DigitMul
-            Triple("TwoByOne_TensQuotient_SkipBorrow_1DigitMul: 71 ÷ 6", 71 to 6, listOf("1", "6", "1", "1", "1", "6", "5")),
-            Triple("TwoByOne_TensQuotient_SkipBorrow_1DigitMul: 90 ÷ 8", 90 to 8, listOf("1", "8", "1", "0", "1", "8", "2")),
             Triple("TwoByOne_TensQuotient_SkipBorrow_1DigitMul: 93 ÷ 8", 93 to 8, listOf("1", "8", "1", "3", "1", "8", "5")),
-
-            // TwoByOne_OnesQuotient_Borrow
-            Triple("TwoByOne_OnesQuotient_Borrow_2DigitMul: 53 ÷ 6", 53 to 6, listOf("8", "48", "4", "5")),
             Triple("TwoByOne_OnesQuotient_Borrow_2DigitMul: 62 ÷ 7", 62 to 7, listOf("8", "56", "5", "6")),
-
-            // TwoByOne_OnesQuotient_NoBorrow
-            Triple("TwoByOne_OnesQuotient_NoBorrow_2DigitMul: 12 ÷ 3", 12 to 3, listOf("4", "12", "0")),
-            Triple("TwoByOne_OnesQuotient_NoBorrow_2DigitMul: 24 ÷ 7", 24 to 7, listOf("3", "21", "3")),
-            Triple("TwoByOne_OnesQuotient_NoBorrow_2DigitMul: 39 ÷ 4", 39 to 4, listOf("9", "36", "3")),
-            Triple("TwoByOne_OnesQuotient_NoBorrow_2DigitMul: 49 ÷ 5", 49 to 5, listOf("9", "45", "4")),
-            Triple("TwoByOne_OnesQuotient_NoBorrow_2DigitMul: 54 ÷ 9", 54 to 9, listOf("6", "54", "0")),
-            Triple("TwoByOne_OnesQuotient_NoBorrow_2DigitMul: 68 ÷ 9", 68 to 9, listOf("7", "63", "5")),
-            Triple("TwoByOne_OnesQuotient_NoBorrow_2DigitMul: 81 ÷ 9", 81 to 9, listOf("9", "81", "0"))
+            Triple("TwoByOne_OnesQuotient_NoBorrow_2DigitMul: 81 ÷ 9", 81 to 9, listOf("9", "81", "0")),
+            Triple("TwoByTwo_NoCarry_NoBorrow_1DigitRem: 68 ÷ 34", 68 to 34, listOf("2", "8", "6", "0")),
+            Triple("TwoByTwo_NoCarry_NoBorrow_2DigitRem: 57 ÷ 22", 57 to 22, listOf("2", "4", "4", "3", "1")),
+            Triple("TwoByTwo_NoCarry_Borrow_1DigitRem: 50 ÷ 22", 50 to 22, listOf("2", "4", "4", "4", "6")),
+            Triple("TwoByTwo_NoCarry_Borrow_2DigitRem: 50 ÷ 13", 50 to 13, listOf("3", "9", "3", "4", "1", "1")),
+            Triple("TwoByTwo_Carry_NoBorrow_1DigitRem: 96 ÷ 12", 96 to 12, listOf("8", "16", "9", "0")),
+            Triple("TwoByTwo_Carry_NoBorrow_2DigitRem: 95 ÷ 28", 95 to 28, listOf("3", "24", "8", "1", "1")),
+            Triple("TwoByTwo_Carry_Borrow_1DigitRem: 81 ÷ 12", 81 to 12, listOf("6", "12", "7", "7", "9")),
+            Triple("TwoByTwo_Carry_Borrow_2DigitRem: 80 ÷ 17", 80 to 17, listOf("4", "28", "6", "7", "2", "1"))
         )
         for ((name, pair, inputs) in cases) {
             val (dividend, divisor) = pair

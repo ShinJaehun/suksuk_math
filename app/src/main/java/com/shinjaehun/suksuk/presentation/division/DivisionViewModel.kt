@@ -18,26 +18,19 @@ import javax.inject.Inject
 class DivisionViewModel @Inject constructor (
     private val savedStateHandle: SavedStateHandle,
     private val phaseEvaluator: PhaseEvaluator,
-//    private val patternDetector: PatternDetector,
-//    private val uiLayoutRegistry: DivisionPatternUiLayoutRegistry,
     private val domainStateFactory: DivisionDomainStateFactory,
     private val feedbackProvider: FeedbackMessageProvider
 ) : ViewModel() {
     private val autoStart: Boolean = savedStateHandle["autoStart"] ?: true
-//    private val autoStart = true
     private val _domainState = MutableStateFlow(DivisionDomainState(0, 0))
     val domainState: StateFlow<DivisionDomainState> = _domainState
 
-//    private val phaseBuilder = PhaseBuilder()
-//    private val evaluator = PhaseEvaluator()
-
-    // ViewModel 내부에 현재 키패드 입력값을 관리하기 위한 상태
     var currentInput by mutableStateOf("")
         private set
 
     init {
         if (autoStart) {
-//            startNewProblem(46, 3) // TensQuotient_NoBorrow_2DigitMul
+            startNewProblem(46, 3) // TensQuotient_NoBorrow_2DigitMul
 //            startNewProblem(85, 7) // TensQuotient_NoBorrow_2DigitMul
 //            startNewProblem(50, 3) // TensQuotient_Borrow_2DigitMul
 //            startNewProblem(90, 7) // TensQuotient_Borrow_2DigitMul
@@ -46,41 +39,27 @@ class DivisionViewModel @Inject constructor (
 //            startNewProblem(45, 4) // TensQuotient_NoBorrow_1DigitMul
 //            startNewProblem(70, 6) // TensQuotient_SkipBorrow_1DigitMul
 //            startNewProblem(93, 8) // TensQuotient_SkipBorrow_1DigitMul
+//            startNewProblem(90, 8) // TensQuotient_SkipBorrow_1DigitMul
 //            startNewProblem(62, 7) // OnesQuotient_Borrow
 //            startNewProblem(39, 4) // OnesQuotient_NoBorrow
 //            startNewProblem(10, 9) // 현재 이러한 경우는 고려하고 있지 않음...
 //            startNewProblem(48, 19) // 병시나 나머지 두 자리...ㅠㅠ
-            startNewProblem(96, 8)
+//            startNewProblem(68, 34) // TwoByTwo_NoCarry_NoBorrow_1DigitRem
+//            startNewProblem(50, 22) // TwoByTwo_NoCarry_Borrow_1DigitRem
+//            startNewProblem(57, 22) // TwoByTwo_NoCarry_Borrow_1DigitRem
+//            startNewProblem(75, 25) // TwoByTwo_Carry_NoBorrow_1DigitRem
+//            startNewProblem(81, 12) // TwoByTwo_Carry_Borrow_1DigitRem
+//            startNewProblem(57, 22) // TwoByTwo_NoCarry_NoBorrow_2DigitRem
+//            startNewProblem(50, 13) // TwoByTwo_NoCarry_Borrow_2DigitRem
         }
     }
 
     fun startNewProblem(dividend: Int, divisor: Int) {
-//        val pattern = PatternDetector.detectPattern(dividend, divisor)
-//        val phases = phaseBuilder.buildPhasesFor(pattern)
-//        println("🔍 [startNewProblem] $dividend ÷ $divisor → pattern=$pattern")
-
-//        val layouts: List<DivisionStepUiLayout> = DivisionPatternUiLayoutRegistry.getStepLayouts(pattern)
-//        val pattern = patternDetector.detectPattern(dividend, divisor)
-//        val layouts: List<DivisionStepUiLayout> = uiLayoutRegistry.getStepLayouts(pattern)
-//        val phases: List<DivisionPhase> = layouts.map { it.phase }
-//
-//        _domainState.value = DivisionDomainState(
-//            dividend,
-//            divisor,
-//            0,
-//            phases,
-//            mutableListOf(),
-//            null,
-//            pattern
-//        )
-
         _domainState.value = domainStateFactory.create(dividend, divisor)
-
     }
 
     fun onDigitInput(digit: Int) {
-//        currentInput += digit.toString()
-        println("onDigitInput($digit) phase=${_domainState.value.phases.getOrNull(_domainState.value.currentPhaseIndex)} currentInput(before)=$currentInput")
+//        println("onDigitInput($digit) phase=${_domainState.value.phases.getOrNull(_domainState.value.currentPhaseIndex)} currentInput(before)=$currentInput")
 
         val state = _domainState.value
         val phase = state.phases.getOrNull(state.currentPhaseIndex) ?: return
@@ -92,34 +71,29 @@ class DivisionViewModel @Inject constructor (
             else -> 1
         }
         currentInput = (currentInput + digit).takeLast(maxLength)
-        println("currentInput(after)=$currentInput")
+//        println("currentInput(after)=$currentInput")
 
     }
-
 
     fun onClear() {
         currentInput = ""
     }
 
-
     fun onEnter() {
-        println("onEnter called! currentInput=$currentInput phase=${_domainState.value.phases.getOrNull(_domainState.value.currentPhaseIndex)}")
-
+//        println("onEnter called! currentInput=$currentInput phase=${_domainState.value.phases.getOrNull(_domainState.value.currentPhaseIndex)}")
         if (currentInput.isEmpty()) {
-            // 아무것도 입력 안했을 때 무시
-            println("onEnter: currentInput empty, return")
-
+//            println("onEnter: currentInput empty, return")
             return
         }
 
         submitInput(currentInput)
         currentInput = ""
     }
-//
+
     fun submitInput(input: String) {
         val state = _domainState.value
         val phase = state.phases.getOrNull(state.currentPhaseIndex) ?: return
-        println("📥 submitInput('$input') at phase=${phase}")
+//        println("📥 submitInput('$input') at phase=${phase}")
 //
 //        // for debugging : 전체 UI 상태
 //        val previewUiState = DivisionUiStateBuilder.mapToUiState(state, currentInput)
@@ -142,7 +116,6 @@ class DivisionViewModel @Inject constructor (
                 return
             }
 
-            // 입력 분해하여 저장
             val newInputs = state.inputs + input[0].toString() + input[1].toString()
             _domainState.value = state.copy(
                 inputs = newInputs,

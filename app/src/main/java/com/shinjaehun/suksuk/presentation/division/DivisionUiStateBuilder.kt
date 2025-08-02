@@ -13,18 +13,18 @@ import com.shinjaehun.suksuk.domain.division.model.SubtractLines
 class DivisionUiStateBuilder private constructor() {
 
     companion object {
-        fun mapToUiState(state: DivisionDomainState, currentInput: String): DivisionUiState {
+        fun mapToUiState(state: DivisionDomainState, currentInput: String, previewAll: Boolean = false): DivisionUiState {
             if (state.pattern == null) {
-                // DivisionUiState의 모든 필드를 기본값으로 채운 초기값 반환
                 return DivisionUiState()
             }
-            return DivisionUiStateBuilderImpl(state, currentInput).mapToUiState()
+            return DivisionUiStateBuilderImpl(state, currentInput, previewAll).mapToUiState()
         }
     }
 
     private class DivisionUiStateBuilderImpl(
         val state: DivisionDomainState,
-        val currentInput: String
+        val currentInput: String,
+        val previewAll: Boolean
     ){
         private val pattern = state.pattern ?: error("pattern not set!")
         private val layouts = DivisionPatternUiLayoutRegistry.getStepLayouts(pattern)
@@ -38,20 +38,18 @@ class DivisionUiStateBuilder private constructor() {
         )
 
         private val accumulatedCells: Map<CellName, InputCell> by lazy {
-            // 현재 단계까지 등장한 모든 셀 config 누적
             val result = mutableMapOf<CellName, InputCell>()
             val inputIdxMap = mutableMapOf<CellName, Int>()
             var currInputIdx = 0
             for (i in 0..stepIdx) {
                 val layout = layouts.getOrNull(i) ?: continue
-                println("🔵 accumulatedCells ▶️ step[$i] phase=${layout.phase} inputIndices=${layout.inputIndices}")
+//                println("🔵 accumulatedCells ▶️ step[$i] phase=${layout.phase} inputIndices=${layout.inputIndices}")
 
-                layout.inputIndices?.forEach { (cellName, idx) ->
+                layout.inputIndices?.forEach { (cellName, _) ->
                     // 최초 기록만 유지(덮어쓰지 않음)
                     if (inputIdxMap[cellName] == null) {
                         inputIdxMap[cellName] = currInputIdx
                         currInputIdx += if (cellName == CellName.Multiply1Tens || cellName == CellName.Multiply1Ones) 1 else 1
-
                     }
                 }
 
@@ -81,19 +79,23 @@ class DivisionUiStateBuilder private constructor() {
 
         private fun makeCell(cellName: CellName): InputCell {
             val cell = accumulatedCells[cellName] ?: InputCell(cellName = CellName.None)
+
+            if (previewAll && cell.cellName != CellName.None) {
+                return cell.copy(value = "?")
+            }
+
             val phase = state.phases.getOrNull(state.currentPhaseIndex) ?: DivisionPhase.Complete
 
             val inputIdx = cell.inputIdx
-            // 입력값 바인딩: inputIdx가 유효하고, 입력값이 있을 때
             val valueFromInput = if (inputIdx != null && inputIdx >= 0) state.inputs.getOrNull(inputIdx) else null
-//            println("🟡 makeCell ▶️ cell=$cellName idx=${cell.inputIdx} valueFromInput=$valueFromInput editable=${cell.editable} currentInput=$currentInput phaseIdx=$stepIdx")
-            println("✏️ cellName=$cellName cell=$cell valueFromInput=$valueFromInput currentInput=$currentInput editable=${cell.editable} valueResult=$cell.value")
-
-//            println("cell=$cellName idx=${cell.inputIdx} cell=$cell editable=${cell.editable} input=${state.inputs.getOrNull(cell.inputIdx)} currentInput=$currentInput phaseIdx=$stepIdx")
+//            println("✏️ cellName=$cellName cell=$cell valueFromInput=$valueFromInput currentInput=$currentInput editable=${cell.editable} valueResult=$cell.value")
 
             val value = when (cellName) {
 
-                CellName.DivisorTens -> cell.value ?: state.divisor.toString().padStart(2, '0')[0].toString()
+                CellName.DivisorTens -> when {
+                    state.divisor < 10 -> ""
+                    else -> cell.value ?: state.divisor.toString().padStart(2, '0')[0].toString()
+                }
                 CellName.DivisorOnes -> cell.value ?: state.divisor.toString().padStart(2, '0')[1].toString()
                 CellName.DividendTens -> cell.value ?: state.dividend.toString().padStart(2, '0')[0].toString()
                 CellName.DividendOnes -> cell.value ?: state.dividend.toString().padStart(2, '0')[1].toString()
@@ -110,6 +112,8 @@ class DivisionUiStateBuilder private constructor() {
                         currentInput.getOrNull(1)?.toString() ?: "?"
                     phase == DivisionPhase.InputMultiply1OnesWithCarry && cell.editable ->
                         currentInput.getOrNull(1)?.toString() ?: "?"
+                    phase == DivisionPhase.InputMultiply1Ones && cell.editable ->
+                        currentInput.ifEmpty { valueFromInput ?: "?" }
                     else -> valueFromInput ?: ""
                 }
 
@@ -133,7 +137,6 @@ class DivisionUiStateBuilder private constructor() {
                     else -> valueFromInput ?: ""
                 }
 
-                // 나머지 셀
                 else -> when {
                     cell.value == "" -> ""
                     cell.value != null -> cell.value
@@ -149,40 +152,68 @@ class DivisionUiStateBuilder private constructor() {
         }
 
         fun mapToUiState(): DivisionUiState {
-            return DivisionUiState(
-                divisorTens = makeCell(CellName.DivisorTens),
-                divisorOnes = makeCell(CellName.DivisorOnes),
+            if (previewAll) {
+                return DivisionUiState(
+                    divisorTens = InputCell(cellName = CellName.DivisorTens, value = "?"),
+                    divisorOnes = InputCell(cellName = CellName.DivisorOnes, value = "?"),
+                    dividendTens = InputCell(cellName = CellName.DividendTens, value = "?"),
+                    dividendOnes = InputCell(cellName = CellName.DividendOnes, value = "?"),
+                    quotientTens = InputCell(cellName = CellName.QuotientTens, value = "?"),
+                    quotientOnes = InputCell(cellName = CellName.QuotientOnes, value = "?"),
+                    multiply1Tens = InputCell(cellName = CellName.Multiply1Tens, value = "?"),
+                    multiply1Ones = InputCell(cellName = CellName.Multiply1Ones, value = "?"),
+                    subtract1Tens = InputCell(cellName = CellName.Subtract1Tens, value = "?"),
+                    subtract1Ones = InputCell(cellName = CellName.Subtract1Ones, value = "?"),
+                    multiply2Tens = InputCell(cellName = CellName.Multiply2Tens, value = "?"),
+                    multiply2Ones = InputCell(cellName = CellName.Multiply2Ones, value = "?"),
+                    subtract2Tens = InputCell(cellName = CellName.Subtract2Tens, value = "?"),
+                    subtract2Ones = InputCell(cellName = CellName.Subtract2Ones, value = "?"),
+                    borrowDividendTens = InputCell(cellName = CellName.BorrowDividendTens, value = "?"),
+                    borrowSubtract1Tens = InputCell(cellName = CellName.BorrowSubtract1Tens, value = "?"),
+                    borrowed10DividendOnes = InputCell(cellName = CellName.Borrowed10DividendOnes, value = "?"),
+                    borrowed10Subtract1Ones = InputCell(cellName = CellName.Borrowed10Subtract1Ones, value = "?"),
+                    carryDivisorTens = InputCell(cellName = CellName.CarryDivisorTens, value = "?"),
+                    stage = 0,
+                    feedback = null,
+                    subtractLines = SubtractLines(showSubtract1 = false, showSubtract2 = false)
+                )
+            } else {
+                return DivisionUiState(
+                    divisorTens = makeCell(CellName.DivisorTens),
+                    divisorOnes = makeCell(CellName.DivisorOnes),
 
-                dividendTens = makeCell(CellName.DividendTens),
-                dividendOnes = makeCell(CellName.DividendOnes),
+                    dividendTens = makeCell(CellName.DividendTens),
+                    dividendOnes = makeCell(CellName.DividendOnes),
 
-                quotientTens = makeCell(CellName.QuotientTens),
-                quotientOnes = makeCell(CellName.QuotientOnes),
+                    quotientTens = makeCell(CellName.QuotientTens),
+                    quotientOnes = makeCell(CellName.QuotientOnes),
 
-                multiply1Tens = makeCell(CellName.Multiply1Tens),
-                multiply1Ones = makeCell(CellName.Multiply1Ones),
+                    multiply1Tens = makeCell(CellName.Multiply1Tens),
+                    multiply1Ones = makeCell(CellName.Multiply1Ones),
 
-                subtract1Tens = makeCell(CellName.Subtract1Tens),
-                subtract1Ones = makeCell(CellName.Subtract1Ones),
+                    subtract1Tens = makeCell(CellName.Subtract1Tens),
+                    subtract1Ones = makeCell(CellName.Subtract1Ones),
 
-                multiply2Tens = makeCell(CellName.Multiply2Tens),
-                multiply2Ones = makeCell(CellName.Multiply2Ones),
+                    multiply2Tens = makeCell(CellName.Multiply2Tens),
+                    multiply2Ones = makeCell(CellName.Multiply2Ones),
 
-                subtract2Ones = makeCell(CellName.Subtract2Ones),
+                    subtract2Ones = makeCell(CellName.Subtract2Ones),
 
-                borrowDividendTens = makeCell(CellName.BorrowDividendTens),
-                borrowSubtract1Tens = makeCell(CellName.BorrowSubtract1Tens),
+                    borrowDividendTens = makeCell(CellName.BorrowDividendTens),
+                    borrowSubtract1Tens = makeCell(CellName.BorrowSubtract1Tens),
 
-                borrowed10DividendOnes = makeCell(CellName.Borrowed10DividendOnes),
-                borrowed10Subtract1Ones = makeCell(CellName.Borrowed10Subtract1Ones),
+                    borrowed10DividendOnes = makeCell(CellName.Borrowed10DividendOnes),
+                    borrowed10Subtract1Ones = makeCell(CellName.Borrowed10Subtract1Ones),
 
-                carryDivisorTens = makeCell(CellName.CarryDivisorTens),
+                    carryDivisorTens = makeCell(CellName.CarryDivisorTens),
 
-                stage = state.currentPhaseIndex,
-                feedback = state.feedback ?: layouts.find { it.phase == state.phases.getOrNull(state.currentPhaseIndex) }?.feedback,
-                subtractLines = getSubtractionLinesFromPhaseIndex(state.phases, state.currentPhaseIndex)
-            )
+                    stage = state.currentPhaseIndex,
+                    feedback = state.feedback ?: layouts.find { it.phase == state.phases.getOrNull(state.currentPhaseIndex) }?.feedback,
+                    subtractLines = getSubtractionLinesFromPhaseIndex(state.phases, state.currentPhaseIndex)
+                )
+            }
         }
+
     }
 }
 
@@ -190,7 +221,6 @@ fun getSubtractionLinesFromPhaseIndex(
     phases: List<DivisionPhase>,
     currentPhaseIndex: Int
 ): SubtractLines {
-    // ✅ Subtract1 줄의 시작 후보
     val subtract1StartIndex = listOf(
         DivisionPhase.InputSubtract1Tens,
         DivisionPhase.InputBorrowFromDividendTens,
@@ -199,7 +229,6 @@ fun getSubtractionLinesFromPhaseIndex(
         .filter { it >= 0 }
         .minOrNull() ?: Int.MAX_VALUE
 
-    // ✅ Subtract2 줄의 시작 후보
     val subtract2StartIndex = listOf(
         DivisionPhase.InputBorrowFromSubtract1Tens,
         DivisionPhase.InputSubtract2Ones

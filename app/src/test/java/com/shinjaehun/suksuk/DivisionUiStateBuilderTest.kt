@@ -10,11 +10,11 @@ import org.junit.Test
 class DivisionUiStateBuilderTest {
 
     @Test
-    fun `mapToUiState maps domain state to correct ui state for 46 div 3 scenario`() {
+    fun testTwoByOne_46div3_mapsDomainStateToUiState() {
         val domainState = DivisionDomainState(
             dividend = 46,
             divisor = 3,
-            currentPhaseIndex = 6, // 마지막 단계까지 완료한 상태
+            currentPhaseIndex = 6,
             phases = listOf(
                 DivisionPhase.InputQuotientTens,
                 DivisionPhase.InputMultiply1TensAndMultiply1Ones,
@@ -30,26 +30,20 @@ class DivisionUiStateBuilderTest {
             pattern = DivisionPattern.TwoByOne_TensQuotient_NoBorrow_2DigitMul
         )
 
-        // currentInput은 이 단계에서는 보통 공백이거나, 다음 입력 직전의 값 (여기서는 "")
         val uiState = DivisionUiStateBuilder.mapToUiState(domainState, "")
 
-        // 단계별 값이 올바르게 매핑되어 있는지 assert
-        assertEquals("1", uiState.quotientTens.value)          // 1단계
-        assertEquals("3", uiState.multiply1Tens.value)         // 2단계 (multiply1의 십의자리)
-        assertEquals("1", uiState.subtract1Tens.value)         // 3단계
-        assertEquals("6", uiState.dividendOnes.value)          // 4단계 (bring down)
-        assertEquals("5", uiState.quotientOnes.value)          // 5단계
-        assertEquals("1", uiState.subtract2Ones.value)         // 마지막 단계(16-15)
-        // multiply2Total은 "15"가 각각 tens/ones로 분할되어 들어감 (구현에 따라)
-        assertEquals("1", uiState.multiply2Tens.value)         // "15"의 십의자리
-        assertEquals("5", uiState.multiply2Ones.value)         // "15"의 일의자리
-
-        // 완료 단계에서는 feedback이 있을 수 있음 (필요시 추가 assert)
-//         assertEquals("정답입니다!", uiState.feedback)
+        assertEquals("1", uiState.quotientTens.value)
+        assertEquals("3", uiState.multiply1Tens.value)
+        assertEquals("1", uiState.subtract1Tens.value)
+        assertEquals("6", uiState.dividendOnes.value)
+        assertEquals("5", uiState.quotientOnes.value)
+        assertEquals("1", uiState.subtract2Ones.value)
+        assertEquals("1", uiState.multiply2Tens.value)
+        assertEquals("5", uiState.multiply2Ones.value)
     }
 
     @Test
-    fun `mapToUiState maps domain state to correct ui state for 71 div 6 scenario`() {
+    fun testTwoByOne_71div6_mapsDomainStateToUiState() {
         val domainState = DivisionDomainState(
             dividend = 71,
             divisor = 6,
@@ -78,11 +72,10 @@ class DivisionUiStateBuilderTest {
         assertEquals("1", uiState.quotientOnes.value)
         assertEquals("6", uiState.multiply2Ones.value)
         assertEquals("5", uiState.subtract2Ones.value)
-        // assertEquals("정답입니다!", uiState.feedback)
     }
 
     @Test
-    fun `mapToUiState maps domain state to correct ui state for 45 div 4 scenario`() {
+    fun testTwoByOne_45div4_mapsDomainStateToUiState() {
         val domainState = DivisionDomainState(
             dividend = 45,
             divisor = 4,
@@ -111,11 +104,10 @@ class DivisionUiStateBuilderTest {
         assertEquals("1", uiState.quotientOnes.value)
         assertEquals("4", uiState.multiply2Ones.value)
         assertEquals("1", uiState.subtract2Ones.value)
-        // assertEquals("정답입니다!", uiState.feedback)
     }
 
     @Test
-    fun `mapToUiState maps domain state to correct ui state for 50 div 3 scenario`() {
+    fun testTwoByOne_50div3_mapsDomainStateToUiState() {
         val domainState = DivisionDomainState(
             dividend = 50,
             divisor = 3,
@@ -131,7 +123,7 @@ class DivisionUiStateBuilderTest {
                 DivisionPhase.InputSubtract2Ones,
                 DivisionPhase.Complete
             ),
-            inputs = listOf("1", "3", "2", "0", "6", "1", "8", "1", "2"), // "18"이 분리되어 들어감
+            inputs = listOf("1", "3", "2", "0", "6", "1", "8", "1", "2"),
             feedback = null,
             pattern = DivisionPattern.TwoByOne_TensQuotient_Borrow_2DigitMul
         )
@@ -143,14 +135,13 @@ class DivisionUiStateBuilderTest {
         assertEquals("2", uiState.subtract1Tens.value)
         assertEquals("0", uiState.dividendOnes.value)
         assertEquals("6", uiState.quotientOnes.value)
-        assertEquals("1", uiState.multiply2Tens.value)   // 18의 십의자리
-        assertEquals("8", uiState.multiply2Ones.value)   // 18의 일의자리
+        assertEquals("1", uiState.multiply2Tens.value)
+        assertEquals("8", uiState.multiply2Ones.value)
         assertEquals("2", uiState.subtract2Ones.value)
-        // assertEquals("정답입니다!", uiState.feedback)
     }
 
     @Test
-    fun `mapToUiState maps domain state to correct ui state for 24 div 7 scenario`() {
+    fun testTwoByOne_24div7_mapsDomainStateToUiState() {
         val domainState = DivisionDomainState(
             dividend = 24,
             divisor = 7,
@@ -169,14 +160,13 @@ class DivisionUiStateBuilderTest {
         val uiState = DivisionUiStateBuilder.mapToUiState(domainState, "")
 
         assertEquals("3", uiState.quotientOnes.value)
-        assertEquals("2", uiState.multiply1Tens.value) // 만약 multiply1이 두 자리라면...
-        assertEquals("1", uiState.multiply1Ones.value) // ...구현에 따라 분리할 수도 있음
+        assertEquals("2", uiState.multiply1Tens.value)
+        assertEquals("1", uiState.multiply1Ones.value)
         assertEquals("3", uiState.subtract1Ones.value)
-        // assertEquals("정답입니다!", uiState.feedback)
     }
 
     @Test
-    fun `mapToUiState maps domain state to correct ui state for 62 div 7 scenario`() {
+    fun testTwoByOne_62div7_mapsDomainStateToUiState() {
         val domainState = DivisionDomainState(
             dividend = 62,
             divisor = 7,
@@ -196,19 +186,18 @@ class DivisionUiStateBuilderTest {
         val uiState = DivisionUiStateBuilder.mapToUiState(domainState, "")
 
         assertEquals("8", uiState.quotientOnes.value)
-        assertEquals("5", uiState.multiply1Tens.value) // (56의 십의자리)
-        assertEquals("6", uiState.multiply1Ones.value) // (56의 일의자리)
-        assertEquals("5", uiState.borrowDividendTens.value) // borrow 값
+        assertEquals("5", uiState.multiply1Tens.value)
+        assertEquals("6", uiState.multiply1Ones.value)
+        assertEquals("5", uiState.borrowDividendTens.value)
         assertEquals("6", uiState.subtract1Ones.value)
-        // assertEquals("정답입니다!", uiState.feedback)
     }
 
     @Test
-    fun `mapToUiState maps domain state to correct ui state for 96 div 12 scenario`() {
+    fun testTwoByTwo_96div12_mapsDomainStateToUiState() {
         val domainState = DivisionDomainState(
             dividend = 96,
             divisor = 12,
-            currentPhaseIndex = 3, // 몫, 곱셈, 뺄셈 완료
+            currentPhaseIndex = 3,
             phases = listOf(
                 DivisionPhase.InputQuotientOnes,
                 DivisionPhase.InputMultiply1OnesWithCarry,
@@ -228,11 +217,10 @@ class DivisionUiStateBuilderTest {
         assertEquals("6", uiState.multiply1Ones.value)
         assertEquals("9", uiState.multiply1Tens.value)
         assertEquals("0", uiState.subtract1Ones.value)
-        // assertEquals("정답입니다!", uiState.feedback)
     }
 
     @Test
-    fun `mapToUiState maps domain state to correct ui state for 81 div 12 scenario`() {
+    fun testTwoByTwo_81div12_mapsDomainStateToUiState() {
         val domainState = DivisionDomainState(
             dividend = 81,
             divisor = 12,
@@ -258,20 +246,19 @@ class DivisionUiStateBuilderTest {
         assertEquals("7", uiState.multiply1Tens.value)
         assertEquals("1", uiState.borrowDividendTens.value)
         assertEquals("9", uiState.subtract1Ones.value)
-        // assertEquals("정답입니다!", uiState.feedback)
     }
 
     @Test
-    fun `mapToUiState maps domain state to correct ui state for 68 div 34 scenario`() {
+    fun testTwoByTwo_68div34_mapsDomainStateToUiState() {
         val domainState = DivisionDomainState(
             dividend = 68,
             divisor = 34,
-            currentPhaseIndex = 3, // 뺄셈까지 완료 (0:몫, 1:곱셈, 2:뺄셈)
+            currentPhaseIndex = 3,
             phases = listOf(
-                DivisionPhase.InputQuotient,                          // "2"
+                DivisionPhase.InputQuotient,
                 DivisionPhase.InputMultiply1Ones,
                 DivisionPhase.InputMultiply1Tens,
-                DivisionPhase.InputSubtract1Ones,                   // "0"
+                DivisionPhase.InputSubtract1Ones,
                 DivisionPhase.Complete
             ),
             inputs = listOf("2", "8", "6", "0"),
@@ -285,24 +272,23 @@ class DivisionUiStateBuilderTest {
         assertEquals("8", uiState.multiply1Ones.value)
         assertEquals("6", uiState.multiply1Tens.value)
         assertEquals("0", uiState.subtract1Ones.value)
-        // assertEquals("정답입니다!", uiState.feedback)
     }
 
     @Test
-    fun `mapToUiState maps domain state to correct ui state for 50 div 22 scenario`() {
+    fun testTwoByTwo_50div22_mapsDomainStateToUiState() {
         val domainState = DivisionDomainState(
             dividend = 50,
             divisor = 22,
-            currentPhaseIndex = 4, // 빌림까지 완료 (0:몫, 1:곱셈, 2:빌림, 3:뺄셈)
+            currentPhaseIndex = 4,
             phases = listOf(
-                DivisionPhase.InputQuotient,                          // "2"
+                DivisionPhase.InputQuotient,
                 DivisionPhase.InputMultiply1Ones,
                 DivisionPhase.InputMultiply1Tens,
                 DivisionPhase.InputBorrowFromDividendTens,
                 DivisionPhase.InputSubtract1Ones,
                 DivisionPhase.Complete
             ),
-            inputs = listOf("2", "4", "4", "4", "6"), // 몫, 곱셈 tens, 곱셈 ones, 빌림, 뺄셈
+            inputs = listOf("2", "4", "4", "4", "6"),
             feedback = null,
             pattern = DivisionPattern.TwoByTwo_NoCarry_Borrow_1DigitRem
         )
@@ -316,5 +302,124 @@ class DivisionUiStateBuilderTest {
         assertEquals("6", uiState.subtract1Ones.value)
         // assertEquals("정답입니다!", uiState.feedback)
     }
+
+    @Test
+    fun testTwoByTwo_57div22_mapsDomainStateToUiState_2DigitRemain() {
+        val domainState = DivisionDomainState(
+            dividend = 57,
+            divisor = 22,
+            currentPhaseIndex = 5,
+            phases = listOf(
+                DivisionPhase.InputQuotient,
+                DivisionPhase.InputMultiply1Ones,
+                DivisionPhase.InputMultiply1Tens,
+                DivisionPhase.InputSubtract1Ones,
+                DivisionPhase.InputSubtract1Tens,
+                DivisionPhase.Complete
+            ),
+            inputs = listOf("2", "4", "4", "3", "1"),
+            feedback = null,
+            pattern = DivisionPattern.TwoByTwo_NoCarry_NoBorrow_2DigitRem
+        )
+
+        val uiState = DivisionUiStateBuilder.mapToUiState(domainState, "")
+
+        assertEquals("2", uiState.quotientOnes.value)
+        assertEquals("4", uiState.multiply1Ones.value)
+        assertEquals("4", uiState.multiply1Tens.value)
+        assertEquals("3", uiState.subtract1Ones.value)
+        assertEquals("1", uiState.subtract1Tens.value)
+    }
+
+    @Test
+    fun testTwoByTwo_50div13_mapsDomainStateToUiState_2DigitRemain() {
+        val domainState = DivisionDomainState(
+            dividend = 50,
+            divisor = 13,
+            currentPhaseIndex = 6,
+            phases = listOf(
+                DivisionPhase.InputQuotient,
+                DivisionPhase.InputMultiply1Ones,
+                DivisionPhase.InputMultiply1Tens,
+                DivisionPhase.InputBorrowFromDividendTens,
+                DivisionPhase.InputSubtract1Ones,
+                DivisionPhase.InputSubtract1Tens,
+                DivisionPhase.Complete
+            ),
+            inputs = listOf("3", "9", "3", "4", "1", "1"),
+            feedback = null,
+            pattern = DivisionPattern.TwoByTwo_NoCarry_Borrow_2DigitRem
+        )
+
+        val uiState = DivisionUiStateBuilder.mapToUiState(domainState, "")
+
+        assertEquals("3", uiState.quotientOnes.value)
+        assertEquals("9", uiState.multiply1Ones.value)
+        assertEquals("3", uiState.multiply1Tens.value)
+        assertEquals("4", uiState.borrowDividendTens.value)
+        assertEquals("1", uiState.subtract1Ones.value)
+        assertEquals("1", uiState.subtract1Tens.value)
+    }
+
+    @Test
+    fun testTwoByTwo_95div28_mapsDomainStateToUiState() {
+        val domainState = DivisionDomainState(
+            dividend = 95,
+            divisor = 28,
+            currentPhaseIndex = 5,
+            phases = listOf(
+                DivisionPhase.InputQuotient,
+                DivisionPhase.InputMultiply1OnesWithCarry,
+                DivisionPhase.InputMultiply1Tens,
+                DivisionPhase.InputSubtract1Ones,
+                DivisionPhase.InputSubtract1Tens,
+                DivisionPhase.Complete
+            ),
+            inputs = listOf("3", "2", "4", "8", "1", "1"),
+            feedback = null,
+            pattern = DivisionPattern.TwoByTwo_Carry_NoBorrow_2DigitRem
+        )
+
+        val uiState = DivisionUiStateBuilder.mapToUiState(domainState, "")
+
+        assertEquals("3", uiState.quotientOnes.value)
+        assertEquals("2", uiState.carryDivisorTens.value)
+        assertEquals("4", uiState.multiply1Ones.value)
+        assertEquals("8", uiState.multiply1Tens.value)
+        assertEquals("1", uiState.subtract1Ones.value)
+        assertEquals("1", uiState.subtract1Tens.value)
+    }
+
+    @Test
+    fun testTwoByTwo_80div17_mapsDomainStateToUiState() {
+        val domainState = DivisionDomainState(
+            dividend = 80,
+            divisor = 17,
+            currentPhaseIndex = 6,
+            phases = listOf(
+                DivisionPhase.InputQuotient,
+                DivisionPhase.InputMultiply1OnesWithCarry,
+                DivisionPhase.InputMultiply1Tens,
+                DivisionPhase.InputBorrowFromDividendTens,
+                DivisionPhase.InputSubtract1Ones,
+                DivisionPhase.InputSubtract1Tens,
+                DivisionPhase.Complete
+            ),
+            inputs = listOf("4", "2", "8", "6", "7", "2", "1"),
+            feedback = null,
+            pattern = DivisionPattern.TwoByTwo_Carry_Borrow_2DigitRem
+        )
+
+        val uiState = DivisionUiStateBuilder.mapToUiState(domainState, "")
+
+        assertEquals("4", uiState.quotientOnes.value)
+        assertEquals("2", uiState.carryDivisorTens.value)
+        assertEquals("8", uiState.multiply1Ones.value)
+        assertEquals("6", uiState.multiply1Tens.value)
+        assertEquals("7", uiState.borrowDividendTens.value)
+        assertEquals("2", uiState.subtract1Ones.value)
+        assertEquals("1", uiState.subtract1Tens.value)
+    }
+
 
 }

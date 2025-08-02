@@ -23,7 +23,6 @@ class PhaseEvaluatorTest {
 
     @Test
     fun isCorrect_TwoByOne_TensQuotientBorrow2DigitMul() {
-        // 예: 50 ÷ 3 (몫 1, 곱 3, 뺄셈 2, 가져내리기 0, 일의자리몫 6, 곱 18, borrow(1), 뺄셈 2)
         assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotientTens, "1", 50, 3))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1Tens, "3", 50, 3))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract1Tens, "2", 50, 3))
@@ -36,7 +35,6 @@ class PhaseEvaluatorTest {
 
     @Test
     fun isCorrect_TwoByOne_TensQuotientNoBorrow1DigitMul() {
-        // 예: 45 ÷ 4 (몫 1, 곱 4, 뺄셈 0, 가져내리기 5, 일의자리몫 1, 곱 4, 뺄셈 1)
         assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotientTens, "1", 45, 4))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1Tens, "4", 45, 4))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract1Tens, "0", 45, 4))
@@ -48,7 +46,6 @@ class PhaseEvaluatorTest {
 
     @Test
     fun isCorrect_TwoByOne_TensQuotientSkipBorrow1DigitMul() {
-        // 예: 71 ÷ 6 (몫 1, 곱 6, 뺄셈 1, 가져내리기 1, 일의자리몫 1, 곱 6, 뺄셈 5)
         assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotientTens, "1", 71, 6))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1Tens, "6", 71, 6))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract1Tens, "1", 71, 6))
@@ -60,7 +57,6 @@ class PhaseEvaluatorTest {
 
     @Test
     fun isCorrect_TwoByOne_OnesQuotientNoBorrow2DigitMul() {
-        // 예: 24 ÷ 7 (몫 3, 곱 21, 뺄셈 3)
         assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotient, "3", 24, 7))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1TensAndMultiply1Ones, "21", 24, 7))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract1Ones, "3", 24, 7))
@@ -68,7 +64,6 @@ class PhaseEvaluatorTest {
 
     @Test
     fun isCorrect_TwoByOne_OnesQuotientBorrow2DigitMul() {
-        // 예: 62 ÷ 7 (몫 8, 곱 56, borrow(5), 뺄셈 6)
         assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotient, "8", 62, 7))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1TensAndMultiply1Ones, "56", 62, 7))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputBorrowFromDividendTens, "5", 62, 7))
@@ -83,6 +78,16 @@ class PhaseEvaluatorTest {
         assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract1Ones, "0", 68, 34))
     }
 
+
+    @Test
+    fun isCorrect_TwoByTwo_NoCarryNoBorrow2DigitRem() {
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotientOnes, "2", 57, 22))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1Ones, "4", 57, 22))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1Tens, "4", 57, 22))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract1Ones, "3", 57, 22))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract1Tens, "1", 57, 22))
+    }
+
     @Test
     fun isCorrect_TwoByTwo_NoCarryBorrow1DigitRem() {
         assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotientOnes, "2", 50, 22))
@@ -93,22 +98,49 @@ class PhaseEvaluatorTest {
     }
 
     @Test
+    fun isCorrect_TwoByTwo_NoCarryBorrow2DigitRem() {
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotientOnes, "3", 50, 13))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1Ones, "9", 50, 13))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1Tens, "3", 50, 13))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputBorrowFromDividendTens, "4", 50,13))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract1Ones, "1", 50, 13))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract1Tens, "1", 50, 13))
+    }
+
+    @Test
     fun isCorrect_TwoByTwo_CarryNoBorrow1DigitRem() {
-        // 96 ÷ 12 = 8
         assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotientOnes, "8", 96, 12))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1OnesWithCarry, "16", 96, 12))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1Tens, "9", 96, 12))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract1Ones, "0", 96, 12))
     }
 
-        @Test
+    @Test
+    fun isCorrect_TwoByTwo_CarryNoBorrow2DigitRem() {
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotientOnes, "3", 95, 28))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1OnesWithCarry, "24", 95, 28))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1Tens, "8", 95, 28))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract1Ones, "1", 95, 28))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract1Tens, "1", 95, 28))
+    }
+
+    @Test
     fun isCorrect_TwoByTwo_CarryBorrow1DigitRem() {
-        // 81 ÷ 12 = 6, 6 × 12 = 72, 81 - 72 = 9 (Borrow 발생)
         assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotientOnes, "6", 81, 12))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1OnesWithCarry, "12", 81, 12))
-        assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1Tens, "7", 81, 12)) // 예시: 실제 구조에 따라
-        assertTrue(evaluator.isCorrect(DivisionPhase.InputBorrowFromDividendTens, "7", 81, 12)) // 예시: 실제 구조에 따라
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1Tens, "7", 81, 12))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputBorrowFromDividendTens, "7", 81, 12))
         assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract1Ones, "9", 81, 12))
+    }
+
+    @Test
+    fun isCorrect_TwoByTwo_CarryBorrow2DigitRem() {
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputQuotientOnes, "4", 80, 17))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1OnesWithCarry, "28", 80, 17))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputMultiply1Tens, "6", 80, 17))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputBorrowFromDividendTens, "7", 80, 17))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract1Ones, "2", 80, 17))
+        assertTrue(evaluator.isCorrect(DivisionPhase.InputSubtract1Tens, "1", 80, 17))
     }
 
     @Test

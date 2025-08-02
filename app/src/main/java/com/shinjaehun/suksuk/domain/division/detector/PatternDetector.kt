@@ -12,12 +12,20 @@ object PatternDetector {
             val hasCarry = multiply1 >= 10
             val product = quotient * divisor
             val hasBorrow = (dividend % 10) < (product % 10)
+
+            val remainder = dividend - product
+            val isTwoDigitRem = remainder >= 10
+
             return when {
-                !hasCarry && !hasBorrow -> DivisionPattern.TwoByTwo_NoCarry_NoBorrow_1DigitRem
-                !hasCarry && hasBorrow  -> DivisionPattern.TwoByTwo_NoCarry_Borrow_1DigitRem
-                hasCarry && !hasBorrow  -> DivisionPattern.TwoByTwo_Carry_NoBorrow_1DigitRem
-                hasCarry && hasBorrow   -> DivisionPattern.TwoByTwo_Carry_Borrow_1DigitRem
-                else -> DivisionPattern.TwoByTwo_NoCarry_NoBorrow_1DigitRem // fallback
+                !hasCarry && !hasBorrow && !isTwoDigitRem -> DivisionPattern.TwoByTwo_NoCarry_NoBorrow_1DigitRem
+                !hasCarry && !hasBorrow && isTwoDigitRem  -> DivisionPattern.TwoByTwo_NoCarry_NoBorrow_2DigitRem
+                !hasCarry && hasBorrow  && !isTwoDigitRem -> DivisionPattern.TwoByTwo_NoCarry_Borrow_1DigitRem
+                !hasCarry && hasBorrow  && isTwoDigitRem  -> DivisionPattern.TwoByTwo_NoCarry_Borrow_2DigitRem
+                hasCarry  && !hasBorrow && !isTwoDigitRem -> DivisionPattern.TwoByTwo_Carry_NoBorrow_1DigitRem
+                hasCarry  && !hasBorrow && isTwoDigitRem  -> DivisionPattern.TwoByTwo_Carry_NoBorrow_2DigitRem
+                hasCarry  && hasBorrow  && !isTwoDigitRem -> DivisionPattern.TwoByTwo_Carry_Borrow_1DigitRem
+                hasCarry  && hasBorrow  && isTwoDigitRem  -> DivisionPattern.TwoByTwo_Carry_Borrow_2DigitRem
+                else -> DivisionPattern.TwoByTwo_NoCarry_NoBorrow_1DigitRem
             }
         }
 

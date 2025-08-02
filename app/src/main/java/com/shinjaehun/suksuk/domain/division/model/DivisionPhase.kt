@@ -17,6 +17,7 @@ sealed interface DivisionPhase {
     object InputMultiply2Ones : DivisionPhase
     object InputMultiply2TensAndMultiply2Ones : DivisionPhase
     object InputSubtract2Ones : DivisionPhase
+    object InputSubtract2Tens : DivisionPhase
     object InputBorrowFromDividendTens : DivisionPhase ///////////////////////
     object InputBorrowFromSubtract1Tens : DivisionPhase
     object Complete : DivisionPhase

@@ -54,11 +54,14 @@ class PhaseEvaluator {
 
 
             DivisionPhase.InputSubtract1Tens -> {
-
-                inputValue == dividendTens - divisor * quotientTens
+                if (divisor < 10) {
+                    inputValue == dividendTens - divisor * quotientTens
+                } else {
+                    inputValue == remainder / 10
+                }
             }
             DivisionPhase.InputSubtract1Ones -> {
-                inputValue == remainder
+                inputValue == remainder % 10
             }
 //            DivisionPhase.InputSubtract1Result -> {
 //                inputValue == remainder
@@ -77,7 +80,6 @@ class PhaseEvaluator {
                 inputValue == divisor * quotientOnes % 10
             }
 
-
             DivisionPhase.InputMultiply2TensAndMultiply2Ones -> {
                 if (input.length != 2) return false
                 val tensInput = input[0].toString().toIntOrNull()
@@ -92,9 +94,11 @@ class PhaseEvaluator {
                 inputValue == (dividend - (divisor * quotientTens * 10)) / 10 - 1
             }
             DivisionPhase.InputSubtract2Ones -> {
-                inputValue == remainder
+                inputValue == remainder % 10
             }
-
+            DivisionPhase.InputSubtract2Tens -> {
+                inputValue == remainder / 10
+            }
             DivisionPhase.Complete -> false
         }
     }

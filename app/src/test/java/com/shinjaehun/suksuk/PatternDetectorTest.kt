@@ -53,17 +53,29 @@ class PatternDetectorTest {
             Triple(48, 24, DivisionPattern.TwoByTwo_NoCarry_NoBorrow_1DigitRem),
             Triple(49, 24, DivisionPattern.TwoByTwo_NoCarry_NoBorrow_1DigitRem),
 
+            Triple(57, 22, DivisionPattern.TwoByTwo_NoCarry_NoBorrow_2DigitRem),
+            Triple(79, 34, DivisionPattern.TwoByTwo_NoCarry_NoBorrow_2DigitRem),
+
             Triple(50, 22, DivisionPattern.TwoByTwo_NoCarry_Borrow_1DigitRem),
             Triple(30, 11, DivisionPattern.TwoByTwo_NoCarry_Borrow_1DigitRem),
             Triple(70, 31, DivisionPattern.TwoByTwo_NoCarry_Borrow_1DigitRem),
+
+            Triple(50, 13, DivisionPattern.TwoByTwo_NoCarry_Borrow_2DigitRem),
+            Triple(61, 24, DivisionPattern.TwoByTwo_NoCarry_Borrow_2DigitRem),
 
             Triple(75, 25, DivisionPattern.TwoByTwo_Carry_NoBorrow_1DigitRem),
             Triple(96, 12, DivisionPattern.TwoByTwo_Carry_NoBorrow_1DigitRem),
             Triple(72, 18, DivisionPattern.TwoByTwo_Carry_NoBorrow_1DigitRem),
 
-//            Triple(80, 28, DivisionPattern.TwoByTwo_Carry_Borrow),
+            Triple(95, 28, DivisionPattern.TwoByTwo_Carry_NoBorrow_2DigitRem),
+            Triple(88, 15, DivisionPattern.TwoByTwo_Carry_NoBorrow_2DigitRem),
+
             Triple(81, 12, DivisionPattern.TwoByTwo_Carry_Borrow_1DigitRem),
-            Triple(83, 13, DivisionPattern.TwoByTwo_Carry_Borrow_1DigitRem)
+            Triple(83, 13, DivisionPattern.TwoByTwo_Carry_Borrow_1DigitRem),
+
+            Triple(80, 17, DivisionPattern.TwoByTwo_Carry_Borrow_2DigitRem),
+            Triple(70, 18, DivisionPattern.TwoByTwo_Carry_Borrow_2DigitRem)
+
         )
         assertPatternCases(cases)
     }

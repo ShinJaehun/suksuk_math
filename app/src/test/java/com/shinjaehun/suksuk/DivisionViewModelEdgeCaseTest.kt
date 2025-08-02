@@ -39,9 +39,6 @@ class DivisionViewModelEdgeCaseTest {
         )
     }
 
-    /**
-     * 시나리오 기반 단일 테스트 도우미
-     */
     private fun assertDivisionScenario(
         dividend: Int,
         divisor: Int,
@@ -59,7 +56,7 @@ class DivisionViewModelEdgeCaseTest {
     }
 
     @Test
-    fun `빈 입력, 문자 입력, 0으로 나누기 등 비정상 입력 처리`() {
+    fun testTwoByOne_invalidInput_emptyAndStringAndDivideByZero() {
         // 빈 입력: submitInput("") 하면 피드백 없이 무시 (오답 메시지 반환을 원하면 정책에 맞게 변경)
         assertDivisionScenario(
             dividend = 46, divisor = 3,
@@ -73,6 +70,25 @@ class DivisionViewModelEdgeCaseTest {
         )
     }
 
+    @Test
+    fun testTwoByTwo_invalidInput_emptyAndStringAndDivideByZero() {
+        // 57 ÷ 22 = 2 ... 13
+        assertDivisionScenario(
+            dividend = 57, divisor = 22,
+            inputs = listOf("", "2", "x", "4", "4", "3", "1"),
+            expectedFeedback = listOf(
+                "다시 시도해 보세요", // "" (빈 입력)
+                null, // 2 (정답)
+                "다시 시도해 보세요", // "x" (문자)
+                null, // 4 (정답: 곱셈1의자리)
+                null, // 4 (정답: 곱셈10의자리)
+                null, // 3 (정답: 뺄셈1의자리)
+                "정답입니다!"  // 1 (정답: 뺄셈10의자리)
+            )
+        )
+    }
+
+
 //    @Test
 //    fun `0으로 나누기 시도시 예외 혹은 graceful 처리`() {
 //        // 0으로 나누는 것은 패턴 감지 단계에서 예외가 발생하거나, domainState.pattern이 null 처리돼야 함
@@ -81,8 +97,15 @@ class DivisionViewModelEdgeCaseTest {
 //        assertNull(viewModel.domainState.value.pattern)
 //    }
 
+
+//    @Test
+//    fun `두 자리 ÷ 두 자리 - 0으로 나누기 시도시 예외 혹은 graceful 처리`() {
+//        viewModel.startNewProblem(57, 0)
+//        assertNull(viewModel.domainState.value.pattern)
+//    }
+
     @Test
-    fun `연속 오답시 feedback이 계속 남아있는지`() {
+    fun testTwoByOne_feedbackRemainsAfterConsecutiveWrongAnswers() {
         // 오답 입력을 연속으로 두 번
         assertDivisionScenario(
             dividend = 46, divisor = 3,
@@ -96,7 +119,26 @@ class DivisionViewModelEdgeCaseTest {
     }
 
     @Test
-    fun `중간에 onClear 호출 시 상태가 유지되는지`() {
+    fun testTwoByTwo_feedbackRemainsAfterConsecutiveWrongAnswers() {
+        // 57 ÷ 22 = 2 ... 13
+        assertDivisionScenario(
+            dividend = 57, divisor = 22,
+            inputs = listOf("9", "0", "2", "4", "4", "3", "1"), // 2,4,4,3,1이 정답 흐름
+            expectedFeedback = listOf(
+                "다시 시도해 보세요",
+                "다시 시도해 보세요",
+                null, // 정답(몫)
+                null, // 정답(곱셈1의자리)
+                null, // 정답(곱셈10의자리)
+                null, // 정답(뺄셈1의자리)
+                "정답입니다!"  // 정답(뺄셈10의자리)
+            )
+        )
+    }
+
+
+    @Test
+    fun testTwoByOne_onClear_keepsFeedbackAndPhase() {
         viewModel.startNewProblem(46, 3)
         // 1단계: 정답("1") 입력
         viewModel.submitInput("1")
@@ -113,7 +155,21 @@ class DivisionViewModelEdgeCaseTest {
     }
 
     @Test
-    fun `문제 재시작 시 상태 완전 초기화`() {
+    fun testTwoByTwo_onClear_keepsFeedbackAndPhase() {
+        viewModel.startNewProblem(57, 22)
+        viewModel.submitInput("2")
+        assertNull(viewModel.domainState.value.feedback) // 1단계 정답
+        viewModel.submitInput("x")
+        assertEquals("다시 시도해 보세요", viewModel.domainState.value.feedback) // 오답
+        viewModel.onClear()
+        assertEquals("다시 시도해 보세요", viewModel.domainState.value.feedback) // onClear 후에도 오답 유지
+        viewModel.submitInput("4")
+        assertNull(viewModel.domainState.value.feedback) // 다시 정답 입력 시 초기화
+    }
+
+
+    @Test
+    fun testTwoByOne_restartProblem_resetsState() {
         viewModel.startNewProblem(46, 3)
         viewModel.submitInput("1")
         viewModel.submitInput("9")
@@ -125,7 +181,19 @@ class DivisionViewModelEdgeCaseTest {
     }
 
     @Test
-    fun `입력 길이 초과(2자리만 허용 phase에서 3자리 입력)`() {
+    fun testTwoByTwo_restartProblem_resetsState() {
+        viewModel.startNewProblem(57, 22)
+        viewModel.submitInput("2")
+        viewModel.submitInput("9")
+        assertEquals("다시 시도해 보세요", viewModel.domainState.value.feedback)
+        viewModel.startNewProblem(57, 22)
+        assertEquals(0, viewModel.domainState.value.currentPhaseIndex)
+        assertNull(viewModel.domainState.value.feedback)
+    }
+
+
+    @Test
+    fun testTwoByOne_inputTooLong_truncatesInput() {
         // "999" 등 긴 입력이 들어와도 앞에서 잘려야 함 (예: InputMultiply1Total phase)
         viewModel.startNewProblem(46, 3)
         // 첫 phase "1" (정상)
@@ -135,4 +203,15 @@ class DivisionViewModelEdgeCaseTest {
         viewModel.submitInput("999")
         assertEquals("다시 시도해 보세요", viewModel.domainState.value.feedback)
     }
+
+    @Test
+    fun testTwoByTwo_inputTooLong_truncatesInput() {
+        viewModel.startNewProblem(57, 22)
+        viewModel.submitInput("2")
+        assertNull(viewModel.domainState.value.feedback)
+        viewModel.submitInput("999") // 곱셈1의자리에서 "999"는 "9"로 처리(틀림)
+        assertEquals("다시 시도해 보세요", viewModel.domainState.value.feedback)
+    }
+
+
 }

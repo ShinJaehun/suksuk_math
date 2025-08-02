@@ -16,6 +16,7 @@ enum class CellName {
     Borrowed10Subtract1Ones,
     Multiply2Tens,
     Multiply2Ones,
+    Subtract2Tens,
     Subtract2Ones,
     BorrowDividendTens,
     BorrowSubtract1Tens,
