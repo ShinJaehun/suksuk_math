@@ -1,5 +1,7 @@
 package com.shinjaehun.suksuk.di
 
+import com.shinjaehun.suksuk.domain.division.DivisionPhaseSequenceProvider
+import com.shinjaehun.suksuk.domain.division.PhaseEvaluatorV2
 import com.shinjaehun.suksuk.domain.division.detector.PatternDetector
 import com.shinjaehun.suksuk.domain.division.evaluator.PhaseEvaluator
 import com.shinjaehun.suksuk.domain.division.factory.DivisionDomainStateFactory
@@ -27,6 +29,12 @@ object AppModule {
 
     @Provides
     fun provideUiLayoutRegistry(): DivisionPatternUiLayoutRegistry = DivisionPatternUiLayoutRegistry
+
+    @Provides
+    fun providePhaseEvaluatorV2(): PhaseEvaluatorV2 = PhaseEvaluatorV2()
+
+    @Provides
+    fun providePhaseSequenceProvider(): DivisionPhaseSequenceProvider = DivisionPhaseSequenceProvider()
 
     @Singleton
     @Provides

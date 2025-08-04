@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,18 +17,23 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shinjaehun.suksuk.R
+import com.shinjaehun.suksuk.domain.division.InputCellV2
 import com.shinjaehun.suksuk.domain.division.model.CrossOutColor
 import com.shinjaehun.suksuk.domain.division.model.Highlight
 import com.shinjaehun.suksuk.domain.division.model.InputCell
 
 @Composable
 fun NumberText(
-    cell: InputCell,
+    cell: InputCellV2,
     defaultColor: Color = Color.Black,
     fontSize: TextUnit = 40.sp,
     width: Dp = 42.dp,
     modifier: Modifier = Modifier
 ) {
+    LaunchedEffect(cell) {
+        println("🟠 [NumberText] ${cell.cellName} | value=${cell.value} | editable=${cell.editable} | highlight=${cell.highlight}")
+    }
+
     val textColor = when (cell.highlight) {
         Highlight.Editing -> Color.Red
         Highlight.Related -> Color(0xFF1976D2) // 파란색 (Material blue)
@@ -49,6 +55,7 @@ fun NumberText(
 //        LaunchedEffect(cell.value) {
 //            println("💬 [SemanticsTest] NumberText(${cell.cellName}) = '${cell.value}'")
 //        }
+
         if (cell.crossOutColor != CrossOutColor.None) {
             val painter = when(cell.crossOutColor){
                 CrossOutColor.Pending -> painterResource(R.drawable.ic_strikethrough_pending)

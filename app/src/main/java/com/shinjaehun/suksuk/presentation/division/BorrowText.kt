@@ -11,12 +11,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.shinjaehun.suksuk.domain.division.InputCellV2
 import com.shinjaehun.suksuk.domain.division.model.Highlight
 import com.shinjaehun.suksuk.domain.division.model.InputCell
 
 @Composable
 fun BorrowText(
-    cell: InputCell,
+    cell: InputCellV2,
     defaultColor: Color = Color.Black,
     fontSize: TextUnit = 20.sp,
     width: Dp = 42.dp,
