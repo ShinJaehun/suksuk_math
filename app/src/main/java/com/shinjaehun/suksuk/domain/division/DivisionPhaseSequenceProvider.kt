@@ -13,13 +13,17 @@ class DivisionPhaseSequenceProvider @Inject constructor() {
 
     fun makeTwoByTwoPhaseSequence(dividend: Int, divisor: Int): PhaseSequence {
         val quotient = dividend / divisor
-        val product = quotient * divisor
-        val onesMul = quotient * (divisor % 10)
+        val multiply1 = quotient * divisor
+        val multiply1DivisorOnes = quotient * (divisor % 10)
 
-        val needsCarry = onesMul >= 10
-        val needsBorrow = (dividend % 100) < (product % 100)
+        val needsCarry = multiply1DivisorOnes >= 10
+        val needsBorrow = (dividend % 10) < (multiply1 % 10)
+
+        val remainder = dividend - multiply1
+        val needsTensSubtraction = remainder >= 10
 
         val steps = mutableListOf<PhaseStep>()
+
 
         // [1] 몫 입력 단계
         steps += PhaseStep(
@@ -79,6 +83,17 @@ class DivisionPhaseSequenceProvider @Inject constructor() {
             presetValues = if (needsBorrow) mapOf(CellName.Borrowed10DividendOnes to "10") else emptyMap(),
             subtractLineTargets = setOf(CellName.Subtract1Ones)
         )
+
+        if(needsTensSubtraction) {
+            steps += PhaseStep(
+                phase = DivisionPhaseV2.InputSubtract,
+                editableCells = listOf(CellName.Subtract1Tens),
+                highlightCells = listOf(CellName.DividendTens, CellName.Multiply1Tens).let {
+                    if(needsBorrow) it + CellName.BorrowDividendTens else it
+                },
+                subtractLineTargets = setOf(CellName.Subtract1Tens)
+            )
+        }
 
         // [6] 완료 단계
         steps += PhaseStep(phase = DivisionPhaseV2.Complete)

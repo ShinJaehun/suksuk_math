@@ -50,9 +50,11 @@ class PhaseEvaluatorV2 {
                 else -> null
             }
             DivisionPhaseV2.InputSubtract -> when (cell) {
-                CellName.Subtract1Ones -> dividend - (quotient * divisor)
+                CellName.Subtract1Tens -> (dividend - (quotient * divisor)) / 10
+                CellName.Subtract1Ones -> (dividend - (quotient * divisor)) % 10
                 else -> null
             }
+
             DivisionPhaseV2.InputBringDown -> null // 구현 필요시 여기에 추가
             DivisionPhaseV2.Complete -> null // 입력 없음
         }

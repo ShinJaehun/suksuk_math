@@ -32,7 +32,8 @@ class DivisionViewModelV2 @Inject constructor(
     private lateinit var domainState: DivisionDomainStateV2
 
     init {
-        startNewProblem(68, 34)
+//        startNewProblem(68, 34) // TwoByTwo_NoCarry_NoBorrow_1DigitRem
+        startNewProblem(57, 22) //
     }
 
     fun startNewProblem(dividend: Int, divisor: Int) {
