@@ -63,7 +63,7 @@ class DivisionPhaseSequenceProvider @Inject constructor() {
                 editableCells = listOf(CellName.BorrowDividendTens),
                 highlightCells = listOf(CellName.DividendTens),
                 needsBorrow = true,
-                crossOutCells = listOf(CellName.DividendTens)
+                strikeThroughCells = listOf(CellName.DividendTens)
             )
         }
 
@@ -76,7 +76,7 @@ class DivisionPhaseSequenceProvider @Inject constructor() {
                 add(CellName.DividendOnes)
                 add(CellName.Multiply1Ones)
             },
-            staticValues = if (needsBorrow) mapOf(CellName.Borrowed10DividendOnes to "10") else emptyMap(),
+            presetValues = if (needsBorrow) mapOf(CellName.Borrowed10DividendOnes to "10") else emptyMap(),
             subtractLineTargets = setOf(CellName.Subtract1Ones)
         )
 

@@ -9,6 +9,6 @@ data class PhaseStep(
     val needsBorrow: Boolean = false,
     val needsCarry: Boolean = false,
     val subtractLineTargets: Set<CellName> = emptySet(),
-    val staticValues: Map<CellName, String> = emptyMap(),
-    val crossOutCells: List<CellName> = emptyList()
+    val presetValues: Map<CellName, String> = emptyMap(),
+    val strikeThroughCells: List<CellName> = emptyList()
 )

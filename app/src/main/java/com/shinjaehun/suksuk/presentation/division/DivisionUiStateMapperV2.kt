@@ -1,11 +1,11 @@
 package com.shinjaehun.suksuk.presentation.division
 
+import com.shinjaehun.suksuk.domain.division.CrossOutType
 import com.shinjaehun.suksuk.domain.division.DivisionDomainStateV2
 import com.shinjaehun.suksuk.domain.division.DivisionUiStateV2
 import com.shinjaehun.suksuk.domain.division.InputCellV2
 import com.shinjaehun.suksuk.domain.division.PhaseStep
 import com.shinjaehun.suksuk.domain.division.model.CellName
-import com.shinjaehun.suksuk.domain.division.model.CrossOutColor
 import com.shinjaehun.suksuk.domain.division.model.Highlight
 
 fun mapToUiStateV2(domain: DivisionDomainStateV2, currentInput: String): DivisionUiStateV2 {
@@ -15,6 +15,11 @@ fun mapToUiStateV2(domain: DivisionDomainStateV2, currentInput: String): Divisio
 
     println("🔵 [mapToUiStateV2] step=${step.phase}, editableCells=${step.editableCells}, currentInput='$currentInput', domain.inputs=${domain.inputs}")
 
+    val subtractLineCells = domain.phaseSequence.steps
+        .take(domain.currentStepIndex + 1)
+        .flatMap { it.subtractLineTargets }
+        .toSet()
+
     for (cellName in CellName.entries) {
         val isEditable = step.editableCells.contains(cellName)
         val highlight = when {
@@ -22,15 +27,19 @@ fun mapToUiStateV2(domain: DivisionDomainStateV2, currentInput: String): Divisio
             step.highlightCells.contains(cellName) -> Highlight.Related
             else -> Highlight.None
         }
-        val crossOut = if (step.crossOutCells.contains(cellName)) CrossOutColor.Pending else CrossOutColor.None
-        val staticValue = step.staticValues[cellName]
+//        val crossOut = if (step.strikeThroughCells.contains(cellName)) CrossOutColor.Pending else CrossOutColor.None
+        val crossOutType = if (step.strikeThroughCells.contains(cellName)) CrossOutType.Pending else CrossOutType.None
+        val drawSubtractLine = subtractLineCells.contains(cellName)
+
+
+        val presetValue = step.presetValues[cellName]
 
         val inputIdx = calculateInputIndexForCell(domain.phaseSequence.steps, currentStep, cellName)
 
         val value = when {
-            staticValue != null -> staticValue
+            presetValue != null -> presetValue
             inputIdx != null -> {
-                if (isEditable && currentStep == domain.currentStepIndex) {
+                if (isEditable && currentStep == domain.currentStepIndex && domain.inputs.getOrNull(inputIdx).isNullOrEmpty()) {
                     currentInput.getOrNull(step.editableCells.indexOf(cellName))?.toString() ?: "?"
                 } else {
                     domain.inputs.getOrNull(inputIdx)
@@ -44,19 +53,19 @@ fun mapToUiStateV2(domain: DivisionDomainStateV2, currentInput: String): Divisio
             value = value,
             editable = isEditable,
             highlight = highlight,
-            crossOutColor = crossOut
+            crossOutType = crossOutType,
+            drawSubtractLine = drawSubtractLine
         )
     }
 
-    val subtractLineCells = domain.phaseSequence.steps
-        .take(domain.currentStepIndex + 1)
-        .flatMap { it.subtractLineTargets }
-        .toSet()
+//    val subtractLineCells = domain.phaseSequence.steps
+//        .take(domain.currentStepIndex + 1)
+//        .flatMap { it.subtractLineTargets }
+//        .toSet()
 
     return DivisionUiStateV2(
         cells = cells,
         currentStep = currentStep,
-        subtractLineCells = subtractLineCells,
         feedback = domain.feedback
     )
 }

@@ -254,7 +254,8 @@ fun DivisionScreen(
 
 //            println("🔥 subtraction1-line should be shown? ${currentUiState.subtractLines.showSubtract1}")
 //            if(currentUiState.subtractLines.showSubtract1){
-            if (currentUiState.subtractLineCells.contains(CellName.Subtract1Ones)) {
+//            if (currentUiState.subtractLineCells.contains(CellName.Subtract1Ones)) {
+            if (currentUiState.cells[CellName.Subtract1Ones]?.drawSubtractLine == true) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_horizontal_line),
                     contentDescription = "Subtraction Line",
@@ -349,7 +350,8 @@ fun DivisionScreen(
             )
 
 //            if (currentUiState.subtractLines.showSubtract2){
-            if (currentUiState.subtractLineCells.contains(CellName.Subtract2Ones)) {
+//            if (currentUiState.subtractLineCells.contains(CellName.Subtract2Ones)) {
+            if (currentUiState.cells[CellName.Subtract2Ones]?.drawSubtractLine == true) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_horizontal_line),
                     contentDescription = "Subtraction Line",

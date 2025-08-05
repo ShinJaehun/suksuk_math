@@ -1,4 +1,4 @@
-package com.shinjaehun.suksuk
+package com.shinjaehun.suksuk.legacy
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test

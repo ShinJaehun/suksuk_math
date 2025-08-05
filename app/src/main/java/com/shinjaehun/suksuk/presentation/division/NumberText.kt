@@ -17,10 +17,10 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shinjaehun.suksuk.R
+import com.shinjaehun.suksuk.domain.division.CrossOutType
 import com.shinjaehun.suksuk.domain.division.InputCellV2
 import com.shinjaehun.suksuk.domain.division.model.CrossOutColor
 import com.shinjaehun.suksuk.domain.division.model.Highlight
-import com.shinjaehun.suksuk.domain.division.model.InputCell
 
 @Composable
 fun NumberText(
@@ -56,10 +56,27 @@ fun NumberText(
 //            println("💬 [SemanticsTest] NumberText(${cell.cellName}) = '${cell.value}'")
 //        }
 
-        if (cell.crossOutColor != CrossOutColor.None) {
-            val painter = when(cell.crossOutColor){
-                CrossOutColor.Pending -> painterResource(R.drawable.ic_strikethrough_pending)
-                CrossOutColor.Confirmed -> painterResource(R.drawable.ic_strikethrough_confirmed)
+//        if (cell.crossOutColor != CrossOutColor.None) {
+//            val painter = when(cell.crossOutColor){
+//                CrossOutColor.Pending -> painterResource(R.drawable.ic_strikethrough_pending)
+//                CrossOutColor.Confirmed -> painterResource(R.drawable.ic_strikethrough_confirmed)
+//                else -> null
+//            }
+//            painter?.let {
+//                Image(
+//                    painter = it,
+//                    contentDescription = "취소선",
+//                    modifier = Modifier
+//                        .matchParentSize()
+//                        .testTag("${cell.cellName}-crossed")
+//                )
+//            }
+//        }
+
+        if (cell.crossOutType != CrossOutType.None) {
+            val painter = when(cell.crossOutType){
+                CrossOutType.Pending -> painterResource(R.drawable.ic_strikethrough_pending)
+                CrossOutType.Confirmed -> painterResource(R.drawable.ic_strikethrough_confirmed)
                 else -> null
             }
             painter?.let {

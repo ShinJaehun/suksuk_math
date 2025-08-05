@@ -50,61 +50,51 @@ class DivisionViewModelV2 @Inject constructor(
     fun onDigitInput(digit: String) {
         println("🟡 [onDigitInput] 입력: $digit, 기존 currentInput='${_currentInput.value}'")
 
+//        if (domainState.feedback != null) {
+//            _currentInput.value = ""
+//            domainState = domainState.copy(feedback = null)
+//        }
+//
+//        _currentInput.value += digit
+//        emitUiState()
 
-        if (domainState.feedback != null) {
-            _currentInput.value = ""
-            domainState = domainState.copy(feedback = null)
-        }
-
-        _currentInput.value += digit
+        val step = domainState.phaseSequence.steps[domainState.currentStepIndex]
+        val maxLength = step.editableCells.size.coerceAtLeast(1)
+        _currentInput.value = (_currentInput.value + digit).takeLast(maxLength)
         emitUiState()
     }
 
     fun onEnter() {
         println("🟡 [onEnter] currentInput=${_currentInput.value}' | currentStep=${domainState.currentStepIndex}")
+//        submitInput(_currentInput.value)
+
+        if (_currentInput.value.isEmpty()) return
         submitInput(_currentInput.value)
+        _currentInput.value = ""
     }
 
     fun submitInput(input: String) {
         println("🧪 [submitInput] called at step=${domainState.currentStepIndex} phase=${domainState.phaseSequence.steps.getOrNull(domainState.currentStepIndex)?.phase}")
         println("🟣 currentStepIndex=${domainState.currentStepIndex}, totalSteps=${domainState.phaseSequence.steps.size}")
 
-        if (domainState.currentStepIndex >= domainState.phaseSequence.steps.size) {
-            println("⚠️ 이미 마지막 단계를 지나쳤습니다.")
-            return
-        }
-
         val step = domainState.phaseSequence.steps[domainState.currentStepIndex]
-
-        // ✅ 완료 단계는 입력 없이 통과 (정답 검증 X)
-        if (step.phase == DivisionPhaseV2.Complete) {
-            domainState = domainState.copy(
-                currentStepIndex = domainState.currentStepIndex + 1,
-                feedback = null
-            )
-            emitUiState()
-            return
-        }
-
-
-        val inputCount = step.editableCells.size
-
-        // 💡 입력 분해: editableCell이 1개이면 마지막 숫자만 사용
-        val actualInput: List<String> = if (inputCount == 1) {
-            listOf(input.lastOrNull()?.toString() ?: "")
+        val editableCount = step.editableCells.size
+        val actualInput: List<String> = if (editableCount > 1) {
+            // 입력값 개수 < editableCells 개수이면 앞에 "?" 등으로 채워넣을 수도 있음
+            // but, 항상 maxLength로 입력 받으니 그냥 split!
+            input.padStart(editableCount, '?').chunked(1).map { it } // "?"는 임의로, 보통 빈칸이면 처리 가능
         } else {
-            input.chunked(1)
+            listOf(input)
         }
 
-        if (actualInput.size < inputCount) {
+        if (actualInput.size < editableCount || actualInput.any { it == "?" }) {
             domainState = domainState.copy(feedback = "입력을 더 해주세요")
             emitUiState()
             return
         }
 
-
         val isCorrect = step.editableCells.withIndex().all { (idx, cellName) ->
-            val userInput = input.getOrNull(idx)?.toString() ?: ""
+            val userInput = actualInput.getOrNull(idx) ?: ""
             phaseEvaluator.isCorrect(
                 phase = step.phase,
                 cell = cellName,
@@ -122,6 +112,7 @@ class DivisionViewModelV2 @Inject constructor(
             return
         }
 
+        // 입력값 분해하여 각각의 셀에 저장
         val updatedInputs = domainState.inputs + actualInput
         val nextStep = domainState.currentStepIndex + 1
 
@@ -133,6 +124,75 @@ class DivisionViewModelV2 @Inject constructor(
         _currentInput.value = ""
         emitUiState()
     }
+
+//    fun submitInput(input: String) {
+//        println("🧪 [submitInput] called at step=${domainState.currentStepIndex} phase=${domainState.phaseSequence.steps.getOrNull(domainState.currentStepIndex)?.phase}")
+//        println("🟣 currentStepIndex=${domainState.currentStepIndex}, totalSteps=${domainState.phaseSequence.steps.size}")
+//
+//        if (domainState.currentStepIndex >= domainState.phaseSequence.steps.size) {
+//            println("⚠️ 이미 마지막 단계를 지나쳤습니다.")
+//            return
+//        }
+//
+//        val step = domainState.phaseSequence.steps[domainState.currentStepIndex]
+//
+//        // ✅ 완료 단계는 입력 없이 통과 (정답 검증 X)
+//        if (step.phase == DivisionPhaseV2.Complete) {
+//            domainState = domainState.copy(
+//                currentStepIndex = domainState.currentStepIndex + 1,
+//                feedback = null
+//            )
+//            emitUiState()
+//            return
+//        }
+//
+//
+//        val inputCount = step.editableCells.size
+//
+//        // 💡 입력 분해: editableCell이 1개이면 마지막 숫자만 사용
+//        val actualInput: List<String> = if (inputCount == 1) {
+//            listOf(input.lastOrNull()?.toString() ?: "")
+//        } else {
+//            input.chunked(1)
+//        }
+//
+//        if (actualInput.size < inputCount) {
+//            domainState = domainState.copy(feedback = "입력을 더 해주세요")
+//            emitUiState()
+//            return
+//        }
+//
+//        val isCorrect = step.editableCells.withIndex().all { (idx, cellName) ->
+//            val userInput = input.getOrNull(idx)?.toString() ?: ""
+//
+//            phaseEvaluator.isCorrect(
+//                phase = step.phase,
+//                cell = cellName,
+//                input = userInput,
+//                dividend = domainState.dividend,
+//                divisor = domainState.divisor,
+//                stepIndex = domainState.currentStepIndex,
+//                previousInputs = domainState.inputs
+//            )
+//        }
+//
+//        if (!isCorrect) {
+//            domainState = domainState.copy(feedback = "오답입니다! 다시 시도하세요")
+//            emitUiState()
+//            return
+//        }
+//
+//        val updatedInputs = domainState.inputs + actualInput
+//        val nextStep = domainState.currentStepIndex + 1
+//
+//        domainState = domainState.copy(
+//            inputs = updatedInputs,
+//            currentStepIndex = nextStep,
+//            feedback = null
+//        )
+//        _currentInput.value = ""
+//        emitUiState()
+//    }
 
 
     fun onClear() {

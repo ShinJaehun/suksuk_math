@@ -1,4 +1,4 @@
-package com.shinjaehun.suksuk
+package com.shinjaehun.suksuk.legacy
 
 import com.shinjaehun.suksuk.domain.division.evaluator.PhaseEvaluator
 import com.shinjaehun.suksuk.domain.division.model.DivisionPhase
