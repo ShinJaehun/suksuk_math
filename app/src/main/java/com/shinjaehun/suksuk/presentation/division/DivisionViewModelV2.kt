@@ -20,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class DivisionViewModelV2 @Inject constructor(
     private val phaseSequenceProvider: DivisionPhaseSequenceProvider,
-    private val phaseEvaluator: PhaseEvaluatorV2, // ← 추가!
+    private val phaseEvaluator: PhaseEvaluatorV2,
+    private val feedbackProvider: FeedbackMessageProviderV2
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(DivisionUiStateV2())
@@ -30,10 +31,18 @@ class DivisionViewModelV2 @Inject constructor(
     val currentInput: StateFlow<String> = _currentInput.asStateFlow()
 
     private lateinit var domainState: DivisionDomainStateV2
+    fun getCurrentPattern(): DivisionPatternV2 = domainState.phaseSequence.pattern
 
     init {
 //        startNewProblem(68, 34) // TwoByTwo_NoCarry_NoBorrow_1DigitRem
-        startNewProblem(57, 22) //
+//        startNewProblem(57, 22) //TwoByTwo_NoCarry_NoBorrow_2DigitRem
+//        startNewProblem(50, 22) //TwoByTwo_NoCarry_Borrow_1DigitRem
+//        startNewProblem(50, 13) //TwoByTwo_NoCarry_Borrow_2DigitRem
+//        startNewProblem(96, 12) //TwoByTwo_Carry_NoBorrow_1DigitRem
+//        startNewProblem(95, 28) //TwoByTwo_Carry_NoBorrow_2DigitRem
+//        startNewProblem(81, 12) //TwoByTwo_Carry_Borrow_1DigitRem
+        startNewProblem(70, 18) //TwoByTwo_Carry_Borrow_2DigitRem
+
     }
 
     fun startNewProblem(dividend: Int, divisor: Int) {
@@ -51,18 +60,20 @@ class DivisionViewModelV2 @Inject constructor(
     fun onDigitInput(digit: String) {
         println("🟡 [onDigitInput] 입력: $digit, 기존 currentInput='${_currentInput.value}'")
 
-//        if (domainState.feedback != null) {
-//            _currentInput.value = ""
-//            domainState = domainState.copy(feedback = null)
-//        }
-//
-//        _currentInput.value += digit
-//        emitUiState()
-
         val step = domainState.phaseSequence.steps[domainState.currentStepIndex]
         val maxLength = step.editableCells.size.coerceAtLeast(1)
+
+//        // 입력 길이가 이미 가득 찼으면 "새 입력"으로 덮어쓰기!
+//        _currentInput.value = if (_currentInput.value.length >= maxLength) {
+//            digit
+//        } else {
+//            _currentInput.value + digit
+//        }
+
         _currentInput.value = (_currentInput.value + digit).takeLast(maxLength)
         emitUiState()
+
+        println("🟢 [onDigitInput] currentInput(after)=${_currentInput.value}")
     }
 
     fun onEnter() {
@@ -108,7 +119,7 @@ class DivisionViewModelV2 @Inject constructor(
         }
 
         if (!isCorrect) {
-            domainState = domainState.copy(feedback = "오답입니다! 다시 시도하세요")
+            domainState = domainState.copy(feedback = feedbackProvider.getWrongMessage(step.phase))
             emitUiState()
             return
         }
@@ -117,84 +128,17 @@ class DivisionViewModelV2 @Inject constructor(
         val updatedInputs = domainState.inputs + actualInput
         val nextStep = domainState.currentStepIndex + 1
 
+        val isLastStep = nextStep >= domainState.phaseSequence.steps.size
+        val lastPhase = domainState.phaseSequence.steps.lastOrNull()?.phase
+
         domainState = domainState.copy(
             inputs = updatedInputs,
             currentStepIndex = nextStep,
-            feedback = null
+            feedback =  if (isLastStep) feedbackProvider.getSuccessMessage(lastPhase ?: DivisionPhaseV2.Complete) else null
         )
         _currentInput.value = ""
         emitUiState()
     }
-
-//    fun submitInput(input: String) {
-//        println("🧪 [submitInput] called at step=${domainState.currentStepIndex} phase=${domainState.phaseSequence.steps.getOrNull(domainState.currentStepIndex)?.phase}")
-//        println("🟣 currentStepIndex=${domainState.currentStepIndex}, totalSteps=${domainState.phaseSequence.steps.size}")
-//
-//        if (domainState.currentStepIndex >= domainState.phaseSequence.steps.size) {
-//            println("⚠️ 이미 마지막 단계를 지나쳤습니다.")
-//            return
-//        }
-//
-//        val step = domainState.phaseSequence.steps[domainState.currentStepIndex]
-//
-//        // ✅ 완료 단계는 입력 없이 통과 (정답 검증 X)
-//        if (step.phase == DivisionPhaseV2.Complete) {
-//            domainState = domainState.copy(
-//                currentStepIndex = domainState.currentStepIndex + 1,
-//                feedback = null
-//            )
-//            emitUiState()
-//            return
-//        }
-//
-//
-//        val inputCount = step.editableCells.size
-//
-//        // 💡 입력 분해: editableCell이 1개이면 마지막 숫자만 사용
-//        val actualInput: List<String> = if (inputCount == 1) {
-//            listOf(input.lastOrNull()?.toString() ?: "")
-//        } else {
-//            input.chunked(1)
-//        }
-//
-//        if (actualInput.size < inputCount) {
-//            domainState = domainState.copy(feedback = "입력을 더 해주세요")
-//            emitUiState()
-//            return
-//        }
-//
-//        val isCorrect = step.editableCells.withIndex().all { (idx, cellName) ->
-//            val userInput = input.getOrNull(idx)?.toString() ?: ""
-//
-//            phaseEvaluator.isCorrect(
-//                phase = step.phase,
-//                cell = cellName,
-//                input = userInput,
-//                dividend = domainState.dividend,
-//                divisor = domainState.divisor,
-//                stepIndex = domainState.currentStepIndex,
-//                previousInputs = domainState.inputs
-//            )
-//        }
-//
-//        if (!isCorrect) {
-//            domainState = domainState.copy(feedback = "오답입니다! 다시 시도하세요")
-//            emitUiState()
-//            return
-//        }
-//
-//        val updatedInputs = domainState.inputs + actualInput
-//        val nextStep = domainState.currentStepIndex + 1
-//
-//        domainState = domainState.copy(
-//            inputs = updatedInputs,
-//            currentStepIndex = nextStep,
-//            feedback = null
-//        )
-//        _currentInput.value = ""
-//        emitUiState()
-//    }
-
 
     fun onClear() {
         println("🟡 [onClear] 기존 currentInput=${_currentInput.value}'")
@@ -205,8 +149,11 @@ class DivisionViewModelV2 @Inject constructor(
 
     private fun emitUiState() {
         println("🟢 emitUiState | domainState=$domainState | currentInput='${_currentInput.value}'")
-        val latestChar = _currentInput.value.takeLast(1)
-
-        _uiState.value = mapToUiStateV2(domainState, latestChar)
+//        _uiState.value = mapToUiStateV2(domainState, _currentInput.value)
+        val isComplete = domainState.currentStepIndex == domainState.phaseSequence.steps.lastIndex
+        if (isComplete && domainState.feedback.isNullOrBlank()) {
+            domainState = domainState.copy(feedback = feedbackProvider.getSuccessMessage(DivisionPhaseV2.Complete))
+        }
+        _uiState.value = mapToUiStateV2(domainState, _currentInput.value)
     }
 }

@@ -1,5 +1,6 @@
 package com.shinjaehun.suksuk.presentation.division
 
+import com.shinjaehun.suksuk.domain.division.DivisionPhaseV2
 import com.shinjaehun.suksuk.domain.division.model.DivisionPhase
 import javax.inject.Inject
 

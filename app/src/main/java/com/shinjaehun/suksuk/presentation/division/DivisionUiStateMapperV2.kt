@@ -9,42 +9,87 @@ import com.shinjaehun.suksuk.domain.division.model.CellName
 import com.shinjaehun.suksuk.domain.division.model.Highlight
 
 fun mapToUiStateV2(domain: DivisionDomainStateV2, currentInput: String): DivisionUiStateV2 {
-    val step = domain.phaseSequence.steps[domain.currentStepIndex]
     val cells = mutableMapOf<CellName, InputCellV2>()
     val currentStep = domain.currentStepIndex
+    val steps = domain.phaseSequence.steps
 
-    println("🔵 [mapToUiStateV2] step=${step.phase}, editableCells=${step.editableCells}, currentInput='$currentInput', domain.inputs=${domain.inputs}")
+    val strikeThroughSet = mutableSetOf<CellName>()
+    val confirmedStrikeThroughSet = mutableSetOf<CellName>()
+    val subtractLineSet = mutableSetOf<CellName>()
+    val borrowed10Set = mutableSetOf<CellName>()
 
-    val subtractLineCells = domain.phaseSequence.steps
-        .take(domain.currentStepIndex + 1)
-        .flatMap { it.subtractLineTargets }
-        .toSet()
+    val strikeThroughCounts = mutableMapOf<CellName, Int>()
+
+    // 1 ~ 현재 단계까지 모든 정보를 누적
+    for (i in 0..currentStep) {
+        val step = steps.getOrNull(i) ?: continue
+
+        // [1] 취소선 처리 (pending/confirmed 누적)
+        for (cell in step.strikeThroughCells) {
+            strikeThroughCounts[cell] = (strikeThroughCounts[cell] ?: 0) + 1
+            if (strikeThroughCounts[cell] == 1) {
+                strikeThroughSet += cell
+            } else {
+                strikeThroughSet -= cell
+                confirmedStrikeThroughSet += cell
+            }
+        }
+
+        // [2] subline 처리 (한 번 켜지면 끝까지 유지)
+        subtractLineSet += step.subtractLineTargets
+
+        // [3] borrowed10 처리 (한 번 켜지면 끝까지 유지)
+        for ((cell, value) in step.presetValues) {
+            if (value == "10") borrowed10Set += cell
+        }
+    }
+
+    val curPhaseStep = steps[currentStep]
 
     for (cellName in CellName.entries) {
-        val isEditable = step.editableCells.contains(cellName)
+        val isEditable = curPhaseStep.editableCells.contains(cellName)
         val highlight = when {
             isEditable -> Highlight.Editing
-            step.highlightCells.contains(cellName) -> Highlight.Related
+            curPhaseStep.highlightCells.contains(cellName) -> Highlight.Related
             else -> Highlight.None
         }
-//        val crossOut = if (step.strikeThroughCells.contains(cellName)) CrossOutColor.Pending else CrossOutColor.None
-        val crossOutType = if (step.strikeThroughCells.contains(cellName)) CrossOutType.Pending else CrossOutType.None
-        val drawSubtractLine = subtractLineCells.contains(cellName)
 
+        val crossOutType = when {
+            confirmedStrikeThroughSet.contains(cellName) -> CrossOutType.Confirmed
+            strikeThroughSet.contains(cellName) -> CrossOutType.Pending
+            else -> CrossOutType.None
+        }
 
-        val presetValue = step.presetValues[cellName]
+        val drawSubtractLine = subtractLineSet.contains(cellName)
+        val presetValue = if (borrowed10Set.contains(cellName)) "10" else curPhaseStep.presetValues[cellName]
 
-        val inputIdx = calculateInputIndexForCell(domain.phaseSequence.steps, currentStep, cellName)
+        val inputIdx = calculateInputIndexForCell(steps, currentStep, cellName)
 
         val value = when {
             presetValue != null -> presetValue
             inputIdx != null -> {
                 if (isEditable && currentStep == domain.currentStepIndex && domain.inputs.getOrNull(inputIdx).isNullOrEmpty()) {
-                    currentInput.getOrNull(step.editableCells.indexOf(cellName))?.toString() ?: "?"
+//                    currentInput.getOrNull(curPhaseStep.editableCells.indexOf(cellName))?.toString() ?: "?"
+                    val idxInEditables = curPhaseStep.editableCells.indexOf(cellName)
+                    currentInput.getOrNull(idxInEditables)?.toString() ?: "?"
                 } else {
                     domain.inputs.getOrNull(inputIdx)
                 }
             }
+
+//            isEditable && currentStep == domain.currentStepIndex &&
+//                    (inputIdx == null || domain.inputs.getOrNull(inputIdx).isNullOrEmpty()) -> {
+//                        // 🔥 currentInput은 editableCells의 순서대로만 바인딩!
+////                val idxInEditables = curPhaseStep.editableCells.indexOf(cellName)
+////                currentInput.getOrNull(idxInEditables)?.toString() ?: "?"
+//                val idxInEditables = curPhaseStep.editableCells.indexOf(cellName)
+//                val v = currentInput.getOrNull(idxInEditables)?.toString() ?: "?"
+//                println("🟣 mapToUiStateV2: cell=$cellName idx=$idxInEditables input=$currentInput v=$v")
+//                v
+//            }
+//
+//            inputIdx != null -> domain.inputs.getOrNull(inputIdx)
+
             else -> getDefaultCellValue(domain, cellName)
         }
 
@@ -58,14 +103,10 @@ fun mapToUiStateV2(domain: DivisionDomainStateV2, currentInput: String): Divisio
         )
     }
 
-//    val subtractLineCells = domain.phaseSequence.steps
-//        .take(domain.currentStepIndex + 1)
-//        .flatMap { it.subtractLineTargets }
-//        .toSet()
-
     return DivisionUiStateV2(
         cells = cells,
         currentStep = currentStep,
+        isCompleted = (currentStep == steps.lastIndex),
         feedback = domain.feedback
     )
 }
@@ -82,6 +123,7 @@ fun calculateInputIndexForCell(
             if (c == cell) {
                 // 이 cell이 현재 step보다 이전이거나, 현재 step이지만 editable이 아니라면 index로 인정
                 return if (stepIdx < currentStep || (stepIdx == currentStep)) idx else null
+//                return if (stepIdx < currentStep) idx else null
             }
             idx++
         }

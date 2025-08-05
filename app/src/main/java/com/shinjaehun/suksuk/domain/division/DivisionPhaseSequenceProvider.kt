@@ -67,7 +67,8 @@ class DivisionPhaseSequenceProvider @Inject constructor() {
                 editableCells = listOf(CellName.BorrowDividendTens),
                 highlightCells = listOf(CellName.DividendTens),
                 needsBorrow = true,
-                strikeThroughCells = listOf(CellName.DividendTens)
+                strikeThroughCells = listOf(CellName.DividendTens),
+                subtractLineTargets = setOf(CellName.BorrowDividendTens)
             )
         }
 
@@ -81,6 +82,7 @@ class DivisionPhaseSequenceProvider @Inject constructor() {
                 add(CellName.Multiply1Ones)
             },
             presetValues = if (needsBorrow) mapOf(CellName.Borrowed10DividendOnes to "10") else emptyMap(),
+            strikeThroughCells = if (needsBorrow) listOf(CellName.DividendTens) else emptyList(),
             subtractLineTargets = setOf(CellName.Subtract1Ones)
         )
 
@@ -88,8 +90,8 @@ class DivisionPhaseSequenceProvider @Inject constructor() {
             steps += PhaseStep(
                 phase = DivisionPhaseV2.InputSubtract,
                 editableCells = listOf(CellName.Subtract1Tens),
-                highlightCells = listOf(CellName.DividendTens, CellName.Multiply1Tens).let {
-                    if(needsBorrow) it + CellName.BorrowDividendTens else it
+                highlightCells = listOf(CellName.Multiply1Tens).let {
+                    if(needsBorrow) it + CellName.BorrowDividendTens else it + CellName.DividendTens
                 },
                 subtractLineTargets = setOf(CellName.Subtract1Tens)
             )

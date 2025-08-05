@@ -1,7 +1,7 @@
-package com.shinjaehun.suksuk.division.two_by_two
+package com.shinjaehun.suksuk.legacy.two_by_two
 
 import androidx.compose.ui.test.junit4.createComposeRule
-import com.shinjaehun.suksuk.division.divisionCase
+import com.shinjaehun.suksuk.legacy.divisionCase
 import com.shinjaehun.suksuk.domain.division.model.DivisionPattern
 import org.junit.Rule
 import org.junit.Test

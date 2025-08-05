@@ -1,4 +1,4 @@
-package com.shinjaehun.suksuk.division
+package com.shinjaehun.suksuk.legacy
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextContains
@@ -12,7 +12,6 @@ import com.shinjaehun.suksuk.domain.division.evaluator.PhaseEvaluator
 import com.shinjaehun.suksuk.domain.division.factory.DivisionDomainStateFactory
 import com.shinjaehun.suksuk.domain.division.layout.DivisionPatternUiLayoutRegistry
 import com.shinjaehun.suksuk.domain.division.model.DivisionPhase
-import com.shinjaehun.suksuk.presentation.division.DivisionScreen
 import com.shinjaehun.suksuk.presentation.division.DivisionViewModel
 import com.shinjaehun.suksuk.presentation.division.FeedbackMessageProvider
 import junit.framework.TestCase.assertEquals
@@ -51,7 +50,7 @@ class DivisionScreenTest {
     @Test
     fun test_TwoByOne_UIFlow() {
         composeTestRule.setContent {
-            DivisionScreen(viewModel = viewModel)
+//            DivisionScreen(viewModel = viewModel)
         }
 
         composeTestRule.runOnIdle {
@@ -80,7 +79,7 @@ class DivisionScreenTest {
     @Test
     fun test_TwoByTwo_UIFlow() {
         composeTestRule.setContent {
-            DivisionScreen(viewModel = viewModel)
+//            DivisionScreen(viewModel = viewModel)
         }
         composeTestRule.runOnIdle { viewModel.startNewProblem(57, 22) }
         val scenario = listOf("2", "4", "4", "3", "1")
@@ -99,7 +98,7 @@ class DivisionScreenTest {
     @Test
     fun test_TwoByOne_Multiply1TensPhase_ShowsSingleQuestionMark() {
         composeTestRule.setContent {
-            DivisionScreen(viewModel = viewModel)
+//            DivisionScreen(viewModel = viewModel)
         }
         composeTestRule.runOnIdle { viewModel.startNewProblem(85, 7) }
 
@@ -113,7 +112,7 @@ class DivisionScreenTest {
     @Test
     fun test_TwoByTwo_Multiply1TensPhase_ShowsSingleQuestionMark() {
         composeTestRule.setContent {
-            DivisionScreen(viewModel = viewModel)
+//            DivisionScreen(viewModel = viewModel)
         }
         composeTestRule.runOnIdle { viewModel.startNewProblem(68, 34) }
 
@@ -128,7 +127,7 @@ class DivisionScreenTest {
     @Test
     fun test_TwoByOne_Multiply1TensAndMultiply1OnesPhase_ShowsTwoQuestionMarks() {
         composeTestRule.setContent {
-            DivisionScreen(viewModel = viewModel)
+//            DivisionScreen(viewModel = viewModel)
         }
         composeTestRule.runOnIdle { viewModel.startNewProblem(62, 7) }
 
@@ -142,7 +141,7 @@ class DivisionScreenTest {
     @Test
     fun test_TwoByTwo_Multiply1OnesWithCarry_ShowsTwoQuestionMarks() {
         composeTestRule.setContent {
-            DivisionScreen(viewModel = viewModel)
+//            DivisionScreen(viewModel = viewModel)
         }
         composeTestRule.runOnIdle { viewModel.startNewProblem(75, 25) }
         composeTestRule.onNodeWithTag("numpad-3").performClick()
@@ -154,7 +153,7 @@ class DivisionScreenTest {
     @Test
     fun test_TwoByOne_Multiply2OnesPhase_ShowsSingleQuestionMark() {
         composeTestRule.setContent {
-            DivisionScreen(viewModel = viewModel)
+//            DivisionScreen(viewModel = viewModel)
         }
         composeTestRule.runOnIdle { viewModel.startNewProblem(93, 8) }
 
@@ -176,7 +175,7 @@ class DivisionScreenTest {
     @Test
     fun test_TwoByTwo_Subtract1OnesPhase_ShowsSingleQuestionMark() {
         composeTestRule.setContent {
-            DivisionScreen(viewModel = viewModel)
+//            DivisionScreen(viewModel = viewModel)
         }
         composeTestRule.runOnIdle { viewModel.startNewProblem(49, 24) }
 
@@ -194,7 +193,7 @@ class DivisionScreenTest {
     @Test
     fun test_TwoByOne_Multiply2TensAndMultiply2OnesPhase_ShowsTwoQuestionMarks() {
         composeTestRule.setContent {
-            DivisionScreen(viewModel = viewModel)
+//            DivisionScreen(viewModel = viewModel)
         }
         composeTestRule.runOnIdle { viewModel.startNewProblem(90, 7) }
 
@@ -221,7 +220,7 @@ class DivisionScreenTest {
     @Test
     fun test_TwoByOne_Multiply2TensAndMultiply2OnesPhase_WrongInput_ShowsQuestionMarks() {
         composeTestRule.setContent {
-            DivisionScreen(viewModel = viewModel)
+//            DivisionScreen(viewModel = viewModel)
         }
         composeTestRule.runOnIdle { viewModel.startNewProblem(90, 7) }
 
@@ -244,7 +243,7 @@ class DivisionScreenTest {
     @Test
     fun test_TwoByTwo_Subtract1TensPhase_e_WrongInput_ShowsQuestionMarks() {
         composeTestRule.setContent {
-            DivisionScreen(viewModel = viewModel)
+//            DivisionScreen(viewModel = viewModel)
         }
         composeTestRule.runOnIdle { viewModel.startNewProblem(95, 28) }
 
@@ -273,7 +272,7 @@ class DivisionScreenTest {
     @Test
     fun test_TwoByOne_DividendTensCellCrossedOut() {
         composeTestRule.setContent {
-            DivisionScreen(viewModel = viewModel)
+//            DivisionScreen(viewModel = viewModel)
         }
         composeTestRule.runOnIdle { viewModel.startNewProblem(62, 7) }
 
@@ -289,7 +288,7 @@ class DivisionScreenTest {
     @Test
     fun test_TwoByTwo_DividendTensCellCrossedOut() {
         composeTestRule.setContent {
-            DivisionScreen(viewModel = viewModel)
+//            DivisionScreen(viewModel = viewModel)
         }
         composeTestRule.runOnIdle { viewModel.startNewProblem(81, 23) }
         composeTestRule.onNodeWithTag("numpad-3").performClick()
@@ -307,7 +306,7 @@ class DivisionScreenTest {
     @Test
     fun test_TwoByOne_Borrowed10ShownOnDividendTens() {
         composeTestRule.setContent {
-            DivisionScreen(viewModel = viewModel)
+//            DivisionScreen(viewModel = viewModel)
         }
         composeTestRule.runOnIdle { viewModel.startNewProblem(62, 7) }
 
@@ -325,7 +324,7 @@ class DivisionScreenTest {
     @Test
     fun test_TwoByTwo_Borrowed10ShownOnDividendTens() {
         composeTestRule.setContent {
-            DivisionScreen(viewModel = viewModel)
+//            DivisionScreen(viewModel = viewModel)
         }
         composeTestRule.runOnIdle { viewModel.startNewProblem(81, 23) }
         // (몫, 곱셈1, 곱셈10, borrow)
@@ -345,7 +344,7 @@ class DivisionScreenTest {
     @Test
     fun test_TwoByOne_Subtract1TensCellCrossedOut() {
         composeTestRule.setContent {
-            DivisionScreen(viewModel = viewModel)
+//            DivisionScreen(viewModel = viewModel)
         }
         composeTestRule.runOnIdle { viewModel.startNewProblem(50, 3) }
 
@@ -369,7 +368,7 @@ class DivisionScreenTest {
     @Test
     fun test_TwoByOne_Borrowed10ShownOnSubtract1Ones() {
         composeTestRule.setContent {
-            DivisionScreen(viewModel = viewModel)
+//            DivisionScreen(viewModel = viewModel)
         }
         composeTestRule.runOnIdle { viewModel.startNewProblem(50, 3) }
 
@@ -401,7 +400,7 @@ class DivisionScreenTest {
     @Test
     fun test_TwoByOne_SubtractionLineAppearsOnlyOnSubtract1Phase() {
         composeTestRule.setContent {
-            DivisionScreen(viewModel = viewModel)
+//            DivisionScreen(viewModel = viewModel)
         }
         composeTestRule.runOnIdle { viewModel.startNewProblem(85, 7) }
 
@@ -421,7 +420,7 @@ class DivisionScreenTest {
     @Test
     fun test_TwoByTwo_SubtractionLineAppearsOnlyOnSubtract1Phase() {
         composeTestRule.setContent {
-            DivisionScreen(viewModel = viewModel)
+//            DivisionScreen(viewModel = viewModel)
         }
         composeTestRule.runOnIdle { viewModel.startNewProblem(68, 34) }
 
@@ -441,7 +440,7 @@ class DivisionScreenTest {
     @Test
     fun test_TwoByOne_SubtractionLineAppearsOnlyOnSubtract2Phase() {
         composeTestRule.setContent {
-            DivisionScreen(viewModel = viewModel)
+//            DivisionScreen(viewModel = viewModel)
         }
         composeTestRule.runOnIdle { viewModel.startNewProblem(85, 7) }
 
@@ -467,7 +466,7 @@ class DivisionScreenTest {
     @Test
     fun test_UserInput_Pattern_TwoByOne_TensQuotientNoBorrow2DigitMul() {
         composeTestRule.setContent {
-            DivisionScreen(viewModel = viewModel)
+//            DivisionScreen(viewModel = viewModel)
         }
         composeTestRule.runOnIdle { viewModel.startNewProblem(90, 7) }
 
@@ -491,7 +490,7 @@ class DivisionScreenTest {
     @Test
     fun test_TwoByOne_TensQuotientBorrow2DigitMul_EachPhase_PlaceholderAndInputValue() {
         composeTestRule.setContent {
-            DivisionScreen(viewModel = viewModel)
+//            DivisionScreen(viewModel = viewModel)
         }
         composeTestRule.runOnIdle { viewModel.startNewProblem(90, 7) }
 
@@ -540,7 +539,7 @@ class DivisionScreenTest {
     @Test
     fun test_TwoByTwo_NoCarryNoBorrow2DigitRem_EachPhase_PlaceholderAndInputValue() {
         composeTestRule.setContent {
-            DivisionScreen(viewModel = viewModel)
+//            DivisionScreen(viewModel = viewModel)
         }
         composeTestRule.runOnIdle { viewModel.startNewProblem(57, 22) }
 

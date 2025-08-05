@@ -42,7 +42,12 @@ class PhaseEvaluatorV2 {
             DivisionPhaseV2.InputMultiply -> when (cell) {
                 CellName.CarryDivisorTens -> (quotient * divisorOnes) / 10
                 CellName.Multiply1Ones    -> (quotient * divisorOnes) % 10
-                CellName.Multiply1Tens    -> (quotient * divisorTens)
+//                CellName.Multiply1Tens    -> (quotient * divisorTens)
+                CellName.Multiply1Tens    -> if(quotient >= 10 ){
+                    quotient * divisorTens
+                } else {
+                    quotient * divisor / 10
+                }
                 else -> null
             }
             DivisionPhaseV2.InputBorrow -> when (cell) {
