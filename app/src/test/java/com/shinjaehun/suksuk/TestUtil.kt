@@ -19,8 +19,8 @@ fun makeDomainStateForTest(
         dividend = dividend,
         divisor = divisor,
         phaseSequence = when (pattern) {
+            DivisionPatternV2.TwoByOne -> sequenceProvider.makeTwoByOnePhaseSequence(dividend, divisor)
             DivisionPatternV2.TwoByTwo -> sequenceProvider.makeTwoByTwoPhaseSequence(dividend, divisor)
-            DivisionPatternV2.TwoByOne -> TODO()
             DivisionPatternV2.ThreeByTwo -> TODO()
         },
         currentStepIndex = step,

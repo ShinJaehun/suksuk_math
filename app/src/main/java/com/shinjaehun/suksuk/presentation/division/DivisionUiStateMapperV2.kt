@@ -60,8 +60,15 @@ fun mapToUiStateV2(domain: DivisionDomainStateV2, currentInput: String): Divisio
             else -> CrossOutType.None
         }
 
-        val drawSubtractLine = subtractLineSet.contains(cellName)
+        var drawSubtractLine = subtractLineSet.contains(cellName)
+
+        if (cellName in curPhaseStep.subtractLineTargets) {
+            drawSubtractLine = true
+        }
+
         val presetValue = if (borrowed10Set.contains(cellName)) "10" else curPhaseStep.presetValues[cellName]
+
+        println("🟡 drawSubtractLine check | cell=$cellName | draw=$drawSubtractLine")
 
         val inputIdx = calculateInputIndexForCell(steps, currentStep, cellName)
 

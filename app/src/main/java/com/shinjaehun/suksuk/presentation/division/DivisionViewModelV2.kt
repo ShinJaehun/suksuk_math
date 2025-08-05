@@ -9,6 +9,7 @@ import com.shinjaehun.suksuk.domain.division.DivisionPatternV2
 import com.shinjaehun.suksuk.domain.division.DivisionPhaseSequenceProvider
 import com.shinjaehun.suksuk.domain.division.DivisionPhaseV2
 import com.shinjaehun.suksuk.domain.division.DivisionUiStateV2
+import com.shinjaehun.suksuk.domain.division.PatternDetectorV2
 import com.shinjaehun.suksuk.domain.division.PhaseEvaluatorV2
 import com.shinjaehun.suksuk.domain.division.PhaseSequence
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,22 +35,31 @@ class DivisionViewModelV2 @Inject constructor(
     fun getCurrentPattern(): DivisionPatternV2 = domainState.phaseSequence.pattern
 
     init {
-//        startNewProblem(68, 34) // TwoByTwo_NoCarry_NoBorrow_1DigitRem
+//        startNewProblem(68, 34) //TwoByTwo_NoCarry_NoBorrow_1DigitRem
 //        startNewProblem(57, 22) //TwoByTwo_NoCarry_NoBorrow_2DigitRem
 //        startNewProblem(50, 22) //TwoByTwo_NoCarry_Borrow_1DigitRem
 //        startNewProblem(50, 13) //TwoByTwo_NoCarry_Borrow_2DigitRem
 //        startNewProblem(96, 12) //TwoByTwo_Carry_NoBorrow_1DigitRem
 //        startNewProblem(95, 28) //TwoByTwo_Carry_NoBorrow_2DigitRem
 //        startNewProblem(81, 12) //TwoByTwo_Carry_Borrow_1DigitRem
-        startNewProblem(70, 18) //TwoByTwo_Carry_Borrow_2DigitRem
+//        startNewProblem(70, 18) //TwoByTwo_Carry_Borrow_2DigitRem
+        startNewProblem(72, 6) // TwoByOne_TensQuotient_NoBorrow_2DigitMul
 
     }
 
     fun startNewProblem(dividend: Int, divisor: Int) {
+        val pattern = PatternDetectorV2.detectPattern(dividend, divisor)
+
+        val sequence = when (pattern) {
+            DivisionPatternV2.TwoByOne -> phaseSequenceProvider.makeTwoByOnePhaseSequence(dividend, divisor)
+            DivisionPatternV2.TwoByTwo -> phaseSequenceProvider.makeTwoByTwoPhaseSequence(dividend, divisor)
+            DivisionPatternV2.ThreeByTwo -> TODO()
+        }
+
         domainState = DivisionDomainStateV2(
             dividend = dividend,
             divisor = divisor,
-            phaseSequence = phaseSequenceProvider.makeTwoByTwoPhaseSequence(dividend, divisor),
+            phaseSequence = sequence,
             currentStepIndex = 0,
             inputs = emptyList()
         )

@@ -28,6 +28,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import com.shinjaehun.suksuk.R
+import com.shinjaehun.suksuk.domain.division.DivisionPatternV2
 import com.shinjaehun.suksuk.domain.division.DivisionPhaseV2
 import com.shinjaehun.suksuk.domain.division.InputCellV2
 import com.shinjaehun.suksuk.domain.division.detector.PatternDetector
@@ -67,7 +68,11 @@ fun DivisionScreen(
 //
 //    val bracketStartMargin = if (isTwoByOne) 60.dp else 90.dp
 
-    val bracketStartMargin = 90.dp
+    val bracketStartMargin = when(viewModel.getCurrentPattern()) {
+        DivisionPatternV2.TwoByOne -> 60.dp
+        DivisionPatternV2.TwoByTwo -> 90.dp
+        DivisionPatternV2.ThreeByTwo -> TODO()
+    }
 
     Box(
         modifier = Modifier
@@ -255,7 +260,10 @@ fun DivisionScreen(
 //            println("🔥 subtraction1-line should be shown? ${currentUiState.subtractLines.showSubtract1}")
 //            if(currentUiState.subtractLines.showSubtract1){
 //            if (currentUiState.subtractLineCells.contains(CellName.Subtract1Ones)) {
-            if (currentUiState.cells[CellName.Subtract1Ones]?.drawSubtractLine == true) {
+//            if (currentUiState.cells[CellName.Subtract1Ones]?.drawSubtractLine == true) {
+            if (currentUiState.cells[CellName.BorrowDividendTens]?.drawSubtractLine == true ||
+                currentUiState.cells[CellName.Subtract1Tens]?.drawSubtractLine == true ||
+                currentUiState.cells[CellName.Subtract1Ones]?.drawSubtractLine == true) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_horizontal_line),
                     contentDescription = "Subtraction Line",
@@ -351,7 +359,9 @@ fun DivisionScreen(
 
 //            if (currentUiState.subtractLines.showSubtract2){
 //            if (currentUiState.subtractLineCells.contains(CellName.Subtract2Ones)) {
-            if (currentUiState.cells[CellName.Subtract2Ones]?.drawSubtractLine == true) {
+//            if (currentUiState.cells[CellName.Subtract2Ones]?.drawSubtractLine == true) {
+            if (currentUiState.cells[CellName.BorrowSubtract1Tens]?.drawSubtractLine == true ||
+                currentUiState.cells[CellName.Subtract2Ones]?.drawSubtractLine == true) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_horizontal_line),
                     contentDescription = "Subtraction Line",

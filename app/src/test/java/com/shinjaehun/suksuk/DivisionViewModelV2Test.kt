@@ -4,13 +4,13 @@ import com.shinjaehun.suksuk.domain.division.DivisionPatternV2
 import com.shinjaehun.suksuk.domain.division.DivisionPhaseSequenceProvider
 import com.shinjaehun.suksuk.domain.division.PhaseEvaluatorV2
 import com.shinjaehun.suksuk.presentation.division.DivisionViewModelV2
+import com.shinjaehun.suksuk.presentation.division.FeedbackMessageProviderV2
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class DivisionViewModelV2Test {
 
     private lateinit var viewModel: DivisionViewModelV2
@@ -19,7 +19,8 @@ class DivisionViewModelV2Test {
     fun setup() {
         viewModel = DivisionViewModelV2(
             phaseSequenceProvider = DivisionPhaseSequenceProvider(),
-            phaseEvaluator = PhaseEvaluatorV2()
+            phaseEvaluator = PhaseEvaluatorV2(),
+            feedbackProvider = FeedbackMessageProviderV2()
         )
     }
 
