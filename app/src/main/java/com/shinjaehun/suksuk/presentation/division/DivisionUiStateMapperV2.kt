@@ -2,6 +2,7 @@ package com.shinjaehun.suksuk.presentation.division
 
 import com.shinjaehun.suksuk.domain.division.CrossOutType
 import com.shinjaehun.suksuk.domain.division.DivisionDomainStateV2
+import com.shinjaehun.suksuk.domain.division.DivisionPhaseV2
 import com.shinjaehun.suksuk.domain.division.DivisionUiStateV2
 import com.shinjaehun.suksuk.domain.division.Highlight
 import com.shinjaehun.suksuk.domain.division.InputCellV2
@@ -109,11 +110,14 @@ fun mapToUiStateV2(domain: DivisionDomainStateV2, currentInput: String): Divisio
 //        cell.copy(subtractLineType = lineType)
 //    }
 
+    val isComplete = steps.getOrNull(domain.currentStepIndex)?.phase == DivisionPhaseV2.Complete
+    val feedback = if (isComplete) "정답입니다!" else null
+
     return DivisionUiStateV2(
         cells = cells,
         currentStep = currentStep,
         isCompleted = (currentStep == steps.lastIndex),
-        feedback = domain.feedback
+        feedback = feedback
     )
 }
 
@@ -175,3 +179,5 @@ fun getDefaultCellValue(domain: DivisionDomainStateV2, cellName: CellName): Stri
 
     else -> null
 }
+
+

@@ -13,14 +13,14 @@ class DivisionPhaseSequenceProvider @Inject constructor() {
 
     fun makeTwoByTwoPhaseSequence(dividend: Int, divisor: Int): PhaseSequence {
         val quotient = dividend / divisor
-        val multiply1 = quotient * divisor
+        val multiply1Total = quotient * divisor
         val multiply1DivisorOnes = quotient * (divisor % 10)
 
         val needsCarry = multiply1DivisorOnes >= 10
-        val needsBorrow = (dividend % 10) < (multiply1 % 10)
+        val needsBorrow = (dividend % 10) < (multiply1Total % 10)
 
-        val remainder = dividend - multiply1
-        val needsSubtract1Tens = remainder >= 10
+        val remainder = dividend - multiply1Total
+        val needs2DigitRem = remainder >= 10
 
         val steps = mutableListOf<PhaseStep>()
 
@@ -87,7 +87,7 @@ class DivisionPhaseSequenceProvider @Inject constructor() {
             subtractLineTargets = setOf(CellName.Subtract1Ones)
         )
 
-        if(needsSubtract1Tens) {
+        if(needs2DigitRem) {
             steps += PhaseStep(
                 phase = DivisionPhaseV2.InputSubtract,
                 editableCells = listOf(CellName.Subtract1Tens),
@@ -112,10 +112,21 @@ class DivisionPhaseSequenceProvider @Inject constructor() {
     fun makeTwoByOnePhaseSequence(dividend: Int, divisor: Int): PhaseSequence {
         val quotient = dividend / divisor
 
-        val needsQuotientTens = quotient >= 10
-        val multiply1TensQuotient = divisor * quotient / 10
 
-        val subtract1 = (dividend / 10) - multiply1TensQuotient
+        val needsTensQuotient = quotient >= 10
+        val multiplyQuotientTens = divisor * (quotient / 10)
+        val multiplyQuotientOnes = divisor * (quotient % 10)
+
+        val needsBorrowSubtract1 = (dividend % 10) < (multiplyQuotientOnes % 10)
+
+        val subtract1TensQuotient = ((dividend / 10) - multiplyQuotientTens) * 10 + (dividend % 10)
+
+        val needs2DigitMul = multiplyQuotientOnes >= 10
+        val needsBorrowSubtract2 = (subtract1TensQuotient % 10) < (multiplyQuotientOnes % 10)
+        val needsSkipBorrowSubtract2 = subtract1TensQuotient == 1 && needsBorrowSubtract2
+
+        val subtract1OnesQuotient = dividend - multiplyQuotientOnes
+
         val bringDown = dividend % 10
 
 //        val needsBorrow = (dividend % 10) < (multiply1 % 10)
@@ -125,7 +136,7 @@ class DivisionPhaseSequenceProvider @Inject constructor() {
 
         val steps = mutableListOf<PhaseStep>()
 
-        if (needsQuotientTens) {
+        if (needsTensQuotient) {
             steps += PhaseStep(
                 phase = DivisionPhaseV2.InputQuotient,
                 editableCells = listOf(CellName.QuotientTens),
@@ -149,22 +160,27 @@ class DivisionPhaseSequenceProvider @Inject constructor() {
                 phase = DivisionPhaseV2.InputBringDown,
                 editableCells = listOf(CellName.Subtract1Ones),
                 highlightCells = listOf(CellName.DividendOnes),
-//                subtractLineTargets = setOf(CellName.Subtract1Ones)
             )
 
             steps += PhaseStep(
                 phase = DivisionPhaseV2.InputQuotient,
                 editableCells = listOf(CellName.QuotientOnes),
                 highlightCells = listOf(CellName.DivisorOnes, CellName.Subtract1Tens, CellName.Subtract1Ones),
-                // sub line?
             )
 
-            steps += PhaseStep(
-                phase = DivisionPhaseV2.InputMultiply,
-                editableCells = listOf(CellName.Multiply2Tens, CellName.Multiply2Ones),
-                highlightCells = listOf(CellName.DivisorOnes, CellName.QuotientOnes),
-            )
-
+            if (needs2DigitMul) {
+                steps += PhaseStep(
+                    phase = DivisionPhaseV2.InputMultiply,
+                    editableCells = listOf(CellName.Multiply2Tens, CellName.Multiply2Ones),
+                    highlightCells = listOf(CellName.DivisorOnes, CellName.QuotientOnes),
+                )
+            } else {
+                steps += PhaseStep(
+                    phase = DivisionPhaseV2.InputMultiply,
+                    editableCells = listOf(CellName.Multiply2Ones),
+                    highlightCells = listOf(CellName.DivisorOnes, CellName.QuotientOnes),
+                )
+            }
 
             steps += PhaseStep(
                 phase = DivisionPhaseV2.InputSubtract,
@@ -173,115 +189,19 @@ class DivisionPhaseSequenceProvider @Inject constructor() {
                 subtractLineTargets = setOf(CellName.Subtract2Ones)
             )
 
+
+
         }
 
         // [6] 완료 단계
         steps += PhaseStep(phase = DivisionPhaseV2.Complete)
 
         return PhaseSequence(
-            pattern = DivisionPatternV2.TwoByTwo,
+            pattern = DivisionPatternV2.TwoByOne,
             steps = steps
         )
     }
 
-//    fun makeTwoByTwoPhaseSequence(dividend: Int, divisor: Int): PhaseSequence {
-//        val quotient = dividend / divisor
-//        val product = quotient * divisor
-//        val multiply1 = quotient * (divisor % 10)
-//
-//        val needsCarry = multiply1 >= 10
-//        val needsBorrow = (dividend % 100) < (product % 100)
-//
-//        val remainder = dividend - product
-//        val needsSubtract1Tens = remainder >= 10
-//
-//        val steps = mutableListOf<PhaseStep>()
-//
-//        // [1] 몫 입력 단계
-//        steps += PhaseStep(
-//            phase = DivisionPhaseV2.InputQuotient,
-//            editableCells = listOf(CellName.QuotientOnes),
-//            highlightCells = listOf(
-//                CellName.DividendTens, CellName.DividendOnes,
-//                CellName.DivisorTens, CellName.DivisorOnes
-//            )
-//        )
-//
-//        // [2] 곱셈1 (일의 자리)
-//        steps += if (needsCarry) {
-//            PhaseStep(
-//                phase = DivisionPhaseV2.InputMultiply,
-//                editableCells = listOf(CellName.CarryDivisorTens, CellName.Multiply1Ones),
-//                highlightCells = listOf(CellName.DivisorOnes, CellName.QuotientOnes),
-//                needsCarry = true
-//            )
-//        } else {
-//            PhaseStep(
-//                phase = DivisionPhaseV2.InputMultiply,
-//                editableCells = listOf(CellName.Multiply1Ones),
-//                highlightCells = listOf(CellName.DivisorOnes, CellName.QuotientOnes)
-//            )
-//        }
-//
-//        // [3] 곱셈2 (십의 자리)
-//        steps += PhaseStep(
-//            phase = DivisionPhaseV2.InputMultiply,
-//            editableCells = listOf(CellName.Multiply1Tens),
-//            highlightCells = buildList {
-//                add(CellName.DivisorTens)
-//                add(CellName.QuotientOnes)
-//                if (needsCarry) add(CellName.CarryDivisorTens)
-//            }
-//        )
-//
-//        // [4] 받아내림
-//        if (needsBorrow) {
-//            steps += PhaseStep(
-//                phase = DivisionPhaseV2.InputBorrow,
-//                editableCells = listOf(CellName.BorrowDividendTens),
-//                highlightCells = listOf(CellName.DividendTens),
-//                needsBorrow = true,
-//                strikeThroughCells = listOf(CellName.DividendTens),
-//                subtractLineTargets = setOf(CellName.BorrowDividendTens)
-//            )
-//        }
-//
-//        // [5] 뺄셈1 (일의 자리)
-//        steps += PhaseStep(
-//            phase = DivisionPhaseV2.InputSubtract,
-//            editableCells = listOf(CellName.Subtract1Ones),
-//            highlightCells = buildList {
-//                if (needsBorrow) add(CellName.Borrowed10DividendOnes)
-//                add(CellName.DividendOnes)
-//                add(CellName.Multiply1Ones)
-//            },
-//            presetValues = if (needsBorrow) mapOf(CellName.Borrowed10DividendOnes to "10") else emptyMap(),
-//            strikeThroughCells = if (needsBorrow) listOf(CellName.DividendTens) else emptyList(),
-//            subtractLineTargets = setOf(CellName.Subtract1Ones)
-//        )
-//
-//        // [6] 뺄셈2 (십의 자리) 필요 시
-//        if (needsSubtract1Tens) {
-//            steps += PhaseStep(
-//                phase = DivisionPhaseV2.InputSubtract,
-//                editableCells = listOf(CellName.Subtract1Tens),
-//                highlightCells = buildList {
-//                    add(CellName.Multiply1Tens)
-//                    if (needsBorrow) add(CellName.BorrowDividendTens)
-//                    else add(CellName.DividendTens)
-//                },
-//                subtractLineTargets = setOf(CellName.Subtract1Tens)
-//            )
-//        }
-//
-//        // [7] 완료
-//        steps += PhaseStep(phase = DivisionPhaseV2.Complete)
-//
-//        return PhaseSequence(
-//            pattern = DivisionPatternV2.TwoByTwo,
-//            steps = steps
-//        )
-//    }
 
 
 }

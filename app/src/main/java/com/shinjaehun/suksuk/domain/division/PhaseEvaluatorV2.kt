@@ -17,6 +17,7 @@ class PhaseEvaluatorV2 {
         val expected = expectedValueForCell(
             phase, cell, dividend, divisor, stepIndex, previousInputs
         )
+        println("🧪 $cell: expected=$expected, input=$input")
         return expected != null && expected == inputValue
     }
 
@@ -72,7 +73,12 @@ class PhaseEvaluatorV2 {
                 } else {
                     (dividend - (quotient * divisor)) / 10
                 }
-                CellName.Subtract1Ones -> (dividend - (quotient * divisor)) % 10
+//                CellName.Subtract1Ones -> (dividend - (quotient * divisor)) % 10
+                CellName.Subtract1Ones -> {
+                    val expected = (dividend - (quotient * divisor)) % 10
+                    println("🧪 Subtract1Ones: expected=$expected")
+                    expected
+                }
                 CellName.Subtract2Ones -> (dividend - (quotient * divisor)) % 10
                 else -> null
             }

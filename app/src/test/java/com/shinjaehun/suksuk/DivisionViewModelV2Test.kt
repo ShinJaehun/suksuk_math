@@ -1,5 +1,6 @@
 package com.shinjaehun.suksuk
 
+import androidx.lifecycle.SavedStateHandle
 import com.shinjaehun.suksuk.domain.division.DivisionPatternV2
 import com.shinjaehun.suksuk.domain.division.DivisionPhaseSequenceProvider
 import com.shinjaehun.suksuk.domain.division.PhaseEvaluatorV2
@@ -17,7 +18,11 @@ class DivisionViewModelV2Test {
 
     @Before
     fun setup() {
+
+        val savedStateHandle = SavedStateHandle(mapOf("autoStart" to false))
+
         viewModel = DivisionViewModelV2(
+            savedStateHandle = savedStateHandle,
             phaseSequenceProvider = DivisionPhaseSequenceProvider(),
             phaseEvaluator = PhaseEvaluatorV2(),
             feedbackProvider = FeedbackMessageProviderV2()
@@ -28,12 +33,12 @@ class DivisionViewModelV2Test {
     fun detectPatternTest() {
         val cases = listOf(
             // === TwoByOne 패턴 세부 분기 ===
-//            Triple(46, 3, DivisionPatternV2.TwoByOne),      // TwoByOne_TensQuotient_NoBorrow_2DigitMul
-//            Triple(45, 4, DivisionPatternV2.TwoByOne),      // TwoByOne_TensQuotient_NoBorrow_1DigitMul
-//            Triple(50, 3, DivisionPatternV2.TwoByOne),      // TwoByOne_TensQuotient_Borrow_2DigitMul
-//            Triple(70, 6, DivisionPatternV2.TwoByOne),      // TwoByOne_TensQuotient_SkipBorrow_1DigitMul
-//            Triple(53, 6, DivisionPatternV2.TwoByOne),      // TwoByOne_OnesQuotient_Borrow_2DigitMul
-//            Triple(12, 3, DivisionPatternV2.TwoByOne),      // TwoByOne_OnesQuotient_NoBorrow_2DigitMul
+            Triple(46, 3, DivisionPatternV2.TwoByOne),      // TwoByOne_TensQuotient_NoBorrow_2DigitMul
+            Triple(45, 4, DivisionPatternV2.TwoByOne),      // TwoByOne_TensQuotient_NoBorrow_1DigitMul
+            Triple(50, 3, DivisionPatternV2.TwoByOne),      // TwoByOne_TensQuotient_Borrow_2DigitMul
+            Triple(70, 6, DivisionPatternV2.TwoByOne),      // TwoByOne_TensQuotient_SkipBorrow_1DigitMul
+            Triple(53, 6, DivisionPatternV2.TwoByOne),      // TwoByOne_OnesQuotient_Borrow_2DigitMul
+            Triple(12, 3, DivisionPatternV2.TwoByOne),      // TwoByOne_OnesQuotient_NoBorrow_2DigitMul
 
             // === TwoByTwo 패턴 세부 분기 ===
             Triple(68, 34, DivisionPatternV2.TwoByTwo),     // TwoByTwo_NoCarry_NoBorrow_1DigitRem
@@ -64,10 +69,10 @@ class DivisionViewModelV2Test {
     fun userInputTest() = runTest {
         val cases = listOf(
             // === TwoByOne 세부 패턴 ===
-//            // TwoByOne_TensQuotient_NoBorrow_2DigitMul
-//            Triple("TwoByOne_TensQuotient_NoBorrow_2DigitMul: 46 ÷ 3", 46 to 3, listOf("1", "3", "1", "6", "5", "15", "1")),
-//            // TwoByOne_TensQuotient_NoBorrow_1DigitMul
-//            Triple("TwoByOne_TensQuotient_NoBorrow_1DigitMul: 45 ÷ 4", 45 to 4, listOf("1", "4", "0", "5", "1", "4", "1")),
+            // TwoByOne_TensQuotient_NoBorrow_2DigitMul
+            Triple("TwoByOne_TensQuotient_NoBorrow_2DigitMul: 46 ÷ 3", 46 to 3, listOf("1", "3", "1", "6", "5", "15", "1")),
+            // TwoByOne_TensQuotient_NoBorrow_1DigitMul
+            Triple("TwoByOne_TensQuotient_NoBorrow_1DigitMul: 45 ÷ 4", 45 to 4, listOf("1", "4", "0", "5", "1", "4", "1")),
 //            // TwoByOne_TensQuotient_Borrow_2DigitMul
 //            Triple("TwoByOne_TensQuotient_Borrow_2DigitMul: 50 ÷ 3", 50 to 3, listOf("1", "3", "2", "0", "6", "18", "1", "2")),
 //            // TwoByOne_TensQuotient_SkipBorrow_1DigitMul
@@ -80,6 +85,7 @@ class DivisionViewModelV2Test {
             // === TwoByTwo 세부 패턴 ===
             // TwoByTwo_NoCarry_NoBorrow_1DigitRem
             Triple("TwoByTwo_NoCarry_NoBorrow_1DigitRem: 68 ÷ 34", 68 to 34, listOf("2", "8", "6", "0")),
+
             // TwoByTwo_NoCarry_NoBorrow_2DigitRem
             Triple("TwoByTwo_NoCarry_NoBorrow_2DigitRem: 57 ÷ 22", 57 to 22, listOf("2", "4", "4", "3", "1")),
             // TwoByTwo_NoCarry_Borrow_1DigitRem
@@ -109,11 +115,18 @@ class DivisionViewModelV2Test {
             val actualPattern = viewModel.getCurrentPattern()
             assertEquals("$name: 대분류 패턴 불일치!", expectedPattern, actualPattern)
 
+
             // 입력값을 순차적으로 제출하며 단계별 정답 확인
             for ((i, input) in inputs.withIndex()) {
                 viewModel.submitInput(input)
                 val state = viewModel.uiState.value
-                assertTrue("$name: ${i + 1}번째 입력 오답! (${input})", state.feedback == null)
+
+                // 마지막 입력이면 feedback이 있어야 한다!
+                if (i == inputs.lastIndex) {
+                    assertEquals("$name: 마지막 입력 후 feedback 불일치", "정답입니다!", state.feedback)
+                } else {
+                    assertTrue("$name: ${i + 1}번째 입력 오답! (${input})", state.feedback == null)
+                }
             }
 
             val state = viewModel.uiState.value
