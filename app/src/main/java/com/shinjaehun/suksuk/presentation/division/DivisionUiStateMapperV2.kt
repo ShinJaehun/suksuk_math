@@ -3,13 +3,13 @@ package com.shinjaehun.suksuk.presentation.division
 import com.shinjaehun.suksuk.domain.division.CrossOutType
 import com.shinjaehun.suksuk.domain.division.DivisionDomainStateV2
 import com.shinjaehun.suksuk.domain.division.DivisionUiStateV2
+import com.shinjaehun.suksuk.domain.division.Highlight
 import com.shinjaehun.suksuk.domain.division.InputCellV2
 import com.shinjaehun.suksuk.domain.division.PhaseStep
+import com.shinjaehun.suksuk.domain.division.SubtractLineType
 import com.shinjaehun.suksuk.domain.division.model.CellName
-import com.shinjaehun.suksuk.domain.division.model.Highlight
 
 fun mapToUiStateV2(domain: DivisionDomainStateV2, currentInput: String): DivisionUiStateV2 {
-    val cells = mutableMapOf<CellName, InputCellV2>()
     val currentStep = domain.currentStepIndex
     val steps = domain.phaseSequence.steps
 
@@ -17,7 +17,6 @@ fun mapToUiStateV2(domain: DivisionDomainStateV2, currentInput: String): Divisio
     val confirmedStrikeThroughSet = mutableSetOf<CellName>()
     val subtractLineSet = mutableSetOf<CellName>()
     val borrowed10Set = mutableSetOf<CellName>()
-
     val strikeThroughCounts = mutableMapOf<CellName, Int>()
 
     // 1 ~ 현재 단계까지 모든 정보를 누적
@@ -46,7 +45,7 @@ fun mapToUiStateV2(domain: DivisionDomainStateV2, currentInput: String): Divisio
 
     val curPhaseStep = steps[currentStep]
 
-    for (cellName in CellName.entries) {
+    val cells = CellName.entries.associateWith { cellName ->
         val isEditable = curPhaseStep.editableCells.contains(cellName)
         val highlight = when {
             isEditable -> Highlight.Editing
@@ -60,15 +59,15 @@ fun mapToUiStateV2(domain: DivisionDomainStateV2, currentInput: String): Divisio
             else -> CrossOutType.None
         }
 
-        var drawSubtractLine = subtractLineSet.contains(cellName)
-
-        if (cellName in curPhaseStep.subtractLineTargets) {
-            drawSubtractLine = true
-        }
+//        val subtractLineType = if (subtractLineSet.contains(cellName) ||
+//            cellName in curPhaseStep.subtractLineTargets) {
+//            SubtractLineType.Pending
+//        } else {
+//            SubtractLineType.None
+//        }
+        val subtractLineType = assignSubtractLineType(cellName, subtractLineSet, curPhaseStep.subtractLineTargets)
 
         val presetValue = if (borrowed10Set.contains(cellName)) "10" else curPhaseStep.presetValues[cellName]
-
-        println("🟡 drawSubtractLine check | cell=$cellName | draw=$drawSubtractLine")
 
         val inputIdx = calculateInputIndexForCell(steps, currentStep, cellName)
 
@@ -84,31 +83,31 @@ fun mapToUiStateV2(domain: DivisionDomainStateV2, currentInput: String): Divisio
                 }
             }
 
-//            isEditable && currentStep == domain.currentStepIndex &&
-//                    (inputIdx == null || domain.inputs.getOrNull(inputIdx).isNullOrEmpty()) -> {
-//                        // 🔥 currentInput은 editableCells의 순서대로만 바인딩!
-////                val idxInEditables = curPhaseStep.editableCells.indexOf(cellName)
-////                currentInput.getOrNull(idxInEditables)?.toString() ?: "?"
-//                val idxInEditables = curPhaseStep.editableCells.indexOf(cellName)
-//                val v = currentInput.getOrNull(idxInEditables)?.toString() ?: "?"
-//                println("🟣 mapToUiStateV2: cell=$cellName idx=$idxInEditables input=$currentInput v=$v")
-//                v
-//            }
-//
-//            inputIdx != null -> domain.inputs.getOrNull(inputIdx)
-
             else -> getDefaultCellValue(domain, cellName)
         }
 
-        cells[cellName] = InputCellV2(
+//        cells[cellName] = InputCellV2(
+//            cellName = cellName,
+//            value = value,
+//            editable = isEditable,
+//            highlight = highlight,
+//            crossOutType = crossOutType,
+//            subtractLineType = subtractLineType
+//        )
+        InputCellV2(
             cellName = cellName,
             value = value,
             editable = isEditable,
             highlight = highlight,
             crossOutType = crossOutType,
-            drawSubtractLine = drawSubtractLine
+            subtractLineType = subtractLineType
         )
     }
+
+//    val cellsWithLineTypes = cells.mapValues { (cellName, cell) ->
+//        val lineType = assignSubtractLineType(cellName, subtractLineSet, curPhaseStep.subtractLineTargets)
+//        cell.copy(subtractLineType = lineType)
+//    }
 
     return DivisionUiStateV2(
         cells = cells,
@@ -118,6 +117,31 @@ fun mapToUiStateV2(domain: DivisionDomainStateV2, currentInput: String): Divisio
     )
 }
 
+fun assignSubtractLineType(
+    cellName: CellName,
+    subtractLineSet: Set<CellName>,
+    currentTargets: Set<CellName>
+): SubtractLineType {
+    val isTarget = subtractLineSet.contains(cellName) || currentTargets.contains(cellName)
+
+    if (!isTarget) return SubtractLineType.None
+
+    return when (cellName) {
+        in setOf(
+            CellName.BorrowDividendTens,
+            CellName.Subtract1Tens,
+            CellName.Subtract1Ones
+        ) -> SubtractLineType.SubtractLine1
+
+        in setOf(
+            CellName.BorrowSubtract1Tens,
+            CellName.Subtract2Tens,
+            CellName.Subtract2Ones
+        ) -> SubtractLineType.SubtractLine2
+
+        else -> SubtractLineType.Pending
+    }
+}
 
 fun calculateInputIndexForCell(
     steps: List<PhaseStep>,

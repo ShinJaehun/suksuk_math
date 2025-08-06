@@ -18,9 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shinjaehun.suksuk.R
 import com.shinjaehun.suksuk.domain.division.CrossOutType
+import com.shinjaehun.suksuk.domain.division.Highlight
 import com.shinjaehun.suksuk.domain.division.InputCellV2
 import com.shinjaehun.suksuk.domain.division.model.CrossOutColor
-import com.shinjaehun.suksuk.domain.division.model.Highlight
 
 @Composable
 fun NumberText(

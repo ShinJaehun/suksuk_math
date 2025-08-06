@@ -42,8 +42,8 @@ class DivisionViewModelV2 @Inject constructor(
 //        startNewProblem(96, 12) //TwoByTwo_Carry_NoBorrow_1DigitRem
 //        startNewProblem(95, 28) //TwoByTwo_Carry_NoBorrow_2DigitRem
 //        startNewProblem(81, 12) //TwoByTwo_Carry_Borrow_1DigitRem
-//        startNewProblem(70, 18) //TwoByTwo_Carry_Borrow_2DigitRem
-        startNewProblem(72, 6) // TwoByOne_TensQuotient_NoBorrow_2DigitMul
+        startNewProblem(70, 18) //TwoByTwo_Carry_Borrow_2DigitRem
+//        startNewProblem(72, 6) // TwoByOne_TensQuotient_NoBorrow_2DigitMul
 
     }
 
