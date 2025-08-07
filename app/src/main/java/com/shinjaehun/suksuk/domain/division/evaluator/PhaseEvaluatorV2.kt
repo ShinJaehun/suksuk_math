@@ -30,6 +30,7 @@ class PhaseEvaluatorV2 {
         stepIndex: Int,
         previousInputs: List<String>
     ): Int? {
+        val dividendHundreds = dividend / 100
         val dividendTens = dividend / 10
         val dividendOnes = dividend % 10
 
@@ -49,14 +50,31 @@ class PhaseEvaluatorV2 {
             }
             DivisionPhaseV2.InputMultiply -> when (cell) {
                 CellName.CarryDivisorTens -> (quotient * divisorOnes) / 10
-                CellName.Multiply1Ones    -> (quotient * divisorOnes) % 10
-//                CellName.Multiply1Tens    -> (quotient * divisorTens)
+
+                CellName.Multiply1Hundreds -> if (quotient >= 10) {
+                    quotientTens * divisorTens
+                } else {
+                    quotientOnes * divisor / 10
+                }
+
                 CellName.Multiply1Tens    -> if(quotient >= 10 ){
-                    quotientTens * divisor
+                    if (dividend >= 100) {
+                        quotientTens * divisorOnes
+                    } else {
+                        quotientTens * divisor
+                    }
                 } else {
                     quotient * divisor / 10
                 }
-                CellName.Multiply2Tens    -> (divisor * quotientOnes) / 10
+
+                CellName.Multiply1Ones    -> (quotient * divisorOnes) % 10
+
+                CellName.Multiply2Tens    -> if (dividend >= 100) {
+                    quotientOnes * divisorTens
+                } else {
+                    (divisor * quotientOnes) / 10
+                }
+
                 CellName.Multiply2Ones    -> (divisor * quotientOnes) % 10
                 else -> null
             }
@@ -70,6 +88,7 @@ class PhaseEvaluatorV2 {
                 else -> null
             }
             DivisionPhaseV2.InputSubtract -> when (cell) {
+                CellName.Subtract1Hundreds -> dividendHundreds - (quotientTens * divisor) / 10
                 CellName.Subtract1Tens -> if(quotient >= 10 ) {
                     dividendTens - quotientTens * divisor
                 } else {

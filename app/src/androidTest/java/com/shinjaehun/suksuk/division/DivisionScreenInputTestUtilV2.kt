@@ -10,6 +10,8 @@ import com.shinjaehun.suksuk.domain.division.factory.DivisionDomainStateV2Factor
 import com.shinjaehun.suksuk.domain.division.layout.DivisionPhaseSequenceProvider
 import com.shinjaehun.suksuk.domain.division.detector.PatternDetectorV2
 import com.shinjaehun.suksuk.domain.division.evaluator.PhaseEvaluatorV2
+import com.shinjaehun.suksuk.domain.division.layout.sequence.TwoByOnePhaseSequenceCreator
+import com.shinjaehun.suksuk.domain.division.layout.sequence.TwoByTwoPhaseSequenceCreator
 import com.shinjaehun.suksuk.presentation.division.DivisionScreenV2
 import com.shinjaehun.suksuk.presentation.division.DivisionViewModelV2
 
@@ -19,7 +21,12 @@ fun ComposeContentTestRule.divisionCaseV2(
     inputs: List<String>
 ) {
     val savedStateHandle = SavedStateHandle(mapOf("autoStart" to false))
-    val phaseSequenceProvider = DivisionPhaseSequenceProvider()
+
+
+    val twoByOneCreator = TwoByOnePhaseSequenceCreator()
+    val twoByTwoCreator = TwoByTwoPhaseSequenceCreator()
+    val phaseSequenceProvider = DivisionPhaseSequenceProvider(twoByOneCreator, twoByTwoCreator)
+
     val phaseEvaluator = PhaseEvaluatorV2()
     val patternDetector = PatternDetectorV2
 

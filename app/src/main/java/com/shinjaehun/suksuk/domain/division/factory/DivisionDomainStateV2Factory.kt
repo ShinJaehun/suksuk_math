@@ -17,7 +17,7 @@ class DivisionDomainStateV2Factory @Inject constructor(
         val sequence = when (pattern) {
             DivisionPatternV2.TwoByOne -> phaseSequenceProvider.makeTwoByOnePhaseSequence(dividend, divisor)
             DivisionPatternV2.TwoByTwo -> phaseSequenceProvider.makeTwoByTwoPhaseSequence(dividend, divisor)
-            DivisionPatternV2.ThreeByTwo -> TODO()
+            DivisionPatternV2.ThreeByTwo -> phaseSequenceProvider.makeThreeByTwoPhaseSequence(dividend, divisor)
         }
 
         return DivisionDomainStateV2(

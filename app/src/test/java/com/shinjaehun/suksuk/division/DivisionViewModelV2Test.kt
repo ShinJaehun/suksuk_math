@@ -6,6 +6,9 @@ import com.shinjaehun.suksuk.domain.division.model.DivisionPatternV2
 import com.shinjaehun.suksuk.domain.division.layout.DivisionPhaseSequenceProvider
 import com.shinjaehun.suksuk.domain.division.detector.PatternDetectorV2
 import com.shinjaehun.suksuk.domain.division.evaluator.PhaseEvaluatorV2
+import com.shinjaehun.suksuk.domain.division.layout.sequence.ThreeByTwoPhaseSequenceCreator
+import com.shinjaehun.suksuk.domain.division.layout.sequence.TwoByOnePhaseSequenceCreator
+import com.shinjaehun.suksuk.domain.division.layout.sequence.TwoByTwoPhaseSequenceCreator
 import com.shinjaehun.suksuk.presentation.division.DivisionViewModelV2
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
@@ -20,7 +23,12 @@ class DivisionViewModelV2Test {
     fun setup() {
 
         val savedStateHandle = SavedStateHandle(mapOf("autoStart" to false))
-        val phaseSequenceProvider = DivisionPhaseSequenceProvider()
+
+        val twoByOneCreator = TwoByOnePhaseSequenceCreator()
+        val twoByTwoCreator = TwoByTwoPhaseSequenceCreator()
+        val threeByTwoCreator = ThreeByTwoPhaseSequenceCreator()
+
+        val phaseSequenceProvider = DivisionPhaseSequenceProvider(twoByOneCreator, twoByTwoCreator, threeByTwoCreator)
         val phaseEvaluator = PhaseEvaluatorV2()
         val patternDetector = PatternDetectorV2
 
@@ -72,7 +80,7 @@ class DivisionViewModelV2Test {
     @Test
     fun userInputTest() = runTest {
         val cases = listOf(
-            // === TwoByOne 세부 패턴 ===
+            // === TwoByOne ===
             // TwoByOne_TensQuotient_NoBorrow_2DigitMul
             Triple("TwoByOne_TensQuotient_NoBorrow_2DigitMul: 46 ÷ 3", 46 to 3, listOf("1", "3", "1", "6", "5", "15", "1")),
             // TwoByOne_TensQuotient_NoBorrow_1DigitMul
@@ -88,7 +96,7 @@ class DivisionViewModelV2Test {
             // TwoByOne_OnesQuotient_NoBorrow_2DigitMul
             Triple("TwoByOne_OnesQuotient_NoBorrow_2DigitMul: 81 ÷ 9", 81 to 9, listOf("9", "81", "0")),
 
-            // === TwoByTwo 세부 패턴 ===
+            // === TwoByTwo ===
             // TwoByTwo_NoCarry_NoBorrow_1DigitRem
             Triple("TwoByTwo_NoCarry_NoBorrow_1DigitRem: 68 ÷ 34", 68 to 34, listOf("2", "8", "6", "0")),
             // TwoByTwo_NoCarry_NoBorrow_2DigitRem
@@ -104,7 +112,11 @@ class DivisionViewModelV2Test {
             // TwoByTwo_Carry_Borrow_1DigitRem
             Triple("TwoByTwo_Carry_Borrow_1DigitRem: 81 ÷ 12", 81 to 12, listOf("6", "12", "7", "7", "9")),
             // TwoByTwo_Carry_Borrow_2DigitRem
-            Triple("TwoByTwo_Carry_Borrow_2DigitRem: 80 ÷ 17", 80 to 17, listOf("4", "28", "6", "7", "2", "1"))
+            Triple("TwoByTwo_Carry_Borrow_2DigitRem: 80 ÷ 17", 80 to 17, listOf("4", "28", "6", "7", "2", "1")),
+
+            // === ThreeByTwo ===
+            // ThreeByTwo_TensQuotient_NoCarry1_NoBorrow_NoCarry2
+            Triple("ThreeByTwo_TensQuotient_NoCarry1_NoBorrow_NoCarry2: 432 ÷ 12", 432 to 12, listOf("3", "6", "3", "7", "1", "2", "6", "2", "6", "0")),
         )
         for ((name, pair, inputs) in cases) {
             val (dividend, divisor) = pair

@@ -4,6 +4,9 @@ import com.shinjaehun.suksuk.domain.division.factory.DivisionDomainStateV2Factor
 import com.shinjaehun.suksuk.domain.division.layout.DivisionPhaseSequenceProvider
 import com.shinjaehun.suksuk.domain.division.detector.PatternDetectorV2
 import com.shinjaehun.suksuk.domain.division.evaluator.PhaseEvaluatorV2
+import com.shinjaehun.suksuk.domain.division.layout.sequence.ThreeByTwoPhaseSequenceCreator
+import com.shinjaehun.suksuk.domain.division.layout.sequence.TwoByOnePhaseSequenceCreator
+import com.shinjaehun.suksuk.domain.division.layout.sequence.TwoByTwoPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.legacy.detector.PatternDetector
 import com.shinjaehun.suksuk.domain.division.legacy.evaluator.PhaseEvaluator
 import com.shinjaehun.suksuk.domain.division.legacy.factory.DivisionDomainStateFactory
@@ -36,7 +39,11 @@ object AppModule {
     fun providePhaseEvaluatorV2(): PhaseEvaluatorV2 = PhaseEvaluatorV2()
 
     @Provides
-    fun providePhaseSequenceProvider(): DivisionPhaseSequenceProvider = DivisionPhaseSequenceProvider()
+    fun providePhaseSequenceProvider(
+        twoByOneCreator: TwoByOnePhaseSequenceCreator,
+        twoByTwoCreator: TwoByTwoPhaseSequenceCreator,
+        threeByTwoCreator: ThreeByTwoPhaseSequenceCreator
+    ): DivisionPhaseSequenceProvider = DivisionPhaseSequenceProvider(twoByOneCreator, twoByTwoCreator, threeByTwoCreator)
 
     @Singleton
     @Provides
