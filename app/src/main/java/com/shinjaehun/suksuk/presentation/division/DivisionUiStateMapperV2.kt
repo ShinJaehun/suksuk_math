@@ -1,13 +1,13 @@
 package com.shinjaehun.suksuk.presentation.division
 
-import com.shinjaehun.suksuk.domain.division.CrossOutType
-import com.shinjaehun.suksuk.domain.division.DivisionDomainStateV2
-import com.shinjaehun.suksuk.domain.division.DivisionPhaseV2
-import com.shinjaehun.suksuk.domain.division.DivisionUiStateV2
-import com.shinjaehun.suksuk.domain.division.Highlight
-import com.shinjaehun.suksuk.domain.division.InputCellV2
-import com.shinjaehun.suksuk.domain.division.PhaseStep
-import com.shinjaehun.suksuk.domain.division.SubtractLineType
+import com.shinjaehun.suksuk.domain.division.model.CrossOutType
+import com.shinjaehun.suksuk.domain.division.model.DivisionDomainStateV2
+import com.shinjaehun.suksuk.domain.division.model.DivisionPhaseV2
+import com.shinjaehun.suksuk.domain.division.model.DivisionUiStateV2
+import com.shinjaehun.suksuk.domain.division.model.Highlight
+import com.shinjaehun.suksuk.domain.division.model.InputCellV2
+import com.shinjaehun.suksuk.domain.division.layout.PhaseStep
+import com.shinjaehun.suksuk.domain.division.model.SubtractLineType
 import com.shinjaehun.suksuk.domain.division.model.CellName
 
 fun mapToUiStateV2(domain: DivisionDomainStateV2, currentInput: String): DivisionUiStateV2 {
@@ -19,6 +19,8 @@ fun mapToUiStateV2(domain: DivisionDomainStateV2, currentInput: String): Divisio
     val subtractLineSet = mutableSetOf<CellName>()
     val borrowed10Set = mutableSetOf<CellName>()
     val strikeThroughCounts = mutableMapOf<CellName, Int>()
+
+    val presetMap = mutableMapOf<CellName, String>()
 
     // 1 ~ 현재 단계까지 모든 정보를 누적
     for (i in 0..currentStep) {
@@ -42,6 +44,9 @@ fun mapToUiStateV2(domain: DivisionDomainStateV2, currentInput: String): Divisio
         for ((cell, value) in step.presetValues) {
             if (value == "10") borrowed10Set += cell
         }
+
+        // 💡 [4] presetValues 누적
+        presetMap.putAll(step.presetValues)
     }
 
     val curPhaseStep = steps[currentStep]
@@ -68,7 +73,11 @@ fun mapToUiStateV2(domain: DivisionDomainStateV2, currentInput: String): Divisio
 //        }
         val subtractLineType = assignSubtractLineType(cellName, subtractLineSet, curPhaseStep.subtractLineTargets)
 
-        val presetValue = if (borrowed10Set.contains(cellName)) "10" else curPhaseStep.presetValues[cellName]
+//        val presetValue = if (borrowed10Set.contains(cellName)) "10" else curPhaseStep.presetValues[cellName]
+        val presetValue = when {
+            borrowed10Set.contains(cellName) -> "10"
+            else -> presetMap[cellName]
+        }
 
         val inputIdx = calculateInputIndexForCell(steps, currentStep, cellName)
 

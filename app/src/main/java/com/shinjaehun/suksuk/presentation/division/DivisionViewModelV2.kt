@@ -1,18 +1,12 @@
 package com.shinjaehun.suksuk.presentation.division
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.shinjaehun.suksuk.domain.division.DivisionDomainStateV2
-import com.shinjaehun.suksuk.domain.division.DivisionPatternV2
-import com.shinjaehun.suksuk.domain.division.DivisionPhaseSequenceProvider
-import com.shinjaehun.suksuk.domain.division.DivisionPhaseV2
-import com.shinjaehun.suksuk.domain.division.DivisionUiStateV2
-import com.shinjaehun.suksuk.domain.division.PatternDetectorV2
-import com.shinjaehun.suksuk.domain.division.PhaseEvaluatorV2
-import com.shinjaehun.suksuk.domain.division.PhaseSequence
+import com.shinjaehun.suksuk.domain.division.model.DivisionDomainStateV2
+import com.shinjaehun.suksuk.domain.division.factory.DivisionDomainStateV2Factory
+import com.shinjaehun.suksuk.domain.division.model.DivisionPatternV2
+import com.shinjaehun.suksuk.domain.division.model.DivisionUiStateV2
+import com.shinjaehun.suksuk.domain.division.evaluator.PhaseEvaluatorV2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,9 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class DivisionViewModelV2 @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val phaseSequenceProvider: DivisionPhaseSequenceProvider,
     private val phaseEvaluator: PhaseEvaluatorV2,
-    private val feedbackProvider: FeedbackMessageProviderV2
+    private val domainStateFactory: DivisionDomainStateV2Factory,
 ): ViewModel() {
     private val autoStart: Boolean = savedStateHandle["autoStart"] ?: true
 
@@ -39,35 +32,30 @@ class DivisionViewModelV2 @Inject constructor(
 
     init {
         if(autoStart){
-//        startNewProblem(68, 34) //TwoByTwo_NoCarry_NoBorrow_1DigitRem
-//        startNewProblem(57, 22) //TwoByTwo_NoCarry_NoBorrow_2DigitRem
-//        startNewProblem(50, 22) //TwoByTwo_NoCarry_Borrow_1DigitRem
-//        startNewProblem(50, 13) //TwoByTwo_NoCarry_Borrow_2DigitRem
-//        startNewProblem(96, 12) //TwoByTwo_Carry_NoBorrow_1DigitRem
-//        startNewProblem(95, 28) //TwoByTwo_Carry_NoBorrow_2DigitRem
-//        startNewProblem(81, 12) //TwoByTwo_Carry_Borrow_1DigitRem
-//        startNewProblem(70, 18) //TwoByTwo_Carry_Borrow_2DigitRem
-//        startNewProblem(72, 6) // TwoByOne_TensQuotient_NoBorrow_2DigitMul
-            startNewProblem(46, 3) // TwoByOne_TensQuotient_NoBorrow_2DigitMul
+//            startNewProblem(68, 34) //TwoByTwo_NoCarry_NoBorrow_1DigitRem
+//            startNewProblem(57, 22) //TwoByTwo_NoCarry_NoBorrow_2DigitRem
+//            startNewProblem(50, 22) //TwoByTwo_NoCarry_Borrow_1DigitRem
+//            startNewProblem(50, 13) //TwoByTwo_NoCarry_Borrow_2DigitRem
+//            startNewProblem(96, 12) //TwoByTwo_Carry_NoBorrow_1DigitRem
+//            startNewProblem(95, 28) //TwoByTwo_Carry_NoBorrow_2DigitRem
+//            startNewProblem(81, 12) //TwoByTwo_Carry_Borrow_1DigitRem
+//            startNewProblem(70, 18) //TwoByTwo_Carry_Borrow_2DigitRem
+//            startNewProblem(72, 6) // TwoByOne_TensQuotient_NoBorrow_2DigitMul
+//            startNewProblem(46, 3) // TwoByOne_TensQuotient_NoBorrow_2DigitMul
+//            startNewProblem(50, 3) // TwoByOne_TensQuotient_Borrow_2DigitMul
+//            startNewProblem(70, 6) // TwoByOne_TensQuotient_SkipBorrow_1DigitMul
+//            startNewProblem(71, 6) // TwoByOne_TensQuotient_SkipBorrow_1DigitMul (11-6 skip borrow 괜찮은거지?)
+//            startNewProblem(89, 8) // TwoByOne_TensQuotient_SkipBorrow_1DigitMul (empty subtract1tens)
+//            startNewProblem(87, 8) // TwoByOne_TensQuotient_SkipMul2Sub2 <------------ new
+//            startNewProblem(62, 7) // TwoByOne_OnesQuotient_Borrow_2DigitMul
+//            startNewProblem(81, 9) // TwoByOne_OnesQuotient_NoBorrow_2DigitMul
+
+
         }
     }
 
     fun startNewProblem(dividend: Int, divisor: Int) {
-        val pattern = PatternDetectorV2.detectPattern(dividend, divisor)
-
-        val sequence = when (pattern) {
-            DivisionPatternV2.TwoByOne -> phaseSequenceProvider.makeTwoByOnePhaseSequence(dividend, divisor)
-            DivisionPatternV2.TwoByTwo -> phaseSequenceProvider.makeTwoByTwoPhaseSequence(dividend, divisor)
-            DivisionPatternV2.ThreeByTwo -> TODO()
-        }
-
-        domainState = DivisionDomainStateV2(
-            dividend = dividend,
-            divisor = divisor,
-            phaseSequence = sequence,
-            currentStepIndex = 0,
-            inputs = emptyList()
-        )
+        domainState = domainStateFactory.create(dividend, divisor)
         _currentInput.value = ""
         emitUiState()
     }

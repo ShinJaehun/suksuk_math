@@ -1,0 +1,56 @@
+package com.shinjaehun.suksuk.domain.division.legacy.layout.two_by_one
+
+import com.shinjaehun.suksuk.domain.division.legacy.layout.DivisionStepUiLayout
+import com.shinjaehun.suksuk.domain.division.legacy.model.CrossOutColor
+import com.shinjaehun.suksuk.domain.division.legacy.model.DivisionPhase
+import com.shinjaehun.suksuk.domain.division.legacy.model.Highlight
+import com.shinjaehun.suksuk.domain.division.legacy.model.InputCell
+import com.shinjaehun.suksuk.domain.division.model.CellName
+
+val twoByOne_OnesQuotientNoBorrow2DigitMulLayouts = listOf(
+    // 1단계: 일의자리 몫(2자리) 입력
+    DivisionStepUiLayout(
+        phase = DivisionPhase.InputQuotient,
+        cells = mapOf(
+                CellName.QuotientOnes to InputCell(cellName = CellName.QuotientOnes, editable = true, highlight = Highlight.Editing),
+                CellName.DividendTens to InputCell(cellName = CellName.DividendTens, highlight = Highlight.Related),
+                CellName.DividendOnes to InputCell(cellName = CellName.DividendOnes, highlight = Highlight.Related),
+                CellName.DivisorOnes to InputCell(cellName = CellName.DivisorOnes, highlight = Highlight.Related)
+        ),
+//        inputIndices = mapOf(
+//            CellName.QuotientOnes to 0
+//        )
+    ),
+    // 2단계: 곱셈(두 자리, 총합 입력)
+    DivisionStepUiLayout(
+        phase = DivisionPhase.InputMultiply1TensAndMultiply1Ones,
+        cells = mapOf(
+                CellName.Multiply1Tens to InputCell(cellName = CellName.Multiply1Tens, editable = true, highlight = Highlight.Editing),
+                CellName.Multiply1Ones to InputCell(cellName = CellName.Multiply1Ones, editable = true, highlight = Highlight.Editing),
+                CellName.DivisorOnes to InputCell(cellName = CellName.DivisorOnes, highlight = Highlight.Related),
+                CellName.QuotientOnes to InputCell(cellName = CellName.QuotientOnes, highlight = Highlight.Related)
+        ),
+//        inputIndices = mapOf(
+//            CellName.Multiply1Tens to 1,
+//            CellName.Multiply1Ones to 2
+//        )
+    ),
+    // 3단계: 뺄셈(두 자리, 각 자리)
+    DivisionStepUiLayout(
+        phase = DivisionPhase.InputSubtract1Ones,
+        cells = mapOf(
+                CellName.Subtract1Ones to InputCell(cellName = CellName.Subtract1Ones, editable = true, highlight = Highlight.Editing),
+                CellName.DividendOnes to InputCell(cellName = CellName.DividendOnes, highlight = Highlight.Related),
+                CellName.Multiply1Ones to InputCell(cellName = CellName.Multiply1Ones, highlight = Highlight.Related),
+        ),
+//        inputIndices = mapOf(
+//            CellName.Subtract1Ones to 3
+//        ),
+        showSubtractLine = true
+    ),
+    DivisionStepUiLayout(
+        phase = DivisionPhase.Complete,
+        cells = emptyMap(),
+    )
+
+)
