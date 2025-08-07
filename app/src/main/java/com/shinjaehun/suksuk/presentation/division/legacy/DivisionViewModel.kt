@@ -30,7 +30,7 @@ class DivisionViewModel @Inject constructor (
 
     init {
         if (autoStart) {
-            startNewProblem(46, 3) // TensQuotient_NoBorrow_2DigitMul
+//            startNewProblem(46, 3) // TensQuotient_NoBorrow_2DigitMul
 //            startNewProblem(85, 7) // TensQuotient_NoBorrow_2DigitMul
 //            startNewProblem(50, 3) // TensQuotient_Borrow_2DigitMul
 //            startNewProblem(90, 7) // TensQuotient_Borrow_2DigitMul

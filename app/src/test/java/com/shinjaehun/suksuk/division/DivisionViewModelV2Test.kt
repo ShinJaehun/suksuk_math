@@ -116,7 +116,8 @@ class DivisionViewModelV2Test {
 
             // === ThreeByTwo ===
             // ThreeByTwo_TensQuotient_NoCarry1_NoBorrow_NoCarry2
-            Triple("ThreeByTwo_TensQuotient_NoCarry1_NoBorrow_NoCarry2: 432 ÷ 12", 432 to 12, listOf("3", "6", "3", "7", "1", "2", "6", "2", "6", "0")),
+            Triple("ThreeByTwo_TensQuotient_NoCarry1_NoBorrow_NoCarry2: 682 ÷ 31", 682 to 31, listOf("2", "2", "6", "6", "2", "2", "2", "6", "0")),
+//            Triple("ThreeByTwo_TensQuotient_NoCarry1_NoBorrow_NoCarry2: 432 ÷ 12", 432 to 12, listOf("3", "6", "3", "7", "1", "2", "6", "2", "6", "0")),
         )
         for ((name, pair, inputs) in cases) {
             val (dividend, divisor) = pair

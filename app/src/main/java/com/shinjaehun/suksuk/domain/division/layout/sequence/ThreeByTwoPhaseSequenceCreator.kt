@@ -44,12 +44,6 @@ class ThreeByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreato
             subtractLineTargets = setOf(CellName.Subtract1Tens)
         )
 
-        steps += PhaseStep(
-            phase = DivisionPhaseV2.InputSubtract,
-            editableCells = listOf(CellName.Subtract1Hundreds),
-            highlightCells = listOf(CellName.DividendHundreds, CellName.Multiply1Hundreds),
-        )
-
         // [4] Bring down 일의 자리
         steps += PhaseStep(
             phase = DivisionPhaseV2.InputBringDown,

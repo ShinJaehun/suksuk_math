@@ -130,7 +130,7 @@ fun mapToUiStateV2(domain: DivisionDomainStateV2, currentInput: String): Divisio
     )
 }
 
-fun assignSubtractLineType(
+fun assignSubtractLineType( //////////////////////////////////////////////// 수정 필요(borrow/borrowed 100의 자리에서부터!!!!!!!!!!
     cellName: CellName,
     subtractLineSet: Set<CellName>,
     currentTargets: Set<CellName>
@@ -181,10 +181,12 @@ fun getDefaultCellValue(domain: DivisionDomainStateV2, cellName: CellName): Stri
     CellName.DivisorOnes ->
         domain.divisor.toString().padStart(2, '0')[1].toString()
 
+    CellName.DividendHundreds ->
+        if (domain.dividend >= 100) domain.dividend.toString().padStart(3, '0')[0].toString() else ""
     CellName.DividendTens ->
-        if (domain.dividend >= 10) domain.dividend.toString().padStart(2, '0')[0].toString() else ""
+        if (domain.dividend >= 10) domain.dividend.toString().padStart(3, '0')[1].toString() else ""
     CellName.DividendOnes ->
-        domain.dividend.toString().padStart(2, '0')[1].toString()
+        domain.dividend.toString().padStart(3, '0')[2].toString()
 
     else -> null
 }

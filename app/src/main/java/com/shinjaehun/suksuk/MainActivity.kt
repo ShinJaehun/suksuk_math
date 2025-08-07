@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.shinjaehun.suksuk.presentation.division.DivisionScreenV2
 import com.shinjaehun.suksuk.presentation.division.legacy.DivisionScreen
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -14,7 +15,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
 
-            DivisionScreen()
+            DivisionScreenV2()
 
         }
     }
