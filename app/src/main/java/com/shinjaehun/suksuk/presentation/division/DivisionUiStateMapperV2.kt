@@ -82,6 +82,7 @@ fun mapToUiStateV2(domain: DivisionDomainStateV2, currentInput: String): Divisio
         val inputIdx = calculateInputIndexForCell(steps, currentStep, cellName)
 
         val value = when {
+            presetValue != null && presetValue == "" -> "?"
             presetValue != null -> presetValue
             inputIdx != null -> {
                 if (isEditable && currentStep == domain.currentStepIndex && domain.inputs.getOrNull(inputIdx).isNullOrEmpty()) {

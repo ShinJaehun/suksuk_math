@@ -28,19 +28,19 @@ class PhaseEvaluatorV2Test_TwoByOne {
         // 1단계: 몫 십의자리 입력
         PhaseInputTestCase(DivisionPhaseV2.InputQuotient, CellName.QuotientTens, "1", 46, 3, 0, listOf(), true),
         // 2단계: 곱셈 (3 × 1 = 3)
-        PhaseInputTestCase(DivisionPhaseV2.InputMultiply, CellName.Multiply1Tens, "3", 46, 3, 1, listOf("1"), true),
+        PhaseInputTestCase(DivisionPhaseV2.InputMultiply1, CellName.Multiply1Tens, "3", 46, 3, 1, listOf("1"), true),
         // 3단계: 뺄셈 (4 - 3 = 1)
-        PhaseInputTestCase(DivisionPhaseV2.InputSubtract, CellName.Subtract1Tens, "1", 46, 3, 2, listOf("1", "3"), true),
+        PhaseInputTestCase(DivisionPhaseV2.InputSubtract1, CellName.Subtract1Tens, "1", 46, 3, 2, listOf("1", "3"), true),
         // 4단계: 곱셈(일의자리 곱하고 아래로 내리기)
         PhaseInputTestCase(DivisionPhaseV2.InputBringDown, CellName.Subtract1Ones, "6", 46, 3, 3, listOf("1", "3", "1"), true),
         // 5단계: 몫 일의자리
         PhaseInputTestCase(DivisionPhaseV2.InputQuotient, CellName.QuotientOnes, "5", 46, 3, 4, listOf("1", "3", "1", "6"), true),
         // 6단계: 곱셈(15)
-        PhaseInputTestCase(DivisionPhaseV2.InputMultiply, CellName.Multiply2Tens, "1", 46, 3, 5, listOf("1", "3", "1", "6", "5"), true),
+        PhaseInputTestCase(DivisionPhaseV2.InputMultiply1, CellName.Multiply2Tens, "1", 46, 3, 5, listOf("1", "3", "1", "6", "5"), true),
 
-        PhaseInputTestCase(DivisionPhaseV2.InputMultiply, CellName.Multiply2Ones, "5", 46, 3, 6, listOf("1", "3", "1", "6", "5", "1"), true),
+        PhaseInputTestCase(DivisionPhaseV2.InputMultiply1, CellName.Multiply2Ones, "5", 46, 3, 6, listOf("1", "3", "1", "6", "5", "1"), true),
         // 7단계: 뺄셈(1)
-        PhaseInputTestCase(DivisionPhaseV2.InputSubtract, CellName.Subtract2Ones, "1", 46, 3, 7, listOf("1", "3", "1", "6", "5", "1", "5"), true),
+        PhaseInputTestCase(DivisionPhaseV2.InputSubtract1, CellName.Subtract2Ones, "1", 46, 3, 7, listOf("1", "3", "1", "6", "5", "1", "5"), true),
     )
 
     @Test

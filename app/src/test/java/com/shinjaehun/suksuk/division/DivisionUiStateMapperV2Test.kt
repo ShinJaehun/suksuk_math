@@ -24,12 +24,12 @@ class DivisionUiStateV2BuilderTest {
                 pattern = DivisionPatternV2.TwoByOne,
                 steps = listOf(
                     PhaseStep(DivisionPhaseV2.InputQuotient, listOf(CellName.QuotientTens)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.Multiply1Tens)),
-                    PhaseStep(DivisionPhaseV2.InputSubtract, listOf(CellName.Subtract1Tens)),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply1Tens)),
+                    PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract1Tens)),
                     PhaseStep(DivisionPhaseV2.InputBringDown, listOf(CellName.Subtract1Ones)),
                     PhaseStep(DivisionPhaseV2.InputQuotient, listOf(CellName.QuotientOnes)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.Multiply2Tens, CellName.Multiply2Ones)),
-                    PhaseStep(DivisionPhaseV2.InputSubtract, listOf(CellName.Subtract2Ones)),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply2Tens, CellName.Multiply2Ones)),
+                    PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract2Ones)),
                     PhaseStep(DivisionPhaseV2.Complete)
                 )
             ),
@@ -58,12 +58,12 @@ class DivisionUiStateV2BuilderTest {
                 pattern = DivisionPatternV2.TwoByOne,
                 steps = listOf(
                     PhaseStep(DivisionPhaseV2.InputQuotient, listOf(CellName.QuotientTens)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.Multiply1Tens)),
-                    PhaseStep(DivisionPhaseV2.InputSubtract, listOf(CellName.Subtract1Tens)),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply1Tens)),
+                    PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract1Tens)),
                     PhaseStep(DivisionPhaseV2.InputBringDown, listOf(CellName.Subtract1Ones)),
                     PhaseStep(DivisionPhaseV2.InputQuotient, listOf(CellName.QuotientOnes)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.Multiply2Ones)),
-                    PhaseStep(DivisionPhaseV2.InputSubtract, listOf(CellName.Subtract2Ones)),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply2Ones)),
+                    PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract2Ones)),
                     PhaseStep(DivisionPhaseV2.Complete)
                 )
             ),
@@ -91,12 +91,12 @@ class DivisionUiStateV2BuilderTest {
                 pattern = DivisionPatternV2.TwoByOne,
                 steps = listOf(
                     PhaseStep(DivisionPhaseV2.InputQuotient, listOf(CellName.QuotientTens)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.Multiply1Tens)),
-                    PhaseStep(DivisionPhaseV2.InputSubtract, listOf(CellName.Subtract1Tens)),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply1Tens)),
+                    PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract1Tens)),
                     PhaseStep(DivisionPhaseV2.InputBringDown, listOf(CellName.Subtract1Ones)),
                     PhaseStep(DivisionPhaseV2.InputQuotient, listOf(CellName.QuotientOnes)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.Multiply2Ones)),
-                    PhaseStep(DivisionPhaseV2.InputSubtract, listOf(CellName.Subtract2Ones)),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply2Ones)),
+                    PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract2Ones)),
                     PhaseStep(DivisionPhaseV2.Complete)
                 )
             ),
@@ -124,13 +124,13 @@ class DivisionUiStateV2BuilderTest {
                 pattern = DivisionPatternV2.TwoByOne,
                 steps = listOf(
                     PhaseStep(DivisionPhaseV2.InputQuotient, listOf(CellName.QuotientTens)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.Multiply1Tens)),
-                    PhaseStep(DivisionPhaseV2.InputSubtract, listOf(CellName.Subtract1Tens)),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply1Tens)),
+                    PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract1Tens)),
                     PhaseStep(DivisionPhaseV2.InputBringDown, listOf(CellName.Subtract1Ones)),
                     PhaseStep(DivisionPhaseV2.InputQuotient, listOf(CellName.QuotientOnes)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.Multiply2Tens, CellName.Multiply2Ones)),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply2Tens, CellName.Multiply2Ones)),
                     PhaseStep(DivisionPhaseV2.InputBorrow, listOf(CellName.BorrowDividendTens), needsBorrow = true),
-                    PhaseStep(DivisionPhaseV2.InputSubtract, listOf(CellName.Subtract2Ones)),
+                    PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract2Ones)),
                     PhaseStep(DivisionPhaseV2.Complete)
                 )
             ),
@@ -159,8 +159,8 @@ class DivisionUiStateV2BuilderTest {
                 pattern = DivisionPatternV2.TwoByOne,
                 steps = listOf(
                     PhaseStep(DivisionPhaseV2.InputQuotient, listOf(CellName.QuotientOnes)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.Multiply1Tens, CellName.Multiply1Ones)),
-                    PhaseStep(DivisionPhaseV2.InputSubtract, listOf(CellName.Subtract1Ones)),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply1Tens, CellName.Multiply1Ones)),
+                    PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract1Ones)),
                     PhaseStep(DivisionPhaseV2.Complete)
                 )
             ),
@@ -185,9 +185,9 @@ class DivisionUiStateV2BuilderTest {
                 pattern = DivisionPatternV2.TwoByOne,
                 steps = listOf(
                     PhaseStep(DivisionPhaseV2.InputQuotient, listOf(CellName.QuotientOnes)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.Multiply1Tens, CellName.Multiply1Ones)),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply1Tens, CellName.Multiply1Ones)),
                     PhaseStep(DivisionPhaseV2.InputBorrow, listOf(CellName.BorrowDividendTens), needsBorrow = true),
-                    PhaseStep(DivisionPhaseV2.InputSubtract, listOf(CellName.Subtract1Ones)),
+                    PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract1Ones)),
                     PhaseStep(DivisionPhaseV2.Complete)
                 )
             ),
@@ -213,9 +213,9 @@ class DivisionUiStateV2BuilderTest {
                 pattern = DivisionPatternV2.TwoByTwo,
                 steps = listOf(
                     PhaseStep(DivisionPhaseV2.InputQuotient, listOf(CellName.QuotientOnes)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.CarryDivisorTens, CellName.Multiply1Ones), needsCarry = true),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.Multiply1Tens)),
-                    PhaseStep(DivisionPhaseV2.InputSubtract, listOf(CellName.Subtract1Ones)),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.CarryDivisorTens, CellName.Multiply1Ones), needsCarry = true),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply1Tens)),
+                    PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract1Ones)),
                     PhaseStep(DivisionPhaseV2.Complete)
                 )
             ),
@@ -241,10 +241,10 @@ class DivisionUiStateV2BuilderTest {
                 pattern = DivisionPatternV2.TwoByTwo,
                 steps = listOf(
                     PhaseStep(DivisionPhaseV2.InputQuotient, listOf(CellName.QuotientOnes)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.CarryDivisorTens, CellName.Multiply1Ones), needsCarry = true),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.Multiply1Tens)),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.CarryDivisorTens, CellName.Multiply1Ones), needsCarry = true),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply1Tens)),
                     PhaseStep(DivisionPhaseV2.InputBorrow, listOf(CellName.BorrowDividendTens), needsBorrow = true),
-                    PhaseStep(DivisionPhaseV2.InputSubtract, listOf(CellName.Subtract1Ones)),
+                    PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract1Ones)),
                     PhaseStep(DivisionPhaseV2.Complete)
                 )
             ),
@@ -271,9 +271,9 @@ class DivisionUiStateV2BuilderTest {
                 pattern = DivisionPatternV2.TwoByTwo,
                 steps = listOf(
                     PhaseStep(DivisionPhaseV2.InputQuotient, listOf(CellName.QuotientOnes)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.Multiply1Ones)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.Multiply1Tens)),
-                    PhaseStep(DivisionPhaseV2.InputSubtract, listOf(CellName.Subtract1Ones)),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply1Ones)),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply1Tens)),
+                    PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract1Ones)),
                     PhaseStep(DivisionPhaseV2.Complete)
                 )
             ),
@@ -300,10 +300,10 @@ class DivisionUiStateV2BuilderTest {
                 pattern = DivisionPatternV2.TwoByTwo,
                 steps = listOf(
                     PhaseStep(DivisionPhaseV2.InputQuotient, listOf(CellName.QuotientOnes)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.Multiply1Ones)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.Multiply1Tens)),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply1Ones)),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply1Tens)),
                     PhaseStep(DivisionPhaseV2.InputBorrow, listOf(CellName.BorrowDividendTens), needsBorrow = true),
-                    PhaseStep(DivisionPhaseV2.InputSubtract, listOf(CellName.Subtract1Ones)),
+                    PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract1Ones)),
                     PhaseStep(DivisionPhaseV2.Complete)
                 )
             ),
@@ -330,10 +330,10 @@ class DivisionUiStateV2BuilderTest {
                 pattern = DivisionPatternV2.TwoByTwo,
                 steps = listOf(
                     PhaseStep(DivisionPhaseV2.InputQuotient, listOf(CellName.QuotientOnes)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.Multiply1Ones)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.Multiply1Tens)),
-                    PhaseStep(DivisionPhaseV2.InputSubtract, listOf(CellName.Subtract1Ones)),
-                    PhaseStep(DivisionPhaseV2.InputSubtract, listOf(CellName.Subtract1Tens)),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply1Ones)),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply1Tens)),
+                    PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract1Ones)),
+                    PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract1Tens)),
                     PhaseStep(DivisionPhaseV2.Complete)
                 )
             ),
@@ -359,11 +359,11 @@ class DivisionUiStateV2BuilderTest {
                 pattern = DivisionPatternV2.TwoByTwo,
                 steps = listOf(
                     PhaseStep(DivisionPhaseV2.InputQuotient, listOf(CellName.QuotientOnes)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.Multiply1Ones)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.Multiply1Tens)),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply1Ones)),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply1Tens)),
                     PhaseStep(DivisionPhaseV2.InputBorrow, listOf(CellName.BorrowDividendTens), needsBorrow = true),
-                    PhaseStep(DivisionPhaseV2.InputSubtract, listOf(CellName.Subtract1Ones)),
-                    PhaseStep(DivisionPhaseV2.InputSubtract, listOf(CellName.Subtract1Tens)),
+                    PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract1Ones)),
+                    PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract1Tens)),
                     PhaseStep(DivisionPhaseV2.Complete)
                 )
             ),
@@ -390,10 +390,10 @@ class DivisionUiStateV2BuilderTest {
                 pattern = DivisionPatternV2.TwoByTwo,
                 steps = listOf(
                     PhaseStep(DivisionPhaseV2.InputQuotient, listOf(CellName.QuotientOnes)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.CarryDivisorTens, CellName.Multiply1Ones), needsCarry = true),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.Multiply1Tens)),
-                    PhaseStep(DivisionPhaseV2.InputSubtract, listOf(CellName.Subtract1Ones)),
-                    PhaseStep(DivisionPhaseV2.InputSubtract, listOf(CellName.Subtract1Tens)),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.CarryDivisorTens, CellName.Multiply1Ones), needsCarry = true),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply1Tens)),
+                    PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract1Ones)),
+                    PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract1Tens)),
                     PhaseStep(DivisionPhaseV2.Complete)
                 )
             ),
@@ -420,11 +420,11 @@ class DivisionUiStateV2BuilderTest {
                 pattern = DivisionPatternV2.TwoByTwo,
                 steps = listOf(
                     PhaseStep(DivisionPhaseV2.InputQuotient, listOf(CellName.QuotientOnes)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.CarryDivisorTens, CellName.Multiply1Ones), needsCarry = true),
-                    PhaseStep(DivisionPhaseV2.InputMultiply, listOf(CellName.Multiply1Tens)),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.CarryDivisorTens, CellName.Multiply1Ones), needsCarry = true),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply1Tens)),
                     PhaseStep(DivisionPhaseV2.InputBorrow, listOf(CellName.BorrowDividendTens), needsBorrow = true),
-                    PhaseStep(DivisionPhaseV2.InputSubtract, listOf(CellName.Subtract1Ones)),
-                    PhaseStep(DivisionPhaseV2.InputSubtract, listOf(CellName.Subtract1Tens)),
+                    PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract1Ones)),
+                    PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract1Tens)),
                     PhaseStep(DivisionPhaseV2.Complete)
                 )
             ),

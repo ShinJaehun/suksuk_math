@@ -13,6 +13,13 @@ class ThreeByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreato
         val quotientTens = quotient / 10
         val quotientOnes = quotient % 10
 
+        val dividendHundreds = dividend / 100
+        val dividendTens = dividend / 10 % 10
+        val dividendOnes = dividend % 10
+
+        val divisorTens = divisor / 10
+        val divisorOnes = divisor % 10
+
         val needsTensQuotient = quotient >= 10
 
         val multiplyQuotientTens = divisor * quotientTens
@@ -20,14 +27,17 @@ class ThreeByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreato
 
         val needsBorrowDividendHundredsInSubtract1 = ((dividend / 10) % 10) < (multiplyQuotientTens % 10)
 
-        val bringdownInSubtract1 = dividend % 10
+        val bringDownInSubtract1 = dividend % 10
         val subtract1 = (dividend / 10) - (quotientTens * divisor)
 
+        val needsCarryInMultiply1 = (quotientTens * divisorOnes) >= 10
+        val needsCarryInMultiply2 = (quotientOnes * divisorOnes) >= 10
+
         val needsBorrowSubtract1TensInSubtract2 =
-            (subtract1 * 10 + bringdownInSubtract1) % 10 < multiplyQuotientOnes % 10
+            (subtract1 * 10 + bringDownInSubtract1) % 10 < multiplyQuotientOnes % 10
 
         val needsBorrowSubtract1HundredsInSubtract2 =
-            ((subtract1 * 10 + bringdownInSubtract1) / 10) % 10 < (multiplyQuotientOnes / 10) % 10
+            ((subtract1 * 10 + bringDownInSubtract1) / 10) % 10 < (multiplyQuotientOnes / 10) % 10
 
         val remainder = dividend - divisor * quotient
         val needs2DigitRem = remainder >= 10
@@ -43,14 +53,23 @@ class ThreeByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreato
             )
 
             // [2] 1차 곱셈 (몫 십의 자리 × 제수) -- Carry 없음
-            steps += PhaseStep(
-                phase = DivisionPhaseV2.InputMultiply,
-                editableCells = listOf(CellName.Multiply1Tens),
-                highlightCells = listOf(CellName.QuotientTens, CellName.DivisorOnes)
-            )
+            if(needsCarryInMultiply1){
+                steps += PhaseStep(
+                    phase = DivisionPhaseV2.InputMultiply1,
+                    editableCells = listOf(CellName.CarryDivisorTens, CellName.Multiply1Tens),
+                    highlightCells = listOf(CellName.DivisorOnes, CellName.QuotientOnes),
+                    needsCarry = true
+                )
+            } else {
+                steps += PhaseStep(
+                    phase = DivisionPhaseV2.InputMultiply1,
+                    editableCells = listOf(CellName.Multiply1Tens),
+                    highlightCells = listOf(CellName.DivisorOnes, CellName.QuotientTens),
+                )
+            }
 
             steps += PhaseStep(
-                phase = DivisionPhaseV2.InputMultiply,
+                phase = DivisionPhaseV2.InputMultiply1,
                 editableCells = listOf(CellName.Multiply1Hundreds),
                 highlightCells = listOf(CellName.QuotientTens, CellName.DivisorTens)
             )
@@ -68,7 +87,7 @@ class ThreeByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreato
 
             // [3] 1차 뺄셈 (Borrow 없음)
             steps += PhaseStep(
-                phase = DivisionPhaseV2.InputSubtract,
+                phase = DivisionPhaseV2.InputSubtract1,
                 editableCells = listOf(CellName.Subtract1Tens),
                 highlightCells = buildList {
                     if(needsBorrowDividendHundredsInSubtract1){
@@ -99,18 +118,28 @@ class ThreeByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreato
             steps += PhaseStep(
                 phase = DivisionPhaseV2.InputQuotient,
                 editableCells = listOf(CellName.QuotientOnes),
-                highlightCells = listOf(CellName.Subtract1Tens, CellName.Subtract1Ones)
+                highlightCells = listOf(CellName.Subtract1Tens, CellName.Subtract1Ones),
+                presetValues = mapOf(CellName.CarryDivisorTens to "")
             )
 
-            // [6] 2차 곱셈 (몫 일의 자리 × 제수) -- Carry 없음
-            steps += PhaseStep(
-                phase = DivisionPhaseV2.InputMultiply,
-                editableCells = listOf(CellName.Multiply2Ones),
-                highlightCells = listOf(CellName.QuotientOnes, CellName.DivisorOnes)
-            )
+            // [6] 2차 곱셈 (몫 일의 자리 × 제수)
+            if(needsCarryInMultiply2){
+                steps += PhaseStep(
+                    phase = DivisionPhaseV2.InputMultiply2,
+                    editableCells = listOf(CellName.CarryDivisorTens, CellName.Multiply2Ones),
+                    highlightCells = listOf(CellName.DivisorOnes, CellName.QuotientOnes),
+                    needsCarry = true
+                )
+            } else {
+                steps += PhaseStep(
+                    phase = DivisionPhaseV2.InputMultiply2,
+                    editableCells = listOf(CellName.Multiply2Ones),
+                    highlightCells = listOf(CellName.QuotientOnes, CellName.DivisorOnes)
+                )
+            }
 
             steps += PhaseStep(
-                phase = DivisionPhaseV2.InputMultiply,
+                phase = DivisionPhaseV2.InputMultiply2,
                 editableCells = listOf(CellName.Multiply2Tens),
                 highlightCells = listOf(CellName.QuotientOnes, CellName.DivisorTens)
             )
@@ -128,7 +157,7 @@ class ThreeByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreato
 
             // [7] 2차 뺄셈 (Borrow 없음)
             steps += PhaseStep(
-                phase = DivisionPhaseV2.InputSubtract,
+                phase = DivisionPhaseV2.InputSubtract2,
                 editableCells = listOf(CellName.Subtract2Ones),
                 highlightCells = buildList {
                     if(needsBorrowSubtract1TensInSubtract2) {
@@ -150,7 +179,7 @@ class ThreeByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreato
 
             if(needs2DigitRem) {
                 steps += PhaseStep(
-                    phase = DivisionPhaseV2.InputSubtract,
+                    phase = DivisionPhaseV2.InputSubtract2,
                     editableCells = listOf(CellName.Subtract2Tens),
                     highlightCells = listOf(CellName.Multiply2Tens, CellName.Subtract1Tens)
                 )

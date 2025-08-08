@@ -32,16 +32,16 @@ class TwoByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreator 
         )
 
         // [2] 곱셈(일의 자리, Carry 여부 반영)
-        steps += if (needsCarry) {
-            PhaseStep(
-                phase = DivisionPhaseV2.InputMultiply,
+        if (needsCarry) {
+            steps += PhaseStep(
+                phase = DivisionPhaseV2.InputMultiply1,
                 editableCells = listOf(CellName.CarryDivisorTens, CellName.Multiply1Ones),
                 highlightCells = listOf(CellName.DivisorOnes, CellName.QuotientOnes),
                 needsCarry = true
             )
         } else {
-            PhaseStep(
-                phase = DivisionPhaseV2.InputMultiply,
+            steps += PhaseStep(
+                phase = DivisionPhaseV2.InputMultiply1,
                 editableCells = listOf(CellName.Multiply1Ones),
                 highlightCells = listOf(CellName.DivisorOnes, CellName.QuotientOnes)
             )
@@ -49,7 +49,7 @@ class TwoByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreator 
 
         // [3] 곱셈(십의 자리)
         steps += PhaseStep(
-            phase = DivisionPhaseV2.InputMultiply,
+            phase = DivisionPhaseV2.InputMultiply1,
             editableCells = listOf(CellName.Multiply1Tens),
             highlightCells = buildList {
                 add(CellName.DivisorTens)
@@ -72,7 +72,7 @@ class TwoByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreator 
 
         // [5] 뺄셈 단계
         steps += PhaseStep(
-            phase = DivisionPhaseV2.InputSubtract,
+            phase = DivisionPhaseV2.InputSubtract1,
             editableCells = listOf(CellName.Subtract1Ones),
             highlightCells = buildList {
                 if (needsBorrow) add(CellName.Borrowed10DividendOnes)
@@ -86,7 +86,7 @@ class TwoByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreator 
 
         if(needs2DigitRem) {
             steps += PhaseStep(
-                phase = DivisionPhaseV2.InputSubtract,
+                phase = DivisionPhaseV2.InputSubtract1,
                 editableCells = listOf(CellName.Subtract1Tens),
                 highlightCells = buildList {
                     add(CellName.Multiply1Tens)
