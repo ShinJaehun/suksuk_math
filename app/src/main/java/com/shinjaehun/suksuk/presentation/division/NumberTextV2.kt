@@ -29,9 +29,9 @@ fun NumberTextV2(
     width: Dp = 42.dp,
     modifier: Modifier = Modifier
 ) {
-    LaunchedEffect(cell) {
-        println("🟠 [NumberText] ${cell.cellName} | value=${cell.value} | editable=${cell.editable} | highlight=${cell.highlight}")
-    }
+//    LaunchedEffect(cell) {
+//        println("🟠 [NumberText] ${cell.cellName} | value=${cell.value} | editable=${cell.editable} | highlight=${cell.highlight}")
+//    }
 
     val textColor = when (cell.highlight) {
         Highlight.Editing -> Color.Red

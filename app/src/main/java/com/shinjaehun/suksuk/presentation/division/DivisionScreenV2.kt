@@ -44,8 +44,27 @@ fun DivisionScreenV2(
 //        DivisionUiStateBuilder.mapToUiState(domainState, currentInput, previewAll)
 //    }
 
-
     val uiState by viewModel.uiState.collectAsState()
+
+    val overrideCells = mapOf(
+        CellName.DividendHundreds to "6",
+        CellName.BorrowDividendHundreds to "5",
+        CellName.Borrowed10DividendTens to "10",
+
+        CellName.DividendTens to "9",
+        CellName.BorrowDividendTens to "8",
+        CellName.Borrowed10DividendOnes to "10"
+    )
+
+    val previewUiState = if (previewAll) {
+        uiState.copy(
+            cells = uiState.cells.mapValues { (cellName, cell) ->
+                cell.copy(
+                    value = overrideCells[cellName] ?: "?"
+                )
+            }
+        )
+    } else uiState
 
     val pattern = viewModel.getCurrentPattern()
 

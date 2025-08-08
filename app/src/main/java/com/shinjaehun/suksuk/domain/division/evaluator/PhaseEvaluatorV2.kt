@@ -83,6 +83,7 @@ class PhaseEvaluatorV2 {
                 else -> null
             }
             DivisionPhaseV2.InputBorrow -> when (cell) {
+                CellName.BorrowDividendHundreds -> dividendHundreds - 1
                 CellName.BorrowDividendTens -> dividendTens - 1
                 CellName.BorrowSubtract1Tens -> dividendTens - (divisor * quotientTens) - 1
                 else -> null
@@ -90,16 +91,19 @@ class PhaseEvaluatorV2 {
             DivisionPhaseV2.InputSubtract -> when (cell) {
                 CellName.Subtract1Hundreds -> dividendHundreds - (quotientTens * divisor) / 10
                 CellName.Subtract1Tens -> if(quotient >= 10 ) {
-                    dividendTens - quotientTens * divisor
+                    if(dividendTens < quotientTens * divisor) {
+                        10 - dividendTens - quotientTens * divisor
+                    } else {
+                        dividendTens - quotientTens * divisor
+                    }
                 } else {
                     (dividend - (quotient * divisor)) / 10
                 }
 //                CellName.Subtract1Ones -> (dividend - (quotient * divisor)) % 10
                 CellName.Subtract1Ones -> {
-                    val expected = (dividend - (quotient * divisor)) % 10
-                    println("🧪 Subtract1Ones: expected=$expected")
-                    expected
+                    (dividend - (quotient * divisor)) % 10
                 }
+                CellName.Subtract2Tens -> (dividend - (quotient * divisor)) / 10
                 CellName.Subtract2Ones -> (dividend - (quotient * divisor)) % 10
                 else -> null
             }

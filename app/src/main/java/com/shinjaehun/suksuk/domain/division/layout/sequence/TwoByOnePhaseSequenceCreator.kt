@@ -18,10 +18,10 @@ class TwoByOnePhaseSequenceCreator @Inject constructor() : PhaseSequenceCreator 
 
 //        val subtract1TensQuotient = ((dividend / 10) - multiplyQuotientTens) * 10 + (dividend % 10)
 
-        val needs2DigitMul = multiplyQuotientOnes >= 10
-        val needsBorrowSubtract = (dividend % 10) < (multiplyQuotientOnes % 10)
-        val needsSkipBorrowSubtract2 = ((dividend / 10) - multiplyQuotientTens == 1) && needsBorrowSubtract
-        val needsActualBorrowSubtract2 = needsBorrowSubtract && !needsSkipBorrowSubtract2
+        val needs2DigitMul2 = multiplyQuotientOnes >= 10
+        val needsBorrowSubtract2 = (dividend % 10) < (multiplyQuotientOnes % 10)
+        val needsSkipBorrowSubtract2 = ((dividend / 10) - multiplyQuotientTens == 1) && needsBorrowSubtract2
+        val needsActualBorrowSubtract2 = needsBorrowSubtract2 && !needsSkipBorrowSubtract2
 
         val needsEmptySubtract1Tens = (dividend / 10) - multiplyQuotientTens == 0
 
@@ -77,7 +77,7 @@ class TwoByOnePhaseSequenceCreator @Inject constructor() : PhaseSequenceCreator 
 
             if(!needsSkipMultiply2AndSubtract2) {
 
-                if (needs2DigitMul) {
+                if (needs2DigitMul2) {
                     steps += PhaseStep(
                         phase = DivisionPhaseV2.InputMultiply,
                         editableCells = listOf(CellName.Multiply2Tens, CellName.Multiply2Ones),
@@ -141,7 +141,7 @@ class TwoByOnePhaseSequenceCreator @Inject constructor() : PhaseSequenceCreator 
                 highlightCells = listOf(CellName.DivisorOnes, CellName.QuotientOnes)
             )
 
-            if (needsBorrowSubtract) {
+            if (needsBorrowSubtract2) {
                 steps += PhaseStep(
                     phase = DivisionPhaseV2.InputBorrow,
                     editableCells = listOf(CellName.BorrowDividendTens),

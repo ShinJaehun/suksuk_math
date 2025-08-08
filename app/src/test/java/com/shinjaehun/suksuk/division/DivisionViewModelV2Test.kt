@@ -89,7 +89,7 @@ class DivisionViewModelV2Test {
             Triple("TwoByOne_TensQuotient_Borrow_2DigitMul: 50 ÷ 3", 50 to 3, listOf("1", "3", "2", "0", "6", "18", "1", "2")),
             // TwoByOne_TensQuotient_SkipBorrow_1DigitMul
             Triple("TwoByOne_TensQuotient_SkipBorrow_1DigitMul: 93 ÷ 8", 93 to 8, listOf("1", "8", "1", "3", "1", "8", "5")),
-            // TwoByOne_TensQuotient_SkipMul2Sub2 <------------------------------------
+            // TwoByOne_TensQuotient_SkipMul2Sub2
             Triple("TwoByOne_TensQuotient_SkipMul2Sub2: 80 ÷ 8", 80 to 8, listOf("1", "8", "0", "0", "0")),
             // TwoByOne_OnesQuotient_Borrow_2DigitMul
             Triple("TwoByOne_OnesQuotient_Borrow_2DigitMul: 62 ÷ 7", 62 to 7, listOf("8", "56", "5", "6")),
@@ -116,7 +116,8 @@ class DivisionViewModelV2Test {
 
             // === ThreeByTwo ===
             // ThreeByTwo_TensQuotient_NoCarry1_NoBorrow_NoCarry2
-            Triple("ThreeByTwo_TensQuotient_NoCarry1_NoBorrow_NoCarry2: 682 ÷ 31", 682 to 31, listOf("2", "2", "6", "6", "2", "2", "2", "6", "0")),
+            Triple("ThreeByTwo_TensQuotient_NCM1_NBM1_NCM2_NBM2_1DR: 682 ÷ 31", 682 to 31, listOf("2", "2", "6", "6", "2", "2", "2", "6", "0")),
+            Triple("ThreeByTwo_TensQuotient_NCM1_BM1_NCM2_NBM2_2DR: 604 ÷ 11", 604 to 11, listOf("5", "5", "5", "5", "5", "4", "4", "4", "4", "0", "1")),
 //            Triple("ThreeByTwo_TensQuotient_NoCarry1_NoBorrow_NoCarry2: 432 ÷ 12", 432 to 12, listOf("3", "6", "3", "7", "1", "2", "6", "2", "6", "0")),
         )
         for ((name, pair, inputs) in cases) {

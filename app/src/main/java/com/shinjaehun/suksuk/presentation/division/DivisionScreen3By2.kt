@@ -47,6 +47,7 @@ fun DivisionScreen3By2(
 ) {
 
     val cellWidth = 42.dp
+    val borrowCellMinWidth = 32.dp
 
     val bracketStartMargin = 60.dp
 
@@ -132,30 +133,32 @@ fun DivisionScreen3By2(
                 }
         )
 
+        val dividendTensBorrowed10Cell = uiState.cells[CellName.Borrowed10DividendTens]
+            ?: InputCellV2(cellName = CellName.Borrowed10DividendTens)
+        BorrowTextV2(
+            cell = dividendTensBorrowed10Cell,
+            modifier = Modifier
+                .width(borrowCellMinWidth)
+                .padding(horizontal = 4.dp)
+                .constrainAs(dividendTensBorrowed10Ref) {
+                    bottom.linkTo(dividendTensRef.top)
+                    start.linkTo(dividendTensRef.start, margin = (-8).dp)
+                }
+                .testTag("borrowed10-dividend-cell")
+        )
+
         val dividendTensBorrowCell = uiState.cells[CellName.BorrowDividendTens] ?: InputCellV2(
             cellName = CellName.BorrowDividendTens
         )
         BorrowTextV2(
             cell = dividendTensBorrowCell,
             modifier = Modifier
-                .width(cellWidth / 2)
+                .width(borrowCellMinWidth)
+                .padding(horizontal = 4.dp)
                 .constrainAs(dividendTensBorrowRef) {
-                    start.linkTo(dividendTensRef.start)
                     bottom.linkTo(dividendTensRef.top)
+                    start.linkTo(dividendTensBorrowed10Ref.end, margin = (-8).dp)
                 }
-        )
-
-        val dividendTensBorrowed10Cell = uiState.cells[CellName.Borrowed10DividendTens]
-            ?: InputCellV2(cellName = CellName.Borrowed10DividendTens)
-        BorrowTextV2(
-            cell = dividendTensBorrowed10Cell,
-            modifier = Modifier
-                .width(cellWidth / 2)
-                .constrainAs(dividendTensBorrowed10Ref) {
-                    start.linkTo(dividendTensBorrowRef.end)
-                    bottom.linkTo(dividendTensRef.top)
-                }
-                .testTag("borrowed10-dividend-cell")
         )
 
         val dividendOnesCell = uiState.cells[CellName.DividendOnes]
@@ -346,31 +349,34 @@ fun DivisionScreen3By2(
                 }
         )
 
-        val subtract1TensBorrowCell = uiState.cells[CellName.BorrowSubtract1Tens] ?: InputCellV2(
-            cellName = CellName.BorrowSubtract1Tens
-        )
-        BorrowTextV2(
-            cell = subtract1TensBorrowCell,
-            modifier = Modifier
-                .width(cellWidth / 2)
-                .constrainAs(subtract1TensBorrowRef) {
-                    start.linkTo(subtract1TensRef.start)
-                    bottom.linkTo(subtract1TensRef.top)
-                }
-        )
-
         val subtract1TensBorrowed10Cell = uiState.cells[CellName.Borrowed10Subtract1Tens] ?: InputCellV2(
             cellName = CellName.Borrowed10Subtract1Tens
         )
         BorrowTextV2(
             cell = subtract1TensBorrowed10Cell,
             modifier = Modifier
-                .width(cellWidth / 2)
+                .width(borrowCellMinWidth)
+                .padding(horizontal = 4.dp)
                 .constrainAs(subtract1TensBorrowed10Ref) {
-                    start.linkTo(subtract1TensBorrowRef.end)
+                    start.linkTo(subtract1TensRef.start, margin = (-8).dp)
                     bottom.linkTo(subtract1TensRef.top)
                 }
         )
+
+        val subtract1TensBorrowCell = uiState.cells[CellName.BorrowSubtract1Tens] ?: InputCellV2(
+            cellName = CellName.BorrowSubtract1Tens
+        )
+        BorrowTextV2(
+            cell = subtract1TensBorrowCell,
+            modifier = Modifier
+                .width(borrowCellMinWidth)
+                .padding(horizontal = 4.dp)
+                .constrainAs(subtract1TensBorrowRef) {
+                    start.linkTo(subtract1TensBorrowed10Ref.end, margin = (-8).dp)
+                    bottom.linkTo(subtract1TensRef.top)
+                }
+        )
+
 
         val subtract1OnesCell = uiState.cells[CellName.Subtract1Ones]
             ?: InputCellV2(cellName = CellName.Subtract1Ones)
@@ -531,7 +537,12 @@ fun PreviewDivisionStageScreen() {
         feedback = null // 또는 "정답입니다!" 등
     )
 
+    val newUiState = fakeUiState.copy(
+        cells = fakeUiState.cells.toMutableMap().apply {
+            this[CellName.Borrowed10DividendTens] = InputCellV2(cellName = CellName.Borrowed10DividendTens, value = "5")
+        }
+    )
     DivisionScreen3By2(
-        uiState = fakeUiState,
+        uiState = newUiState,
     )
 }

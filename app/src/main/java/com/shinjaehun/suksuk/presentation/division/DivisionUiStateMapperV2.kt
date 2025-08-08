@@ -130,7 +130,7 @@ fun mapToUiStateV2(domain: DivisionDomainStateV2, currentInput: String): Divisio
     )
 }
 
-fun assignSubtractLineType( //////////////////////////////////////////////// 수정 필요(borrow/borrowed 100의 자리에서부터!!!!!!!!!!
+fun assignSubtractLineType(
     cellName: CellName,
     subtractLineSet: Set<CellName>,
     currentTargets: Set<CellName>
@@ -141,12 +141,14 @@ fun assignSubtractLineType( //////////////////////////////////////////////// 수
 
     return when (cellName) {
         in setOf(
+            CellName.BorrowDividendHundreds,
             CellName.BorrowDividendTens,
             CellName.Subtract1Tens,
             CellName.Subtract1Ones
         ) -> SubtractLineType.SubtractLine1
 
         in setOf(
+            CellName.BorrowSubtract1Hundreds,
             CellName.BorrowSubtract1Tens,
             CellName.Subtract2Tens,
             CellName.Subtract2Ones
