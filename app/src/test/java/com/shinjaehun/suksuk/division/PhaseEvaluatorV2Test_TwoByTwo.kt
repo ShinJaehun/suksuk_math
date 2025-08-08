@@ -36,7 +36,7 @@ class PhaseEvaluatorV2Test_TwoByTwo {
         // 96 ÷ 12, 몫 8, 곱셈 Carry 발생 (16)
         PhaseInputTestCase(DivisionPhaseV2.InputQuotient, CellName.QuotientOnes, "8", 96, 12, 0, listOf(), true),
         // Carry를 먼저 입력 (1)
-        PhaseInputTestCase(DivisionPhaseV2.InputMultiply1, CellName.CarryDivisorTens, "1", 96, 12, 1, listOf("8"), true),
+        PhaseInputTestCase(DivisionPhaseV2.InputMultiply1, CellName.CarryDivisorTensMul1, "1", 96, 12, 1, listOf("8"), true),
         // Ones 입력 (6)
         PhaseInputTestCase(DivisionPhaseV2.InputMultiply1, CellName.Multiply1Ones, "6", 96, 12, 2, listOf("8", "1"), true),
         // Tens 입력 (9)

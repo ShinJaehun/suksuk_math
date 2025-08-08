@@ -102,7 +102,7 @@ class PhaseEvaluatorV2 {
 //            }
 
             DivisionPhaseV2.InputMultiply1 -> when (cell) {
-                CellName.CarryDivisorTens -> when {
+                CellName.CarryDivisorTensMul1 -> when {
                     dividend < 100 -> (quotient * divisorOnes) / 10      // 2by1, 2by2: 몫 × 제수일의자리 / 10
                     else -> (quotientTens * divisorOnes) / 10            // 3by2: 몫십의자리 × 제수일의자리 / 10
                 }
@@ -136,7 +136,7 @@ class PhaseEvaluatorV2 {
 //                }
 
             DivisionPhaseV2.InputMultiply2 -> when (cell) {
-                CellName.CarryDivisorTens -> (quotientOnes * divisorOnes) / 10   // 3by2 두 번째 곱셈 carry
+                CellName.CarryDivisorTensMul2 -> (quotientOnes * divisorOnes) / 10   // 3by2 두 번째 곱셈 carry
                 CellName.Multiply2Tens -> when {
                     dividend >= 100 -> {
 //                        println("$quotientOnes * $divisorTens + ($divisorOnes * $quotientOnes")

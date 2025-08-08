@@ -1,13 +1,10 @@
 package com.shinjaehun.suksuk.presentation.division
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
@@ -157,8 +154,8 @@ fun DivisionScreen2By1And2By2(
         )
 
 //            val divisorTensCarryCell = currentUiState.carryDivisorTens
-        val divisorTensCarryCell = uiState.cells[CellName.CarryDivisorTens] ?: InputCellV2(
-            cellName = CellName.CarryDivisorTens
+        val divisorTensCarryCell = uiState.cells[CellName.CarryDivisorTensMul1] ?: InputCellV2(
+            cellName = CellName.CarryDivisorTensMul1
         )
         BorrowTextV2(
             cell = divisorTensCarryCell,

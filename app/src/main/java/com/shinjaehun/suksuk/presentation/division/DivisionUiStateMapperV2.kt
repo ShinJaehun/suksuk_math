@@ -82,11 +82,15 @@ fun mapToUiStateV2(domain: DivisionDomainStateV2, currentInput: String): Divisio
         val inputIdx = calculateInputIndexForCell(steps, currentStep, cellName)
 
         val value = when {
-            presetValue != null && presetValue == "" -> "?"
             presetValue != null -> presetValue
             inputIdx != null -> {
+
+//                val idxInEditables = curPhaseStep.editableCells.indexOf(cellName)
+//                val cur = currentInput.getOrNull(idxInEditables)?.toString()
+//                println("cell=$cellName, editable=$isEditable, inputIdx=$inputIdx, idxInEditables=$idxInEditables, curInput=$currentInput, curVal=$cur")
+//                println("CarryDivisorTens | editable=$isEditable, inputIdx=$inputIdx, idxInEditables=$idxInEditables, curInput=$currentInput, domain.inputs=${domain.inputs}")
+
                 if (isEditable && currentStep == domain.currentStepIndex && domain.inputs.getOrNull(inputIdx).isNullOrEmpty()) {
-//                    currentInput.getOrNull(curPhaseStep.editableCells.indexOf(cellName))?.toString() ?: "?"
                     val idxInEditables = curPhaseStep.editableCells.indexOf(cellName)
                     currentInput.getOrNull(idxInEditables)?.toString() ?: "?"
                 } else {
@@ -96,6 +100,9 @@ fun mapToUiStateV2(domain: DivisionDomainStateV2, currentInput: String): Divisio
 
             else -> getDefaultCellValue(domain, cellName)
         }
+
+//        println("cell=$cellName, editable=$isEditable, inputIdx=$inputIdx, curInput=$currentInput")
+
 
 //        cells[cellName] = InputCellV2(
 //            cellName = cellName,
@@ -168,6 +175,8 @@ fun calculateInputIndexForCell(
     for ((stepIdx, step) in steps.withIndex()) {
         for (c in step.editableCells) {
             if (c == cell) {
+//                println("calculateInputIndexForCell: cell=$cell, stepIdx=$stepIdx, currentStep=$currentStep, idx=$idx, return=${if (stepIdx < currentStep || (stepIdx == currentStep)) idx else null}")
+
                 // 이 cell이 현재 step보다 이전이거나, 현재 step이지만 editable이 아니라면 index로 인정
                 return if (stepIdx < currentStep || (stepIdx == currentStep)) idx else null
 //                return if (stepIdx < currentStep) idx else null

@@ -1,44 +1,23 @@
 package com.shinjaehun.suksuk.presentation.division
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.lifecycle.SavedStateHandle
 import com.shinjaehun.suksuk.R
-import com.shinjaehun.suksuk.domain.division.detector.PatternDetectorV2
-import com.shinjaehun.suksuk.domain.division.evaluator.PhaseEvaluatorV2
-import com.shinjaehun.suksuk.domain.division.factory.DivisionDomainStateV2Factory
-import com.shinjaehun.suksuk.domain.division.layout.DivisionPhaseSequenceProvider
-import com.shinjaehun.suksuk.domain.division.layout.sequence.ThreeByTwoPhaseSequenceCreator
-import com.shinjaehun.suksuk.domain.division.layout.sequence.TwoByOnePhaseSequenceCreator
-import com.shinjaehun.suksuk.domain.division.layout.sequence.TwoByTwoPhaseSequenceCreator
-import com.shinjaehun.suksuk.domain.division.legacy.detector.PatternDetector
-import com.shinjaehun.suksuk.domain.division.legacy.evaluator.PhaseEvaluator
-import com.shinjaehun.suksuk.domain.division.legacy.factory.DivisionDomainStateFactory
-import com.shinjaehun.suksuk.domain.division.legacy.layout.DivisionPatternUiLayoutRegistry
 import com.shinjaehun.suksuk.domain.division.model.CellName
-import com.shinjaehun.suksuk.domain.division.model.DivisionPatternV2
 import com.shinjaehun.suksuk.domain.division.model.DivisionUiStateV2
 import com.shinjaehun.suksuk.domain.division.model.InputCellV2
 import com.shinjaehun.suksuk.domain.division.model.SubtractLineType
-import com.shinjaehun.suksuk.presentation.division.legacy.DivisionScreen
-import com.shinjaehun.suksuk.presentation.division.legacy.DivisionViewModel
-import com.shinjaehun.suksuk.presentation.division.legacy.FeedbackMessageProvider
 
 
 @Composable
@@ -58,7 +37,7 @@ fun DivisionScreen3By2(
             .padding(horizontal = 30.dp, vertical = 30.dp)
     ) {
         val (
-            divisorTensRef, divisorOnesRef, divisorTensCarryRef,
+            divisorTensRef, divisorOnesRef, divisorTensCarryMul1Ref, divisorTensCarryMul2Ref,
             dividendHundredsRef, dividendTensRef, dividendOnesRef,
         ) = createRefs()
 
@@ -214,15 +193,29 @@ fun DivisionScreen3By2(
                 }
         )
 
-        val divisorTensCarryCell = uiState.cells[CellName.CarryDivisorTens] ?: InputCellV2(
-            cellName = CellName.CarryDivisorTens
+        val divisorTensMul1CarryCell = uiState.cells[CellName.CarryDivisorTensMul1] ?: InputCellV2(
+            cellName = CellName.CarryDivisorTensMul1
         )
         BorrowTextV2(
-            cell = divisorTensCarryCell,
+            cell = divisorTensMul1CarryCell,
             modifier = Modifier
                 .width(cellWidth)
                 .padding(horizontal = 8.dp)
-                .constrainAs(divisorTensCarryRef) {
+                .constrainAs(divisorTensCarryMul1Ref) {
+                    start.linkTo(divisorTensRef.start)
+                    bottom.linkTo(divisorTensRef.top)
+                }
+        )
+
+        val divisorTensMul2CarryCell = uiState.cells[CellName.CarryDivisorTensMul2] ?: InputCellV2(
+            cellName = CellName.CarryDivisorTensMul2
+        )
+        BorrowTextV2(
+            cell = divisorTensMul2CarryCell,
+            modifier = Modifier
+                .width(cellWidth)
+                .padding(horizontal = 8.dp)
+                .constrainAs(divisorTensCarryMul2Ref) {
                     start.linkTo(divisorTensRef.start)
                     bottom.linkTo(divisorTensRef.top)
                 }
@@ -527,7 +520,7 @@ fun PreviewDivisionStageScreen() {
         CellName.Borrowed10Subtract1Tens,
         CellName.Borrowed10Subtract1Ones,
 
-        CellName.CarryDivisorTens
+        CellName.CarryDivisorTensMul1
     )
 
     val fakeUiState = DivisionUiStateV2(

@@ -82,37 +82,37 @@ class DivisionViewModelV2Test {
         val cases = listOf(
             // === TwoByOne ===
             // TwoByOne_TensQuotient_NoBorrow_2DigitMul
-//            Triple("TwoByOne_TensQuotient_NoBorrow_2DigitMul: 46 ÷ 3", 46 to 3, listOf("1", "3", "1", "6", "5", "15", "1")),
-//            // TwoByOne_TensQuotient_NoBorrow_1DigitMul
-//            Triple("TwoByOne_TensQuotient_NoBorrow_1DigitMul: 45 ÷ 4", 45 to 4, listOf("1", "4", "0", "5", "1", "4", "1")),
-//            // TwoByOne_TensQuotient_Borrow_2DigitMul
-//            Triple("TwoByOne_TensQuotient_Borrow_2DigitMul: 50 ÷ 3", 50 to 3, listOf("1", "3", "2", "0", "6", "18", "1", "2")),
-//            // TwoByOne_TensQuotient_SkipBorrow_1DigitMul
-//            Triple("TwoByOne_TensQuotient_SkipBorrow_1DigitMul: 93 ÷ 8", 93 to 8, listOf("1", "8", "1", "3", "1", "8", "5")),
-//            // TwoByOne_TensQuotient_SkipMul2Sub2
-//            Triple("TwoByOne_TensQuotient_SkipMul2Sub2: 80 ÷ 8", 80 to 8, listOf("1", "8", "0", "0", "0")),
-//            // TwoByOne_OnesQuotient_Borrow_2DigitMul
-//            Triple("TwoByOne_OnesQuotient_Borrow_2DigitMul: 62 ÷ 7", 62 to 7, listOf("8", "56", "5", "6")),
-//            // TwoByOne_OnesQuotient_NoBorrow_2DigitMul
-//            Triple("TwoByOne_OnesQuotient_NoBorrow_2DigitMul: 81 ÷ 9", 81 to 9, listOf("9", "81", "0")),
-//
-//            // === TwoByTwo ===
-//            // TwoByTwo_NoCarry_NoBorrow_1DigitRem
-//            Triple("TwoByTwo_NoCarry_NoBorrow_1DigitRem: 68 ÷ 34", 68 to 34, listOf("2", "8", "6", "0")),
-//            // TwoByTwo_NoCarry_NoBorrow_2DigitRem
-//            Triple("TwoByTwo_NoCarry_NoBorrow_2DigitRem: 57 ÷ 22", 57 to 22, listOf("2", "4", "4", "3", "1")),
-//            // TwoByTwo_NoCarry_Borrow_1DigitRem
-//            Triple("TwoByTwo_NoCarry_Borrow_1DigitRem: 50 ÷ 22", 50 to 22, listOf("2", "4", "4", "4", "6")),
-//            // TwoByTwo_NoCarry_Borrow_2DigitRem
-//            Triple("TwoByTwo_NoCarry_Borrow_2DigitRem: 50 ÷ 13", 50 to 13, listOf("3", "9", "3", "4", "1", "1")),
-//            // TwoByTwo_Carry_NoBorrow_1DigitRem
-//            Triple("TwoByTwo_Carry_NoBorrow_1DigitRem: 96 ÷ 12", 96 to 12, listOf("8", "16", "9", "0")),
-//            // TwoByTwo_Carry_NoBorrow_2DigitRem
-//            Triple("TwoByTwo_Carry_NoBorrow_2DigitRem: 95 ÷ 28", 95 to 28, listOf("3", "24", "8", "1", "1")),
-//            // TwoByTwo_Carry_Borrow_1DigitRem
-//            Triple("TwoByTwo_Carry_Borrow_1DigitRem: 81 ÷ 12", 81 to 12, listOf("6", "12", "7", "7", "9")),
-//            // TwoByTwo_Carry_Borrow_2DigitRem
-//            Triple("TwoByTwo_Carry_Borrow_2DigitRem: 80 ÷ 17", 80 to 17, listOf("4", "28", "6", "7", "2", "1")),
+            Triple("TwoByOne_TensQuotient_NoBorrow_2DigitMul: 46 ÷ 3", 46 to 3, listOf("1", "3", "1", "6", "5", "15", "1")),
+            // TwoByOne_TensQuotient_NoBorrow_1DigitMul
+            Triple("TwoByOne_TensQuotient_NoBorrow_1DigitMul: 45 ÷ 4", 45 to 4, listOf("1", "4", "0", "5", "1", "4", "1")),
+            // TwoByOne_TensQuotient_Borrow_2DigitMul
+            Triple("TwoByOne_TensQuotient_Borrow_2DigitMul: 50 ÷ 3", 50 to 3, listOf("1", "3", "2", "0", "6", "18", "1", "2")),
+            // TwoByOne_TensQuotient_SkipBorrow_1DigitMul
+            Triple("TwoByOne_TensQuotient_SkipBorrow_1DigitMul: 93 ÷ 8", 93 to 8, listOf("1", "8", "1", "3", "1", "8", "5")),
+            // TwoByOne_TensQuotient_SkipMul2Sub2
+            Triple("TwoByOne_TensQuotient_SkipMul2Sub2: 80 ÷ 8", 80 to 8, listOf("1", "8", "0", "0", "0")),
+            // TwoByOne_OnesQuotient_Borrow_2DigitMul
+            Triple("TwoByOne_OnesQuotient_Borrow_2DigitMul: 62 ÷ 7", 62 to 7, listOf("8", "56", "5", "6")),
+            // TwoByOne_OnesQuotient_NoBorrow_2DigitMul
+            Triple("TwoByOne_OnesQuotient_NoBorrow_2DigitMul: 81 ÷ 9", 81 to 9, listOf("9", "81", "0")),
+
+            // === TwoByTwo ===
+            // TwoByTwo_NoCarry_NoBorrow_1DigitRem
+            Triple("TwoByTwo_NoCarry_NoBorrow_1DigitRem: 68 ÷ 34", 68 to 34, listOf("2", "8", "6", "0")),
+            // TwoByTwo_NoCarry_NoBorrow_2DigitRem
+            Triple("TwoByTwo_NoCarry_NoBorrow_2DigitRem: 57 ÷ 22", 57 to 22, listOf("2", "4", "4", "3", "1")),
+            // TwoByTwo_NoCarry_Borrow_1DigitRem
+            Triple("TwoByTwo_NoCarry_Borrow_1DigitRem: 50 ÷ 22", 50 to 22, listOf("2", "4", "4", "4", "6")),
+            // TwoByTwo_NoCarry_Borrow_2DigitRem
+            Triple("TwoByTwo_NoCarry_Borrow_2DigitRem: 50 ÷ 13", 50 to 13, listOf("3", "9", "3", "4", "1", "1")),
+            // TwoByTwo_Carry_NoBorrow_1DigitRem
+            Triple("TwoByTwo_Carry_NoBorrow_1DigitRem: 96 ÷ 12", 96 to 12, listOf("8", "16", "9", "0")),
+            // TwoByTwo_Carry_NoBorrow_2DigitRem
+            Triple("TwoByTwo_Carry_NoBorrow_2DigitRem: 95 ÷ 28", 95 to 28, listOf("3", "24", "8", "1", "1")),
+            // TwoByTwo_Carry_Borrow_1DigitRem
+            Triple("TwoByTwo_Carry_Borrow_1DigitRem: 81 ÷ 12", 81 to 12, listOf("6", "12", "7", "7", "9")),
+            // TwoByTwo_Carry_Borrow_2DigitRem
+            Triple("TwoByTwo_Carry_Borrow_2DigitRem: 80 ÷ 17", 80 to 17, listOf("4", "28", "6", "7", "2", "1")),
 
             // === ThreeByTwo ===
             // ThreeByTwo_TensQuotient_NoCarry1_NoBorrow_NoCarry2

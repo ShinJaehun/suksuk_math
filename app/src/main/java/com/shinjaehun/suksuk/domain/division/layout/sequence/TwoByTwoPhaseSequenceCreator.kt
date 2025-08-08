@@ -35,7 +35,7 @@ class TwoByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreator 
         if (needsCarry) {
             steps += PhaseStep(
                 phase = DivisionPhaseV2.InputMultiply1,
-                editableCells = listOf(CellName.CarryDivisorTens, CellName.Multiply1Ones),
+                editableCells = listOf(CellName.CarryDivisorTensMul1, CellName.Multiply1Ones),
                 highlightCells = listOf(CellName.DivisorOnes, CellName.QuotientOnes),
                 needsCarry = true
             )
@@ -54,7 +54,7 @@ class TwoByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreator 
             highlightCells = buildList {
                 add(CellName.DivisorTens)
                 add(CellName.QuotientOnes)
-                if (needsCarry) add(CellName.CarryDivisorTens)
+                if (needsCarry) add(CellName.CarryDivisorTensMul1)
             }
         )
 

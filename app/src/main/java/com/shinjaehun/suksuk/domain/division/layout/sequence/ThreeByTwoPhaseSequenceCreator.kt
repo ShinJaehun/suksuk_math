@@ -56,7 +56,7 @@ class ThreeByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreato
             if(needsCarryInMultiply1){
                 steps += PhaseStep(
                     phase = DivisionPhaseV2.InputMultiply1,
-                    editableCells = listOf(CellName.CarryDivisorTens, CellName.Multiply1Tens),
+                    editableCells = listOf(CellName.CarryDivisorTensMul1, CellName.Multiply1Tens),
                     highlightCells = listOf(CellName.DivisorOnes, CellName.QuotientOnes),
                     needsCarry = true
                 )
@@ -119,14 +119,17 @@ class ThreeByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreato
                 phase = DivisionPhaseV2.InputQuotient,
                 editableCells = listOf(CellName.QuotientOnes),
                 highlightCells = listOf(CellName.Subtract1Tens, CellName.Subtract1Ones),
-                presetValues = mapOf(CellName.CarryDivisorTens to "")
+                presetValues = if(needsCarryInMultiply1)
+                    mapOf(CellName.CarryDivisorTensMul1 to "")
+                else
+                    emptyMap(),
             )
 
             // [6] 2차 곱셈 (몫 일의 자리 × 제수)
             if(needsCarryInMultiply2){
                 steps += PhaseStep(
                     phase = DivisionPhaseV2.InputMultiply2,
-                    editableCells = listOf(CellName.CarryDivisorTens, CellName.Multiply2Ones),
+                    editableCells = listOf(CellName.CarryDivisorTensMul2, CellName.Multiply2Ones),
                     highlightCells = listOf(CellName.DivisorOnes, CellName.QuotientOnes),
                     needsCarry = true
                 )
@@ -190,6 +193,10 @@ class ThreeByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreato
 
         // [8] 완료 단계
         steps += PhaseStep(phase = DivisionPhaseV2.Complete)
+
+        steps.forEachIndexed { idx, step ->
+            println("[$idx] phase=${step.phase}, editableCells=${step.editableCells}")
+        }
 
         return PhaseSequence(
             pattern = DivisionPatternV2.ThreeByTwo,

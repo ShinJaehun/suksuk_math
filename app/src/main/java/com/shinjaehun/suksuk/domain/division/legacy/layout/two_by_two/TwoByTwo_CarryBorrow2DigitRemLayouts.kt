@@ -21,7 +21,7 @@ val twoByTwo_CarryBorrow2DigitRemLayouts = listOf(
     DivisionStepUiLayout(
         phase = DivisionPhase.InputMultiply1OnesWithCarry,
         cells = mapOf(
-            CellName.CarryDivisorTens to InputCell(cellName = CellName.CarryDivisorTens, editable = true, highlight = Highlight.Editing),
+            CellName.CarryDivisorTensMul1 to InputCell(cellName = CellName.CarryDivisorTensMul1, editable = true, highlight = Highlight.Editing),
             CellName.Multiply1Ones to InputCell(cellName = CellName.Multiply1Ones, editable = true, highlight = Highlight.Editing),
             CellName.DivisorOnes to InputCell(cellName = CellName.DivisorOnes, highlight = Highlight.Related),
             CellName.QuotientOnes to InputCell(cellName = CellName.QuotientOnes, highlight = Highlight.Related)
@@ -31,7 +31,7 @@ val twoByTwo_CarryBorrow2DigitRemLayouts = listOf(
         phase = DivisionPhase.InputMultiply1Tens,
         cells = mapOf(
             CellName.Multiply1Tens to InputCell(cellName = CellName.Multiply1Tens, editable = true, highlight = Highlight.Editing),
-            CellName.CarryDivisorTens to InputCell(cellName = CellName.CarryDivisorTens, highlight = Highlight.Related),
+            CellName.CarryDivisorTensMul1 to InputCell(cellName = CellName.CarryDivisorTensMul1, highlight = Highlight.Related),
             CellName.DivisorTens to InputCell(cellName = CellName.DivisorOnes, highlight = Highlight.Related),
             CellName.QuotientOnes to InputCell(cellName = CellName.QuotientOnes, highlight = Highlight.Related)
         )

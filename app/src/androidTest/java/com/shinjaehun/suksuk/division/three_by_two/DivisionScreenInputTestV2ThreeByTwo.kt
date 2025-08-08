@@ -66,7 +66,7 @@ class DivisionScreenInputTestV2ThreeByTwo {
     fun testPattern_632_div_14() =
         composeTestRule.divisionCaseV2(
             632, 14,
-            listOf("4", "1", "6", "5", "7", "2", "5", "2", "0", "7", "2")
+            listOf("4", "16", "5", "5", "7", "2", "5", "20", "7", "2")
         )
 
 
