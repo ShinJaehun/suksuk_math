@@ -16,8 +16,18 @@ class ThreeByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreato
         val needsTensQuotient = quotient >= 10
 
         val multiplyQuotientTens = divisor * quotientTens
+        val multiplyQuotientOnes = divisor * quotientOnes
 
-        val needsBorrowSubtract1 = ((dividend / 10) % 10) < (multiplyQuotientTens % 10)
+        val needsBorrowDividendHundredsInSubtract1 = ((dividend / 10) % 10) < (multiplyQuotientTens % 10)
+
+        val bringdownInSubtract1 = dividend % 10
+        val subtract1 = (dividend / 10) - (quotientTens * divisor)
+
+        val needsBorrowSubtract1TensInSubtract2 =
+            (subtract1 * 10 + bringdownInSubtract1) % 10 < multiplyQuotientOnes % 10
+
+        val needsBorrowSubtract1HundredsInSubtract2 =
+            ((subtract1 * 10 + bringdownInSubtract1) / 10) % 10 < (multiplyQuotientOnes / 10) % 10
 
         val remainder = dividend - divisor * quotient
         val needs2DigitRem = remainder >= 10
@@ -45,7 +55,7 @@ class ThreeByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreato
                 highlightCells = listOf(CellName.QuotientTens, CellName.DivisorTens)
             )
 
-            if(needsBorrowSubtract1) {
+            if(needsBorrowDividendHundredsInSubtract1) {
                 steps += PhaseStep(
                     phase = DivisionPhaseV2.InputBorrow,
                     editableCells = listOf(CellName.BorrowDividendHundreds),
@@ -61,17 +71,17 @@ class ThreeByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreato
                 phase = DivisionPhaseV2.InputSubtract,
                 editableCells = listOf(CellName.Subtract1Tens),
                 highlightCells = buildList {
-                    if(needsBorrowSubtract1){
+                    if(needsBorrowDividendHundredsInSubtract1){
                         add(CellName.Borrowed10DividendTens)
                     }
                     add(CellName.DividendTens)
                     add(CellName.Multiply1Tens)
                 },
-                presetValues = if (needsBorrowSubtract1)
+                presetValues = if (needsBorrowDividendHundredsInSubtract1)
                     mapOf(CellName.Borrowed10DividendTens to "10")
                 else
                     emptyMap(),
-                strikeThroughCells = if(needsBorrowSubtract1)
+                strikeThroughCells = if(needsBorrowDividendHundredsInSubtract1)
                     listOf(CellName.DividendHundreds)
                 else
                     emptyList(),
@@ -105,11 +115,36 @@ class ThreeByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreato
                 highlightCells = listOf(CellName.QuotientOnes, CellName.DivisorTens)
             )
 
+            if(needsBorrowSubtract1TensInSubtract2){
+                steps += PhaseStep(
+                    phase = DivisionPhaseV2.InputBorrow,
+                    editableCells = listOf(CellName.BorrowSubtract1Tens),
+                    highlightCells = listOf(CellName.Subtract1Tens),
+                    needsBorrow = true,
+                    strikeThroughCells = listOf(CellName.Subtract1Tens),
+                    subtractLineTargets = setOf(CellName.BorrowSubtract1Tens)
+                )
+            }
+
             // [7] 2차 뺄셈 (Borrow 없음)
             steps += PhaseStep(
                 phase = DivisionPhaseV2.InputSubtract,
                 editableCells = listOf(CellName.Subtract2Ones),
-                highlightCells = listOf(CellName.Subtract1Ones, CellName.Multiply2Ones),
+                highlightCells = buildList {
+                    if(needsBorrowSubtract1TensInSubtract2) {
+                        add(CellName.Borrowed10Subtract1Ones)
+                    }
+                    add(CellName.Subtract1Ones)
+                    add(CellName.Multiply2Ones)
+                },
+                presetValues = if(needsBorrowSubtract1TensInSubtract2)
+                    mapOf(CellName.Borrowed10Subtract1Ones to "10")
+                else
+                    emptyMap(),
+                strikeThroughCells = if(needsBorrowSubtract1TensInSubtract2)
+                    listOf(CellName.Subtract1Tens)
+                else
+                    emptyList(),
                 subtractLineTargets = setOf(CellName.Subtract2Ones)
             )
 

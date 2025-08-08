@@ -116,9 +116,23 @@ class DivisionViewModelV2Test {
 
             // === ThreeByTwo ===
             // ThreeByTwo_TensQuotient_NoCarry1_NoBorrow_NoCarry2
-            Triple("ThreeByTwo_TensQuotient_NCM1_NBM1_NCM2_NBM2_1DR: 682 ÷ 31", 682 to 31, listOf("2", "2", "6", "6", "2", "2", "2", "6", "0")),
-            Triple("ThreeByTwo_TensQuotient_NCM1_BM1_NCM2_NBM2_2DR: 604 ÷ 11", 604 to 11, listOf("5", "5", "5", "5", "5", "4", "4", "4", "4", "0", "1")),
-//            Triple("ThreeByTwo_TensQuotient_NoCarry1_NoBorrow_NoCarry2: 432 ÷ 12", 432 to 12, listOf("3", "6", "3", "7", "1", "2", "6", "2", "6", "0")),
+            Triple("ThreeByTwo_TensQuotient_NCM1_NBS1_NCM2_NBS2_1DR: 682 ÷ 31", 682 to 31, listOf("2", "2", "6", "6", "2", "2", "2", "6", "0")),
+            // ThreeByTwo_TensQuotient_NCM1_NBS1_NCM2_NBS2_2DR 찾기 어려움
+            Triple("ThreeByTwo_TensQuotient_NCM1_BS1_NCM2_NBS2_1DR: 517 ÷ 47", 517 to 47, listOf("1", "7", "4", "4", "4", "7", "1", "7", "4", "0")),
+            Triple("ThreeByTwo_TensQuotient_NCM1_BS1_NCM2_NBS2_2DR: 604 ÷ 11", 604 to 11, listOf("5", "5", "5", "5", "5", "4", "4", "4", "4", "0", "1")),
+            // ThreeByTwo_TensQuotient_NCM1_NBS1_NCM2_BS2_1DR 찾기 어려움
+            // ThreeByTwo_TensQuotient_NCM1_NBS1_NCM2_BS2_2DR 찾기 어려움
+
+            Triple("ThreeByTwo_TensQuotient_NCM1_BM1_NCM2_BM2_2DR: 710 ÷ 21", 710 to 21, listOf("3", "3", "6", "6", "8", "0", "3", "3", "6", "7", "7", "1")),
+            Triple("ThreeByTwo_TensQuotient_NCM1_BM1_NCM2_BM2_1DR: 911 ÷ 43", 911 to 43, listOf("2", "6", "8", "8", "5", "1", "1", "3", "4", "4", "8")),
+
+//            Triple("ThreeByTwo_TensQuotient_CM1_BM1_CM2_NBM2_1DR: 501 ÷ 14", 501 to 14, listOf("3", "12", "4", "4", "5", "20", "7", "1", "1")),
+//            Triple("ThreeByTwo_TensQuotient_NCM1_BM1_CM2_NBM2_1DR: 432 ÷ 12", 432 to 12, listOf("3", "6", "3", "3", "7", "2", "6", "12", "7", "0")),
+
+//            Triple("ThreeByTwo_TensQuotient_NCM1_BM1_NCM2_BM2_3DM2_1DR: 613 ÷ 21", 613 to 21, listOf("2", "2", "4", "5", "9", "1", "3", "9", "9", "18", "8", "4")),
+
+
+//            Triple("ThreeByTwo_TensQuotient_NCM1_NBM1_3DM1_NCM2_BM2_3DM2_2DR: 785 ÷ 32", 785 to 32, listOf("2", "4", "6", "4", "1", "5", "4", "8", "12", "3", "7", "1")),
         )
         for ((name, pair, inputs) in cases) {
             val (dividend, divisor) = pair
