@@ -107,7 +107,7 @@ class PhaseEvaluatorV2 {
                     else -> (quotientTens * divisorOnes) / 10            // 3by2: 몫십의자리 × 제수일의자리 / 10
                 }
                 CellName.Multiply1Hundreds -> if (dividend >= 100) {
-                    if (divisorOnes * quotientTens > 10){
+                    if (divisorOnes * quotientTens >= 10){
                         quotientTens * divisorTens + (divisorOnes * quotientTens / 10)
                     } else {
                         quotientTens * divisorTens                            // 3by2: 몫십의자리 × 제수십의자리
@@ -140,7 +140,7 @@ class PhaseEvaluatorV2 {
                 CellName.Multiply2Tens -> when {
                     dividend >= 100 -> {
 //                        println("$quotientOnes * $divisorTens + ($divisorOnes * $quotientOnes")
-                        if(divisorOnes * quotientOnes > 10 ){
+                        if(divisorOnes * quotientOnes >= 10 ){
                             quotientOnes * divisorTens + (divisorOnes * quotientOnes / 10)
                         } else {
                             quotientOnes * divisorTens
@@ -168,7 +168,7 @@ class PhaseEvaluatorV2 {
                         val bringDown = dividendOnes
                         val sub2Target = firstSub * 10 + bringDown
 
-// sub2TensBeforeBorrow는 sub2Target의 십의 자리
+                        // sub2TensBeforeBorrow는 sub2Target의 십의 자리
                         val sub2TensBeforeBorrow = sub2Target / 10
                         sub2TensBeforeBorrow - 1
                     }
@@ -202,7 +202,7 @@ class PhaseEvaluatorV2 {
 
             DivisionPhaseV2.InputSubtract1 -> when (cell) {
                 CellName.Subtract1Hundreds -> if (dividend >= 100) {
-                    dividendHundreds
+                    dividendHundreds // 아직 구현 안함!
                 } else null
 
                 CellName.Subtract1Tens -> when {
@@ -211,7 +211,7 @@ class PhaseEvaluatorV2 {
                         val left = dividendHundreds * 10 + dividendTens
                         val right = quotientTens * divisor
                         val tens = left - right
-                        tens // 음수면 실제로는 몫 계산이 잘못된 케이스니, 보정 로직은 상황에 따라
+                        tens % 10// 음수면 실제로는 몫 계산이 잘못된 케이스니, 보정 로직은 상황에 따라
                     }
                     dividend >= 10 && quotient >= 10 -> {
                         // 2by2: 두 자리 피제수/몫

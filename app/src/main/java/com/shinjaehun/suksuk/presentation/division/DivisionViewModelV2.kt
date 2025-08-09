@@ -72,7 +72,23 @@ class DivisionViewModelV2 @Inject constructor(
 //            startNewProblem(632, 14) // ThreeByTwo_TensQuotient_CM1_BS1_CM2_NBS2_1DR
 
 //            startNewProblem(624, 14) // ThreeByTwo_TensQuotient_CM1_BS1_CM2_BS2_1DR
-            startNewProblem(610, 13) // ThreeByTwo_TensQuotient_CM1_BS1_CM2_BS2_2DR
+//            startNewProblem(610, 13) // ThreeByTwo_TensQuotient_CM1_BS1_CM2_BS2_2DR
+
+//            startNewProblem(700, 13) // ThreeByTwo_TensQuotient_CM1_BS1_NCM2_BS2_2DR
+//            startNewProblem(800, 13) // ThreeByTwo_TensQuotient_CM1_BS1_NCM2_BS2_1DR
+//            startNewProblem(680, 12) // ThreeByTwo_TensQuotient_CM1_NBS1_CM2_BS2_1DR
+//            startNewProblem(670, 12) // ThreeByTwo_TensQuotient_CM1_NBS1_CM2_BS2_2DR
+//            startNewProblem(660, 12) // ThreeByTwo_TensQuotient_CM1_NBS1_CM2_NBS2_1DR
+
+//            startNewProblem(595, 13) //
+//            startNewProblem(320, 15) //
+//            startNewProblem(475, 15) //
+//            startNewProblem(460, 14) //
+            startNewProblem(632, 21) //
+
+
+
+//            startNewProblem(610, 15)
         }
     }
 

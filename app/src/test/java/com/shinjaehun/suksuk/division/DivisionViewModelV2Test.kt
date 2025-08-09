@@ -118,24 +118,35 @@ class DivisionViewModelV2Test {
             Triple("ThreeByTwo_TensQuotient_CM1_BS1_CM2_BS2_2DR: 610 ÷ 13", 610 to 13, listOf("4", "12", "5", "5", "9", "0", "6", "18", "7", "8", "2", "1")),
             Triple("ThreeByTwo_TensQuotient_CM1_BS1_CM2_BS2_1DR: 624 ÷ 14", 624 to 14, listOf("4", "16", "5", "5", "6", "4", "4", "16", "5", "5", "8")),
 
+            Triple("ThreeByTwo_TensQuotient_CM1_BS1_CM2_NBS2_2DR: 732 ÷ 16", 732 to 16, listOf("4", "24", "6", "6", "9", "2", "5", "30", "8", "2", "1")),
             Triple("ThreeByTwo_TensQuotient_CM1_BS1_CM2_NBS2_2DR: 654 ÷ 14", 654 to 14, listOf("4", "16", "5", "5", "9", "4", "6", "24", "8", "0", "1")),
             Triple("ThreeByTwo_TensQuotient_CM1_BS1_CM2_NBS2_1DR: 632 ÷ 14", 632 to 14, listOf("4", "16", "5", "5", "7", "2", "5", "20", "7", "2")),
 
-            // ThreeByTwo_TensQuotient_CM1_BS1_NCM2_BS2
-//            Triple("ThreeByTwo_TensQuotient_CM1_BS1_NCM2_BS2_2DR: 610 ÷ 15", 610 to 15, listOf("4", "20", "6", "1", "0", "0", "0", "10")),
+            Triple("ThreeByTwo_TensQuotient_CM1_BS1_NCM2_BS2_2DR: 700 ÷ 13", 700 to 13, listOf("5", "15", "6", "6", "5", "0", "3", "9", "3", "4", "1", "1")),
+            Triple("ThreeByTwo_TensQuotient_CM1_BS1_NCM2_BS2_1DR: 800 ÷ 13", 800 to 13, listOf("6", "18", "7", "7", "2", "0", "1", "3", "1", "1", "7")),
 
             Triple("ThreeByTwo_TensQuotient_CM1_BS1_NCM2_NBS2_2DR: 619 ÷ 29", 619 to 29, listOf("2", "18", "5", "5", "3", "9", "1", "9", "2", "0", "1")),
             Triple("ThreeByTwo_TensQuotient_CM1_BS1_NCM2_NBS2_1DR: 819 ÷ 39", 819 to 39, listOf("2", "18", "7", "7", "3", "9", "1", "9", "3", "0")),
 
-// ThreeByTwo_TensQuotient_CM1_NBS1_CM2_BS2       # 누락
-// ThreeByTwo_TensQuotient_CM1_NBS1_CM2_NBS2      # 누락
-// ThreeByTwo_TensQuotient_CM1_NBS1_NCM2_BS2      # 누락
+            Triple("ThreeByTwo_TensQuotient_CM1_NBS1_CM2_BS2_2DR: 670 ÷ 12", 670 to 12, listOf("5", "10", "6", "7", "0", "5", "10", "6", "0", "1")),
+            Triple("ThreeByTwo_TensQuotient_CM1_NBS1_CM2_BS2_1DR: 680 ÷ 12", 680 to 12, listOf("5", "10", "6", "8", "0", "6", "12", "7", "7", "8")),
 
+            Triple("ThreeByTwo_TensQuotient_CM1_NBS1_CM2_NBS2_2DR: 595 ÷ 13", 595 to 13, listOf("4", "12", "5", "7", "5", "5", "15", "6", "0", "1")),
+            Triple("ThreeByTwo_TensQuotient_CM1_NBS1_CM2_NBS2_1DR: 660 ÷ 12", 660 to 12, listOf("5", "10", "6", "6", "0", "5", "10", "6", "0")),
+            Triple("ThreeByTwo_TensQuotient_CM1_NBS1_CM2_NBS2_1DR: 672 ÷ 12", 672 to 12, listOf("5", "10", "6", "7", "2", "6", "12", "7", "0")),
+
+            Triple("ThreeByTwo_TensQuotient_CM1_NBS1_NCM2_BS2_2DR: 460 ÷ 14", 460 to 14, listOf("3", "12", "4", "4", "0", "2", "8", "2", "3", "2", "1")),
+            Triple("ThreeByTwo_TensQuotient_CM1_NBS1_NCM2_BS2_1DR: 320 ÷ 15", 320 to 15, listOf("2", "10", "3", "2", "0", "1", "5", "1", "1", "5")),
+
+            Triple("ThreeByTwo_TensQuotient_CM1_NBS1_NCM2_NBS2_2DR: 475 ÷ 15", 475 to 15, listOf("3", "15", "4", "2", "5", "1", "5", "1", "0", "1")),
             Triple("ThreeByTwo_TensQuotient_CM1_NBS1_NCM2_NBS2_2DR: 446 ÷ 14", 446 to 14, listOf("3", "12", "4", "2", "6", "1", "4", "1", "2", "1")),
             Triple("ThreeByTwo_TensQuotient_CM1_NBS1_NCM2_NBS2_1DR: 568 ÷ 27", 568 to 27, listOf("2", "14", "5", "2", "8", "1", "7", "2", "1")),
 
-// ThreeByTwo_TensQuotient_NCM1_BS1_CM2_BS2       # 누락
-// ThreeByTwo_TensQuotient_NCM1_BS1_CM2_NBS2      # 누락
+            Triple("ThreeByTwo_TensQuotient_NCM1_BS1_CM2_BS2_2DR: 220 ÷ 13", 220 to 13, listOf("1", "3", "1", "1", "9", "0", "6", "18", "7", "8", "2", "1")),
+            Triple("ThreeByTwo_TensQuotient_NCM1_BS1_CM2_BS2_1DR: 200 ÷ 16", 200 to 16, listOf("1", "6", "1", "1", "4", "0", "2", "12", "3", "3", "8")),
+
+            Triple("ThreeByTwo_TensQuotient_NCM1_BS1_CM2_NBS2_2DR: 202 ÷ 12", 202 to 12, listOf("1", "2", "1", "1", "8", "2", "6", "12", "7", "0", "1")),
+            Triple("ThreeByTwo_TensQuotient_NCM1_BS1_CM2_NBS2_1DR: 204 ÷ 12", 204 to 12, listOf("1", "2", "1", "1", "8", "4", "7", "14", "8", "0")),
 
             Triple("ThreeByTwo_TensQuotient_NCM1_BS1_NCM2_BS2_2DR: 710 ÷ 21", 710 to 21, listOf("3", "3", "6", "6", "8", "0", "3", "3", "6", "7", "7", "1")),
             Triple("ThreeByTwo_TensQuotient_NCM1_BS1_NCM2_BS2_1DR: 911 ÷ 43", 911 to 43, listOf("2", "6", "8", "8", "5", "1", "1", "3", "4", "4", "8")),
@@ -143,14 +154,19 @@ class DivisionViewModelV2Test {
             Triple("ThreeByTwo_TensQuotient_NCM1_BS1_NCM2_NBS2_2DR: 604 ÷ 11", 604 to 11, listOf("5", "5", "5", "5", "5", "4", "4", "4", "4", "0", "1")),
             Triple("ThreeByTwo_TensQuotient_NCM1_BS1_NCM2_NBS2_1DR: 517 ÷ 47", 517 to 47, listOf("1", "7", "4", "4", "4", "7", "1", "7", "4", "0")),
 
-// ThreeByTwo_TensQuotient_NCM1_NBS1_CM2_BS2      # 누락
-// ThreeByTwo_TensQuotient_NCM1_NBS1_CM2_NBS2     # 누락
+            // ThreeByTwo_TensQuotient_NCM1_NBS1_CM2_BS2_2DR 불가
+            Triple("ThreeByTwo_TensQuotient_NCM1_NBS1_CM2_BS2_1DR: 190 ÷ 13", 190 to 13, listOf("1", "3", "1", "6", "0", "4", "12", "5", "5", "8")),
+
+            Triple("ThreeByTwo_TensQuotient_NCM1_NBS1_CM2_NBS2_1DR: 181 ÷ 12", 181 to 12, listOf("1", "2", "1", "6", "1", "5", "10", "6", "1")),
+            Triple("ThreeByTwo_TensQuotient_NCM1_NBS1_CM2_NBS2_2DR: 190 ÷ 12", 190 to 12, listOf("1", "2", "1", "7", "0", "5", "10", "6", "0", "1")),
 
             Triple("ThreeByTwo_TensQuotient_NCM1_NBS1_NCM2_BS2_2DR: 180 ÷ 14", 180 to 14, listOf("1", "4", "1", "4", "0", "2", "8", "2", "3", "2", "1")),
             Triple("ThreeByTwo_TensQuotient_NCM1_NBS1_NCM2_BS2_1DR: 280 ÷ 25", 280 to 25, listOf("1", "5", "2", "3", "0", "1", "5", "2", "2", "5")),
 
             Triple("ThreeByTwo_TensQuotient_NCM1_NBS1_NCM2_NBS2_2DR: 131 ÷ 11", 131 to 11, listOf("1", "1", "1", "2", "1", "1", "1", "1", "0", "1")),
             Triple("ThreeByTwo_TensQuotient_NCM1_NBS1_NCM2_NBS2_1DR: 682 ÷ 31", 682 to 31, listOf("2", "2", "6", "6", "2", "2", "2", "6", "0")),
+
+            Triple("ThreeByTwo_TensQuotient_CM1_BS1_SkipMul2Sub2 : 610 ÷ 15", 610 to 15, listOf("4", "20", "6", "1", "0", "0")),
 
         )
 
