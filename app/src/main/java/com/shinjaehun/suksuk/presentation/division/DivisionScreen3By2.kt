@@ -293,9 +293,9 @@ fun DivisionScreen3By2(
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
                     .constrainAs(subtract1LineRef) {
-                        top.linkTo(dividendTensRef.bottom, margin = 60.dp)
-                        start.linkTo(dividendTensRef.start, margin = (-10).dp)
-                        width = Dimension.value(100.dp)
+                        top.linkTo(dividendHundredsRef.bottom, margin = 60.dp)
+                        start.linkTo(dividendHundredsRef.start, margin = (-10).dp)
+                        width = Dimension.value(150.dp)
                         height = Dimension.value(4.dp)
                     }
                     .testTag("subtraction1-line")
@@ -443,9 +443,9 @@ fun DivisionScreen3By2(
                 contentDescription = "Subtraction Line",
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier.constrainAs(subtract2LineRef) {
-                    top.linkTo(dividendTensRef.bottom, margin = 200.dp)
-                    start.linkTo(dividendTensRef.start, margin = (-10).dp)
-                    width = Dimension.value(100.dp)
+                    top.linkTo(dividendHundredsRef.bottom, margin = 200.dp)
+                    start.linkTo(dividendHundredsRef.start, margin = (-10).dp)
+                    width = Dimension.value(150.dp)
                     height = Dimension.value(4.dp)
                 }
                     .testTag("subtraction2-line")

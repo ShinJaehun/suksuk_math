@@ -49,13 +49,30 @@ class DivisionViewModelV2 @Inject constructor(
 //            startNewProblem(87, 8) // TwoByOne_TensQuotient_SkipMul2Sub2 <------------ new
 //            startNewProblem(62, 7) // TwoByOne_OnesQuotient_Borrow_2DigitMul
 //            startNewProblem(81, 9) // TwoByOne_OnesQuotient_NoBorrow_2DigitMul
+
+//            startNewProblem(131, 11) // ThreeByTwo_TensQuotient_NCM1_NBS1_NCM2_NBS2_2DR
 //            startNewProblem(682, 31) // ThreeByTwo_TensQuotient_NCM1_NBM1_NCM2_NBM2_1DR
+
 //            startNewProblem(604, 11) // ThreeByTwo_TensQuotient_NCM1_BM1_NCM2_NBM2_2DR
+//            startNewProblem(517, 47) // ThreeByTwo_TensQuotient_NCM1_BS1_NCM2_NBS2_1DR
+
+//            startNewProblem(180, 14) // ThreeByTwo_TensQuotient_NCM1_NBS1_NCM2_BS2_2DR
+//            startNewProblem(280, 25) // ThreeByTwo_TensQuotient_NCM1_NBS1_NCM2_BS2_1DR
+
 //            startNewProblem(710, 21) // ThreeByTwo_TensQuotient_NCM1_BM1_NCM2_BM2_2DR
 //            startNewProblem(911, 43) // ThreeByTwo_TensQuotient_NCM1_BM1_NCM2_BM2_1DR
 
+//            startNewProblem(446, 14) // ThreeByTwo_TensQuotient_CM1_NBS1_NCM2_NBS2_2DR
+//            startNewProblem(568, 27) // ThreeByTwo_TensQuotient_CM1_NBS1_NCM2_NBS2_1DR
 
-            startNewProblem(632, 14) // ThreeByTwo_TensQuotient_CM1_BS1_CM2_NBS2
+//            startNewProblem(619, 29) // ThreeByTwo_TensQuotient_CM1_BS1_NCM2_NBS2_2DR
+//            startNewProblem(819, 39) // ThreeByTwo_TensQuotient_CM1_BS1_NCM2_NBS2_1DR
+
+//            startNewProblem(654, 14) // ThreeByTwo_TensQuotient_CM1_BS1_CM2_NBS2_2DR
+//            startNewProblem(632, 14) // ThreeByTwo_TensQuotient_CM1_BS1_CM2_NBS2_1DR
+
+//            startNewProblem(624, 14) // ThreeByTwo_TensQuotient_CM1_BS1_CM2_BS2_1DR
+            startNewProblem(610, 13) // ThreeByTwo_TensQuotient_CM1_BS1_CM2_BS2_2DR
         }
     }
 

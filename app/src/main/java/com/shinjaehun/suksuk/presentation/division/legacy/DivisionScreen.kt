@@ -231,7 +231,7 @@ fun DivisionScreen(
             println("🔥 subtraction1-line should be shown? ${currentUiState.subtractLines.showSubtract1}")
             if(currentUiState.subtractLines.showSubtract1){
                 Image(
-                    painter = painterResource(id = R.drawable.ic_horizontal_line),
+                    painter = painterResource(id = R.drawable.ic_horizontal_line_short),
                     contentDescription = "Subtraction Line 1",
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier.constrainAs(subtract1LineRef) {
@@ -319,7 +319,7 @@ fun DivisionScreen(
 
             if (currentUiState.subtractLines.showSubtract2){
                 Image(
-                    painter = painterResource(id = R.drawable.ic_horizontal_line),
+                    painter = painterResource(id = R.drawable.ic_horizontal_line_short),
                     contentDescription = "Subtraction Line",
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier.constrainAs(subtract2LineRef) {

@@ -71,7 +71,13 @@ class ThreeByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreato
             steps += PhaseStep(
                 phase = DivisionPhaseV2.InputMultiply1,
                 editableCells = listOf(CellName.Multiply1Hundreds),
-                highlightCells = listOf(CellName.QuotientTens, CellName.DivisorTens)
+                highlightCells = buildList {
+                    if(needsCarryInMultiply1) {
+                        add(CellName.CarryDivisorTensMul1)
+                    }
+                    add(CellName.QuotientTens)
+                    add(CellName.DivisorTens)
+                }
             )
 
             if(needsBorrowDividendHundredsInSubtract1) {
@@ -144,7 +150,13 @@ class ThreeByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreato
             steps += PhaseStep(
                 phase = DivisionPhaseV2.InputMultiply2,
                 editableCells = listOf(CellName.Multiply2Tens),
-                highlightCells = listOf(CellName.QuotientOnes, CellName.DivisorTens)
+                highlightCells = buildList {
+                    if(needsCarryInMultiply2) {
+                        add(CellName.CarryDivisorTensMul2)
+                    }
+                    add(CellName.QuotientOnes)
+                    add(CellName.DivisorTens)
+                }
             )
 
             if(needsBorrowSubtract1TensInSubtract2){
@@ -184,7 +196,14 @@ class ThreeByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreato
                 steps += PhaseStep(
                     phase = DivisionPhaseV2.InputSubtract2,
                     editableCells = listOf(CellName.Subtract2Tens),
-                    highlightCells = listOf(CellName.Multiply2Tens, CellName.Subtract1Tens)
+                    highlightCells = buildList {
+                        if (needsBorrowSubtract1TensInSubtract2) {
+                            add(CellName.BorrowSubtract1Tens)
+                        } else {
+                            add(CellName.Subtract1Tens)
+                        }
+                        add(CellName.Multiply2Tens)
+                    }
                 )
             }
         }

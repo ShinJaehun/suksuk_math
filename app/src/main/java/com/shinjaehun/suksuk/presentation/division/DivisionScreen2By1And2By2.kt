@@ -233,7 +233,7 @@ fun DivisionScreen2By1And2By2(
 //                currentUiState.cells[CellName.Subtract1Ones]?.subtractLineType == true) {
         if (uiState.cells.values.any { it.subtractLineType == SubtractLineType.SubtractLine1 }) {
             Image(
-                painter = painterResource(id = R.drawable.ic_horizontal_line),
+                painter = painterResource(id = R.drawable.ic_horizontal_line_short),
                 contentDescription = "Subtraction Line 1",
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier.constrainAs(subtract1LineRef) {
@@ -339,7 +339,7 @@ fun DivisionScreen2By1And2By2(
 //                currentUiState.cells[CellName.Subtract2Ones]?.subtractLineType == true) {
         if (uiState.cells.values.any { it.subtractLineType == SubtractLineType.SubtractLine2 }) {
             Image(
-                painter = painterResource(id = R.drawable.ic_horizontal_line),
+                painter = painterResource(id = R.drawable.ic_horizontal_line_short),
                 contentDescription = "Subtraction Line",
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier.constrainAs(subtract2LineRef) {
