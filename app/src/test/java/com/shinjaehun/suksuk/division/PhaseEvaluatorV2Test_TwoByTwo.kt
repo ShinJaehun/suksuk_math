@@ -1,5 +1,8 @@
 package com.shinjaehun.suksuk.division
 
+import com.shinjaehun.suksuk.division.PhaseEvaluatorV2Test_ThreeByTwo.PhaseInputTestCase
+import com.shinjaehun.suksuk.domain.division.DivisionInfoBuilder
+import com.shinjaehun.suksuk.domain.division.DivisionStateInfo
 import com.shinjaehun.suksuk.domain.division.model.CrossOutType
 import com.shinjaehun.suksuk.domain.division.model.DivisionPhaseV2
 import com.shinjaehun.suksuk.domain.division.evaluator.PhaseEvaluatorV2
@@ -16,33 +19,30 @@ class PhaseEvaluatorV2Test_TwoByTwo {
         val phase: DivisionPhaseV2,
         val cell: CellName,
         val input: String,
-        val dividend: Int,
-        val divisor: Int,
+        val info: DivisionStateInfo,
         val stepIndex: Int,
         val previousInputs: List<String>,
         val shouldBeCorrect: Boolean
     )
 
-    val cases = listOf(
-        // 68 ÷ 34의 단계별 예시
-        PhaseInputTestCase(DivisionPhaseV2.InputQuotient, CellName.QuotientOnes, "2", 68, 34, 0, listOf(), true),
-        PhaseInputTestCase(DivisionPhaseV2.InputMultiply1, CellName.Multiply1Ones, "8", 68, 34, 1, listOf("2"), true),
-        PhaseInputTestCase(DivisionPhaseV2.InputMultiply1, CellName.Multiply1Tens, "6", 68, 34, 2, listOf("2", "8"), true),
-        PhaseInputTestCase(DivisionPhaseV2.InputSubtract1, CellName.Subtract1Ones, "0", 68, 34, 3, listOf("2", "8", "6"), true),
-        // 오답 케이스
-        PhaseInputTestCase(DivisionPhaseV2.InputQuotient, CellName.QuotientOnes, "3", 68, 34, 0, listOf(), false),
-        PhaseInputTestCase(DivisionPhaseV2.InputMultiply1, CellName.Multiply1Ones, "7", 68, 34, 1, listOf("2"), false),
+    val info68x34 = DivisionInfoBuilder.from(68, 34)
+    val info96x12 = DivisionInfoBuilder.from(96, 12)
 
+    val cases = listOf(
+        // 68 ÷ 34
+        PhaseInputTestCase(DivisionPhaseV2.InputQuotient, CellName.QuotientOnes, "2", info68x34, 0, listOf(), true),
+        PhaseInputTestCase(DivisionPhaseV2.InputMultiply1, CellName.Multiply1Ones, "8", info68x34, 1, listOf("2"), true),
+        PhaseInputTestCase(DivisionPhaseV2.InputMultiply1, CellName.Multiply1Tens, "6", info68x34, 2, listOf("2", "8"), true),
+        PhaseInputTestCase(DivisionPhaseV2.InputSubtract1, CellName.Subtract1Ones, "0", info68x34, 3, listOf("2", "8", "6"), true),
+        // 오답 케이스
+        PhaseInputTestCase(DivisionPhaseV2.InputQuotient, CellName.QuotientOnes, "3", info68x34, 0, listOf(), false),
+        PhaseInputTestCase(DivisionPhaseV2.InputMultiply1, CellName.Multiply1Ones, "7", info68x34, 1, listOf("2"), false),
         // 96 ÷ 12, 몫 8, 곱셈 Carry 발생 (16)
-        PhaseInputTestCase(DivisionPhaseV2.InputQuotient, CellName.QuotientOnes, "8", 96, 12, 0, listOf(), true),
-        // Carry를 먼저 입력 (1)
-        PhaseInputTestCase(DivisionPhaseV2.InputMultiply1, CellName.CarryDivisorTensMul1, "1", 96, 12, 1, listOf("8"), true),
-        // Ones 입력 (6)
-        PhaseInputTestCase(DivisionPhaseV2.InputMultiply1, CellName.Multiply1Ones, "6", 96, 12, 2, listOf("8", "1"), true),
-        // Tens 입력 (9)
-        PhaseInputTestCase(DivisionPhaseV2.InputMultiply1, CellName.Multiply1Tens, "9", 96, 12, 3, listOf("8", "1", "6"), true),
-        // 뺄셈 (0)
-        PhaseInputTestCase(DivisionPhaseV2.InputSubtract1, CellName.Subtract1Ones, "0", 96, 12, 4, listOf("8", "1", "6", "9"), true),
+        PhaseInputTestCase(DivisionPhaseV2.InputQuotient, CellName.QuotientOnes, "8", info96x12, 0, listOf(), true),
+        PhaseInputTestCase(DivisionPhaseV2.InputMultiply1, CellName.CarryDivisorTensMul1, "1", info96x12, 1, listOf("8"), true),
+        PhaseInputTestCase(DivisionPhaseV2.InputMultiply1, CellName.Multiply1Ones, "6", info96x12, 2, listOf("8", "1"), true),
+        PhaseInputTestCase(DivisionPhaseV2.InputMultiply1, CellName.Multiply1Tens, "9", info96x12, 3, listOf("8", "1", "6"), true),
+        PhaseInputTestCase(DivisionPhaseV2.InputSubtract1, CellName.Subtract1Ones, "0", info96x12, 4, listOf("8", "1", "6", "9"), true),
     )
 
     @Test
@@ -54,13 +54,12 @@ class PhaseEvaluatorV2Test_TwoByTwo {
                 phase = c.phase,
                 cell = c.cell,
                 input = c.input,
-                dividend = c.dividend,
-                divisor = c.divisor,
+                info = c.info,
                 stepIndex = c.stepIndex,
                 previousInputs = c.previousInputs
             )
             assertEquals(
-                "phase=${c.phase}, cell=${c.cell}, input=${c.input}, dividend=${c.dividend}, divisor=${c.divisor}, step=${c.stepIndex}, prevInputs=${c.previousInputs}",
+                "phase=${c.phase}, cell=${c.cell}, input=${c.input}, step=${c.stepIndex}, prevInputs=${c.previousInputs}",
                 c.shouldBeCorrect, result
             )
         }
@@ -117,8 +116,10 @@ class PhaseEvaluatorV2Test_TwoByTwo {
         val stepIndex = 0
         val previousInputs = emptyList<String>()
 
+        val info = DivisionInfoBuilder.from(dividend, divisor)
+
         val result = evaluator.isCorrect(
-            phase, cell, userInput, dividend, divisor, stepIndex, previousInputs
+            phase, cell, userInput, info, stepIndex, previousInputs
         )
 
         assertTrue(result)

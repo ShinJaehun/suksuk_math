@@ -155,8 +155,9 @@ class DivisionViewModelV2 @Inject constructor(
                 phase = step.phase,
                 cell = cellName,
                 input = userInput,
-                dividend = domainState.dividend,
-                divisor = domainState.divisor,
+//                dividend = domainState.dividend,
+//                divisor = domainState.divisor,
+                info = domainState.info,
                 stepIndex = domainState.currentStepIndex,
                 previousInputs = domainState.inputs
             )

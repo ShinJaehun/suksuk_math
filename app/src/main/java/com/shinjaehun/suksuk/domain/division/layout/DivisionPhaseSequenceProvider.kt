@@ -1,5 +1,6 @@
 package com.shinjaehun.suksuk.domain.division.layout
 
+import com.shinjaehun.suksuk.domain.division.DivisionInfoBuilder
 import com.shinjaehun.suksuk.domain.division.layout.sequence.ThreeByTwoPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.layout.sequence.TwoByOnePhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.layout.sequence.TwoByTwoPhaseSequenceCreator
@@ -16,13 +17,18 @@ class DivisionPhaseSequenceProvider @Inject constructor(
     ) {
     // 추후 provider 없이 di로 제공할 예정
 
-    fun makeTwoByOnePhaseSequence(dividend: Int, divisor: Int): PhaseSequence =
-        twoByOneCreator.create(dividend, divisor)
+    fun makeTwoByOnePhaseSequence(dividend: Int, divisor: Int): PhaseSequence {
+        val info = DivisionInfoBuilder.from(dividend, divisor)
+        return twoByOneCreator.create(info)
+    }
 
-    fun makeTwoByTwoPhaseSequence(dividend: Int, divisor: Int): PhaseSequence =
-        twoByTwoCreator.create(dividend, divisor)
+    fun makeTwoByTwoPhaseSequence(dividend: Int, divisor: Int): PhaseSequence {
+        val info = DivisionInfoBuilder.from(dividend, divisor)
+        return twoByTwoCreator.create(info)
+    }
 
-    fun makeThreeByTwoPhaseSequence(dividend: Int, divisor: Int): PhaseSequence =
-        threeByTwoCreator.create(dividend, divisor)
-
+    fun makeThreeByTwoPhaseSequence(dividend: Int, divisor: Int): PhaseSequence {
+        val info = DivisionInfoBuilder.from(dividend, divisor)
+        return threeByTwoCreator.create(info)
+    }
 }

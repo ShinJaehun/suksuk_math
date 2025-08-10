@@ -149,7 +149,7 @@ class DivisionScreenTest {
         composeTestRule.onNodeWithTag("numpad-3").performClick()
         composeTestRule.onNodeWithTag("numpad-enter").performClick()
         composeTestRule.onNodeWithTag("Multiply1Ones-cell").assertTextEquals("?")
-        composeTestRule.onNodeWithTag("CarryDivisorTens-cell").assertTextEquals("?")
+        composeTestRule.onNodeWithTag("CarryDivisorTensMul1-cell").assertTextEquals("?")
     }
 
     @Test

@@ -12,7 +12,6 @@ import org.junit.Test
 
 class PhaseSequenceProviderTest {
 
-
     val twoByOneCreator = TwoByOnePhaseSequenceCreator()
     val twoByTwoCreator = TwoByTwoPhaseSequenceCreator()
     val threeByTwoCreator = ThreeByTwoPhaseSequenceCreator()
@@ -52,13 +51,13 @@ class PhaseSequenceProviderTest {
         assertEquals(DivisionPhaseV2.InputQuotient,   seq.steps[0].phase)   // 몫 십의자리
         assertEquals(DivisionPhaseV2.InputMultiply1,   seq.steps[1].phase)   // 1차 곱셈(Tens)
         assertEquals(DivisionPhaseV2.InputMultiply1,   seq.steps[2].phase)   // 1차 곱셈(Hundreds)
-        assertEquals(DivisionPhaseV2.InputSubtract1,   seq.steps[3].phase)   // 1차 뺄셈(Tens)
+        assertEquals(DivisionPhaseV2.InputBorrow,   seq.steps[3].phase)   // 1차 뺄셈(Tens)
         assertEquals(DivisionPhaseV2.InputSubtract1,   seq.steps[4].phase)   // 1차 뺄셈(Hundreds)
         assertEquals(DivisionPhaseV2.InputBringDown,  seq.steps[5].phase)   // Bring down Ones
         assertEquals(DivisionPhaseV2.InputQuotient,   seq.steps[6].phase)   // 몫 일의자리
-        assertEquals(DivisionPhaseV2.InputMultiply1,   seq.steps[7].phase)   // 2차 곱셈(Ones)
-        assertEquals(DivisionPhaseV2.InputMultiply1,   seq.steps[8].phase)   // 2차 곱셈(Tens)
-        assertEquals(DivisionPhaseV2.InputSubtract1,   seq.steps[9].phase)   // 2차 뺄셈(Ones)
+        assertEquals(DivisionPhaseV2.InputMultiply2,   seq.steps[7].phase)   // 2차 곱셈(Ones)
+        assertEquals(DivisionPhaseV2.InputMultiply2,   seq.steps[8].phase)   // 2차 곱셈(Tens)
+        assertEquals(DivisionPhaseV2.InputSubtract2,   seq.steps[9].phase)   // 2차 뺄셈(Ones)
         assertEquals(DivisionPhaseV2.Complete,        seq.steps[10].phase)  // 완료
 
         // 4. 세부 단계 속성 검증 (예: editableCells, highlightCells 등 필요 시 추가)
