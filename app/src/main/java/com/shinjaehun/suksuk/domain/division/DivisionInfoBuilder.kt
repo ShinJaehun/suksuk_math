@@ -28,19 +28,47 @@ object DivisionInfoBuilder {
         val needsCarryInMultiply1 = (quotientTens * divisorOnes) >= 10
         val needsCarryInMultiply2 = (quotientOnes * divisorOnes) >= 10
 
-        val needsBorrowFromSubtract1TensInSubtract2 =
-            (quotientOnes != 0) && ((subtract1Result % 10) < (multiplyQuotientOnes % 10))
+        val needs2DigitsInSubtract1 = subtract1TensOnly >= 10
+        val needs3DigitsInMultiply2 = multiplyQuotientOnes >= 100
+
+        val isThreeByTwo = (dividend >= 100) && (divisor  >= 10)
+
+        val Nh = subtract1TensOnly / 10
+        val Nt = subtract1TensOnly % 10
+        val No = dividendOnes
+
+        // 2차 곱셈 M 의 자릿수
+        val Mh = (multiplyQuotientOnes / 100) % 10
+        val Mt = (multiplyQuotientOnes / 10) % 10
+        val Mo = multiplyQuotientOnes % 10
+
+//        val needsBorrowFromSubtract1TensInSubtract2 =
+//            (quotientOnes != 0) && ((subtract1Result % 10) < (multiplyQuotientOnes % 10))
+        val needsBorrowFromSubtract1TensInSubtract2 = No < Mo
 
         val needsSkipMultiply2AndSubtract2 = quotientOnes == 0
-        val needsEmptySubtract1Tens = (dividendTens - (multiplyQuotientTens % 10)) == 0
+        val needsEmptySubtract1Tens =
+            (dividendTens - (multiplyQuotientTens % 10)) == 0 && !needs2DigitsInSubtract1
 
+//        val needsBorrowFromSubtract1HundredsInSubtract2 =
+//            (dividend >= 100) &&
+//                    (((subtract1Result / 10) % 10) < ((multiplyQuotientOnes / 10) % 10))
         val needsBorrowFromSubtract1HundredsInSubtract2 =
-            (dividend >= 100) &&
-                    (((subtract1Result / 10) % 10) < ((multiplyQuotientOnes / 10) % 10))
+            (dividend >= 100) && ((Nt - (if (needsBorrowFromSubtract1TensInSubtract2) 1 else 0)) < Mt)
+
+        val needsSkipBorrowFromSubtract1HundredsInSubtract2 =
+            needsBorrowFromSubtract1HundredsInSubtract2 && (Nh == 1)
 
         val remainder = dividend - divisor * quotient
         val needs2DigitRem =
             if (needsSkipMultiply2AndSubtract2) subtract1Result >= 10 else remainder >= 10
+
+        val needsSubtract2TensStep = !needsSkipMultiply2AndSubtract2 && needs2DigitRem
+
+        val tbs2 = isThreeByTwo && (No < Mo)
+        val hbs2 = isThreeByTwo && (subtract1TensOnly >= 10) && ((Nt - (if (tbs2) 1 else 0)) < Mt)
+        val skipHbs2 = hbs2 && (Nh == 1)
+        val doubleBorrow = isThreeByTwo && tbs2 && ((Nt - 1) < Mt)
 
 //        println("InfoBuilder: q=$quotient, q1=$quotientOnes, skip2=${(quotientOnes == 0)}")
 //        println("InfoBuilder(assign): skip2=$needsSkipMultiply2AndSubtract2")
@@ -71,15 +99,25 @@ object DivisionInfoBuilder {
             needsCarryInMultiply1 = needsCarryInMultiply1,
             needsCarryInMultiply2 = needsCarryInMultiply2,
 
+            needs2DigitsInSubtract1 = needs2DigitsInSubtract1,
+            needs3DigitsInMultiply2 = needs3DigitsInMultiply2,
+
             needsBorrowFromDividendHundredsInSubtract1 = needsBorrowFromDividendHundredsInSubtract1,
             needsBorrowFromSubtract1TensInSubtract2 = needsBorrowFromSubtract1TensInSubtract2,
             needsBorrowFromSubtract1HundredsInSubtract2 = needsBorrowFromSubtract1HundredsInSubtract2,
+            needsSkipBorrowFromSubtract1HundredsInSubtract2 = needsSkipBorrowFromSubtract1HundredsInSubtract2,
 
-            needsSkipMultiply2AndSubtract2 = needsSkipMultiply2AndSubtract2,  // ← 문제의 필드
+            needsSkipMultiply2AndSubtract2 = needsSkipMultiply2AndSubtract2,
             needsEmptySubtract1Tens = needsEmptySubtract1Tens,
 
             remainder = remainder,
-            needs2DigitRem = needs2DigitRem
+            needs2DigitRem = needs2DigitRem,
+
+            needsSubtract2TensStep = needsSubtract2TensStep,
+            tbs2 = tbs2,
+            hbs2 = hbs2,
+            skipHbs2 = skipHbs2,
+            doubleBorrow = doubleBorrow
         )
     }
 }

@@ -328,4 +328,59 @@ class DivisionScreenInputTestV2ThreeByTwo {
             listOf("4", "20", "6", "1", "0", "0")
         )
 
+
+    // 236 ÷ 13 = 18 ... 2
+// ThreeByTwo_TensQuotient_3DS1_3DM2
+    @Test
+    fun testPattern_236_div_13() =
+        composeTestRule.divisionCaseV2(
+            236, 13,
+            listOf("1", "3", "1", "0", "1", "6", "8", "24", "10", "2")
+        )
+
+    // 419 ÷ 21 = 19 ... 20
+// ThreeByTwo_TensQuotient_3DS1_3DM2 (hbs2, ntbs2)
+    @Test
+    fun testPattern_419_div_21() =
+        composeTestRule.divisionCaseV2(
+            419, 21,
+            listOf("1", "1", "2", "0", "2", "9", "9", "9", "18", "0", "1", "2")
+        )
+
+    // 230 ÷ 12 = 19 ... 2
+// ThreeByTwo_TensQuotient_3DS1_3DM2 (nhbs2, tbs2)
+    @Test
+    fun testPattern_230_div_12() =
+        composeTestRule.divisionCaseV2(
+            230, 12,
+            listOf("1", "2", "1", "1", "1", "0", "9", "18", "10", "0", "2")
+        )
+
+    // 210 ÷ 11 = 19 ... 1
+// ThreeByTwo_TensQuotient_3DS1_3DM2 (hbs2 + tbs2, double borrow)
+    @Test
+    fun testPattern_210_div_11() =
+        composeTestRule.divisionCaseV2(
+            210, 11,
+            listOf("1", "1", "1", "0", "1", "0", "9", "9", "9", "0", "9", "1")
+        )
+
+    // 710 ÷ 60 = 11 ... 50
+// ThreeByTwo_TensQuotient_3DS1_2DM2 : Sub2 110-60, skip borrow from sub1Hundreds
+    @Test
+    fun testPattern_710_div_60() =
+        composeTestRule.divisionCaseV2(
+            710, 60,
+            listOf("1", "0", "6", "1", "1", "0", "1", "0", "6", "0", "0", "5")
+        )
+
+    // 219 ÷ 11 = 19 ... 10
+// ThreeByTwo_TensQuotient_3DS1_3DM2
+    @Test
+    fun testPattern_219_div_11() =
+        composeTestRule.divisionCaseV2(
+            219, 11,
+            listOf("1", "1", "1", "0", "1", "9", "9", "9", "9", "0", "1")
+        )
+
 }

@@ -168,7 +168,20 @@ class DivisionViewModelV2Test {
 
             Triple("ThreeByTwo_TensQuotient_CM1_BS1_SkipMul2Sub2 : 610 ÷ 15", 610 to 15, listOf("4", "20", "6", "1", "0", "0")),
 
-        )
+            // 3ds1 3dm2: nhbs2 ntbs2
+            Triple("ThreeByTwo_TensQuotient_3DS1_3DM2 : 236 ÷ 13", 236 to 13, listOf("1", "3", "1", "0", "1", "6", "8", "24", "10", "2")),
+            // 3ds1 3dm2: hbs2 ntbs2
+            Triple("ThreeByTwo_TensQuotient_3DS1_3DM2 : 419 ÷ 21", 419 to 21, listOf("1", "1", "2", "0", "2", "9", "9", "9", "18", "0", "1", "2")),
+            // 3ds1 3dm2: nhbs2 tbs2
+            Triple("ThreeByTwo_TensQuotient_3DS1_3DM2 : 230 ÷ 12", 230 to 12, listOf("1", "2", "1", "1", "1", "0", "9", "18", "10", "0", "2")),
+            // 3ds1 3dm2: hbs2 tbs2 double borrow
+            Triple("ThreeByTwo_TensQuotient_3DS1_3DM2 : 210 ÷ 11", 210 to 11, listOf("1", "1", "1", "0", "1", "0", "9", "9", "9", "0", "9", "1")),
+
+            // Sub2 110 - 60: skip borrow from sub1hundreds
+            Triple("ThreeByTwo_TensQuotient_3DS1_2DM2 : 710 ÷ 60", 710 to 60, listOf("1", "0", "6", "1", "1", "0", "1", "0", "6", "0", "0", "5")),
+            Triple("ThreeByTwo_TensQuotient_3DS1_3DM2 : 219 ÷ 11", 219 to 11, listOf("1", "1", "1", "0", "1", "9", "9", "9", "9", "0", "1")),
+
+            )
 
         for ((name, pair, inputs) in cases) {
             val (dividend, divisor) = pair

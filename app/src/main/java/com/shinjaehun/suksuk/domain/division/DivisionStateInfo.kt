@@ -30,13 +30,23 @@ data class DivisionStateInfo(
     val needsCarryInMultiply1: Boolean,
     val needsCarryInMultiply2: Boolean,
 
+    val needs2DigitsInSubtract1: Boolean,
+    val needs3DigitsInMultiply2: Boolean,
+
     val needsBorrowFromDividendHundredsInSubtract1: Boolean,
     val needsBorrowFromSubtract1TensInSubtract2: Boolean,
     val needsBorrowFromSubtract1HundredsInSubtract2: Boolean,
+    val needsSkipBorrowFromSubtract1HundredsInSubtract2: Boolean,
 
     // skip / zero / remainder
     val needsSkipMultiply2AndSubtract2: Boolean,
     val needsEmptySubtract1Tens: Boolean,
     val remainder: Int,
     val needs2DigitRem: Boolean,
+
+    val needsSubtract2TensStep: Boolean,
+    val tbs2: Boolean,
+    val hbs2: Boolean,
+    val skipHbs2: Boolean,
+    val doubleBorrow: Boolean
 )

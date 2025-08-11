@@ -351,7 +351,7 @@ fun DivisionScreen3By2(
                 .width(borrowCellMinWidth)
                 .padding(horizontal = 4.dp)
                 .constrainAs(subtract1TensBorrowed10Ref) {
-                    start.linkTo(subtract1TensRef.start, margin = (-8).dp)
+                    start.linkTo(subtract1TensRef.start, margin = (-10).dp)
                     bottom.linkTo(subtract1TensRef.top)
                 }
         )
@@ -365,7 +365,7 @@ fun DivisionScreen3By2(
                 .width(borrowCellMinWidth)
                 .padding(horizontal = 4.dp)
                 .constrainAs(subtract1TensBorrowRef) {
-                    start.linkTo(subtract1TensBorrowed10Ref.end, margin = (-8).dp)
+                    start.linkTo(subtract1TensBorrowed10Ref.end, margin = (-6).dp)
                     bottom.linkTo(subtract1TensRef.top)
                 }
         )
@@ -384,10 +384,10 @@ fun DivisionScreen3By2(
                 }
         )
 
-        val subtract1Borrowed10Cell = uiState.cells[CellName.Borrowed10Subtract1Ones]
+        val subtract1OnesBorrowed10Cell = uiState.cells[CellName.Borrowed10Subtract1Ones]
             ?: InputCellV2(cellName = CellName.Borrowed10Subtract1Ones)
         BorrowTextV2(
-            cell = subtract1Borrowed10Cell,
+            cell = subtract1OnesBorrowed10Cell,
             modifier = Modifier
                 .width(cellWidth)
                 .padding(horizontal = 8.dp)
@@ -532,7 +532,7 @@ fun PreviewDivisionStageScreen() {
 
     val newUiState = fakeUiState.copy(
         cells = fakeUiState.cells.toMutableMap().apply {
-            this[CellName.Borrowed10DividendTens] = InputCellV2(cellName = CellName.Borrowed10DividendTens, value = "5")
+            this[CellName.Borrowed10Subtract1Tens] = InputCellV2(cellName = CellName.Borrowed10Subtract1Tens, value = "10")
         }
     )
     DivisionScreen3By2(
