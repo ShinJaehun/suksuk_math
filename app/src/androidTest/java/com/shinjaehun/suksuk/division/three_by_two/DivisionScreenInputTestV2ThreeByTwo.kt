@@ -383,4 +383,115 @@ class DivisionScreenInputTestV2ThreeByTwo {
             listOf("1", "1", "1", "0", "1", "9", "9", "9", "9", "0", "1")
         )
 
+    // nhbs1 ntbs1
+    @Test fun test_ThreeByTwo_OneQuotient_198_div_22() =
+        composeTestRule.divisionCaseV2(198, 22, listOf("9", "18", "19", "0"))
+
+    // nhbs1 tbs1
+    @Test fun test_ThreeByTwo_OneQuotient_230_div_27() =
+        composeTestRule.divisionCaseV2(230, 27, listOf("8", "56", "21", "2", "4", "1"))
+
+    // hbs1 ntbs1
+    @Test fun test_ThreeByTwo_OneQuotient_205_div_23() =
+        composeTestRule.divisionCaseV2(205, 23, listOf("8", "24", "18", "1", "1", "2"))
+
+    // hbs1 tbs1 double borrow
+    @Test fun test_ThreeByTwo_OneQuotient_342_div_49() =
+        composeTestRule.divisionCaseV2(342, 49, listOf("6", "54", "29", "2", "9", "8", "4"))
+
+    // nhbs1 tbs1 2digit mul
+    @Test fun test_ThreeByTwo_OneQuotient_234_div_25() =
+        composeTestRule.divisionCaseV2(234, 25, listOf("9", "45", "22", "2", "9"))
+
+    // hbs1 ntbs1 2digit mul
+    @Test fun test_ThreeByTwo_OneQuotient_315_div_42() =
+        composeTestRule.divisionCaseV2(315, 42, listOf("7", "14", "29", "1", "2", "2"))
+
+    // hbs1 ntbs1 2digit mul
+    @Test fun test_ThreeByTwo_OneQuotient_107_div_12() =
+        composeTestRule.divisionCaseV2(107, 12, listOf("8", "16", "9", "1", "0", "1"))
+
+    // hbs1 tbs1 double borrow 2digit mul
+    @Test fun test_ThreeByTwo_OneQuotient_104_div_12() =
+        composeTestRule.divisionCaseV2(104, 12, listOf("8", "16", "9", "0", "9", "8"))
+
+    // 2digit mul remain 0
+    @Test fun test_ThreeByTwo_OneQuotient_150_div_30() =
+        composeTestRule.divisionCaseV2(150, 30, listOf("5", "0", "15", "0"))
+
+    // skip hbs1
+    @Test fun test_ThreeByTwo_OneQuotient_109_div_11() =
+        composeTestRule.divisionCaseV2(109, 11, listOf("9", "9", "9", "0", "1"))
+
+    // skip hbs1
+    @Test fun test_ThreeByTwo_OneQuotient_101_div_51() =
+        composeTestRule.divisionCaseV2(101, 51, listOf("1", "1", "5", "0", "5"))
+
+    // no borrow 3digit mul 2digit remain
+    @Test fun test_ThreeByTwo_OneQuotient_229_div_23() =
+        composeTestRule.divisionCaseV2(229, 23, listOf("9", "27", "20", "2", "2"))
+
+    // tbs1 1digit remain
+    @Test fun test_ThreeByTwo_OneQuotient_214_div_23() =
+        composeTestRule.divisionCaseV2(214, 23, listOf("9", "27", "20", "0", "7"))
+
+    // ========== 공통 경계 ==========
+    @Test fun test_ThreeByTwo_110_div_11() =
+        composeTestRule.divisionCaseV2(110, 11, listOf("1", "1", "1", "0", "0", "0"))
+
+    @Test fun test_ThreeByTwo_240_div_20() =
+        composeTestRule.divisionCaseV2(240, 20, listOf("1", "0", "2", "4", "0", "2", "0", "4", "0"))
+
+    @Test fun test_ThreeByTwo_605_div_20() =
+        composeTestRule.divisionCaseV2(605, 20, listOf("3", "0", "6", "0", "5", "0"))
+
+    @Test fun test_ThreeByTwo_999_div_99() =
+        composeTestRule.divisionCaseV2(999, 99, listOf("1", "9", "9", "0", "9", "0"))
+
+    @Test fun test_ThreeByTwo_396_div_33() =
+        composeTestRule.divisionCaseV2(396, 33, listOf("1", "3", "3", "6", "6", "2", "6", "6", "0"))
+
+    @Test fun test_ThreeByTwo_402_div_27() =
+        composeTestRule.divisionCaseV2(402, 27, listOf("1", "7", "2", "3", "3", "1", "2", "4", "28", "10", "2", "4", "2"))
+
+    @Test fun test_ThreeByTwo_308_div_11() =
+        composeTestRule.divisionCaseV2(308, 11, listOf("2", "2", "2", "2", "8", "8", "8", "8", "8", "0"))
+
+    // ========== Double-borrow / Skip-borrow 변형 ==========
+    @Test fun test_ThreeByTwo_342_div_38() =
+        composeTestRule.divisionCaseV2(342, 38, listOf("9", "72", "34", "0"))
+
+    @Test fun test_ThreeByTwo_418_div_41() =
+        composeTestRule.divisionCaseV2(418, 41, listOf("1", "1", "4", "0", "8", "0"))
+
+    // ========== Mul 경계 ==========
+    @Test fun test_ThreeByTwo_425_div_25() =
+        composeTestRule.divisionCaseV2(425, 25, listOf("1", "5", "2", "3", "7", "1", "5", "7", "35", "17", "0"))
+
+    @Test fun test_ThreeByTwo_284_div_28() =
+        composeTestRule.divisionCaseV2(284, 28, listOf("1", "8", "2", "0", "4", "0"))
+
+    @Test fun test_ThreeByTwo_368_div_32() =
+        composeTestRule.divisionCaseV2(368, 32, listOf("1", "2", "3", "4", "8", "1", "2", "3", "6", "1"))
+
+    // ========== Remainder 다양화 ==========
+    @Test fun test_ThreeByTwo_672_div_32() =
+        composeTestRule.divisionCaseV2(672, 32, listOf("2", "4", "6", "3", "2", "1", "2", "3", "0"))
+
+    @Test fun test_ThreeByTwo_815_div_39() =
+        composeTestRule.divisionCaseV2(815, 39, listOf("2", "18", "7", "7", "3", "5", "0"))
+
+    @Test fun test_ThreeByTwo_731_div_36() =
+        composeTestRule.divisionCaseV2(731, 36, listOf("2", "12", "7", "1", "1", "0"))
+
+    @Test fun test_ThreeByTwo_568_div_26() =
+        composeTestRule.divisionCaseV2(568, 26, listOf("2", "12", "5", "4", "8", "1", "6", "2", "2", "2"))
+
+    // ========== 스킵 단계 UI/StrikeThrough 정합성 ==========
+    @Test fun test_ThreeByTwo_209_div_19() =
+        composeTestRule.divisionCaseV2(209, 19, listOf("1", "9", "1", "1", "1", "9", "1", "9", "1", "0"))
+
+    @Test fun test_ThreeByTwo_840_div_70() =
+        composeTestRule.divisionCaseV2(840, 70, listOf("1", "0", "7", "4", "1", "0", "2", "0", "14", "0"))
+
 }

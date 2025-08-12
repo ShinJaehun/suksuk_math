@@ -39,28 +39,50 @@ class PhaseEvaluatorV2 {
 
             DivisionPhaseV2.InputMultiply1 -> when (cell) {
                 CellName.CarryDivisorTensMul1 ->
-                    if (i.dividend >= 100) (i.quotientTens * i.divisorOnes) / 10
+                    if (i.hasTensQuotient) {
+                        (i.quotientTens * i.divisorOnes) / 10
+                    }
                     else (i.quotient * i.divisorOnes) / 10
 
                 // multiply1quotientTens 이용하면 더 간단히 정리할 수 있지 않을까?
                 CellName.Multiply1Hundreds ->
                     if (i.dividend >= 100) {
-                        if (i.needsCarryInMultiply1)
-                            i.quotientTens * i.divisorTens + (i.quotientTens * i.divisorOnes / 10)
-                        else
-                            i.quotientTens * i.divisorTens
+                        if(i.hasTensQuotient){
+                            if (i.isCarryRequiredInMultiplyQuotientTens)
+                                i.quotientTens * i.divisorTens + (i.quotientTens * i.divisorOnes / 10)
+                            else
+                                i.quotientTens * i.divisorTens
+                        } else {
+                            if (i.isCarryRequiredInMultiplyQuotientOnes)
+                                (i.quotientOnes * i.divisorTens + (i.quotientOnes * i.divisorOnes / 10)) /10
+                            else
+                                i.multiplyQuotientOnes / 100
+                        }
                     } else null
 
                 CellName.Multiply1Tens -> when {
-                    i.dividend >= 100 -> (i.quotientTens * i.divisorOnes) % 10           // 3by2
-                    !i.needsTensQuotient -> (i.quotient * i.divisor) / 10                // 2by1
-                    else -> i.quotientTens * i.divisorOnes                                // 2by2 표시 규칙 유지
+                    i.dividend >= 100 -> {           // 3by2
+                        if (i.hasTensQuotient) {
+                            (i.quotientTens * i.divisorOnes) % 10
+                        } else {
+                            i.multiplyQuotientOnes / 10 % 10
+                        }
+                    }
+                    i.hasTensQuotient -> i.quotientTens * i.divisorOnes
+                    else -> (i.quotient * i.divisor) / 10
                 }
 
                 CellName.Multiply1Ones -> when {
-                    i.dividend >= 100 -> (i.quotientTens * i.divisorOnes) % 10           // 3by2
-                    i.needsTensQuotient -> (i.quotientTens * i.divisor) % 10             // 2by2
-                    else -> (i.quotient * i.divisor) % 10                                 // 2by1
+                    i.dividend >= 100 -> {           // 3by2
+                        if (i.hasTensQuotient) {
+                            (i.quotientTens * i.divisorOnes) % 10
+                        } else {
+                            i.multiplyQuotientOnes % 10
+                        }
+                    }
+                    i.hasTensQuotient -> (i.quotientTens * i.divisor) % 10             // 2by2
+//                    else -> (i.quotient * i.divisor) % 10                                 // 2by1
+                    else -> i.multiplyQuotientOnes % 10                                 // 2by1
                 }
 
                 else -> null
@@ -74,10 +96,16 @@ class PhaseEvaluatorV2 {
             DivisionPhaseV2.InputBorrow -> when (cell) {
                 CellName.BorrowDividendHundreds ->
                     if (i.dividend >= 100) i.dividendHundreds - 1 else null
-                CellName.BorrowDividendTens -> i.dividendTens - 1
+                CellName.BorrowDividendTens ->
+                    if(i.isBorrowFromDividendTensRequiredInS1 &&
+                        i.isBorrowFromDividendHundredsRequiredInS1) {
+                        9
+                    } else {
+                        i.dividendTens - 1
+                    }
                 CellName.BorrowSubtract1Tens -> {
-                    if (i.needsBorrowFromSubtract1TensInSubtract2 &&
-                        i.needsBorrowFromSubtract1HundredsInSubtract2) {
+                    if (i.isBorrowFromSubtract1TensRequiredInS2 &&
+                        i.isBorrowFromSubtract1HundredsRequiredInS2) {
                         9
                     } else {
                         val sub2TensBeforeBorrow = (i.subtract1Result / 10) % 10
@@ -91,22 +119,33 @@ class PhaseEvaluatorV2 {
             DivisionPhaseV2.InputSubtract1 -> when (cell) {
                 CellName.Subtract1Hundreds ->
 //                    if (i.dividend >= 100) i.dividendHundreds - (i.quotientTens * i.divisor) / 10
-                    if(i.needsTensQuotient){
+                    if (i.hasTensQuotient) {
                         i.subtract1Result / 100
                     } else null
-                CellName.Subtract1Tens -> when {
-                    i.dividend >= 100 -> {
-                        val tens = i.dividendHundreds * 10 + i.dividendTens - i.multiplyQuotientTens
-                        tens % 10
-                    }
-                    i.dividend >= 10 && i.quotient >= 10 -> {
-                        val tens = i.dividendTens - (i.quotientTens * i.divisor)
-                        if (tens < 0) tens + 10 else tens
-                    }
-                    else -> (i.dividend - (i.quotient * i.divisor)) / 10
-                }
+//                CellName.Subtract1Tens -> when {
+//                    i.dividend >= 100 -> {
+//                        if (i.hasTensQuotient) {
+//                            val tens = i.dividendHundreds * 10 + i.dividendTens - i.multiplyQuotientTens
+//                            tens % 10
+//                        } else {
+//                            i.remainder / 10
+//                        }
+//                    }
+//                    i.dividend >= 10 && i.quotient >= 10 -> {
+//                        val tens = i.dividendTens - (i.quotientTens * i.divisor)
+//                        if (tens < 0) tens + 10 else tens
+//                    }
+//                    else -> (i.dividend - (i.quotient * i.divisor)) / 10
 
-                CellName.Subtract1Ones -> (i.dividend - (i.quotient * i.divisor)) % 10
+                CellName.Subtract1Tens ->
+                    if (i.hasTensQuotient){
+                        i.subtract1TensOnly % 10
+                    } else {
+                        i.remainder / 10
+                    }
+
+//                CellName.Subtract1Ones -> (i.dividend - (i.quotient * i.divisor)) % 10
+                CellName.Subtract1Ones -> i.remainder % 10
                 else -> null
             }
 

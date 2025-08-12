@@ -15,7 +15,7 @@ data class DivisionStateInfo(
     val divisorTens: Int,
     val divisorOnes: Int,
 
-    val needsTensQuotient: Boolean,
+    val hasTensQuotient: Boolean,
 
     // multiply (alias: multiply1 / multiply2)
     val multiplyQuotientTens: Int, // divisor * quotientTens
@@ -27,26 +27,22 @@ data class DivisionStateInfo(
     val subtract1Result: Int,
 
     // carry / borrow flags
-    val needsCarryInMultiply1: Boolean,
-    val needsCarryInMultiply2: Boolean,
+    val isCarryRequiredInMultiplyQuotientTens: Boolean,
+    val isCarryRequiredInMultiplyQuotientOnes: Boolean,
 
-    val needs2DigitsInSubtract1: Boolean,
-    val needs3DigitsInMultiply2: Boolean,
+    val is2DigitsInSubtract1: Boolean, // 3by2 only
+    val is3DigitsMultiplyQuotientOnes: Boolean, // 3by2 only
 
-    val needsBorrowFromDividendHundredsInSubtract1: Boolean,
-    val needsBorrowFromSubtract1TensInSubtract2: Boolean,
-    val needsBorrowFromSubtract1HundredsInSubtract2: Boolean,
-    val needsSkipBorrowFromSubtract1HundredsInSubtract2: Boolean,
+    val isBorrowFromDividendTensRequiredInS1: Boolean, //pe only
+    val isBorrowFromDividendHundredsRequiredInS1: Boolean, //pe 3by2
+    val isBorrowFromSubtract1TensRequiredInS2: Boolean, //pe 3by2
+    val isBorrowFromSubtract1HundredsRequiredInS2: Boolean, //pe only
 
     // skip / zero / remainder
-    val needsSkipMultiply2AndSubtract2: Boolean,
-    val needsEmptySubtract1Tens: Boolean,
+    val shouldBypassM2AndS2: Boolean,
+    val isEmptySubtract1Tens: Boolean,
     val remainder: Int,
-    val needs2DigitRem: Boolean,
+    val is2DigitRem: Boolean,
+    val shouldPerformSubtractTensStep: Boolean,
 
-    val needsSubtract2TensStep: Boolean,
-    val tbs2: Boolean,
-    val hbs2: Boolean,
-    val skipHbs2: Boolean,
-    val doubleBorrow: Boolean
 )
