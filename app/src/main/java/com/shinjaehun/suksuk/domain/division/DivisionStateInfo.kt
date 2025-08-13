@@ -38,13 +38,14 @@ data class DivisionStateInfo(
 
     val needsTensBorrowInS2: Boolean,
     val performedTensBorrowInS2: Boolean,
+    val skipTensBorrowInS2WhenTensIsOne: Boolean,
     val needsHundredsBorrowInS2: Boolean,
     val skipHundredsBorrowInS2: Boolean,
     val needsDoubleBorrowInS2: Boolean,
 
     // skip / zero / remainder
     val shouldBypassM2AndS2: Boolean,
-    val isEmptySubtract1Tens: Boolean,
+    val shouldLeaveSubtract1TensEmpty: Boolean,
     val remainder: Int,
     val has2DigitsRemainder: Boolean,
     val shouldPerformSubtractTensStep: Boolean,

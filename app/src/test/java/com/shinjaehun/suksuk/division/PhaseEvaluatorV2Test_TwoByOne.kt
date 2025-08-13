@@ -1,6 +1,6 @@
 package com.shinjaehun.suksuk.division
 
-import com.shinjaehun.suksuk.domain.division.DivisionInfoBuilder
+import com.shinjaehun.suksuk.domain.division.DivisionStateInfoBuilder
 import com.shinjaehun.suksuk.domain.division.DivisionStateInfo
 import com.shinjaehun.suksuk.domain.division.model.DivisionPhaseV2
 import com.shinjaehun.suksuk.domain.division.evaluator.PhaseEvaluatorV2
@@ -13,6 +13,7 @@ import org.junit.Test
 class PhaseEvaluatorV2Test_TwoByOne {
 
     private val evaluator = PhaseEvaluatorV2()
+    private val infoBuilder = DivisionStateInfoBuilder
 
     data class PhaseInputTestCase(
         val phase: DivisionPhaseV2,
@@ -24,9 +25,9 @@ class PhaseEvaluatorV2Test_TwoByOne {
         val shouldBeCorrect: Boolean
     )
 
-    val info46x3 = DivisionInfoBuilder.from(46, 3)
-    val info90x9 = DivisionInfoBuilder.from(90, 9)
-    val info93x8 = DivisionInfoBuilder.from(93, 8)
+    val info46x3 = infoBuilder.from(46, 3)
+    val info90x9 = infoBuilder.from(90, 9)
+    val info93x8 = infoBuilder.from(93, 8)
 
 
     val cases = listOf(
@@ -103,7 +104,7 @@ class PhaseEvaluatorV2Test_TwoByOne {
         val stepIndex = 0
         val previousInputs = emptyList<String>()
 
-        val info = DivisionInfoBuilder.from(dividend, divisor)
+        val info = infoBuilder.from(dividend, divisor)
 
         val result = evaluator.isCorrect(
             phase, cell, userInput, info, stepIndex, previousInputs
@@ -122,7 +123,7 @@ class PhaseEvaluatorV2Test_TwoByOne {
         val stepIndex = 0
         val previousInputs = emptyList<String>()
 
-        val info = DivisionInfoBuilder.from(dividend, divisor)
+        val info = infoBuilder.from(dividend, divisor)
 
         val result = evaluator.isCorrect(
             phase, cell, userInput, info, stepIndex, previousInputs

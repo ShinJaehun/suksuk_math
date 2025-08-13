@@ -28,11 +28,14 @@ class DivisionViewModelV2Test {
         val twoByTwoCreator = TwoByTwoPhaseSequenceCreator()
         val threeByTwoCreator = ThreeByTwoPhaseSequenceCreator()
 
-        val phaseSequenceProvider = DivisionPhaseSequenceProvider(twoByOneCreator, twoByTwoCreator, threeByTwoCreator)
+        val phaseSequenceProvider = DivisionPhaseSequenceProvider(
+            twoByOneCreator,
+            twoByTwoCreator,
+            threeByTwoCreator,
+        )
         val phaseEvaluator = PhaseEvaluatorV2()
-        val patternDetector = PatternDetectorV2
 
-        val factory = DivisionDomainStateV2Factory(phaseSequenceProvider, patternDetector)
+        val factory = DivisionDomainStateV2Factory(PatternDetectorV2, phaseSequenceProvider)
 
         viewModel = DivisionViewModelV2(
             savedStateHandle = savedStateHandle,

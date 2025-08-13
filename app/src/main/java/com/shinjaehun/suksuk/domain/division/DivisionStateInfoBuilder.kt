@@ -1,6 +1,7 @@
 package com.shinjaehun.suksuk.domain.division
 
-object DivisionInfoBuilder {
+object DivisionStateInfoBuilder {
+
     fun from(dividend: Int, divisor: Int): DivisionStateInfo {
         val quotient = dividend / divisor
         val quotientTens = quotient / 10
@@ -17,9 +18,6 @@ object DivisionInfoBuilder {
 
         val multiplyQuotientTens = divisor * quotientTens
         val multiplyQuotientOnes = divisor * quotientOnes
-//
-//        val needsBorrowFromDividendHundredsInSubtract1 =
-//            (dividend >= 100) && (dividendTens < (multiplyQuotientTens % 10))
 
         val bringDownInSubtract1 = dividendOnes
         val subtract1TensOnly = (dividend / 10) - multiplyQuotientTens
@@ -28,10 +26,10 @@ object DivisionInfoBuilder {
         val isCarryRequiredInMultiplyQuotientTens = (quotientTens * divisorOnes) >= 10
         val isCarryRequiredInMultiplyQuotientOnes = (quotientOnes * divisorOnes) >= 10
 
-        val is2DigitsInSubtract1 = subtract1TensOnly >= 10
-        val is3DigitsMultiplyQuotientOnes = multiplyQuotientOnes >= 100
+        val has2DigitsInSubtract1 = subtract1TensOnly >= 10
+//        val is3DigitsMultiplyQuotientOnes = multiplyQuotientOnes >= 100 // 미사용
 
-        val isThreeByTwo = (dividend >= 100) && (divisor  >= 10)
+//        val isThreeByTwo = (dividend >= 100) && (divisor  >= 10) // 미사용
 
         // subtract1
         val s1TOHundreds = subtract1TensOnly / 10
@@ -43,29 +41,7 @@ object DivisionInfoBuilder {
         val mQOTens = (multiplyQuotientOnes / 10) % 10
         val mQOOnes = multiplyQuotientOnes % 10
 
-//        val isBorrowFromDividendTensRequiredInSubtract1 = dividendOnes < mQOOnes
-
-////        val needsBorrowFromSubtract1TensInSubtract2 =
-////            (quotientOnes != 0) && ((subtract1Result % 10) < (multiplyQuotientOnes % 10))
-
-//        val isBorrowFromSubtract1TensRequiredInS2 = s1TOOnes < mQOOnes
-
         val shouldBypassMultiply2AndSubtract2 = quotientOnes == 0
-////        val needsBorrowFromSubtract1HundredsInSubtract2 =
-////            (dividend >= 100) &&
-////                    (((subtract1Result / 10) % 10) < ((multiplyQuotientOnes / 10) % 10))
-
-//        val isBorrowFromSubtract1HundredsRequiredInS2 =
-//            (dividend >= 100) && ((s1TOTens - (if (isBorrowFromSubtract1TensRequiredInS2) 1 else 0)) < mQOTens)
-
-////        val needsBorrowFromDividendHundredsInSubtract1 =
-////            (dividend >= 100) && ((dividendTens - (if (needsBorrowFromDividendTensInSubtract1) 1 else 0)) < mQOTens)
-
-//        val isBorrowFromDividendHundredsRequiredInS1 =
-//            if (dividend >= 100 && hasTensQuotient)
-//                (dividendTens < (multiplyQuotientTens % 10))
-//            else ((dividendTens - (if (isBorrowFromDividendTensRequiredInSubtract1) 1 else 0)) < mQOTens)
-
 
         val needsTensBorrowInS1 = dividendOnes < mQOOnes
         val skipTensBorrowInS1 = needsTensBorrowInS1 && (dividendTens == 1)
@@ -75,6 +51,7 @@ object DivisionInfoBuilder {
         val needsDoubleBorrowInS1 = needsTensBorrowInS1 && ((dividendTens - 1) < mQOTens)
 
         val performedTensBorrowInS2 = needsTensBorrowInS1 && subtract1TensOnly != 1
+        val skipTensBorrowInS2WhenTensIsOne = needsTensBorrowInS1 && (subtract1TensOnly == 1)
 
         val needsTensBorrowInS2 = s1TOOnes < mQOOnes
 
@@ -82,8 +59,8 @@ object DivisionInfoBuilder {
         val skipHundredsBorrowInS2 = needsHundredsBorrowInS2 && (s1TOHundreds == 1)
         val needsDoubleBorrowInS2 = needsTensBorrowInS2 && ((s1TOTens - 1) < mQOTens)
 
-        val isEmptySubtract1Tens =
-            (dividendTens - (multiplyQuotientTens % 10)) == 0 && !is2DigitsInSubtract1
+        val shouldLeaveSubtract1TensEmpty =
+            (dividendTens - (multiplyQuotientTens % 10)) == 0 && !has2DigitsInSubtract1
 
         val remainder = dividend - divisor * quotient
         val has2DigitsRemainder =
@@ -128,12 +105,13 @@ object DivisionInfoBuilder {
 
             needsTensBorrowInS2 = needsTensBorrowInS2,
             performedTensBorrowInS2 = performedTensBorrowInS2,
+            skipTensBorrowInS2WhenTensIsOne = skipTensBorrowInS2WhenTensIsOne,
             needsHundredsBorrowInS2 = needsHundredsBorrowInS2,
             skipHundredsBorrowInS2 = skipHundredsBorrowInS2,
             needsDoubleBorrowInS2 = needsDoubleBorrowInS2,
 
             shouldBypassM2AndS2 = shouldBypassMultiply2AndSubtract2,
-            isEmptySubtract1Tens = isEmptySubtract1Tens,
+            shouldLeaveSubtract1TensEmpty = shouldLeaveSubtract1TensEmpty,
 
             remainder = remainder,
             has2DigitsRemainder = has2DigitsRemainder,

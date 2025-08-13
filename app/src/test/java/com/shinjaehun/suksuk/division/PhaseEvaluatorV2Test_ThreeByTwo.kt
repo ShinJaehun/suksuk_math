@@ -1,6 +1,6 @@
 package com.shinjaehun.suksuk.division
 
-import com.shinjaehun.suksuk.domain.division.DivisionInfoBuilder
+import com.shinjaehun.suksuk.domain.division.DivisionStateInfoBuilder
 import com.shinjaehun.suksuk.domain.division.DivisionStateInfo
 import com.shinjaehun.suksuk.domain.division.evaluator.PhaseEvaluatorV2
 import com.shinjaehun.suksuk.domain.division.model.CellName
@@ -13,6 +13,7 @@ import org.junit.Test
 class PhaseEvaluatorV2Test_ThreeByTwo {
 
     private val evaluator = PhaseEvaluatorV2()
+    private val infoBuilder = DivisionStateInfoBuilder
 
     data class PhaseInputTestCase(
         val phase: DivisionPhaseV2,
@@ -24,10 +25,8 @@ class PhaseEvaluatorV2Test_ThreeByTwo {
         val shouldBeCorrect: Boolean
     )
 
-
-    val info432x12 = DivisionInfoBuilder.from(432, 12)
-    val info864x24 = DivisionInfoBuilder.from(864, 24)
-    val info360x27 = DivisionInfoBuilder.from(360, 27)
+    val info432x12 = infoBuilder.from(432, 12)
+    val info864x24 = infoBuilder.from(864, 24)
 
     val cases = listOf(
         // 432 ÷ 12 = 36 (기본, Carry/Borrow 없음)
@@ -56,17 +55,6 @@ class PhaseEvaluatorV2Test_ThreeByTwo {
         PhaseInputTestCase(DivisionPhaseV2.InputMultiply2, CellName.Multiply2Hundreds,     "1",  info864x24, 10, listOf("3","1","2","7","4","1","4","6","2","4"), true),
         PhaseInputTestCase(DivisionPhaseV2.InputMultiply2, CellName.Multiply2Tens,     "4",  info864x24, 10, listOf("3","1","2","7","4","1","4","6","2","4","1"), true),
         PhaseInputTestCase(DivisionPhaseV2.InputSubtract2, CellName.Subtract2Ones,     "0",  info864x24, 11, listOf("3","1","2","7","4","1","4","6","2","4","1","4"), true),
-        // 360 ÷ 27 = 13 … 9 (subtract1 & subtract2 borrow)
-//        PhaseInputTestCase(DivisionPhaseV2.InputQuotient,  CellName.QuotientTens, "1", info360x27, 0, listOf(), true),
-//        PhaseInputTestCase(DivisionPhaseV2.InputBorrow,    CellName.BorrowDividendHundreds, "2", info360x27, 1, listOf("1"), true),
-//        PhaseInputTestCase(DivisionPhaseV2.InputSubtract1, CellName.Subtract1Tens, "9", info360x27, 2, listOf("1","2"), true),
-//        PhaseInputTestCase(DivisionPhaseV2.InputBringDown, CellName.Subtract1Ones, "0", info360x27, 3, listOf("1","2","9"), true),
-//        PhaseInputTestCase(DivisionPhaseV2.InputQuotient,  CellName.QuotientOnes, "3", info360x27, 4, listOf("1","2","9","0"), true),
-//        PhaseInputTestCase(DivisionPhaseV2.InputMultiply2, CellName.CarryDivisorTensMul2, "2", info360x27, 5, listOf("1","2","9","0","3"), true),
-//        PhaseInputTestCase(DivisionPhaseV2.InputMultiply2, CellName.Multiply2Ones, "1", info360x27, 6, listOf("1","2","9","0","3","2"), true),
-//        PhaseInputTestCase(DivisionPhaseV2.InputMultiply2, CellName.Multiply2Tens, "8", info360x27, 7, listOf("1","2","9","0","3","2","1"), true),
-//        PhaseInputTestCase(DivisionPhaseV2.InputBorrow,    CellName.BorrowSubtract1Tens, "8", info360x27, 5, listOf("1","2","9","0","3","2","1","8"), true),
-//        PhaseInputTestCase(DivisionPhaseV2.InputSubtract2, CellName.Subtract2Ones, "9", info360x27, 8, listOf("1","2","9","0","3","2","1","8","8"), true),
     )
 
     @Test
@@ -116,7 +104,7 @@ class PhaseEvaluatorV2Test_ThreeByTwo {
         val userInput = "3"
         val stepIndex = 0
         val previousInputs = emptyList<String>()
-        val info = DivisionInfoBuilder.from(dividend, divisor)
+        val info = infoBuilder.from(dividend, divisor)
 
         val result = evaluator.isCorrect(
             phase, cell, userInput, info, stepIndex, previousInputs
@@ -134,7 +122,7 @@ class PhaseEvaluatorV2Test_ThreeByTwo {
         val userInput = "2"
         val stepIndex = 0
         val previousInputs = emptyList<String>()
-        val info = DivisionInfoBuilder.from(dividend, divisor)
+        val info = infoBuilder.from(dividend, divisor)
 
         val result = evaluator.isCorrect(
             phase, cell, userInput, info, stepIndex, previousInputs

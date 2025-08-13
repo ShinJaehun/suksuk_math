@@ -23,16 +23,19 @@ fun ComposeContentTestRule.divisionCaseV2(
 ) {
     val savedStateHandle = SavedStateHandle(mapOf("autoStart" to false))
 
-
     val twoByOneCreator = TwoByOnePhaseSequenceCreator()
     val twoByTwoCreator = TwoByTwoPhaseSequenceCreator()
     val threeByTwoCreator = ThreeByTwoPhaseSequenceCreator()
-    val phaseSequenceProvider = DivisionPhaseSequenceProvider(twoByOneCreator, twoByTwoCreator, threeByTwoCreator)
+
+    val phaseSequenceProvider = DivisionPhaseSequenceProvider(
+        twoByOneCreator,
+        twoByTwoCreator,
+        threeByTwoCreator,
+    )
 
     val phaseEvaluator = PhaseEvaluatorV2()
-    val patternDetector = PatternDetectorV2
 
-    val factory = DivisionDomainStateV2Factory(phaseSequenceProvider, patternDetector)
+    val factory = DivisionDomainStateV2Factory(PatternDetectorV2, phaseSequenceProvider)
 
     val viewModel = DivisionViewModelV2(
         savedStateHandle = savedStateHandle,

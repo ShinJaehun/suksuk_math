@@ -39,7 +39,7 @@ class TwoByOnePhaseSequenceCreator @Inject constructor() : PhaseSequenceCreator 
                 phase = DivisionPhaseV2.InputBringDown,
                 editableCells = listOf(CellName.Subtract1Ones),
                 highlightCells = listOf(CellName.DividendOnes),
-                presetValues = if (info.isEmptySubtract1Tens){
+                presetValues = if (info.shouldLeaveSubtract1TensEmpty){
                     mapOf(CellName.Subtract1Tens to "")
                 } else {
                     emptyMap()
@@ -90,7 +90,7 @@ class TwoByOnePhaseSequenceCreator @Inject constructor() : PhaseSequenceCreator 
                         if (info.performedTensBorrowInS2) {
                             add(CellName.Borrowed10Subtract1Ones)
                         }
-                        if ((info.subtract1TensOnly == 1) && info.needsTensBorrowInS1) {
+                        if (info.skipTensBorrowInS2WhenTensIsOne) {
                             add(CellName.Subtract1Tens)
                         }
                         add(CellName.Subtract1Ones)

@@ -1,13 +1,19 @@
 package com.shinjaehun.suksuk.division
 
+import com.shinjaehun.suksuk.domain.division.DivisionStateInfoBuilder
+import com.shinjaehun.suksuk.domain.division.detector.PatternDetectorV2
+import com.shinjaehun.suksuk.domain.division.evaluator.PhaseEvaluatorV2
 import com.shinjaehun.suksuk.domain.division.model.DivisionPatternV2
 import com.shinjaehun.suksuk.domain.division.layout.DivisionPhaseSequenceProvider
 import com.shinjaehun.suksuk.domain.division.layout.sequence.ThreeByTwoPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.layout.sequence.TwoByOnePhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.layout.sequence.TwoByTwoPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.model.CellName
+import com.shinjaehun.suksuk.domain.division.model.DivisionDomainStateV2
 import com.shinjaehun.suksuk.domain.division.model.DivisionPhaseV2
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertFalse
+import junit.framework.TestCase.assertTrue
 import org.junit.Test
 
 class PhaseSequenceProviderTest {
@@ -16,13 +22,21 @@ class PhaseSequenceProviderTest {
     val twoByTwoCreator = TwoByTwoPhaseSequenceCreator()
     val threeByTwoCreator = ThreeByTwoPhaseSequenceCreator()
 
-    private val provider = DivisionPhaseSequenceProvider(twoByOneCreator, twoByTwoCreator, threeByTwoCreator)
+    private val provider = DivisionPhaseSequenceProvider(
+        twoByOneCreator,
+        twoByTwoCreator,
+        threeByTwoCreator,
+    )
 
     @Test
     fun makeTwoByTwoPhaseSequence_creates_expected_steps() {
         val dividend = 68
         val divisor = 34
-        val seq = provider.makeTwoByTwoPhaseSequence(dividend, divisor)
+
+        val pattern = PatternDetectorV2.detectPattern(dividend, divisor)
+        val info = DivisionStateInfoBuilder.from(dividend, divisor)
+        val seq = provider.make(pattern, info)
+
         // 예: PhaseStep 단계 수, 각 phase 타입 등 비교
         assertEquals(DivisionPatternV2.TwoByTwo, seq.pattern)
         assertEquals(5, seq.steps.size) // 단계수 예시
@@ -39,7 +53,10 @@ class PhaseSequenceProviderTest {
     fun makeThreeByTwoPhaseSequence_creates_expected_steps() {
         val dividend = 432
         val divisor = 12
-        val seq = provider.makeThreeByTwoPhaseSequence(dividend, divisor)
+
+        val pattern = PatternDetectorV2.detectPattern(dividend, divisor)
+        val info = DivisionStateInfoBuilder.from(dividend, divisor)
+        val seq = provider.make(pattern, info)
 
         // 1. 패턴 확인
         assertEquals(DivisionPatternV2.ThreeByTwo, seq.pattern)
@@ -66,4 +83,46 @@ class PhaseSequenceProviderTest {
 
         // 실제로 만들어지는 PhaseStep 정보와 비교하여, 구조적 일관성 체크
     }
+
+    @Test
+    fun evaluate_returns_next_and_finished_when_entering_complete_step() {
+        // given
+        val dividend = 68
+        val divisor = 34
+
+        val pattern = PatternDetectorV2.detectPattern(dividend, divisor)
+        val info = DivisionStateInfoBuilder.from(dividend, divisor)
+        val seq = provider.make(pattern, info)
+
+        // sanity checks
+        assertEquals(DivisionPatternV2.TwoByTwo, seq.pattern)
+        assertEquals(5, seq.steps.size)
+        assertEquals(DivisionPhaseV2.InputSubtract1, seq.steps[3].phase)
+        assertEquals(DivisionPhaseV2.Complete, seq.steps[4].phase)
+
+        val domain = DivisionDomainStateV2(
+            phaseSequence = seq,
+            currentStepIndex = 3, // InputSubtract1
+            inputs = emptyList(),
+            info = info
+        )
+
+        val firstCell = seq.steps[3].editableCells.firstOrNull()
+            ?: error("No editable cell at step 3")
+        val correctInput = when (firstCell) {
+            CellName.Subtract1Tens, CellName.Subtract1Ones -> "0"
+            else -> error("Unexpected first editable cell at step 3: $firstCell")
+        }
+
+        val evaluator = PhaseEvaluatorV2()
+
+        // when
+        val result = evaluator.evaluate(domain, correctInput)
+
+        // then
+        assertTrue(result.isCorrect)
+        assertEquals(4, result.nextStepIndex)   // Complete로 이동
+        assertTrue(result.isFinished)           // ✅ 정책 변경: Complete 진입 즉시 finished=true
+    }
+
 }

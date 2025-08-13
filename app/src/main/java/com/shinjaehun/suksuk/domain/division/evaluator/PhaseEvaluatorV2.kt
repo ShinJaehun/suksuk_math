@@ -3,8 +3,10 @@ package com.shinjaehun.suksuk.domain.division.evaluator
 import com.shinjaehun.suksuk.domain.division.DivisionStateInfo
 import com.shinjaehun.suksuk.domain.division.model.DivisionPhaseV2
 import com.shinjaehun.suksuk.domain.division.model.CellName
+import com.shinjaehun.suksuk.domain.division.model.DivisionDomainStateV2
+import javax.inject.Inject
 
-class PhaseEvaluatorV2 {
+class PhaseEvaluatorV2 @Inject constructor() {
 
     fun isCorrect(
         phase: DivisionPhaseV2,
@@ -20,6 +22,33 @@ class PhaseEvaluatorV2 {
         )
         println("🧪 $cell: expected=$expected, input=$input")
         return expected != null && expected == inputValue
+    }
+
+    // 표준 진입점: 판정 + 전이 + 종료 포함
+    fun evaluate(
+        domain: DivisionDomainStateV2,
+        input: String
+    ): EvalResultV2 {
+        val step = domain.phaseSequence.steps[domain.currentStepIndex]
+        val ok = isCorrect(step.phase, step.editableCells.firstOrNull() ?: CellName.None, input, domain.info, domain.currentStepIndex, domain.inputs)
+        if (!ok) {
+            return EvalResultV2(
+                isCorrect = false,
+                nextStepIndex = null,
+                isFinished = false,
+                normalizedInput = input.trim()
+            )
+        }
+
+        val next = domain.currentStepIndex + 1
+        val finished = next >= domain.phaseSequence.steps.lastIndex
+
+        return EvalResultV2(
+            isCorrect = true,
+            nextStepIndex = next,
+            isFinished = finished,
+            normalizedInput = input.trim()
+        )
     }
 
     private fun expectedValueForCell(
@@ -52,10 +81,6 @@ class PhaseEvaluatorV2 {
                             else
                                 i.quotientTens * i.divisorTens
                         } else {
-//                            if (i.isCarryRequiredInMultiplyQuotientOnes)
-//                                (i.quotientOnes * i.divisorTens + (i.quotientOnes * i.divisorOnes / 10)) /10
-//                            else
-//                                i.multiplyQuotientOnes / 100
                             i.multiplyQuotientOnes / 100
                         }
                     } else null
@@ -155,3 +180,10 @@ class PhaseEvaluatorV2 {
         }
     }
 }
+
+data class EvalResultV2(
+    val isCorrect: Boolean,
+    val nextStepIndex: Int?,   // 정답일 때만 증가, 오답이면 null
+    val isFinished: Boolean,   // 단일 진실(SSOT): 마지막 단계 도달 여부
+    val normalizedInput: String? = null
+)

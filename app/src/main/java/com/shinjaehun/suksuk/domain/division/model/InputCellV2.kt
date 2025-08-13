@@ -1,8 +1,5 @@
 package com.shinjaehun.suksuk.domain.division.model
 
-import com.shinjaehun.suksuk.domain.division.model.CellName
-
-// InputCellV2.kt
 data class InputCellV2(
     val cellName: CellName,
     val value: String? = null,
@@ -26,7 +23,7 @@ enum class SubtractLineType {
 }
 
 enum class Highlight {
-    None,      // 일반
-    Editing,   // 현재 입력 중(빨간색 ?)
-    Related    // 연관 강조(파란색)
+    None,
+    Editing,
+    Related
 }

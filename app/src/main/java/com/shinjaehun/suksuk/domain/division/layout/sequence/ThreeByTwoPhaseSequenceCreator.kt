@@ -111,7 +111,7 @@ class ThreeByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreato
                 phase = DivisionPhaseV2.InputBringDown,
                 editableCells = listOf(CellName.Subtract1Ones),
                 highlightCells = listOf(CellName.DividendOnes),
-                presetValues = if(info.isEmptySubtract1Tens){
+                presetValues = if(info.shouldLeaveSubtract1TensEmpty){
                     mapOf(CellName.Subtract1Tens to "")
                 } else {
                     emptyMap()
@@ -626,9 +626,9 @@ class ThreeByTwoPhaseSequenceCreator @Inject constructor() : PhaseSequenceCreato
             phase = DivisionPhaseV2.Complete,
         )
 
-        steps.forEachIndexed { idx, step ->
-            println("[$idx] phase=${step.phase}, editableCells=${step.editableCells}")
-        }
+//        steps.forEachIndexed { idx, step ->
+//            println("[$idx] phase=${step.phase}, editableCells=${step.editableCells}")
+//        }
 
         return PhaseSequence(
             pattern = DivisionPatternV2.ThreeByTwo,
