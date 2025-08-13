@@ -117,7 +117,7 @@ class DivisionUiStateBuilder private constructor() {
                     else -> valueFromInput ?: ""
                 }
 
-                CellName.CarryDivisorTensMul1 -> when {
+                CellName.CarryDivisorTensM1 -> when {
                     phase == DivisionPhase.InputMultiply1OnesWithCarry && cell.editable ->
                         currentInput.getOrNull(0)?.toString() ?: "?"
                     else -> valueFromInput ?: ""
@@ -172,7 +172,7 @@ class DivisionUiStateBuilder private constructor() {
                     borrowSubtract1Tens = InputCell(cellName = CellName.BorrowSubtract1Tens, value = "?"),
                     borrowed10DividendOnes = InputCell(cellName = CellName.Borrowed10DividendOnes, value = "?"),
                     borrowed10Subtract1Ones = InputCell(cellName = CellName.Borrowed10Subtract1Ones, value = "?"),
-                    carryDivisorTens = InputCell(cellName = CellName.CarryDivisorTensMul1, value = "?"),
+                    carryDivisorTens = InputCell(cellName = CellName.CarryDivisorTensM1, value = "?"),
                     stage = 0,
                     feedback = null,
                     subtractLines = SubtractLines(showSubtract1 = false, showSubtract2 = false)
@@ -205,7 +205,7 @@ class DivisionUiStateBuilder private constructor() {
                     borrowed10DividendOnes = makeCell(CellName.Borrowed10DividendOnes),
                     borrowed10Subtract1Ones = makeCell(CellName.Borrowed10Subtract1Ones),
 
-                    carryDivisorTens = makeCell(CellName.CarryDivisorTensMul1),
+                    carryDivisorTens = makeCell(CellName.CarryDivisorTensM1),
 
                     stage = state.currentPhaseIndex,
                     feedback = state.feedback ?: layouts.find { it.phase == state.phases.getOrNull(state.currentPhaseIndex) }?.feedback,

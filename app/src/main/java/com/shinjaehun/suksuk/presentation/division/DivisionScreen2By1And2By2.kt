@@ -29,8 +29,7 @@ fun DivisionScreen2By1And2By2(
 
     val bracketStartMargin = when(pattern) {
         DivisionPatternV2.TwoByOne -> 60.dp
-        DivisionPatternV2.TwoByTwo -> 90.dp
-        DivisionPatternV2.ThreeByTwo -> 90.dp // <- 이게 나오면 안됩니다.
+        else -> 90.dp
     }
 
     ConstraintLayout(
@@ -154,8 +153,8 @@ fun DivisionScreen2By1And2By2(
         )
 
 //            val divisorTensCarryCell = currentUiState.carryDivisorTens
-        val divisorTensCarryCell = uiState.cells[CellName.CarryDivisorTensMul1] ?: InputCellV2(
-            cellName = CellName.CarryDivisorTensMul1
+        val divisorTensCarryCell = uiState.cells[CellName.CarryDivisorTensM1] ?: InputCellV2(
+            cellName = CellName.CarryDivisorTensM1
         )
         BorrowTextV2(
             cell = divisorTensCarryCell,

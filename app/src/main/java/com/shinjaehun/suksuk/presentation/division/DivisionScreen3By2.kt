@@ -193,8 +193,8 @@ fun DivisionScreen3By2(
                 }
         )
 
-        val divisorTensMul1CarryCell = uiState.cells[CellName.CarryDivisorTensMul1] ?: InputCellV2(
-            cellName = CellName.CarryDivisorTensMul1
+        val divisorTensMul1CarryCell = uiState.cells[CellName.CarryDivisorTensM1] ?: InputCellV2(
+            cellName = CellName.CarryDivisorTensM1
         )
         BorrowTextV2(
             cell = divisorTensMul1CarryCell,
@@ -207,8 +207,8 @@ fun DivisionScreen3By2(
                 }
         )
 
-        val divisorTensMul2CarryCell = uiState.cells[CellName.CarryDivisorTensMul2] ?: InputCellV2(
-            cellName = CellName.CarryDivisorTensMul2
+        val divisorTensMul2CarryCell = uiState.cells[CellName.CarryDivisorTensM2] ?: InputCellV2(
+            cellName = CellName.CarryDivisorTensM2
         )
         BorrowTextV2(
             cell = divisorTensMul2CarryCell,
@@ -520,7 +520,8 @@ fun PreviewDivisionStageScreen() {
         CellName.Borrowed10Subtract1Tens,
         CellName.Borrowed10Subtract1Ones,
 
-        CellName.CarryDivisorTensMul1
+        CellName.CarryDivisorTensM1,
+        CellName.CarryDivisorTensM2
     )
 
     val fakeUiState = DivisionUiStateV2(

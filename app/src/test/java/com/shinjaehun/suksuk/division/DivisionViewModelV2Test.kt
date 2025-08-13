@@ -231,7 +231,7 @@ class DivisionViewModelV2Test {
             Triple("ThreeByTwo_OneQuotient : 234 ÷ 25", 234 to 25, listOf("9", "45", "22", "2", "9")),
             // hbs1 ntbs1 2digit mul
             Triple("ThreeByTwo_OneQuotient : 315 ÷ 42", 315 to 42, listOf("7", "14", "29", "1", "2", "2")),
-            // hbs1 ntbs1 2digit mul
+            // skip hbs1 / ntbs1 2digit mul
             Triple("ThreeByTwo_OneQuotient : 107 ÷ 12", 107 to 12, listOf("8", "16", "9", "1", "0", "1")),
             // hbs1 tbs1 double borrow 2digit mul
             Triple("ThreeByTwo_OneQuotient : 104 ÷ 12", 104 to 12, listOf("8", "16", "9", "0", "9", "8")),

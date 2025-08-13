@@ -11,15 +11,7 @@ import javax.inject.Inject
 class TwoByOnePhaseSequenceCreator @Inject constructor() : PhaseSequenceCreator {
     override fun create(info: DivisionStateInfo): PhaseSequence {
 
-        val is2DigitsMultiply2 = info.quotientOnes * info.divisor >= 10
-
-        val isBorrowRequiredInSubtract1 = info.dividendOnes < (info.multiplyQuotientOnes % 10)
-        val shouldSkipBorrowInSubtract2 =
-            (info.subtract1TensOnly == 1) && isBorrowRequiredInSubtract1
-        val isBorrowPerformedInSubtract2 =
-            isBorrowRequiredInSubtract1 && !shouldSkipBorrowInSubtract2
-        val shouldSkipBorrowInSubtract1 =
-            (info.dividendTens == 1) && isBorrowRequiredInSubtract1
+        val is2DigitsMultiply = info.quotientOnes * info.divisor >= 10
 
         val steps = mutableListOf<PhaseStep>()
 
@@ -62,7 +54,7 @@ class TwoByOnePhaseSequenceCreator @Inject constructor() : PhaseSequenceCreator 
 
             if(!info.shouldBypassM2AndS2) {
 
-                if (is2DigitsMultiply2) {
+                if (is2DigitsMultiply) {
                     steps += PhaseStep(
                         phase = DivisionPhaseV2.InputMultiply2,
                         editableCells = listOf(CellName.Multiply2Tens, CellName.Multiply2Ones),
@@ -76,11 +68,15 @@ class TwoByOnePhaseSequenceCreator @Inject constructor() : PhaseSequenceCreator 
                     )
                 }
 
-                if (isBorrowPerformedInSubtract2) {
+                if (info.performedTensBorrowInS2) {
                     steps += PhaseStep(
                         phase = DivisionPhaseV2.InputBorrow,
                         editableCells = listOf(CellName.BorrowSubtract1Tens),
-                        highlightCells = listOf(CellName.Subtract1Tens),
+                        highlightCells = listOf(
+                            CellName.Subtract1Tens,
+                            CellName.Subtract1Ones,
+                            CellName.Multiply2Ones
+                        ),
                         needsBorrow = true,
                         strikeThroughCells = listOf(CellName.Subtract1Tens),
                         subtractLineTargets = setOf(CellName.BorrowSubtract1Tens)
@@ -91,20 +87,20 @@ class TwoByOnePhaseSequenceCreator @Inject constructor() : PhaseSequenceCreator 
                     phase = DivisionPhaseV2.InputSubtract2,
                     editableCells = listOf(CellName.Subtract2Ones),
                     highlightCells = buildList {
-                        if (isBorrowPerformedInSubtract2) {
+                        if (info.performedTensBorrowInS2) {
                             add(CellName.Borrowed10Subtract1Ones)
                         }
-                        if (shouldSkipBorrowInSubtract2) {
+                        if ((info.subtract1TensOnly == 1) && info.needsTensBorrowInS1) {
                             add(CellName.Subtract1Tens)
                         }
                         add(CellName.Subtract1Ones)
                         add(CellName.Multiply2Ones)
                     },
-                    presetValues = if (isBorrowPerformedInSubtract2)
+                    presetValues = if (info.performedTensBorrowInS2)
                         mapOf(CellName.Borrowed10Subtract1Ones to "10")
                     else
                         emptyMap(),
-                    strikeThroughCells = if (isBorrowPerformedInSubtract2)
+                    strikeThroughCells = if (info.performedTensBorrowInS2)
                         listOf(CellName.Subtract1Tens)
                     else
                         emptyList(),
@@ -120,7 +116,7 @@ class TwoByOnePhaseSequenceCreator @Inject constructor() : PhaseSequenceCreator 
             )
 
             when {
-                is2DigitsMultiply2 -> {
+                is2DigitsMultiply -> {
                     steps += PhaseStep(
                         phase = DivisionPhaseV2.InputMultiply1,
                         editableCells = listOf(CellName.Multiply1Tens, CellName.Multiply1Ones),
@@ -136,11 +132,15 @@ class TwoByOnePhaseSequenceCreator @Inject constructor() : PhaseSequenceCreator 
                 }
             }
 
-            if (isBorrowRequiredInSubtract1 && !shouldSkipBorrowInSubtract1) {
+            if (info.needsTensBorrowInS1 && !info.skipTensBorrowInS1) {
                 steps += PhaseStep(
                     phase = DivisionPhaseV2.InputBorrow,
                     editableCells = listOf(CellName.BorrowDividendTens),
-                    highlightCells = listOf(CellName.DividendTens),
+                    highlightCells = listOf(
+                        CellName.DividendTens,
+                        CellName.DividendOnes,
+                        CellName.Multiply1Ones
+                    ),
                     needsBorrow = true,
                     strikeThroughCells = listOf(CellName.DividendTens),
                     subtractLineTargets = setOf(CellName.BorrowDividendTens)
@@ -152,14 +152,14 @@ class TwoByOnePhaseSequenceCreator @Inject constructor() : PhaseSequenceCreator 
                     highlightCells = listOf(CellName.Borrowed10DividendOnes, CellName.Multiply1Ones, CellName.DividendOnes),
                     presetValues = mapOf(CellName.Borrowed10DividendOnes to "10"),
                     strikeThroughCells = listOf(CellName.DividendTens),
+                    subtractLineTargets = setOf(CellName.Subtract1Ones)
                 )
             } else {
                 steps += PhaseStep(
                     phase = DivisionPhaseV2.InputSubtract1,
                     editableCells = listOf(CellName.Subtract1Ones),
-//                    highlightCells = listOf(CellName.DividendOnes, CellName.Multiply1Ones),
                     highlightCells = buildList {
-                        if(shouldSkipBorrowInSubtract1) add(CellName.DividendTens)
+                        if(info.skipTensBorrowInS1) add(CellName.DividendTens)
                         add(CellName.DividendOnes)
                         add(CellName.Multiply1Ones)
                     },

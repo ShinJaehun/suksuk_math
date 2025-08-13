@@ -1,6 +1,5 @@
 package com.shinjaehun.suksuk.division
 
-import com.shinjaehun.suksuk.division.PhaseEvaluatorV2Test_ThreeByTwo.PhaseInputTestCase
 import com.shinjaehun.suksuk.domain.division.DivisionInfoBuilder
 import com.shinjaehun.suksuk.domain.division.DivisionStateInfo
 import com.shinjaehun.suksuk.domain.division.model.CrossOutType
@@ -39,7 +38,7 @@ class PhaseEvaluatorV2Test_TwoByTwo {
         PhaseInputTestCase(DivisionPhaseV2.InputMultiply1, CellName.Multiply1Ones, "7", info68x34, 1, listOf("2"), false),
         // 96 ÷ 12, 몫 8, 곱셈 Carry 발생 (16)
         PhaseInputTestCase(DivisionPhaseV2.InputQuotient, CellName.QuotientOnes, "8", info96x12, 0, listOf(), true),
-        PhaseInputTestCase(DivisionPhaseV2.InputMultiply1, CellName.CarryDivisorTensMul1, "1", info96x12, 1, listOf("8"), true),
+        PhaseInputTestCase(DivisionPhaseV2.InputMultiply1, CellName.CarryDivisorTensM1, "1", info96x12, 1, listOf("8"), true),
         PhaseInputTestCase(DivisionPhaseV2.InputMultiply1, CellName.Multiply1Ones, "6", info96x12, 2, listOf("8", "1"), true),
         PhaseInputTestCase(DivisionPhaseV2.InputMultiply1, CellName.Multiply1Tens, "9", info96x12, 3, listOf("8", "1", "6"), true),
         PhaseInputTestCase(DivisionPhaseV2.InputSubtract1, CellName.Subtract1Ones, "0", info96x12, 4, listOf("8", "1", "6", "9"), true),

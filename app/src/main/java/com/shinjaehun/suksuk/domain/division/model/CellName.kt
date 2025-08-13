@@ -37,6 +37,6 @@ enum class CellName {
     Borrowed10Subtract1Tens,
     Borrowed10Subtract1Ones,
 
-    CarryDivisorTensMul1,
-    CarryDivisorTensMul2,
+    CarryDivisorTensM1,
+    CarryDivisorTensM2,
 }

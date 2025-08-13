@@ -213,7 +213,7 @@ class DivisionUiStateV2BuilderTest {
                 pattern = DivisionPatternV2.TwoByTwo,
                 steps = listOf(
                     PhaseStep(DivisionPhaseV2.InputQuotient, listOf(CellName.QuotientOnes)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.CarryDivisorTensMul1, CellName.Multiply1Ones), needsCarry = true),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.CarryDivisorTensM1, CellName.Multiply1Ones), needsCarry = true),
                     PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply1Tens)),
                     PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract1Ones)),
                     PhaseStep(DivisionPhaseV2.Complete)
@@ -226,7 +226,7 @@ class DivisionUiStateV2BuilderTest {
         val uiState = mapToUiStateV2(domainState, "")
 
         assertEquals("8", uiState.cells[CellName.QuotientOnes]?.value)
-        assertEquals("1", uiState.cells[CellName.CarryDivisorTensMul1]?.value)
+        assertEquals("1", uiState.cells[CellName.CarryDivisorTensM1]?.value)
         assertEquals("6", uiState.cells[CellName.Multiply1Ones]?.value)
         assertEquals("9", uiState.cells[CellName.Multiply1Tens]?.value)
         assertEquals("0", uiState.cells[CellName.Subtract1Ones]?.value)
@@ -241,7 +241,7 @@ class DivisionUiStateV2BuilderTest {
                 pattern = DivisionPatternV2.TwoByTwo,
                 steps = listOf(
                     PhaseStep(DivisionPhaseV2.InputQuotient, listOf(CellName.QuotientOnes)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.CarryDivisorTensMul1, CellName.Multiply1Ones), needsCarry = true),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.CarryDivisorTensM1, CellName.Multiply1Ones), needsCarry = true),
                     PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply1Tens)),
                     PhaseStep(DivisionPhaseV2.InputBorrow, listOf(CellName.BorrowDividendTens), needsBorrow = true),
                     PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract1Ones)),
@@ -255,7 +255,7 @@ class DivisionUiStateV2BuilderTest {
         val uiState = mapToUiStateV2(domainState, "")
 
         assertEquals("6", uiState.cells[CellName.QuotientOnes]?.value)
-        assertEquals("1", uiState.cells[CellName.CarryDivisorTensMul1]?.value)
+        assertEquals("1", uiState.cells[CellName.CarryDivisorTensM1]?.value)
         assertEquals("2", uiState.cells[CellName.Multiply1Ones]?.value)
         assertEquals("7", uiState.cells[CellName.Multiply1Tens]?.value)
         assertEquals("1", uiState.cells[CellName.BorrowDividendTens]?.value)
@@ -390,7 +390,7 @@ class DivisionUiStateV2BuilderTest {
                 pattern = DivisionPatternV2.TwoByTwo,
                 steps = listOf(
                     PhaseStep(DivisionPhaseV2.InputQuotient, listOf(CellName.QuotientOnes)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.CarryDivisorTensMul1, CellName.Multiply1Ones), needsCarry = true),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.CarryDivisorTensM1, CellName.Multiply1Ones), needsCarry = true),
                     PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply1Tens)),
                     PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract1Ones)),
                     PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract1Tens)),
@@ -404,7 +404,7 @@ class DivisionUiStateV2BuilderTest {
         val uiState = mapToUiStateV2(domainState, "")
 
         assertEquals("3", uiState.cells[CellName.QuotientOnes]?.value)
-        assertEquals("2", uiState.cells[CellName.CarryDivisorTensMul1]?.value)
+        assertEquals("2", uiState.cells[CellName.CarryDivisorTensM1]?.value)
         assertEquals("4", uiState.cells[CellName.Multiply1Ones]?.value)
         assertEquals("8", uiState.cells[CellName.Multiply1Tens]?.value)
         assertEquals("1", uiState.cells[CellName.Subtract1Ones]?.value)
@@ -420,7 +420,7 @@ class DivisionUiStateV2BuilderTest {
                 pattern = DivisionPatternV2.TwoByTwo,
                 steps = listOf(
                     PhaseStep(DivisionPhaseV2.InputQuotient, listOf(CellName.QuotientOnes)),
-                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.CarryDivisorTensMul1, CellName.Multiply1Ones), needsCarry = true),
+                    PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.CarryDivisorTensM1, CellName.Multiply1Ones), needsCarry = true),
                     PhaseStep(DivisionPhaseV2.InputMultiply1, listOf(CellName.Multiply1Tens)),
                     PhaseStep(DivisionPhaseV2.InputBorrow, listOf(CellName.BorrowDividendTens), needsBorrow = true),
                     PhaseStep(DivisionPhaseV2.InputSubtract1, listOf(CellName.Subtract1Ones)),
@@ -435,7 +435,7 @@ class DivisionUiStateV2BuilderTest {
         val uiState = mapToUiStateV2(domainState, "")
 
         assertEquals("4", uiState.cells[CellName.QuotientOnes]?.value)
-        assertEquals("2", uiState.cells[CellName.CarryDivisorTensMul1]?.value)
+        assertEquals("2", uiState.cells[CellName.CarryDivisorTensM1]?.value)
         assertEquals("8", uiState.cells[CellName.Multiply1Ones]?.value)
         assertEquals("6", uiState.cells[CellName.Multiply1Tens]?.value)
         assertEquals("7", uiState.cells[CellName.BorrowDividendTens]?.value)
