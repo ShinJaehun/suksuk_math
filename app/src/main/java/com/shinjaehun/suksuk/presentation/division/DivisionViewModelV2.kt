@@ -4,9 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.shinjaehun.suksuk.domain.division.model.DivisionDomainStateV2
 import com.shinjaehun.suksuk.domain.division.factory.DivisionDomainStateV2Factory
-import com.shinjaehun.suksuk.domain.division.model.DivisionPatternV2
-import com.shinjaehun.suksuk.domain.division.model.DivisionUiStateV2
-import com.shinjaehun.suksuk.domain.division.evaluator.PhaseEvaluatorV2
+import com.shinjaehun.suksuk.domain.division.evaluator.DivisionPhaseEvaluatorV2
+import com.shinjaehun.suksuk.presentation.division.model.DivisionUiStateV2
+import com.shinjaehun.suksuk.presentation.division.model.mapDivisonUiStateV2
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DivisionViewModelV2 @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val phaseEvaluator: PhaseEvaluatorV2,
+    private val phaseEvaluator: DivisionPhaseEvaluatorV2,
     private val domainStateFactory: DivisionDomainStateV2Factory,
 ): ViewModel() {
     private val autoStart: Boolean = savedStateHandle["autoStart"] ?: true
@@ -28,7 +28,7 @@ class DivisionViewModelV2 @Inject constructor(
     val currentInput: StateFlow<String> = _currentInput.asStateFlow()
 
     private lateinit var domainState: DivisionDomainStateV2
-    fun getCurrentPattern(): DivisionPatternV2 = domainState.phaseSequence.pattern
+//    fun getCurrentPattern(): DivisionPatternV2 = domainState.phaseSequence.pattern
 
     init {
         if(autoStart){
@@ -148,56 +148,134 @@ class DivisionViewModelV2 @Inject constructor(
 //        println("🧪 [submitInput] called at step=${domainState.currentStepIndex} phase=${domainState.phaseSequence.steps.getOrNull(domainState.currentStepIndex)?.phase}")
 //        println("🟣 currentStepIndex=${domainState.currentStepIndex}, totalSteps=${domainState.phaseSequence.steps.size}")
 
-        val step = domainState.phaseSequence.steps[domainState.currentStepIndex]
+//        val step = domainState.phaseSequence.steps[domainState.currentStepIndex]
 
-        val editableCount = step.editableCells.size
-        val actualInput: List<String> = if (editableCount > 1) {
+//        val editableCount = step.editableCells.size
 
-            input.padStart(editableCount, '?').chunked(1).map { it }
-        } else {
-            listOf(input)
-        }
-
-        if (actualInput.size < editableCount || actualInput.any { it == "?" }) {
-            _currentInput.value = ""
-            emitUiState()
-            return
-        }
-
-        val isCorrect = step.editableCells.withIndex().all { (idx, cellName) ->
-            val userInput = actualInput.getOrNull(idx) ?: ""
-            phaseEvaluator.isCorrect(
-                phase = step.phase,
-                cell = cellName,
-                input = userInput,
-                info = domainState.info,
-                stepIndex = domainState.currentStepIndex,
-                previousInputs = domainState.inputs
-            )
-        }
-
-        if (!isCorrect) {
-            _currentInput.value = ""
-            emitUiState()
-            return
-        }
+//        val actualInput: List<String> = if (editableCount > 1) {
+//            input.padStart(editableCount, '?').chunked(1).map { it }
+//        } else {
+//            listOf(input)
+//        }
+//
+//        if (actualInput.size < editableCount || actualInput.any { it == "?" }) {
+//            _currentInput.value = ""
+//            emitUiState()
+//            return
+//        }
+//
+//        val allCorrect = step.editableCells.withIndex().all { (idx, cellName) ->
+//            val userInput = actualInput.getOrNull(idx) ?: ""
+//            phaseEvaluator.isCorrect(
+//                phase = step.phase,
+//                cell = cellName,
+//                input = userInput,
+//                info = domainState.info,
+//                stepIndex = domainState.currentStepIndex,
+//                previousInputs = domainState.inputs
+//            )
+//        }
+//
+//        if (!allCorrect) {
+//            _currentInput.value = ""
+//            emitUiState()
+//            return
+//        }
 
         // 전이/완료 판정은 evaluator.evaluate()에게 위임
         // - 첫 editable 셀에 대해 이미 검증한 입력값을 그대로 사용
-        val evalInputForTransition = actualInput.firstOrNull() ?: ""
-        val eval = phaseEvaluator.evaluate(domainState, evalInputForTransition)
+//        val evalInputForTransition = actualInput.firstOrNull() ?: ""
+//        val eval = phaseEvaluator.evaluate(domainState, evalInputForTransition)
 
-        val updatedInputs = domainState.inputs + actualInput
+//        val updatedInputs = domainState.inputs + actualInput
 //        val nextStep = domainState.currentStepIndex + 1
-        val nextStep = eval.nextStepIndex ?: domainState.currentStepIndex
+//        val nextStepIndex = eval.nextStepIndex ?: domainState.currentStepIndex
+
+
+        val step = domainState.phaseSequence.steps[domainState.currentStepIndex]
+
+        val editableCount = step.editableCells.size
+
+
+        val inputsForThisStep: List<String> =
+            if (editableCount > 1) input.padStart(editableCount, '?').chunked(1)
+            else listOf(input)
+
+        if (inputsForThisStep.size < editableCount || inputsForThisStep.any { it == "?" }) {
+            _currentInput.value = ""
+            emitUiState()
+            return
+        }
+
+        val eval = phaseEvaluator.evaluate(domainState, inputsForThisStep)
+
+        if (!eval.isCorrect) {
+            _currentInput.value = ""
+            emitUiState()
+            return
+        }
+
 
         domainState = domainState.copy(
-            inputs = updatedInputs,
-            currentStepIndex = nextStep
+            inputs = domainState.inputs + inputsForThisStep,
+            currentStepIndex = eval.nextStepIndex ?: domainState.currentStepIndex
         )
 
         _currentInput.value = ""
         emitUiState()
+
+
+//        val steps = domainState.phaseSequence.steps
+//        val cur   = domainState.currentStepIndex
+//        val step  = steps[cur]
+//
+//        val editableCount = step.editableCells.size
+//
+//        // [A] 편집 셀이 0개인 스텝에서 사용자가 실수로 Enter를 눌러도
+//        //     evaluator에게 빈 입력을 넘겨 전이/자동 스킵/Complete 판정을 수행하도록 위임
+//        if (editableCount == 0) {
+//            val eval = phaseEvaluator.evaluate(domainState, emptyList())
+//            if (eval.isCorrect) {
+//                domainState = domainState.copy(
+//                    // inputs는 증가 없음
+//                    currentStepIndex = eval.nextStepIndex ?: cur
+//                )
+//            }
+//            _currentInput.value = ""
+//            emitUiState()
+//            return
+//        }
+//
+//        // [B] 현재 스텝이 요구하는 자리수만큼 입력을 준비 (공백은 미리 제거)
+//        val trimmed = input.trim()
+//        val inputsForThisStep: List<String> =
+//            if (editableCount > 1) trimmed.padStart(editableCount, '?').chunked(1)
+//            else listOf(trimmed)
+//
+//        // [C] 자리수 부족/플레이스홀더 존재 시 조용히 리턴
+//        if (inputsForThisStep.size < editableCount || inputsForThisStep.any { it == "?" }) {
+//            _currentInput.value = ""
+//            emitUiState()
+//            return
+//        }
+//
+//        // [D] 판정 + 전이 + Complete 진입 처리(피드백은 UiState 쪽에서 Complete면 노출)
+//        val eval = phaseEvaluator.evaluate(domainState, inputsForThisStep)
+//
+//        if (!eval.isCorrect) {
+//            _currentInput.value = ""
+//            emitUiState()
+//            return
+//        }
+//
+//        domainState = domainState.copy(
+//            inputs = domainState.inputs + inputsForThisStep,
+//            currentStepIndex = eval.nextStepIndex ?: cur
+//        )
+//
+//        _currentInput.value = ""
+//        emitUiState()
+
     }
 
     fun onClear() {
@@ -207,6 +285,6 @@ class DivisionViewModelV2 @Inject constructor(
     }
 
     private fun emitUiState() {
-        _uiState.value = mapToUiStateV2(domainState, _currentInput.value)
+        _uiState.value = mapDivisonUiStateV2(domainState, _currentInput.value)
     }
 }

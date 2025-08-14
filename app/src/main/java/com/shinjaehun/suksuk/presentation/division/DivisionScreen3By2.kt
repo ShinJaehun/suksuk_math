@@ -14,10 +14,13 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.shinjaehun.suksuk.R
-import com.shinjaehun.suksuk.domain.division.model.CellName
-import com.shinjaehun.suksuk.domain.division.model.DivisionUiStateV2
-import com.shinjaehun.suksuk.domain.division.model.InputCellV2
-import com.shinjaehun.suksuk.domain.division.model.SubtractLineType
+import com.shinjaehun.suksuk.domain.division.model.DivisionCellName
+import com.shinjaehun.suksuk.domain.division.model.DivisionPatternV2
+import com.shinjaehun.suksuk.presentation.division.component.BorrowTextV2
+import com.shinjaehun.suksuk.presentation.division.component.NumberTextV2
+import com.shinjaehun.suksuk.presentation.division.model.DivisionInputCellV2
+import com.shinjaehun.suksuk.presentation.division.model.DivisionUiStateV2
+import com.shinjaehun.suksuk.presentation.division.model.SubtractLineType
 
 
 @Composable
@@ -72,8 +75,8 @@ fun DivisionScreen3By2(
         )
 
         val dividendHundredsCell =
-            uiState.cells[CellName.DividendHundreds] ?:
-            InputCellV2(cellName = CellName.DividendHundreds)
+            uiState.cells[DivisionCellName.DividendHundreds] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.DividendHundreds)
         NumberTextV2(
             cell = dividendHundredsCell,
             modifier = Modifier
@@ -86,8 +89,8 @@ fun DivisionScreen3By2(
         )
 
         val dividendHundredsBorrowCell =
-            uiState.cells[CellName.BorrowDividendHundreds] ?:
-            InputCellV2(cellName = CellName.BorrowDividendHundreds)
+            uiState.cells[DivisionCellName.BorrowDividendHundreds] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.BorrowDividendHundreds)
         BorrowTextV2(
             cell = dividendHundredsBorrowCell,
             modifier = Modifier
@@ -100,8 +103,8 @@ fun DivisionScreen3By2(
         )
 
         val dividendTensCell =
-            uiState.cells[CellName.DividendTens] ?:
-            InputCellV2(cellName = CellName.DividendTens)
+            uiState.cells[DivisionCellName.DividendTens] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.DividendTens)
         NumberTextV2(
             cell = dividendTensCell,
             modifier = Modifier
@@ -114,8 +117,8 @@ fun DivisionScreen3By2(
         )
 
         val dividendTensBorrowed10Cell =
-            uiState.cells[CellName.Borrowed10DividendTens] ?:
-            InputCellV2(cellName = CellName.Borrowed10DividendTens)
+            uiState.cells[DivisionCellName.Borrowed10DividendTens] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.Borrowed10DividendTens)
         BorrowTextV2(
             cell = dividendTensBorrowed10Cell,
             modifier = Modifier
@@ -129,8 +132,8 @@ fun DivisionScreen3By2(
         )
 
         val dividendTensBorrowCell =
-            uiState.cells[CellName.BorrowDividendTens] ?:
-            InputCellV2(cellName = CellName.BorrowDividendTens)
+            uiState.cells[DivisionCellName.BorrowDividendTens] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.BorrowDividendTens)
         BorrowTextV2(
             cell = dividendTensBorrowCell,
             modifier = Modifier
@@ -143,8 +146,8 @@ fun DivisionScreen3By2(
         )
 
         val dividendOnesCell =
-            uiState.cells[CellName.DividendOnes] ?:
-            InputCellV2(cellName = CellName.DividendOnes)
+            uiState.cells[DivisionCellName.DividendOnes] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.DividendOnes)
         NumberTextV2(
             cell = dividendOnesCell,
             modifier = Modifier
@@ -157,8 +160,8 @@ fun DivisionScreen3By2(
         )
 
         val dividendOnesBorrowed10Cell =
-            uiState.cells[CellName.Borrowed10DividendOnes] ?:
-            InputCellV2(cellName = CellName.Borrowed10DividendOnes)
+            uiState.cells[DivisionCellName.Borrowed10DividendOnes] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.Borrowed10DividendOnes)
         BorrowTextV2(
             cell = dividendOnesBorrowed10Cell,
             modifier = Modifier
@@ -172,7 +175,7 @@ fun DivisionScreen3By2(
         )
 
         val divisorOnesCell =
-            uiState.cells[CellName.DivisorOnes] ?: InputCellV2(cellName = CellName.DivisorOnes)
+            uiState.cells[DivisionCellName.DivisorOnes] ?: DivisionInputCellV2(cellName = DivisionCellName.DivisorOnes)
         NumberTextV2(
             cell = divisorOnesCell,
             modifier = Modifier
@@ -185,7 +188,7 @@ fun DivisionScreen3By2(
         )
 
         val divisorTensCell =
-            uiState.cells[CellName.DivisorTens] ?: InputCellV2(cellName = CellName.DivisorTens)
+            uiState.cells[DivisionCellName.DivisorTens] ?: DivisionInputCellV2(cellName = DivisionCellName.DivisorTens)
         NumberTextV2(
             cell = divisorTensCell,
             modifier = Modifier
@@ -198,8 +201,8 @@ fun DivisionScreen3By2(
         )
 
         val divisorTensMul1CarryCell =
-            uiState.cells[CellName.CarryDivisorTensM1] ?:
-            InputCellV2(cellName = CellName.CarryDivisorTensM1)
+            uiState.cells[DivisionCellName.CarryDivisorTensM1] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.CarryDivisorTensM1)
         BorrowTextV2(
             cell = divisorTensMul1CarryCell,
             modifier = Modifier
@@ -212,8 +215,8 @@ fun DivisionScreen3By2(
         )
 
         val divisorTensMul2CarryCell =
-            uiState.cells[CellName.CarryDivisorTensM2] ?:
-            InputCellV2(cellName = CellName.CarryDivisorTensM2)
+            uiState.cells[DivisionCellName.CarryDivisorTensM2] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.CarryDivisorTensM2)
         BorrowTextV2(
             cell = divisorTensMul2CarryCell,
             modifier = Modifier
@@ -226,8 +229,8 @@ fun DivisionScreen3By2(
         )
 
         val quotientTensCell =
-            uiState.cells[CellName.QuotientTens] ?:
-            InputCellV2(cellName = CellName.QuotientTens)
+            uiState.cells[DivisionCellName.QuotientTens] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.QuotientTens)
         NumberTextV2(
             cell = quotientTensCell,
             modifier = Modifier
@@ -240,8 +243,8 @@ fun DivisionScreen3By2(
         )
 
         val quotientOnesCell =
-            uiState.cells[CellName.QuotientOnes] ?:
-            InputCellV2(cellName = CellName.QuotientOnes)
+            uiState.cells[DivisionCellName.QuotientOnes] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.QuotientOnes)
         NumberTextV2(
             cell = quotientOnesCell,
             modifier = Modifier
@@ -253,8 +256,8 @@ fun DivisionScreen3By2(
                 }
         )
 
-        val multiply1HundredsCell = uiState.cells[CellName.Multiply1Hundreds] ?:
-            InputCellV2(cellName = CellName.Multiply1Hundreds)
+        val multiply1HundredsCell = uiState.cells[DivisionCellName.Multiply1Hundreds] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.Multiply1Hundreds)
         NumberTextV2(
             cell = multiply1HundredsCell,
             modifier = Modifier
@@ -266,8 +269,8 @@ fun DivisionScreen3By2(
                 }
         )
 
-        val multiply1TensCell = uiState.cells[CellName.Multiply1Tens] ?:
-            InputCellV2(cellName = CellName.Multiply1Tens)
+        val multiply1TensCell = uiState.cells[DivisionCellName.Multiply1Tens] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.Multiply1Tens)
         NumberTextV2(
             cell = multiply1TensCell,
             modifier = Modifier
@@ -279,8 +282,8 @@ fun DivisionScreen3By2(
                 }
         )
 
-        val multiply1OnesCell = uiState.cells[CellName.Multiply1Ones] ?:
-            InputCellV2(cellName = CellName.Multiply1Ones)
+        val multiply1OnesCell = uiState.cells[DivisionCellName.Multiply1Ones] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.Multiply1Ones)
         NumberTextV2(
             cell = multiply1OnesCell,
             modifier = Modifier
@@ -308,8 +311,8 @@ fun DivisionScreen3By2(
             )
         }
 
-        val subtract1HundredsCell = uiState.cells[CellName.Subtract1Hundreds] ?:
-            InputCellV2(cellName = CellName.Subtract1Hundreds)
+        val subtract1HundredsCell = uiState.cells[DivisionCellName.Subtract1Hundreds] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.Subtract1Hundreds)
         NumberTextV2(
             cell = subtract1HundredsCell,
             modifier = Modifier
@@ -322,8 +325,8 @@ fun DivisionScreen3By2(
         )
 
         val subtract1HundredsBorrowCell =
-            uiState.cells[CellName.BorrowSubtract1Hundreds] ?:
-            InputCellV2(cellName = CellName.BorrowSubtract1Hundreds)
+            uiState.cells[DivisionCellName.BorrowSubtract1Hundreds] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.BorrowSubtract1Hundreds)
         BorrowTextV2(
             cell = subtract1HundredsBorrowCell,
             modifier = Modifier
@@ -335,8 +338,8 @@ fun DivisionScreen3By2(
                 }
         )
 
-        val subtract1TensCell = uiState.cells[CellName.Subtract1Tens] ?:
-            InputCellV2(cellName = CellName.Subtract1Tens)
+        val subtract1TensCell = uiState.cells[DivisionCellName.Subtract1Tens] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.Subtract1Tens)
         NumberTextV2(
             cell = subtract1TensCell,
             modifier = Modifier
@@ -349,8 +352,8 @@ fun DivisionScreen3By2(
         )
 
         val subtract1TensBorrowed10Cell =
-            uiState.cells[CellName.Borrowed10Subtract1Tens] ?:
-            InputCellV2(cellName = CellName.Borrowed10Subtract1Tens)
+            uiState.cells[DivisionCellName.Borrowed10Subtract1Tens] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.Borrowed10Subtract1Tens)
         BorrowTextV2(
             cell = subtract1TensBorrowed10Cell,
             modifier = Modifier
@@ -363,8 +366,8 @@ fun DivisionScreen3By2(
         )
 
         val subtract1TensBorrowCell =
-            uiState.cells[CellName.BorrowSubtract1Tens] ?:
-            InputCellV2(cellName = CellName.BorrowSubtract1Tens)
+            uiState.cells[DivisionCellName.BorrowSubtract1Tens] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.BorrowSubtract1Tens)
         BorrowTextV2(
             cell = subtract1TensBorrowCell,
             modifier = Modifier
@@ -377,8 +380,8 @@ fun DivisionScreen3By2(
         )
 
 
-        val subtract1OnesCell = uiState.cells[CellName.Subtract1Ones] ?:
-            InputCellV2(cellName = CellName.Subtract1Ones)
+        val subtract1OnesCell = uiState.cells[DivisionCellName.Subtract1Ones] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.Subtract1Ones)
         NumberTextV2(
             cell = subtract1OnesCell,
             modifier = Modifier
@@ -391,8 +394,8 @@ fun DivisionScreen3By2(
         )
 
         val subtract1OnesBorrowed10Cell =
-            uiState.cells[CellName.Borrowed10Subtract1Ones] ?:
-            InputCellV2(cellName = CellName.Borrowed10Subtract1Ones)
+            uiState.cells[DivisionCellName.Borrowed10Subtract1Ones] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.Borrowed10Subtract1Ones)
         BorrowTextV2(
             cell = subtract1OnesBorrowed10Cell,
             modifier = Modifier
@@ -405,8 +408,8 @@ fun DivisionScreen3By2(
                 .testTag("borrowed10-sub1-cell")
         )
 
-        val multiply2HundredsCell = uiState.cells[CellName.Multiply2Hundreds] ?:
-            InputCellV2(cellName = CellName.Multiply2Hundreds)
+        val multiply2HundredsCell = uiState.cells[DivisionCellName.Multiply2Hundreds] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.Multiply2Hundreds)
         NumberTextV2(
             cell = multiply2HundredsCell,
             modifier = Modifier
@@ -418,8 +421,8 @@ fun DivisionScreen3By2(
                 }
         )
 
-        val multiply2TensCell = uiState.cells[CellName.Multiply2Tens] ?:
-            InputCellV2(cellName = CellName.Multiply2Tens)
+        val multiply2TensCell = uiState.cells[DivisionCellName.Multiply2Tens] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.Multiply2Tens)
         NumberTextV2(
             cell = multiply2TensCell,
             modifier = Modifier
@@ -431,8 +434,8 @@ fun DivisionScreen3By2(
                 }
         )
 
-        val multiply2OnesCell = uiState.cells[CellName.Multiply2Ones] ?:
-            InputCellV2(cellName = CellName.Multiply2Ones)
+        val multiply2OnesCell = uiState.cells[DivisionCellName.Multiply2Ones] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.Multiply2Ones)
         NumberTextV2(
             cell = multiply2OnesCell,
             modifier = Modifier
@@ -459,8 +462,8 @@ fun DivisionScreen3By2(
             )
         }
 
-        val subtract2TensCell = uiState.cells[CellName.Subtract2Tens] ?:
-            InputCellV2(cellName = CellName.Subtract2Tens)
+        val subtract2TensCell = uiState.cells[DivisionCellName.Subtract2Tens] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.Subtract2Tens)
         NumberTextV2(
             cell = subtract2TensCell,
             modifier = Modifier
@@ -472,8 +475,8 @@ fun DivisionScreen3By2(
                 }
         )
 
-        val subtract2OnesCell = uiState.cells[CellName.Subtract2Ones] ?:
-            InputCellV2(cellName = CellName.Subtract2Ones)
+        val subtract2OnesCell = uiState.cells[DivisionCellName.Subtract2Ones] ?:
+            DivisionInputCellV2(cellName = DivisionCellName.Subtract2Ones)
         NumberTextV2(
             cell = subtract2OnesCell,
             modifier = Modifier
@@ -487,62 +490,67 @@ fun DivisionScreen3By2(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewDivisionStageScreen() {
-    val allCells = listOf(
-        CellName.DividendHundreds,
-        CellName.DividendTens,
-        CellName.DividendOnes,
-
-        CellName.DivisorTens,
-        CellName.DivisorOnes,
-
-        CellName.QuotientTens,
-        CellName.QuotientOnes,
-
-        CellName.Multiply1Hundreds,
-        CellName.Multiply1Tens,
-        CellName.Multiply1Ones,
-
-        CellName.Subtract1Hundreds,
-        CellName.Subtract1Tens,
-        CellName.Subtract1Ones,
-
-        CellName.Multiply2Hundreds,
-        CellName.Multiply2Tens,
-        CellName.Multiply2Ones,
-
-        CellName.Subtract2Tens,
-        CellName.Subtract2Ones,
-
-        CellName.BorrowDividendHundreds,
-        CellName.BorrowDividendTens,
-        CellName.Borrowed10DividendTens,
-        CellName.Borrowed10DividendOnes,
-
-        CellName.BorrowSubtract1Hundreds,
-        CellName.BorrowSubtract1Tens,
-        CellName.Borrowed10Subtract1Tens,
-        CellName.Borrowed10Subtract1Ones,
-
-        CellName.CarryDivisorTensM1,
-        CellName.CarryDivisorTensM2
-    )
-
-    val fakeUiState = DivisionUiStateV2(
-        cells = allCells.associateWith { cellName ->
-            InputCellV2(cellName = cellName, value = "?")
-        },
-        feedback = null // 또는 "정답입니다!" 등
-    )
-
-    val newUiState = fakeUiState.copy(
-        cells = fakeUiState.cells.toMutableMap().apply {
-            this[CellName.Borrowed10Subtract1Tens] = InputCellV2(cellName = CellName.Borrowed10Subtract1Tens, value = "10")
-        }
-    )
-    DivisionScreen3By2(
-        uiState = newUiState,
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewDivisionStageScreen() {
+//    val allCells = listOf(
+//        DivisionCellName.DividendHundreds,
+//        DivisionCellName.DividendTens,
+//        DivisionCellName.DividendOnes,
+//
+//        DivisionCellName.DivisorTens,
+//        DivisionCellName.DivisorOnes,
+//
+//        DivisionCellName.QuotientTens,
+//        DivisionCellName.QuotientOnes,
+//
+//        DivisionCellName.Multiply1Hundreds,
+//        DivisionCellName.Multiply1Tens,
+//        DivisionCellName.Multiply1Ones,
+//
+//        DivisionCellName.Subtract1Hundreds,
+//        DivisionCellName.Subtract1Tens,
+//        DivisionCellName.Subtract1Ones,
+//
+//        DivisionCellName.Multiply2Hundreds,
+//        DivisionCellName.Multiply2Tens,
+//        DivisionCellName.Multiply2Ones,
+//
+//        DivisionCellName.Subtract2Tens,
+//        DivisionCellName.Subtract2Ones,
+//
+//        DivisionCellName.BorrowDividendHundreds,
+//        DivisionCellName.BorrowDividendTens,
+//        DivisionCellName.Borrowed10DividendTens,
+//        DivisionCellName.Borrowed10DividendOnes,
+//
+//        DivisionCellName.BorrowSubtract1Hundreds,
+//        DivisionCellName.BorrowSubtract1Tens,
+//        DivisionCellName.Borrowed10Subtract1Tens,
+//        DivisionCellName.Borrowed10Subtract1Ones,
+//
+//        DivisionCellName.CarryDivisorTensM1,
+//        DivisionCellName.CarryDivisorTensM2
+//    )
+//
+//    val fakeUiState = DivisionUiStateV2(
+//        cells = allCells.associateWith { cellName ->
+//            DivisionInputCellV2(cellName = cellName, value = "?")
+//        },
+//        pattern = DivisionPatternV2.ThreeByTwo,
+//        feedback = null // 또는 "정답입니다!" 등
+//    )
+//
+//    val newUiState = fakeUiState.copy(
+//        cells = fakeUiState.cells.toMutableMap().apply {
+//            this[DivisionCellName.Borrowed10Subtract1Tens] =
+//                DivisionInputCellV2(
+//                    cellName = DivisionCellName.Borrowed10Subtract1Tens,
+//                    value = "10"
+//                )
+//        }
+//    )
+//    DivisionScreen3By2(
+//        uiState = newUiState,
+//    )
+//}

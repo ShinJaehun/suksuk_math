@@ -5,49 +5,49 @@ import com.shinjaehun.suksuk.domain.division.legacy.model.CrossOutColor
 import com.shinjaehun.suksuk.domain.division.legacy.model.DivisionPhase
 import com.shinjaehun.suksuk.domain.division.legacy.model.Highlight
 import com.shinjaehun.suksuk.domain.division.legacy.model.InputCell
-import com.shinjaehun.suksuk.domain.division.model.CellName
+import com.shinjaehun.suksuk.domain.division.model.DivisionCellName
 
 val twoByTwo_NoCarryBorrow2DigitRemLayouts = listOf(
     DivisionStepUiLayout(
         phase = DivisionPhase.InputQuotient,
         cells = mapOf(
-            CellName.QuotientOnes to InputCell(cellName = CellName.QuotientOnes, editable = true, highlight = Highlight.Editing),
-            CellName.DividendTens to InputCell(cellName = CellName.DividendTens, highlight = Highlight.Related),
-            CellName.DividendOnes to InputCell(cellName = CellName.DividendOnes, highlight = Highlight.Related),
-            CellName.DivisorTens to InputCell(cellName = CellName.DivisorTens, highlight = Highlight.Related),
-            CellName.DivisorOnes to InputCell(cellName = CellName.DivisorOnes, highlight = Highlight.Related)
+            DivisionCellName.QuotientOnes to InputCell(divisionCellName = DivisionCellName.QuotientOnes, editable = true, highlight = Highlight.Editing),
+            DivisionCellName.DividendTens to InputCell(divisionCellName = DivisionCellName.DividendTens, highlight = Highlight.Related),
+            DivisionCellName.DividendOnes to InputCell(divisionCellName = DivisionCellName.DividendOnes, highlight = Highlight.Related),
+            DivisionCellName.DivisorTens to InputCell(divisionCellName = DivisionCellName.DivisorTens, highlight = Highlight.Related),
+            DivisionCellName.DivisorOnes to InputCell(divisionCellName = DivisionCellName.DivisorOnes, highlight = Highlight.Related)
         )
     ),
     DivisionStepUiLayout(
         phase = DivisionPhase.InputMultiply1Ones,
         cells = mapOf(
-            CellName.Multiply1Ones to InputCell(cellName = CellName.Multiply1Ones, editable = true, highlight = Highlight.Editing),
-            CellName.DivisorOnes to InputCell(cellName = CellName.DivisorOnes, highlight = Highlight.Related),
-            CellName.QuotientOnes to InputCell(cellName = CellName.QuotientOnes, highlight = Highlight.Related)
+            DivisionCellName.Multiply1Ones to InputCell(divisionCellName = DivisionCellName.Multiply1Ones, editable = true, highlight = Highlight.Editing),
+            DivisionCellName.DivisorOnes to InputCell(divisionCellName = DivisionCellName.DivisorOnes, highlight = Highlight.Related),
+            DivisionCellName.QuotientOnes to InputCell(divisionCellName = DivisionCellName.QuotientOnes, highlight = Highlight.Related)
         )
     ),
     DivisionStepUiLayout(
         phase = DivisionPhase.InputMultiply1Tens,
         cells = mapOf(
-            CellName.Multiply1Tens to InputCell(cellName = CellName.Multiply1Tens, editable = true, highlight = Highlight.Editing),
-            CellName.DivisorTens to InputCell(cellName = CellName.DivisorOnes, highlight = Highlight.Related),
-            CellName.QuotientOnes to InputCell(cellName = CellName.QuotientOnes, highlight = Highlight.Related)
+            DivisionCellName.Multiply1Tens to InputCell(divisionCellName = DivisionCellName.Multiply1Tens, editable = true, highlight = Highlight.Editing),
+            DivisionCellName.DivisorTens to InputCell(divisionCellName = DivisionCellName.DivisorOnes, highlight = Highlight.Related),
+            DivisionCellName.QuotientOnes to InputCell(divisionCellName = DivisionCellName.QuotientOnes, highlight = Highlight.Related)
         )
     ),
     DivisionStepUiLayout(
         phase = DivisionPhase.InputBorrowFromDividendTens,
         cells = mapOf(
-            CellName.BorrowDividendTens to InputCell(cellName = CellName.BorrowDividendTens, editable = true, highlight = Highlight.Editing),
-            CellName.DividendTens to InputCell(cellName = CellName.DividendTens, highlight = Highlight.Related, crossOutColor = CrossOutColor.Pending)
+            DivisionCellName.BorrowDividendTens to InputCell(divisionCellName = DivisionCellName.BorrowDividendTens, editable = true, highlight = Highlight.Editing),
+            DivisionCellName.DividendTens to InputCell(divisionCellName = DivisionCellName.DividendTens, highlight = Highlight.Related, crossOutColor = CrossOutColor.Pending)
         )
     ),
     DivisionStepUiLayout(
         phase = DivisionPhase.InputSubtract1Ones,
         cells = mapOf(
-            CellName.Subtract1Ones to InputCell(cellName = CellName.Subtract1Ones, editable = true, highlight = Highlight.Editing),
-            CellName.Borrowed10DividendOnes to InputCell(cellName = CellName.Borrowed10DividendOnes, editable = false, value = "10", highlight = Highlight.Related),
-            CellName.DividendOnes to InputCell(cellName = CellName.DividendOnes, highlight = Highlight.Related),
-            CellName.Multiply1Ones to InputCell(cellName = CellName.Multiply1Ones, highlight = Highlight.Related)
+            DivisionCellName.Subtract1Ones to InputCell(divisionCellName = DivisionCellName.Subtract1Ones, editable = true, highlight = Highlight.Editing),
+            DivisionCellName.Borrowed10DividendOnes to InputCell(divisionCellName = DivisionCellName.Borrowed10DividendOnes, editable = false, value = "10", highlight = Highlight.Related),
+            DivisionCellName.DividendOnes to InputCell(divisionCellName = DivisionCellName.DividendOnes, highlight = Highlight.Related),
+            DivisionCellName.Multiply1Ones to InputCell(divisionCellName = DivisionCellName.Multiply1Ones, highlight = Highlight.Related)
 
         ),
         showSubtractLine = true
@@ -55,9 +55,9 @@ val twoByTwo_NoCarryBorrow2DigitRemLayouts = listOf(
     DivisionStepUiLayout(
         phase = DivisionPhase.InputSubtract1Tens,
         cells = mapOf(
-            CellName.Subtract1Tens to InputCell(cellName = CellName.Subtract1Tens, editable = true, highlight = Highlight.Editing),
-            CellName.BorrowDividendTens to InputCell(cellName = CellName.BorrowDividendTens, highlight = Highlight.Related),
-            CellName.Multiply1Tens to InputCell(cellName = CellName.Multiply1Tens, highlight = Highlight.Related)
+            DivisionCellName.Subtract1Tens to InputCell(divisionCellName = DivisionCellName.Subtract1Tens, editable = true, highlight = Highlight.Editing),
+            DivisionCellName.BorrowDividendTens to InputCell(divisionCellName = DivisionCellName.BorrowDividendTens, highlight = Highlight.Related),
+            DivisionCellName.Multiply1Tens to InputCell(divisionCellName = DivisionCellName.Multiply1Tens, highlight = Highlight.Related)
         ),
         showSubtractLine = true
     ),

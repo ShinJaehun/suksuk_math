@@ -33,6 +33,6 @@ fun BorrowText(
         color = textColor,
         textAlign = TextAlign.Center,
         modifier = modifier.width(width)
-            .testTag("${cell.cellName}-cell"),
+            .testTag("${cell.divisionCellName}-cell"),
     )
 }

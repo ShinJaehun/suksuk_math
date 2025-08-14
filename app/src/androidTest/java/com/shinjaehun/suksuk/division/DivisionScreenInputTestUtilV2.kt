@@ -7,12 +7,12 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.lifecycle.SavedStateHandle
 import com.shinjaehun.suksuk.domain.division.factory.DivisionDomainStateV2Factory
-import com.shinjaehun.suksuk.domain.division.layout.DivisionPhaseSequenceProvider
-import com.shinjaehun.suksuk.domain.division.detector.PatternDetectorV2
-import com.shinjaehun.suksuk.domain.division.evaluator.PhaseEvaluatorV2
-import com.shinjaehun.suksuk.domain.division.layout.sequence.ThreeByTwoPhaseSequenceCreator
-import com.shinjaehun.suksuk.domain.division.layout.sequence.TwoByOnePhaseSequenceCreator
-import com.shinjaehun.suksuk.domain.division.layout.sequence.TwoByTwoPhaseSequenceCreator
+import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequenceProvider
+import com.shinjaehun.suksuk.domain.division.detector.DivisionPatternDetectorV2
+import com.shinjaehun.suksuk.domain.division.evaluator.DivisionPhaseEvaluatorV2
+import com.shinjaehun.suksuk.domain.division.sequence.creator.ThreeByTwoDivPhaseSequenceCreator
+import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByOneDivPhaseSequenceCreator
+import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByTwoDivPhaseSequenceCreator
 import com.shinjaehun.suksuk.presentation.division.DivisionScreenV2
 import com.shinjaehun.suksuk.presentation.division.DivisionViewModelV2
 
@@ -23,9 +23,9 @@ fun ComposeContentTestRule.divisionCaseV2(
 ) {
     val savedStateHandle = SavedStateHandle(mapOf("autoStart" to false))
 
-    val twoByOneCreator = TwoByOnePhaseSequenceCreator()
-    val twoByTwoCreator = TwoByTwoPhaseSequenceCreator()
-    val threeByTwoCreator = ThreeByTwoPhaseSequenceCreator()
+    val twoByOneCreator = TwoByOneDivPhaseSequenceCreator()
+    val twoByTwoCreator = TwoByTwoDivPhaseSequenceCreator()
+    val threeByTwoCreator = ThreeByTwoDivPhaseSequenceCreator()
 
     val phaseSequenceProvider = DivisionPhaseSequenceProvider(
         twoByOneCreator,
@@ -33,9 +33,9 @@ fun ComposeContentTestRule.divisionCaseV2(
         threeByTwoCreator,
     )
 
-    val phaseEvaluator = PhaseEvaluatorV2()
+    val phaseEvaluator = DivisionPhaseEvaluatorV2()
 
-    val factory = DivisionDomainStateV2Factory(PatternDetectorV2, phaseSequenceProvider)
+    val factory = DivisionDomainStateV2Factory(DivisionPatternDetectorV2, phaseSequenceProvider)
 
     val viewModel = DivisionViewModelV2(
         savedStateHandle = savedStateHandle,

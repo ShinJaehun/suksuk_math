@@ -8,8 +8,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.shinjaehun.suksuk.domain.division.model.CellName
 import com.shinjaehun.suksuk.domain.division.model.DivisionPatternV2
+import com.shinjaehun.suksuk.presentation.division.component.DivisionInputPanel
 
 @Composable
 fun DivisionScreenV2(
@@ -19,32 +19,11 @@ fun DivisionScreenV2(
 
     val uiState by viewModel.uiState.collectAsState()
 
-    val overrideCells = mapOf(
-        CellName.DividendHundreds to "6",
-        CellName.BorrowDividendHundreds to "5",
-        CellName.Borrowed10DividendTens to "10",
-
-        CellName.DividendTens to "9",
-        CellName.BorrowDividendTens to "8",
-        CellName.Borrowed10DividendOnes to "10"
-    )
-
-    val previewUiState = if (previewAll) {
-        uiState.copy(
-            cells = uiState.cells.mapValues { (cellName, cell) ->
-                cell.copy(
-                    value = overrideCells[cellName] ?: "?"
-                )
-            }
-        )
-    } else uiState
-
-    val pattern = viewModel.getCurrentPattern()
 
     Box(modifier = Modifier.fillMaxSize()){
-        when(pattern) {
+        when(uiState.pattern) {
             DivisionPatternV2.TwoByOne,
-            DivisionPatternV2.TwoByTwo -> DivisionScreen2By1And2By2(uiState, pattern)
+            DivisionPatternV2.TwoByTwo -> DivisionScreen2By1And2By2(uiState, uiState.pattern)
             DivisionPatternV2.ThreeByTwo -> DivisionScreen3By2(uiState)
         }
 

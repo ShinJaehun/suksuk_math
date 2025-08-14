@@ -26,7 +26,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.shinjaehun.suksuk.R
 import com.shinjaehun.suksuk.domain.division.legacy.model.DivisionPattern
-import com.shinjaehun.suksuk.presentation.division.NumberPad
+import com.shinjaehun.suksuk.presentation.division.component.NumberPad
 
 
 @Composable

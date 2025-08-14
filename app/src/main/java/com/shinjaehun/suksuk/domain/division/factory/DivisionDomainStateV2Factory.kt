@@ -1,15 +1,15 @@
 package com.shinjaehun.suksuk.domain.division.factory
 
-import com.shinjaehun.suksuk.domain.division.DivisionStateInfoBuilder
-import com.shinjaehun.suksuk.domain.division.detector.PatternDetectorV2
+import com.shinjaehun.suksuk.domain.division.info.DivisionStateInfoBuilder
+import com.shinjaehun.suksuk.domain.division.detector.DivisionPatternDetectorV2
 import com.shinjaehun.suksuk.domain.division.model.DivisionDomainStateV2
-import com.shinjaehun.suksuk.domain.division.layout.DivisionPhaseSequenceProvider
+import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequenceProvider
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class DivisionDomainStateV2Factory @Inject constructor(
-    private val detector: PatternDetectorV2,
+    private val detector: DivisionPatternDetectorV2,
     private val phaseSequenceProvider: DivisionPhaseSequenceProvider,
 ) {
     fun create(dividend: Int, divisor: Int): DivisionDomainStateV2 {
@@ -22,7 +22,8 @@ class DivisionDomainStateV2Factory @Inject constructor(
             phaseSequence = sequence,
             currentStepIndex = 0,
             inputs = emptyList(),
-            info = info
+            info = info,
+            pattern = pattern
         )
     }
 }

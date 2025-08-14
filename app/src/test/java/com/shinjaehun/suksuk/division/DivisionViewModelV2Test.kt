@@ -3,12 +3,12 @@ package com.shinjaehun.suksuk.division
 import androidx.lifecycle.SavedStateHandle
 import com.shinjaehun.suksuk.domain.division.factory.DivisionDomainStateV2Factory
 import com.shinjaehun.suksuk.domain.division.model.DivisionPatternV2
-import com.shinjaehun.suksuk.domain.division.layout.DivisionPhaseSequenceProvider
-import com.shinjaehun.suksuk.domain.division.detector.PatternDetectorV2
-import com.shinjaehun.suksuk.domain.division.evaluator.PhaseEvaluatorV2
-import com.shinjaehun.suksuk.domain.division.layout.sequence.ThreeByTwoPhaseSequenceCreator
-import com.shinjaehun.suksuk.domain.division.layout.sequence.TwoByOnePhaseSequenceCreator
-import com.shinjaehun.suksuk.domain.division.layout.sequence.TwoByTwoPhaseSequenceCreator
+import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequenceProvider
+import com.shinjaehun.suksuk.domain.division.detector.DivisionPatternDetectorV2
+import com.shinjaehun.suksuk.domain.division.evaluator.DivisionPhaseEvaluatorV2
+import com.shinjaehun.suksuk.domain.division.sequence.creator.ThreeByTwoDivPhaseSequenceCreator
+import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByOneDivPhaseSequenceCreator
+import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByTwoDivPhaseSequenceCreator
 import com.shinjaehun.suksuk.presentation.division.DivisionViewModelV2
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
@@ -24,18 +24,18 @@ class DivisionViewModelV2Test {
 
         val savedStateHandle = SavedStateHandle(mapOf("autoStart" to false))
 
-        val twoByOneCreator = TwoByOnePhaseSequenceCreator()
-        val twoByTwoCreator = TwoByTwoPhaseSequenceCreator()
-        val threeByTwoCreator = ThreeByTwoPhaseSequenceCreator()
+        val twoByOneCreator = TwoByOneDivPhaseSequenceCreator()
+        val twoByTwoCreator = TwoByTwoDivPhaseSequenceCreator()
+        val threeByTwoCreator = ThreeByTwoDivPhaseSequenceCreator()
 
         val phaseSequenceProvider = DivisionPhaseSequenceProvider(
             twoByOneCreator,
             twoByTwoCreator,
             threeByTwoCreator,
         )
-        val phaseEvaluator = PhaseEvaluatorV2()
+        val phaseEvaluator = DivisionPhaseEvaluatorV2()
 
-        val factory = DivisionDomainStateV2Factory(PatternDetectorV2, phaseSequenceProvider)
+        val factory = DivisionDomainStateV2Factory(DivisionPatternDetectorV2, phaseSequenceProvider)
 
         viewModel = DivisionViewModelV2(
             savedStateHandle = savedStateHandle,
@@ -69,7 +69,7 @@ class DivisionViewModelV2Test {
 
         for ((dividend, divisor, expectedPattern) in cases) {
             viewModel.startNewProblem(dividend, divisor)
-            val actualPattern = viewModel.getCurrentPattern()
+            val actualPattern = viewModel.uiState.value.pattern
             println("✅ $dividend ÷ $divisor → expected: $expectedPattern, actual: $actualPattern")
 
             assertEquals(
@@ -320,7 +320,7 @@ class DivisionViewModelV2Test {
 
             // 주석으로만 세부 패턴 구분 (name 변수 참고)
             viewModel.startNewProblem(dividend, divisor)
-            val actualPattern = viewModel.getCurrentPattern()
+            val actualPattern = viewModel.uiState.value.pattern   // ← 여기로 변경
             assertEquals("$name: 대분류 패턴 불일치!", expectedPattern, actualPattern)
 
 

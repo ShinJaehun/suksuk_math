@@ -1,17 +1,17 @@
 package com.shinjaehun.suksuk.division
 
-import com.shinjaehun.suksuk.domain.division.DivisionStateInfoBuilder
+import com.shinjaehun.suksuk.domain.division.info.DivisionStateInfoBuilder
 import com.shinjaehun.suksuk.domain.division.model.DivisionDomainStateV2
 import com.shinjaehun.suksuk.domain.division.model.DivisionPatternV2
-import com.shinjaehun.suksuk.domain.division.layout.DivisionPhaseSequenceProvider
-import com.shinjaehun.suksuk.domain.division.model.DivisionUiStateV2
-import com.shinjaehun.suksuk.domain.division.detector.PatternDetectorV2
-import com.shinjaehun.suksuk.domain.division.layout.PhaseSequence
-import com.shinjaehun.suksuk.domain.division.layout.PhaseStep
-import com.shinjaehun.suksuk.domain.division.layout.sequence.ThreeByTwoPhaseSequenceCreator
-import com.shinjaehun.suksuk.domain.division.layout.sequence.TwoByOnePhaseSequenceCreator
-import com.shinjaehun.suksuk.domain.division.layout.sequence.TwoByTwoPhaseSequenceCreator
-import com.shinjaehun.suksuk.presentation.division.mapToUiStateV2
+import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequenceProvider
+import com.shinjaehun.suksuk.presentation.division.model.DivisionUiStateV2
+import com.shinjaehun.suksuk.domain.division.detector.DivisionPatternDetectorV2
+import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequence
+import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseStep
+import com.shinjaehun.suksuk.domain.division.sequence.creator.ThreeByTwoDivPhaseSequenceCreator
+import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByOneDivPhaseSequenceCreator
+import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByTwoDivPhaseSequenceCreator
+import com.shinjaehun.suksuk.presentation.division.model.mapDivisonUiStateV2
 
 fun makeDomainStateForTest(
     dividend: Int,
@@ -19,12 +19,12 @@ fun makeDomainStateForTest(
     step: Int,
     inputs: List<String> = emptyList(),
     sequenceProvider: DivisionPhaseSequenceProvider = DivisionPhaseSequenceProvider(
-        twoByOneCreator = TwoByOnePhaseSequenceCreator(),
-        twoByTwoCreator = TwoByTwoPhaseSequenceCreator(),
-        threeByTwoCreator = ThreeByTwoPhaseSequenceCreator(),
+        twoByOneCreator = TwoByOneDivPhaseSequenceCreator(),
+        twoByTwoCreator = TwoByTwoDivPhaseSequenceCreator(),
+        threeByTwoCreator = ThreeByTwoDivPhaseSequenceCreator(),
     )
 ): DivisionDomainStateV2 {
-    val pattern = PatternDetectorV2.detectPattern(dividend, divisor)
+    val pattern = DivisionPatternDetectorV2.detectPattern(dividend, divisor)
     val info = DivisionStateInfoBuilder.from(dividend, divisor)
     val sequence = sequenceProvider.make(pattern, info)
 
@@ -32,7 +32,8 @@ fun makeDomainStateForTest(
         phaseSequence = sequence,
         currentStepIndex = step,
         inputs = inputs,
-        info = info
+        info = info,
+        pattern = pattern
     )
 }
 
@@ -43,22 +44,23 @@ fun makeUiStateForTest(
     inputs: List<String> = emptyList()
 ): DivisionUiStateV2 {
     val domain = makeDomainStateForTest(dividend, divisor, step, inputs)
-    return mapToUiStateV2(domain, currentInput = "")
+    return mapDivisonUiStateV2(domain, currentInput = "")
 }
 
 fun createDomainState(
     dividend: Int,
     divisor: Int,
-    steps: List<PhaseStep>,
+    steps: List<DivisionPhaseStep>,
     currentStepIndex: Int,
     inputs: List<String> = emptyList(),
-    pattern: DivisionPatternV2 = PatternDetectorV2.detectPattern(dividend, divisor)
+    pattern: DivisionPatternV2 = DivisionPatternDetectorV2.detectPattern(dividend, divisor)
 ): DivisionDomainStateV2 {
     val info = DivisionStateInfoBuilder.from(dividend, divisor)
     return DivisionDomainStateV2(
-        phaseSequence = PhaseSequence(pattern, steps),
+        phaseSequence = DivisionPhaseSequence(steps),
         currentStepIndex = currentStepIndex,
         inputs = inputs,
-        info = info
+        info = info,
+        pattern = pattern
     )
 }
