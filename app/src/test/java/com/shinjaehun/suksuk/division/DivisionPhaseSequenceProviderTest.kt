@@ -18,14 +18,10 @@ import org.junit.Test
 
 class DivisionPhaseSequenceProviderTest {
 
-    val twoByOneCreator = TwoByOneDivPhaseSequenceCreator()
-    val twoByTwoCreator = TwoByTwoDivPhaseSequenceCreator()
-    val threeByTwoCreator = ThreeByTwoDivPhaseSequenceCreator()
-
     private val provider = DivisionPhaseSequenceProvider(
-        twoByOneCreator,
-        twoByTwoCreator,
-        threeByTwoCreator,
+        TwoByOneDivPhaseSequenceCreator(),
+        TwoByTwoDivPhaseSequenceCreator(),
+        ThreeByTwoDivPhaseSequenceCreator(),
     )
 
     @Test
@@ -125,7 +121,6 @@ class DivisionPhaseSequenceProviderTest {
         assertEquals(4, result.nextStepIndex)   // Complete로 이동
         assertTrue(result.isFinished)           // ✅ 정책 변경: Complete 진입 즉시 finished=true
     }
-
 }
 
 private fun inputsForStep(seq: DivisionPhaseSequence, stepIndex: Int, vararg values: String): List<String> {

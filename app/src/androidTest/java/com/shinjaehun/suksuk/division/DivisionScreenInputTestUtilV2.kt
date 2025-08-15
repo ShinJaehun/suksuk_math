@@ -21,37 +21,27 @@ fun ComposeContentTestRule.divisionCaseV2(
     divisor: Int,
     inputs: List<String>
 ) {
-    val savedStateHandle = SavedStateHandle(mapOf("autoStart" to false))
-
-    val twoByOneCreator = TwoByOneDivPhaseSequenceCreator()
-    val twoByTwoCreator = TwoByTwoDivPhaseSequenceCreator()
-    val threeByTwoCreator = ThreeByTwoDivPhaseSequenceCreator()
-
     val phaseSequenceProvider = DivisionPhaseSequenceProvider(
-        twoByOneCreator,
-        twoByTwoCreator,
-        threeByTwoCreator,
+        TwoByOneDivPhaseSequenceCreator(),
+        TwoByTwoDivPhaseSequenceCreator(),
+        ThreeByTwoDivPhaseSequenceCreator(),
     )
-
-    val phaseEvaluator = DivisionPhaseEvaluatorV2()
-
-    val factory = DivisionDomainStateV2Factory(DivisionPatternDetectorV2, phaseSequenceProvider)
-
     val viewModel = DivisionViewModelV2(
-        savedStateHandle = savedStateHandle,
-        phaseEvaluator = phaseEvaluator,
-        domainStateFactory = factory
+        evaluator = DivisionPhaseEvaluatorV2(),
+        factory = DivisionDomainStateV2Factory(DivisionPatternDetectorV2, phaseSequenceProvider)
     )
+
+    setContent {
+        DivisionScreenV2(viewModel = viewModel)
+    }
+
+    waitForIdle()
 
     this.runOnIdle {
         viewModel.startNewProblem(dividend, divisor)
     }
 
-    this.setContent {
-        // 실제로 사용하는 DivisionScreen V2 버전 연결
-        DivisionScreenV2(viewModel = viewModel)
-    }
-
+    waitForIdle()
 
     var i = 0
     while (i < inputs.size) {
@@ -59,19 +49,23 @@ fun ComposeContentTestRule.divisionCaseV2(
         if (input.length == 1) {
             this.onNodeWithTag("numpad-$input").performClick()
             this.onNodeWithTag("numpad-enter").performClick()
-            i++
         } else if (input.length == 2) {
             this.onNodeWithTag("numpad-${input[0]}").performClick()
             this.onNodeWithTag("numpad-${input[1]}").performClick()
             this.onNodeWithTag("numpad-enter").performClick()
-            i++
         } else {
             error("지원하지 않는 입력: $input")
         }
+
+        waitForIdle()
+
         // 정답 feedback 노출 전까지는 오답 피드백 존재하면 안 됨
         if (i < inputs.lastIndex)
             this.onNodeWithTag("feedback").assertDoesNotExist()
+        i++
+
     }
+
     // 마지막 입력 후 "정답입니다!" 피드백 노출되어야 함
     this.onNodeWithTag("feedback").assertIsDisplayed()
     this.onNodeWithTag("feedback").assertTextContains("정답입니다!")

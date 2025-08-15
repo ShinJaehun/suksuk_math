@@ -1,6 +1,5 @@
 package com.shinjaehun.suksuk.division
 
-import androidx.lifecycle.SavedStateHandle
 import com.shinjaehun.suksuk.domain.division.factory.DivisionDomainStateV2Factory
 import com.shinjaehun.suksuk.domain.division.model.DivisionPatternV2
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequenceProvider
@@ -10,6 +9,7 @@ import com.shinjaehun.suksuk.domain.division.sequence.creator.ThreeByTwoDivPhase
 import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByOneDivPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByTwoDivPhaseSequenceCreator
 import com.shinjaehun.suksuk.presentation.division.DivisionViewModelV2
+import com.shinjaehun.suksuk.presentation.division.model.DivisionUiStateV2
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 import org.junit.Before
@@ -21,8 +21,6 @@ class DivisionViewModelV2Test {
 
     @Before
     fun setup() {
-
-        val savedStateHandle = SavedStateHandle(mapOf("autoStart" to false))
 
         val twoByOneCreator = TwoByOneDivPhaseSequenceCreator()
         val twoByTwoCreator = TwoByTwoDivPhaseSequenceCreator()
@@ -38,14 +36,16 @@ class DivisionViewModelV2Test {
         val factory = DivisionDomainStateV2Factory(DivisionPatternDetectorV2, phaseSequenceProvider)
 
         viewModel = DivisionViewModelV2(
-            savedStateHandle = savedStateHandle,
-            phaseEvaluator = phaseEvaluator,
-            domainStateFactory = factory
+            evaluator = phaseEvaluator,
+            factory = factory
         )
     }
 
+    private fun DivisionViewModelV2.uiOrThrow(): DivisionUiStateV2 =
+        requireNotNull(uiState.value) { "uiState is null. Did you call startNewProblem()?" }
+
     @Test
-    fun detectPatternTest() {
+    fun detectPatternTest() = runTest {
         val cases = listOf(
             // === TwoByOne 패턴 세부 분기 ===
             Triple(46, 3, DivisionPatternV2.TwoByOne),      // TwoByOne_TensQuotient_NoBorrow_2DigitMul
@@ -69,7 +69,10 @@ class DivisionViewModelV2Test {
 
         for ((dividend, divisor, expectedPattern) in cases) {
             viewModel.startNewProblem(dividend, divisor)
-            val actualPattern = viewModel.uiState.value.pattern
+
+            val actualPattern = viewModel.uiOrThrow().pattern
+            assertEquals(expectedPattern, actualPattern)
+
             println("✅ $dividend ÷ $divisor → expected: $expectedPattern, actual: $actualPattern")
 
             assertEquals(
@@ -318,9 +321,10 @@ class DivisionViewModelV2Test {
             }
 
 
-            // 주석으로만 세부 패턴 구분 (name 변수 참고)
             viewModel.startNewProblem(dividend, divisor)
-            val actualPattern = viewModel.uiState.value.pattern   // ← 여기로 변경
+            var state = viewModel.uiOrThrow()
+
+            val actualPattern = state.pattern   // ← 여기로 변경
             assertEquals("$name: 대분류 패턴 불일치!", expectedPattern, actualPattern)
 
 
@@ -328,7 +332,7 @@ class DivisionViewModelV2Test {
             for ((i, input) in inputs.withIndex()) {
 
                 viewModel.submitInput(input)
-                val state = viewModel.uiState.value
+                state = viewModel.uiOrThrow()
 
                 // 마지막 입력이면 feedback이 있어야 한다!
                 if (i == inputs.lastIndex) {
@@ -338,7 +342,7 @@ class DivisionViewModelV2Test {
                 }
             }
 
-            val state = viewModel.uiState.value
+//            val state = viewModel.uiState.value
             assertTrue("$name: Complete phase 미도달", state.isCompleted)
         }
     }

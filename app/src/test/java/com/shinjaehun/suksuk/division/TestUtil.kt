@@ -11,7 +11,7 @@ import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseStep
 import com.shinjaehun.suksuk.domain.division.sequence.creator.ThreeByTwoDivPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByOneDivPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByTwoDivPhaseSequenceCreator
-import com.shinjaehun.suksuk.presentation.division.model.mapDivisonUiStateV2
+import com.shinjaehun.suksuk.presentation.division.model.mapDivisionUiStateV2
 
 fun makeDomainStateForTest(
     dividend: Int,
@@ -44,7 +44,7 @@ fun makeUiStateForTest(
     inputs: List<String> = emptyList()
 ): DivisionUiStateV2 {
     val domain = makeDomainStateForTest(dividend, divisor, step, inputs)
-    return mapDivisonUiStateV2(domain, currentInput = "")
+    return mapDivisionUiStateV2(domain, currentInput = "")
 }
 
 fun createDomainState(

@@ -10,7 +10,7 @@ import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import org.junit.Test
 
-class DivisionPhaseEvaluatorV2Test_TwoByOne {
+class DivisionPhaseEvaluatorV2TestTwoByOne {
 
     private val evaluator = DivisionPhaseEvaluatorV2()
     private val infoBuilder = DivisionStateInfoBuilder
@@ -25,12 +25,12 @@ class DivisionPhaseEvaluatorV2Test_TwoByOne {
         val shouldBeCorrect: Boolean
     )
 
-    val info46x3 = infoBuilder.from(46, 3)
-    val info90x9 = infoBuilder.from(90, 9)
-    val info93x8 = infoBuilder.from(93, 8)
+    private val info46x3 = infoBuilder.from(46, 3)
+    private val info90x9 = infoBuilder.from(90, 9)
+    private val info93x8 = infoBuilder.from(93, 8)
 
 
-    val cases = listOf(
+    private val cases = listOf(
         // 예시: 46 ÷ 3 (몫 15, 곱셈 15, 뺄셈 1, ...)
         PhaseInputTestCase(DivisionPhaseV2.InputQuotient, DivisionCellName.QuotientTens, "1", info46x3, 0, listOf(), true),
         PhaseInputTestCase(DivisionPhaseV2.InputMultiply1, DivisionCellName.Multiply1Tens, "3", info46x3, 1, listOf("1"), true),
@@ -64,11 +64,9 @@ class DivisionPhaseEvaluatorV2Test_TwoByOne {
                 cell = c.cell,
                 input = c.input,
                 info = c.info,
-                stepIndex = c.stepIndex,
-                previousInputs = c.previousInputs
             )
             assertEquals(
-                "phase=${c.phase}, cell=${c.cell}, input=${c.input}, step=${c.stepIndex}, prevInputs=${c.previousInputs}",
+                "phase=${c.phase}, cell=${c.cell}, input=${c.input}",
                 c.shouldBeCorrect, result
             )
         }
@@ -101,13 +99,11 @@ class DivisionPhaseEvaluatorV2Test_TwoByOne {
         val dividend = 46
         val divisor = 3
         val userInput = "1"
-        val stepIndex = 0
-        val previousInputs = emptyList<String>()
 
         val info = infoBuilder.from(dividend, divisor)
 
         val result = evaluator.isCorrect(
-            phase, cell, userInput, info, stepIndex, previousInputs
+            phase, cell, userInput, info
         )
 
         assertTrue(result)
@@ -120,13 +116,11 @@ class DivisionPhaseEvaluatorV2Test_TwoByOne {
         val dividend = 46
         val divisor = 3
         val userInput = "2"
-        val stepIndex = 0
-        val previousInputs = emptyList<String>()
 
         val info = infoBuilder.from(dividend, divisor)
 
         val result = evaluator.isCorrect(
-            phase, cell, userInput, info, stepIndex, previousInputs
+            phase, cell, userInput, info
         )
 
         assertFalse(result)

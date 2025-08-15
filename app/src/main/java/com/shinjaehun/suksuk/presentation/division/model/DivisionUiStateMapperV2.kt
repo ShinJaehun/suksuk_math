@@ -5,9 +5,10 @@ import com.shinjaehun.suksuk.domain.division.model.DivisionDomainStateV2
 import com.shinjaehun.suksuk.domain.division.model.DivisionPhaseV2
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseStep
 import com.shinjaehun.suksuk.domain.division.model.DivisionCellName
+import java.util.EnumMap
 
-fun mapDivisonUiStateV2(domain: DivisionDomainStateV2, currentInput: String): DivisionUiStateV2 {
-    val currentStep = domain.currentStepIndex
+fun mapDivisionUiStateV2(domain: DivisionDomainStateV2, currentInput: String): DivisionUiStateV2 {
+    val currentStepIndex = domain.currentStepIndex
     val steps = domain.phaseSequence.steps
 
     val strikeThroughSet = mutableSetOf<DivisionCellName>()
@@ -19,7 +20,7 @@ fun mapDivisonUiStateV2(domain: DivisionDomainStateV2, currentInput: String): Di
     val presetMap = mutableMapOf<DivisionCellName, String>()
 
     // 1 ~ 현재 단계까지 모든 정보를 누적
-    for (i in 0..currentStep) {
+    for (i in 0..currentStepIndex) {
         val step = steps.getOrNull(i) ?: continue
 
         // [1] 취소선 처리 (pending/confirmed 누적)
@@ -45,30 +46,11 @@ fun mapDivisonUiStateV2(domain: DivisionDomainStateV2, currentInput: String): Di
         presetMap.putAll(step.presetValues)
     }
 
-    val curPhaseStep = steps[currentStep]
-
-    // [A] subtract line 타입을 1회 계산 (이중 소스 불일치 제거 + per-cell 반복 계산 제거)
-    val subtractLineAccum = subtractLineSet.toSet()
-    val subtractLineCurrent = curPhaseStep.subtractLineTargets
-
-    val lineTypes: Map<DivisionCellName, SubtractLineType> = buildMap {
-        // 이번 단계에서 새로 켜진 라인은 Pending (하이라이트)
-        for (c in subtractLineCurrent) {
-            put(c, SubtractLineType.Pending)
-        }
-        // 과거부터 켜져있던 라인은 라인1/라인2로 구분
-        for (c in subtractLineAccum) {
-            if (c in subtractLineCurrent) continue // 이미 Pending으로 표기됨
-            put(
-                c,
-                when (c) {
-                    in LINE1_CELLS -> SubtractLineType.SubtractLine1
-                    in LINE2_CELLS -> SubtractLineType.SubtractLine2
-                    else           -> SubtractLineType.Pending // 안전망
-                }
-            )
-        }
-    }
+    val curPhaseStep = steps[currentStepIndex]
+    val lineTypes = buildSubtractLineTypes(
+        subtractLineAccum = subtractLineSet,
+        currentTargets = curPhaseStep.subtractLineTargets
+    )
 
     val cells = DivisionCellName.entries.associateWith { cellName ->
         val isEditable = curPhaseStep.editableCells.contains(cellName)
@@ -85,13 +67,14 @@ fun mapDivisonUiStateV2(domain: DivisionDomainStateV2, currentInput: String): Di
         }
 
         val subtractLineType = lineTypes[cellName] ?: SubtractLineType.None
+//        val subtractLineType = assignSubtractLineType(cellName, subtractLineSet, curPhaseStep.subtractLineTargets)
 
         val presetValue = when {
             borrowed10Set.contains(cellName) -> "10"
             else -> presetMap[cellName]
         }
 
-        val inputIdx = calculateInputIndexForCell(steps, currentStep, cellName)
+        val inputIdx = calculateInputIndexForCell(steps, currentStepIndex, cellName)
 
         val value = when {
             presetValue != null -> presetValue
@@ -124,25 +107,75 @@ fun mapDivisonUiStateV2(domain: DivisionDomainStateV2, currentInput: String): Di
 
     return DivisionUiStateV2(
         cells = cells,
-        currentStep = currentStep,
-        isCompleted = (currentStep == steps.lastIndex),
+        currentStep = currentStepIndex,
+        isCompleted = (currentStepIndex == steps.lastIndex),
         feedback = feedback,
         pattern = domain.pattern
     )
 }
 
-private val LINE1_CELLS = setOf(
+private val LINE1_ANCHORS = setOf(
     DivisionCellName.BorrowDividendHundreds,
     DivisionCellName.BorrowDividendTens,
     DivisionCellName.Subtract1Tens,
     DivisionCellName.Subtract1Ones
 )
-private val LINE2_CELLS = setOf(
+
+private val LINE2_ANCHORS = setOf(
     DivisionCellName.BorrowSubtract1Hundreds,
     DivisionCellName.BorrowSubtract1Tens,
     DivisionCellName.Subtract2Tens,
     DivisionCellName.Subtract2Ones
 )
+
+private fun buildSubtractLineTypes(
+    subtractLineAccum: Set<DivisionCellName>,
+    currentTargets: Set<DivisionCellName>
+): EnumMap<DivisionCellName, SubtractLineType> {
+    val map = EnumMap<DivisionCellName, SubtractLineType>(DivisionCellName::class.java)
+
+    // 1) 이번 단계에서 새로 켜진 타깃 우선 반영
+    for (c in currentTargets) {
+        map[c] = when (c) {
+            in LINE1_ANCHORS -> SubtractLineType.SubtractLine1
+            in LINE2_ANCHORS -> SubtractLineType.SubtractLine2
+            else             -> SubtractLineType.SubtractLine1 // 안전망(원하면 Pending으로)
+        }
+    }
+
+    // 2) 과거부터 켜져있던 타깃 (이번 단계 타깃은 건너뜀)
+    for (c in subtractLineAccum) {
+        if (c in currentTargets) continue
+        map[c] = when (c) {
+            in LINE1_ANCHORS -> SubtractLineType.SubtractLine1
+            in LINE2_ANCHORS -> SubtractLineType.SubtractLine2
+            else             -> SubtractLineType.Pending // 안전망
+        }
+    }
+
+    return map
+}
+
+//fun assignSubtractLineType(
+//    cellName: DivisionCellName,
+//    subtractLineSet: Set<DivisionCellName>,
+//    currentTargets: Set<DivisionCellName>
+//): SubtractLineType {
+//    val isTarget = subtractLineSet.contains(cellName) || currentTargets.contains(cellName)
+//
+//    if (!isTarget) return SubtractLineType.None
+//
+//    return when (cellName) {
+//        in LINE1_ANCHORS -> SubtractLineType.SubtractLine1
+//        in LINE2_ANCHORS -> SubtractLineType.SubtractLine2
+//        else -> {
+//            // 렌더러가 Pending을 숨기면 Line1로 폴백하거나, 로그 남기기
+//            // println("WARN subtract-line unknown anchor=$cellName, fallback=Line1")
+//            SubtractLineType.SubtractLine1
+//        }
+//    }
+//}
+
 
 fun calculateInputIndexForCell(
     steps: List<DivisionPhaseStep>,

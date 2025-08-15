@@ -13,11 +13,9 @@ class MulPhaseEvaluator @Inject constructor() {
         cell: MulCellName,
         input: String,
         info: MulStateInfo,
-        stepIndex: Int,
-        previousInputs: List<String>
     ): Boolean {
         val inputValue = input.trim().toIntOrNull() ?: return false
-        val expected = expectedValueForCell(phase, cell, info, stepIndex, previousInputs)
+        val expected = expectedValueForCell(phase, cell, info)
         println("🧪 [MUL] $cell: expected=$expected, input=$inputValue")
         return expected != null && expected == inputValue
     }
@@ -78,13 +76,13 @@ class MulPhaseEvaluator @Inject constructor() {
 //        )
 
         val steps = domain.phaseSequence.steps
-        val cur   = domain.currentStepIndex
-        val step  = steps[cur]
+        val currentStepIndex   = domain.currentStepIndex
+        val currentStep  = steps[currentStepIndex]
 
         // [1] 스텝 전체 검증
-        val allOk = step.editableCells.withIndex().all { (i, cell) ->
+        val allOk = currentStep.editableCells.withIndex().all { (i, cell) ->
             val user = inputsForThisStep.getOrNull(i) ?: return@all false
-            isCorrect(step.phase, cell, user, domain.info, cur, domain.inputs)
+            isCorrect(currentStep.phase, cell, user, domain.info)
         }
         if (!allOk) {
             return EvalResult(
@@ -95,7 +93,7 @@ class MulPhaseEvaluator @Inject constructor() {
         }
 
         // [2] 비편집 스텝 자동 스킵
-        var next = cur + 1
+        var next = currentStepIndex + 1
         while (next <= steps.lastIndex && steps[next].editableCells.isEmpty()) {
             next++
         }
@@ -118,8 +116,6 @@ class MulPhaseEvaluator @Inject constructor() {
         phase: MulPhase,
         cell: MulCellName,
         i: MulStateInfo,
-        stepIndex: Int,
-        previousInputs: List<String>
     ): Int? = when (phase) {
 
         MulPhase.InputMultiply1 -> when (cell) {

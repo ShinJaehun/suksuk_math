@@ -171,7 +171,6 @@ class TwoByOneDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeque
         steps += DivisionPhaseStep(phase = DivisionPhaseV2.Complete)
 
         return DivisionPhaseSequence(
-//            pattern = DivisionPatternV2.TwoByOne,
             steps = steps
         )
     }

@@ -1,6 +1,5 @@
 package com.shinjaehun.suksuk.multiplication
 
-import androidx.lifecycle.SavedStateHandle
 import com.shinjaehun.suksuk.domain.multiplication.detector.MulPatternDetector
 import com.shinjaehun.suksuk.domain.multiplication.evaluator.MulPhaseEvaluator
 import com.shinjaehun.suksuk.domain.multiplication.factory.MulDomainStateFactory
@@ -9,22 +8,19 @@ import com.shinjaehun.suksuk.domain.multiplication.sequence.MulPhaseSequenceProv
 import com.shinjaehun.suksuk.domain.multiplication.sequence.creator.ThreeByTwoMulPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.multiplication.sequence.creator.TwoByTwoMulPhaseSequenceCreator
 import com.shinjaehun.suksuk.presentation.multiplication.MultiplicationViewModel
+import com.shinjaehun.suksuk.presentation.multiplication.model.MulUiState
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
-class MultiplicationViewModelV2Test {
+class MultiplicationViewModelTest {
 
     private lateinit var viewModel: MultiplicationViewModel
 
     @Before
     fun setup() {
-        val savedStateHandle = SavedStateHandle(mapOf("autoStart" to false))
-
         // Phase Sequence 생성기
         val twoByTwoCreator   = TwoByTwoMulPhaseSequenceCreator()
         val threeByTwoCreator = ThreeByTwoMulPhaseSequenceCreator()
@@ -37,16 +33,19 @@ class MultiplicationViewModelV2Test {
         val phaseEvaluator = MulPhaseEvaluator()
 
         val factory = MulDomainStateFactory(
-            patternDetector = MulPatternDetector,   // object로 설계했다면 그대로
+            patternDetector = MulPatternDetector,
             phaseSequenceProvider = phaseSequenceProvider
         )
 
         viewModel = MultiplicationViewModel(
-            savedStateHandle = savedStateHandle,
-            phaseEvaluator = phaseEvaluator,
-            domainStateFactory = factory
+            evaluator = phaseEvaluator,
+            factory = factory
         )
     }
+
+    fun MultiplicationViewModel.uiOrThrow(): MulUiState =
+        requireNotNull(uiState.value) { "uiState is null. Did you call startNewProblem()?" }
+
 
     // 패턴만 대분류 확인(2x2, 3x2)
     @Test
@@ -60,7 +59,8 @@ class MultiplicationViewModelV2Test {
 
         for ((multiplicand, multiplier, expected) in cases) {
             viewModel.startNewProblem(multiplicand, multiplier)
-            val actual = viewModel.uiState.value.pattern
+            val state = viewModel.uiOrThrow()
+            val actual = state.pattern
             assertEquals("$multiplicand × $multiplier: 예상=$expected, 결과=$actual", expected, actual)
         }
     }
@@ -251,10 +251,11 @@ class MultiplicationViewModelV2Test {
             // 문제 시작
             viewModel.startNewProblem(multiplicand, multiplier)
 
+            var state = viewModel.uiOrThrow()
             // 단계별 입력
             for ((i, input) in inputs.withIndex()) {
                 viewModel.submitInput(input)
-                val state = viewModel.uiState.value
+                state = viewModel.uiOrThrow()
 
                 if (i == inputs.lastIndex) {
                     assertEquals("$name: 마지막 입력 후 feedback 불일치", "정답입니다!", state.feedback)
@@ -263,8 +264,7 @@ class MultiplicationViewModelV2Test {
                 }
             }
 
-            val finalState = viewModel.uiState.value
-            assertTrue("$name: Complete phase 미도달", finalState.isCompleted)
+            assertTrue("$name: Complete phase 미도달", state.isCompleted)
         }
     }
 }

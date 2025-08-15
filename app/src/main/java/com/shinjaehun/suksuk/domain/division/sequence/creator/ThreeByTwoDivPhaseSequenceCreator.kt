@@ -630,7 +630,6 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
 //        }
 
         return DivisionPhaseSequence(
-//            pattern = DivisionPatternV2.ThreeByTwo,
             steps = steps
         )
     }

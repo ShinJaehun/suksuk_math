@@ -14,13 +14,9 @@ class DivisionPhaseEvaluatorV2 @Inject constructor() {
         cell: DivisionCellName,
         input: String,
         info: DivisionStateInfo,
-        stepIndex: Int,
-        previousInputs: List<String>
     ): Boolean {
         val inputValue = input.toIntOrNull() ?: return false
-        val expected = expectedValueForCell(
-            phase, cell, info, stepIndex, previousInputs
-        )
+        val expected = expectedValueForCell(phase, cell, info)
         println("🧪 $cell: expected=$expected, input=$input")
         return expected != null && expected == inputValue
     }
@@ -72,25 +68,24 @@ class DivisionPhaseEvaluatorV2 @Inject constructor() {
 //        )
 
         val steps = domain.phaseSequence.steps
-        val cur   = domain.currentStepIndex
-        val step  = steps[cur]
+        val currentStepIndex   = domain.currentStepIndex
+        val currentStep  = steps[currentStepIndex]
 
         // [1] 이번 스텝 전부 검증 (로그는 여기서만 찍힘)
-        val allOk = step.editableCells.withIndex().all { (i, cell) ->
+        val allOk = currentStep.editableCells.withIndex().all { (i, cell) ->
             val user = inputsForThisStep.getOrNull(i) ?: return@all false
-            isCorrect(step.phase, cell, user, domain.info, cur, domain.inputs)
+            isCorrect(currentStep.phase, cell, user, domain.info)
         }
         if (!allOk) {
             return EvalResult(
                 isCorrect = false,
                 nextStepIndex = null,
                 isFinished = false,
-                normalizedInput = inputsForThisStep.joinToString("")
             )
         }
 
         // [2] 전이: 비편집 스텝 자동 스킵
-        var next = cur + 1
+        var next = currentStepIndex + 1
         while (next <= steps.lastIndex && steps[next].editableCells.isEmpty()) {
             next++
         }
@@ -107,7 +102,6 @@ class DivisionPhaseEvaluatorV2 @Inject constructor() {
             isCorrect = true,
             nextStepIndex = clampedNext,
             isFinished = finished,
-            normalizedInput = inputsForThisStep.joinToString("")
         )
     }
 
@@ -115,8 +109,6 @@ class DivisionPhaseEvaluatorV2 @Inject constructor() {
         phase: DivisionPhaseV2,
         cell: DivisionCellName,
         i: DivisionStateInfo,
-        stepIndex: Int,
-        previousInputs: List<String>
     ): Int? {
 
         return when (phase) {
