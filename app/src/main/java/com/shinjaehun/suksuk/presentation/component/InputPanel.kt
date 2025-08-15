@@ -1,4 +1,4 @@
-package com.shinjaehun.suksuk.presentation.division.component
+package com.shinjaehun.suksuk.presentation.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,13 +9,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import com.shinjaehun.suksuk.presentation.division.model.DivisionUiStateV2
 
 @Composable
-fun DivisionInputPanel(
-    uiState: DivisionUiStateV2,
+fun InputPanel(
+    feedback: String?,
     onDigitInput: (Int) -> Unit,
     onClear: () -> Unit,
     onEnter: () -> Unit,
@@ -30,14 +28,12 @@ fun DivisionInputPanel(
             onClear = onClear,
             onEnter = onEnter
         )
-        uiState.feedback?.let {
+        feedback?.let {
             Spacer(Modifier.height(16.dp))
             Text(
                 text = it,
                 color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .testTag("feedback")
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         }
     }
