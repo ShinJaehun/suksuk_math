@@ -14,9 +14,8 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.shinjaehun.suksuk.R
-import com.shinjaehun.suksuk.domain.multiplication.model.MulCellName
+import com.shinjaehun.suksuk.domain.multiplication.model.MulCell
 import com.shinjaehun.suksuk.domain.multiplication.model.MulPattern
-import com.shinjaehun.suksuk.presentation.division.model.DivisionInputCellV2
 import com.shinjaehun.suksuk.presentation.multiplication.model.MulInputCell
 import com.shinjaehun.suksuk.presentation.multiplication.model.MulUiState
 
@@ -71,7 +70,7 @@ fun MultiplicationBoard2x2(
 
         // ── 2) 피승수(위 줄): X 기준으로 위쪽에 배치 ──────────────────────────
         val mcTensCell =
-            uiState.cells[MulCellName.MultiplicandTens] ?: MulInputCell(MulCellName.MultiplicandTens)
+            uiState.cells[MulCell.MultiplicandTens] ?: MulInputCell(MulCell.MultiplicandTens)
         MulNumberText(
             cell = mcTensCell,
             modifier = Modifier
@@ -84,8 +83,8 @@ fun MultiplicationBoard2x2(
         )
 
         val carryP1TensCell =
-            uiState.cells[MulCellName.CarryP1Tens] ?:
-            MulInputCell(cellName = MulCellName.CarryP1Tens)
+            uiState.cells[MulCell.CarryP1Tens] ?:
+            MulInputCell(cellName = MulCell.CarryP1Tens)
         MulAuxNumberText(
             cell = carryP1TensCell,
             modifier = Modifier
@@ -98,8 +97,8 @@ fun MultiplicationBoard2x2(
         )
 
         val carryP2TensCell =
-            uiState.cells[MulCellName.CarryP2Tens] ?:
-            MulInputCell(cellName = MulCellName.CarryP2Tens)
+            uiState.cells[MulCell.CarryP2Tens] ?:
+            MulInputCell(cellName = MulCell.CarryP2Tens)
         MulAuxNumberText(
             cell = carryP2TensCell,
             modifier = Modifier
@@ -112,7 +111,7 @@ fun MultiplicationBoard2x2(
         )
 
         val mcOnesCell =
-            uiState.cells[MulCellName.MultiplicandOnes] ?: MulInputCell(MulCellName.MultiplicandOnes)
+            uiState.cells[MulCell.MultiplicandOnes] ?: MulInputCell(MulCell.MultiplicandOnes)
         MulNumberText(
             cell = mcOnesCell,
             modifier = Modifier
@@ -126,7 +125,7 @@ fun MultiplicationBoard2x2(
 
         // ── 3) 승수(아래 줄): X 기준으로 아래쪽에 배치 ─────────────────────────
         val mlTensCell =
-            uiState.cells[MulCellName.MultiplierTens] ?: MulInputCell(MulCellName.MultiplierTens)
+            uiState.cells[MulCell.MultiplierTens] ?: MulInputCell(MulCell.MultiplierTens)
         MulNumberText(
             cell = mlTensCell,
             modifier = Modifier
@@ -139,7 +138,7 @@ fun MultiplicationBoard2x2(
         )
 
         val mlOnesCell =
-            uiState.cells[MulCellName.MultiplierOnes] ?: MulInputCell(MulCellName.MultiplierOnes)
+            uiState.cells[MulCell.MultiplierOnes] ?: MulInputCell(MulCell.MultiplierOnes)
         MulNumberText(
             cell = mlOnesCell,
             modifier = Modifier
@@ -171,7 +170,7 @@ fun MultiplicationBoard2x2(
         //   Hundreds  Tens  Ones
         //   (T-1col)  (T)   (O)
         // ─────────────────────────────
-        uiState.cells[MulCellName.P1Hundreds]?.let { c ->
+        uiState.cells[MulCell.P1Hundreds]?.let { c ->
             MulNumberText(
                 cell = c,
                 modifier = Modifier
@@ -185,7 +184,7 @@ fun MultiplicationBoard2x2(
             )
         }
 
-        uiState.cells[MulCellName.CarrySumHundreds]?.let { c ->
+        uiState.cells[MulCell.CarrySumHundreds]?.let { c ->
             MulAuxNumberText(
                 cell = c,
                 modifier = Modifier
@@ -198,7 +197,7 @@ fun MultiplicationBoard2x2(
             )
         }
 
-        uiState.cells[MulCellName.P1Tens]?.let { c ->
+        uiState.cells[MulCell.P1Tens]?.let { c ->
             MulNumberText(
                 cell = c,
                 modifier = Modifier
@@ -211,7 +210,7 @@ fun MultiplicationBoard2x2(
             )
         }
 
-        uiState.cells[MulCellName.P1Ones]?.let { c ->
+        uiState.cells[MulCell.P1Ones]?.let { c ->
             MulNumberText(
                 cell = c,
                 modifier = Modifier
@@ -229,7 +228,7 @@ fun MultiplicationBoard2x2(
         //   Thousands  Hundreds  Tens
         //   (T-2col)   (T-1col)  (T)
         // ─────────────────────────────
-        uiState.cells[MulCellName.P2Thousands]?.let { c ->
+        uiState.cells[MulCell.P2Thousands]?.let { c ->
             MulNumberText(
                 cell = c,
                 modifier = Modifier
@@ -242,7 +241,7 @@ fun MultiplicationBoard2x2(
             )
         }
 
-        uiState.cells[MulCellName.CarrySumThousands]?.let { c ->
+        uiState.cells[MulCell.CarrySumThousands]?.let { c ->
             MulAuxNumberText(
                 cell = c,
                 modifier = Modifier
@@ -255,7 +254,7 @@ fun MultiplicationBoard2x2(
             )
         }
 
-        uiState.cells[MulCellName.P2Hundreds]?.let { c ->
+        uiState.cells[MulCell.P2Hundreds]?.let { c ->
             MulNumberText(
                 cell = c,
                 modifier = Modifier
@@ -267,7 +266,7 @@ fun MultiplicationBoard2x2(
                     }
             )
         }
-        uiState.cells[MulCellName.P2Tens]?.let { c ->
+        uiState.cells[MulCell.P2Tens]?.let { c ->
             MulNumberText(
                 cell = c,
                 modifier = Modifier
@@ -299,7 +298,7 @@ fun MultiplicationBoard2x2(
         //   Thousands  Hundreds  Tens  Ones
         //   (T-2col)   (T-1col)  (T)   (O)
         // ─────────────────────────────
-        uiState.cells[MulCellName.SumThousands]?.let { c ->
+        uiState.cells[MulCell.SumThousands]?.let { c ->
             MulNumberText(
                 cell = c,
                 modifier = Modifier
@@ -310,7 +309,7 @@ fun MultiplicationBoard2x2(
                     }
             )
         }
-        uiState.cells[MulCellName.SumHundreds]?.let { c ->
+        uiState.cells[MulCell.SumHundreds]?.let { c ->
             MulNumberText(
                 cell = c,
                 modifier = Modifier
@@ -321,7 +320,7 @@ fun MultiplicationBoard2x2(
                     }
             )
         }
-        uiState.cells[MulCellName.SumTens]?.let { c ->
+        uiState.cells[MulCell.SumTens]?.let { c ->
             MulNumberText(
                 cell = c,
                 modifier = Modifier
@@ -332,7 +331,7 @@ fun MultiplicationBoard2x2(
                     }
             )
         }
-        uiState.cells[MulCellName.SumOnes]?.let { c ->
+        uiState.cells[MulCell.SumOnes]?.let { c ->
             MulNumberText(
                 cell = c,
                 modifier = Modifier
@@ -352,34 +351,34 @@ fun PreviewMultiplicationBoard2x2() {
     // 2×2에서 주로 쓰일 셀들 모음
     val allCells = listOf(
         // 피승수(위)
-        MulCellName.MultiplicandTens,
-        MulCellName.MultiplicandOnes,
+        MulCell.MultiplicandTens,
+        MulCell.MultiplicandOnes,
 
         // 승수(아래)
-        MulCellName.MultiplierTens,
-        MulCellName.MultiplierOnes,
+        MulCell.MultiplierTens,
+        MulCell.MultiplierOnes,
 
         // 부분곱 1 (ones × multiplicand)
-        MulCellName.P1Hundreds,
-        MulCellName.P1Tens,
-        MulCellName.P1Ones,
+        MulCell.P1Hundreds,
+        MulCell.P1Tens,
+        MulCell.P1Ones,
 
         // 부분곱 2 (tens × multiplicand, 한 칸 시프트)
-        MulCellName.P2Thousands,
-        MulCellName.P2Hundreds,
-        MulCellName.P2Tens,
+        MulCell.P2Thousands,
+        MulCell.P2Hundreds,
+        MulCell.P2Tens,
         // 필요 시 MulCellName.Product2Ones 도 포함 가능
 
         // 최종 합계
-        MulCellName.SumThousands,
-        MulCellName.SumHundreds,
-        MulCellName.SumTens,
-        MulCellName.SumOnes,
+        MulCell.SumThousands,
+        MulCell.SumHundreds,
+        MulCell.SumTens,
+        MulCell.SumOnes,
 
         // 캐리(보조 숫자) 쓰면 여기 추가: CarryP1Tens, CarryP1Hundreds, CarryP2Hundreds 등
-        MulCellName.CarryP1Tens,
-        MulCellName.CarrySumHundreds,
-        MulCellName.CarrySumThousands
+        MulCell.CarryP1Tens,
+        MulCell.CarrySumHundreds,
+        MulCell.CarrySumThousands
 
     )
 
@@ -396,28 +395,28 @@ fun PreviewMultiplicationBoard2x2() {
     val previewUiState = fakeUiState.copy(
         cells = fakeUiState.cells.toMutableMap().apply {
             // 피승수/승수
-            this[MulCellName.MultiplicandTens]  = MulInputCell(MulCellName.MultiplicandTens,  value = "4")
-            this[MulCellName.MultiplicandOnes]  = MulInputCell(MulCellName.MultiplicandOnes,  value = "8")
-            this[MulCellName.MultiplierTens]    = MulInputCell(MulCellName.MultiplierTens,    value = "3")
-            this[MulCellName.MultiplierOnes]    = MulInputCell(MulCellName.MultiplierOnes,    value = "6")
+            this[MulCell.MultiplicandTens]  = MulInputCell(MulCell.MultiplicandTens,  value = "4")
+            this[MulCell.MultiplicandOnes]  = MulInputCell(MulCell.MultiplicandOnes,  value = "8")
+            this[MulCell.MultiplierTens]    = MulInputCell(MulCell.MultiplierTens,    value = "3")
+            this[MulCell.MultiplierOnes]    = MulInputCell(MulCell.MultiplierOnes,    value = "6")
 
             // 부분곱(예시)
-            this[MulCellName.P1Hundreds]      = MulInputCell(MulCellName.P1Hundreds,      value = "2")
-            this[MulCellName.P1Tens]      = MulInputCell(MulCellName.P1Tens,      value = "2")
-            this[MulCellName.P1Ones]      = MulInputCell(MulCellName.P1Ones,      value = "8")
-            this[MulCellName.P2Thousands]  = MulInputCell(MulCellName.P2Thousands,  value = "1")
-            this[MulCellName.P2Hundreds]  = MulInputCell(MulCellName.P2Hundreds,  value = "1")
-            this[MulCellName.P2Tens]      = MulInputCell(MulCellName.P2Tens,      value = "4")
+            this[MulCell.P1Hundreds]      = MulInputCell(MulCell.P1Hundreds,      value = "2")
+            this[MulCell.P1Tens]      = MulInputCell(MulCell.P1Tens,      value = "2")
+            this[MulCell.P1Ones]      = MulInputCell(MulCell.P1Ones,      value = "8")
+            this[MulCell.P2Thousands]  = MulInputCell(MulCell.P2Thousands,  value = "1")
+            this[MulCell.P2Hundreds]  = MulInputCell(MulCell.P2Hundreds,  value = "1")
+            this[MulCell.P2Tens]      = MulInputCell(MulCell.P2Tens,      value = "4")
 
             // 합계(예시)
-            this[MulCellName.SumThousands]    = MulInputCell(MulCellName.SumThousands,    value = "1")
-            this[MulCellName.SumHundreds]        = MulInputCell(MulCellName.SumHundreds,        value = "7")
-            this[MulCellName.SumTens]        = MulInputCell(MulCellName.SumTens,        value = "8")
-            this[MulCellName.SumOnes]        = MulInputCell(MulCellName.SumOnes,        value = "8")
+            this[MulCell.SumThousands]    = MulInputCell(MulCell.SumThousands,    value = "1")
+            this[MulCell.SumHundreds]        = MulInputCell(MulCell.SumHundreds,        value = "7")
+            this[MulCell.SumTens]        = MulInputCell(MulCell.SumTens,        value = "8")
+            this[MulCell.SumOnes]        = MulInputCell(MulCell.SumOnes,        value = "8")
 
-            this[MulCellName.CarryP1Tens]        = MulInputCell(MulCellName.CarryP1Tens,        value = "8")
-            this[MulCellName.CarrySumHundreds]        = MulInputCell(MulCellName.CarrySumHundreds,        value = "8")
-            this[MulCellName.CarrySumThousands]        = MulInputCell(MulCellName.CarrySumThousands,        value = "8")
+            this[MulCell.CarryP1Tens]        = MulInputCell(MulCell.CarryP1Tens,        value = "8")
+            this[MulCell.CarrySumHundreds]        = MulInputCell(MulCell.CarrySumHundreds,        value = "8")
+            this[MulCell.CarrySumThousands]        = MulInputCell(MulCell.CarrySumThousands,        value = "8")
         }
     )
 

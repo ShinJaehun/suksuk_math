@@ -1,6 +1,6 @@
 package com.shinjaehun.suksuk.domain.division.model
 
-enum class DivisionCellName {
+enum class DivisionCell {
     None,
 
     DivisorTens,

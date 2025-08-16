@@ -1,11 +1,13 @@
 package com.shinjaehun.suksuk.domain.multiplication.sequence
 
-import com.shinjaehun.suksuk.domain.multiplication.model.MulCellName
+import com.shinjaehun.suksuk.domain.division.model.DivisionCell
+import com.shinjaehun.suksuk.domain.multiplication.model.MulCell
 import com.shinjaehun.suksuk.domain.multiplication.model.MulPhase
 
 data class MulPhaseStep(
     val phase: MulPhase,
-    val editableCells: List<MulCellName> = emptyList(),
-    val highlightCells: List<MulCellName> = emptyList(),
-    val needsCarry: Boolean = false
+    val editableCells: List<MulCell> = emptyList(),
+    val highlightCells: List<MulCell> = emptyList(),
+    val needsCarry: Boolean = false,
+    val clearCells: Set<MulCell> = emptySet(),
 )

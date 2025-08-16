@@ -38,8 +38,8 @@ class MultiplicationViewModelTest {
         )
 
         viewModel = MultiplicationViewModel(
-            evaluator = phaseEvaluator,
-            factory = factory
+            phaseEvaluator = phaseEvaluator,
+            domainStateFactory = factory
         )
     }
 

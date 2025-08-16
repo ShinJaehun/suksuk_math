@@ -1,7 +1,7 @@
 package com.shinjaehun.suksuk.domain.multiplication.sequence.creator
 
 import com.shinjaehun.suksuk.domain.multiplication.info.MulStateInfo
-import com.shinjaehun.suksuk.domain.multiplication.model.MulCellName
+import com.shinjaehun.suksuk.domain.multiplication.model.MulCell
 import com.shinjaehun.suksuk.domain.multiplication.model.MulPhase
 import com.shinjaehun.suksuk.domain.multiplication.sequence.MulPhaseSequence
 import com.shinjaehun.suksuk.domain.multiplication.sequence.MulPhaseStep
@@ -15,15 +15,15 @@ class TwoByTwoMulPhaseSequenceCreator @Inject constructor() : MulPhaseSequenceCr
         if (info.carryP1Tens > 0) {
             steps += MulPhaseStep(
                 phase = MulPhase.InputMultiply1,
-                editableCells = listOf(MulCellName.CarryP1Tens, MulCellName.P1Ones),
-                highlightCells = listOf(MulCellName.MultiplicandOnes, MulCellName.MultiplierOnes),
+                editableCells = listOf(MulCell.CarryP1Tens, MulCell.P1Ones),
+                highlightCells = listOf(MulCell.MultiplicandOnes, MulCell.MultiplierOnes),
                 needsCarry = true
             )
         } else {
            steps += MulPhaseStep(
                phase = MulPhase.InputMultiply1,
-               editableCells = listOf(MulCellName.P1Ones),
-               highlightCells = listOf(MulCellName.MultiplicandOnes, MulCellName.MultiplierOnes)
+               editableCells = listOf(MulCell.P1Ones),
+               highlightCells = listOf(MulCell.MultiplicandOnes, MulCell.MultiplierOnes)
            )
         }
 
@@ -31,19 +31,19 @@ class TwoByTwoMulPhaseSequenceCreator @Inject constructor() : MulPhaseSequenceCr
         if (info.carryP1Hundreds > 0) {
             steps += MulPhaseStep(
                 phase = MulPhase.InputMultiply1,
-                editableCells = listOf(MulCellName.P1Hundreds, MulCellName.P1Tens),
+                editableCells = listOf(MulCell.P1Hundreds, MulCell.P1Tens),
                 highlightCells = listOf(
-                    MulCellName.MultiplicandTens,
-                    MulCellName.MultiplierOnes,
-                    MulCellName.CarryP1Tens
+                    MulCell.MultiplicandTens,
+                    MulCell.MultiplierOnes,
+                    MulCell.CarryP1Tens
                 ),
                 needsCarry = true
             )
         } else {
             steps += MulPhaseStep(
                 phase = MulPhase.InputMultiply1,
-                editableCells = listOf(MulCellName.P1Tens),
-                highlightCells = listOf(MulCellName.MultiplicandTens, MulCellName.MultiplierOnes)
+                editableCells = listOf(MulCell.P1Tens),
+                highlightCells = listOf(MulCell.MultiplicandTens, MulCell.MultiplierOnes)
             )
         }
 //
@@ -70,18 +70,24 @@ class TwoByTwoMulPhaseSequenceCreator @Inject constructor() : MulPhaseSequenceCr
 //            )
 //        }
 
+        steps += MulPhaseStep(
+            phase = MulPhase.PrepareNextOp,
+            editableCells = emptyList(),
+            clearCells = setOf(MulCell.CarryP1Tens)
+        )
+
         if (info.carryP2Tens > 0) {
             steps += MulPhaseStep(
                 phase = MulPhase.InputMultiply2,
-                editableCells = listOf(MulCellName.CarryP2Tens, MulCellName.P2Tens),
-                highlightCells = listOf(MulCellName.MultiplicandOnes, MulCellName.MultiplierTens),
+                editableCells = listOf(MulCell.CarryP2Tens, MulCell.P2Tens),
+                highlightCells = listOf(MulCell.MultiplicandOnes, MulCell.MultiplierTens),
                 needsCarry = true
             )
         } else {
             steps += MulPhaseStep(
                 phase = MulPhase.InputMultiply2,
-                editableCells = listOf(MulCellName.P2Tens),
-                highlightCells = listOf(MulCellName.MultiplicandOnes, MulCellName.MultiplierTens)
+                editableCells = listOf(MulCell.P2Tens),
+                highlightCells = listOf(MulCell.MultiplicandOnes, MulCell.MultiplierTens)
             )
         }
 
@@ -89,19 +95,19 @@ class TwoByTwoMulPhaseSequenceCreator @Inject constructor() : MulPhaseSequenceCr
         if (info.carryP2Hundreds > 0) {
             steps += MulPhaseStep(
                 phase = MulPhase.InputMultiply2,
-                editableCells = listOf(MulCellName.P2Thousands, MulCellName.P2Hundreds),
+                editableCells = listOf(MulCell.P2Thousands, MulCell.P2Hundreds),
                 highlightCells = listOf(
-                    MulCellName.MultiplicandTens,
-                    MulCellName.MultiplierTens,
-                    MulCellName.CarryP2Tens
+                    MulCell.MultiplicandTens,
+                    MulCell.MultiplierTens,
+                    MulCell.CarryP2Tens
                 ),
                 needsCarry = true
             )
         } else {
             steps += MulPhaseStep(
                 phase = MulPhase.InputMultiply2,
-                editableCells = listOf(MulCellName.P2Hundreds),
-                highlightCells = listOf(MulCellName.MultiplicandTens, MulCellName.MultiplierTens)
+                editableCells = listOf(MulCell.P2Hundreds),
+                highlightCells = listOf(MulCell.MultiplicandTens, MulCell.MultiplierTens)
             )
         }
 
@@ -131,44 +137,44 @@ class TwoByTwoMulPhaseSequenceCreator @Inject constructor() : MulPhaseSequenceCr
         // ---------- SUM ----------
         steps += MulPhaseStep( // Ones
             phase = MulPhase.InputSum,
-            editableCells = listOf(MulCellName.SumOnes),
-            highlightCells = listOf(MulCellName.P1Ones)
+            editableCells = listOf(MulCell.SumOnes),
+            highlightCells = listOf(MulCell.P1Ones)
         )
 
         if (info.carrySumHundreds > 0) {
             steps += MulPhaseStep(
                 phase = MulPhase.InputSum,
-                editableCells = listOf(MulCellName.CarrySumHundreds, MulCellName.SumTens),
-                highlightCells = listOf(MulCellName.P1Tens, MulCellName.P2Tens),
+                editableCells = listOf(MulCell.CarrySumHundreds, MulCell.SumTens),
+                highlightCells = listOf(MulCell.P1Tens, MulCell.P2Tens),
                 needsCarry = true
             )
         } else {
             steps += MulPhaseStep(
                 phase = MulPhase.InputSum,
-                editableCells = listOf(MulCellName.SumTens),
-                highlightCells = listOf(MulCellName.P1Tens, MulCellName.P2Tens)
+                editableCells = listOf(MulCell.SumTens),
+                highlightCells = listOf(MulCell.P1Tens, MulCell.P2Tens)
             )
         }
 
         if (info.carrySumThousands > 0) {
             steps += MulPhaseStep(
                 phase = MulPhase.InputSum,
-                editableCells = listOf(MulCellName.CarrySumThousands, MulCellName.SumHundreds),
+                editableCells = listOf(MulCell.CarrySumThousands, MulCell.SumHundreds),
                 highlightCells = listOf(
-                    MulCellName.P1Hundreds,
-                    MulCellName.P2Hundreds,
-                    MulCellName.CarrySumHundreds
+                    MulCell.P1Hundreds,
+                    MulCell.P2Hundreds,
+                    MulCell.CarrySumHundreds
                 ),
                 needsCarry = true
             )
         } else {
             steps += MulPhaseStep(
                 phase = MulPhase.InputSum,
-                editableCells = listOf(MulCellName.SumHundreds),
+                editableCells = listOf(MulCell.SumHundreds),
                 highlightCells = listOf(
-                    MulCellName.P1Hundreds,
-                    MulCellName.P2Hundreds,
-                    MulCellName.CarrySumHundreds
+                    MulCell.P1Hundreds,
+                    MulCell.P2Hundreds,
+                    MulCell.CarrySumHundreds
                 )
             )
         }
@@ -177,11 +183,11 @@ class TwoByTwoMulPhaseSequenceCreator @Inject constructor() : MulPhaseSequenceCr
         if (info.sumThousands > 0) {
             steps += MulPhaseStep(
                 phase = MulPhase.InputSum,
-                editableCells = listOf(MulCellName.SumThousands),
+                editableCells = listOf(MulCell.SumThousands),
                 highlightCells = listOf(
-                    MulCellName.P1Thousands,
-                    MulCellName.P2Thousands,
-                    MulCellName.CarrySumThousands
+                    MulCell.P1Thousands,
+                    MulCell.P2Thousands,
+                    MulCell.CarrySumThousands
                 ),
             )
         }

@@ -2,7 +2,7 @@ package com.shinjaehun.suksuk.domain.multiplication.evaluator
 
 import com.shinjaehun.suksuk.common.eval.EvalResult
 import com.shinjaehun.suksuk.domain.multiplication.info.MulStateInfo
-import com.shinjaehun.suksuk.domain.multiplication.model.MulCellName
+import com.shinjaehun.suksuk.domain.multiplication.model.MulCell
 import com.shinjaehun.suksuk.domain.multiplication.model.MulDomainState
 import com.shinjaehun.suksuk.domain.multiplication.model.MulPhase
 import javax.inject.Inject
@@ -10,7 +10,7 @@ import javax.inject.Inject
 class MulPhaseEvaluator @Inject constructor() {
     fun isCorrect(
         phase: MulPhase,
-        cell: MulCellName,
+        cell: MulCell,
         input: String,
         info: MulStateInfo,
     ): Boolean {
@@ -114,37 +114,39 @@ class MulPhaseEvaluator @Inject constructor() {
 
     private fun expectedValueForCell(
         phase: MulPhase,
-        cell: MulCellName,
+        cell: MulCell,
         i: MulStateInfo,
     ): Int? = when (phase) {
 
         MulPhase.InputMultiply1 -> when (cell) {
-            MulCellName.CarryP1Tens     -> i.carryP1Tens
-            MulCellName.P1Ones          -> i.product1Ones
-            MulCellName.P1Tens          -> i.product1Tens
-            MulCellName.P1Hundreds      -> i.product1Hundreds
-            MulCellName.P1Thousands     -> i.product1Thousands
+            MulCell.CarryP1Tens     -> i.carryP1Tens
+            MulCell.P1Ones          -> i.product1Ones
+            MulCell.P1Tens          -> i.product1Tens
+            MulCell.P1Hundreds      -> i.product1Hundreds
+            MulCell.P1Thousands     -> i.product1Thousands
             else -> null
         }
 
+        MulPhase.PrepareNextOp -> null
+
         MulPhase.InputMultiply2 -> when (cell) {
-            MulCellName.CarryP2Tens     -> i.carryP2Tens
-            MulCellName.P2Tens          -> i.product2Tens
-            MulCellName.P2Hundreds      -> i.product2Hundreds
-            MulCellName.P2Thousands     -> i.product2Thousands
-            MulCellName.P2TenThousands  -> i.product2TenThousands
+            MulCell.CarryP2Tens     -> i.carryP2Tens
+            MulCell.P2Tens          -> i.product2Tens
+            MulCell.P2Hundreds      -> i.product2Hundreds
+            MulCell.P2Thousands     -> i.product2Thousands
+            MulCell.P2TenThousands  -> i.product2TenThousands
             else -> null
         }
 
         MulPhase.InputSum -> when (cell) {
-            MulCellName.SumOnes             -> i.sumOnes
-            MulCellName.CarrySumHundreds    -> i.carrySumHundreds
-            MulCellName.SumTens             -> i.sumTens
-            MulCellName.CarrySumThousands   -> i.carrySumThousands
-            MulCellName.SumHundreds         -> i.sumHundreds
-            MulCellName.CarrySumTenThousands-> i.carrySumTenThousands
-            MulCellName.SumThousands        -> i.sumThousands
-            MulCellName.SumTenThousands     -> i.sumTenThousands
+            MulCell.SumOnes             -> i.sumOnes
+            MulCell.CarrySumHundreds    -> i.carrySumHundreds
+            MulCell.SumTens             -> i.sumTens
+            MulCell.CarrySumThousands   -> i.carrySumThousands
+            MulCell.SumHundreds         -> i.sumHundreds
+            MulCell.CarrySumTenThousands-> i.carrySumTenThousands
+            MulCell.SumThousands        -> i.sumThousands
+            MulCell.SumTenThousands     -> i.sumTenThousands
             else -> null
         }
 

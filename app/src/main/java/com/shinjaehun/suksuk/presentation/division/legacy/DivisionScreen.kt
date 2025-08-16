@@ -363,7 +363,7 @@ fun DivisionScreen(
 
         // Number pad & feedback
         Box(modifier = Modifier.fillMaxSize()) {
-            Column(
+            Column( // 얘를 component로 분할했더니 테스트를 계속 실패함... 원인을 찾기 너무 어려웠음..ㅠㅠ
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 32.dp)

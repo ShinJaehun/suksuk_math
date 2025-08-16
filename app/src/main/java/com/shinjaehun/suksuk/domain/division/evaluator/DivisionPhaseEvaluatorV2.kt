@@ -3,7 +3,7 @@ package com.shinjaehun.suksuk.domain.division.evaluator
 import com.shinjaehun.suksuk.common.eval.EvalResult
 import com.shinjaehun.suksuk.domain.division.info.DivisionStateInfo
 import com.shinjaehun.suksuk.domain.division.model.DivisionPhaseV2
-import com.shinjaehun.suksuk.domain.division.model.DivisionCellName
+import com.shinjaehun.suksuk.domain.division.model.DivisionCell
 import com.shinjaehun.suksuk.domain.division.model.DivisionDomainStateV2
 import javax.inject.Inject
 
@@ -11,7 +11,7 @@ class DivisionPhaseEvaluatorV2 @Inject constructor() {
 
     fun isCorrect(
         phase: DivisionPhaseV2,
-        cell: DivisionCellName,
+        cell: DivisionCell,
         input: String,
         info: DivisionStateInfo,
     ): Boolean {
@@ -107,25 +107,25 @@ class DivisionPhaseEvaluatorV2 @Inject constructor() {
 
     private fun expectedValueForCell(
         phase: DivisionPhaseV2,
-        cell: DivisionCellName,
+        cell: DivisionCell,
         i: DivisionStateInfo,
     ): Int? {
 
         return when (phase) {
             DivisionPhaseV2.InputQuotient -> when (cell) {
-                DivisionCellName.QuotientTens -> i.quotientTens
-                DivisionCellName.QuotientOnes -> i.quotientOnes
+                DivisionCell.QuotientTens -> i.quotientTens
+                DivisionCell.QuotientOnes -> i.quotientOnes
                 else -> null
             }
 
             DivisionPhaseV2.InputMultiply1 -> when (cell) {
-                DivisionCellName.CarryDivisorTensM1 ->
+                DivisionCell.CarryDivisorTensM1 ->
                     if (i.hasTensQuotient) {
                         (i.quotientTens * i.divisorOnes) / 10
                     }
                     else (i.quotient * i.divisorOnes) / 10
 
-                DivisionCellName.Multiply1Hundreds ->
+                DivisionCell.Multiply1Hundreds ->
                     if (i.dividend >= 100) {
                         if(i.hasTensQuotient){
                             if (i.isCarryRequiredInMultiplyQuotientTens)
@@ -137,7 +137,7 @@ class DivisionPhaseEvaluatorV2 @Inject constructor() {
                         }
                     } else null
 
-                DivisionCellName.Multiply1Tens -> when {
+                DivisionCell.Multiply1Tens -> when {
                     i.dividend >= 100 -> {
                         if (i.hasTensQuotient) {
                             (i.quotientTens * i.divisorOnes) % 10
@@ -149,7 +149,7 @@ class DivisionPhaseEvaluatorV2 @Inject constructor() {
                     else -> (i.quotient * i.divisor) / 10
                 }
 
-                DivisionCellName.Multiply1Ones -> when {
+                DivisionCell.Multiply1Ones -> when {
                     i.dividend >= 100 -> {
                         if (i.hasTensQuotient) {
                             (i.quotientTens * i.divisorOnes) % 10
@@ -165,21 +165,21 @@ class DivisionPhaseEvaluatorV2 @Inject constructor() {
             }
 
             DivisionPhaseV2.InputBringDown -> when (cell) {
-                DivisionCellName.Subtract1Ones -> i.bringDownInSubtract1
+                DivisionCell.Subtract1Ones -> i.bringDownInSubtract1
                 else -> null
             }
 
             DivisionPhaseV2.InputBorrow -> when (cell) {
-                DivisionCellName.BorrowDividendHundreds ->
+                DivisionCell.BorrowDividendHundreds ->
                     if (i.dividend >= 100) i.dividendHundreds - 1 else null
-                DivisionCellName.BorrowDividendTens ->
+                DivisionCell.BorrowDividendTens ->
                     if(i.needsTensBorrowInS1 &&
                         i.needsHundredsBorrowInS1) {
                         9
                     } else {
                         i.dividendTens - 1
                     }
-                DivisionCellName.BorrowSubtract1Tens -> {
+                DivisionCell.BorrowSubtract1Tens -> {
                     if (i.needsTensBorrowInS2 &&
                         i.needsHundredsBorrowInS2) {
                             9
@@ -188,43 +188,45 @@ class DivisionPhaseEvaluatorV2 @Inject constructor() {
                         sub2TensBeforeBorrow - 1
                     }
                 }
-                DivisionCellName.BorrowSubtract1Hundreds -> (i.subtract1Result / 100) - 1
+                DivisionCell.BorrowSubtract1Hundreds -> (i.subtract1Result / 100) - 1
                 else -> null
             }
 
             DivisionPhaseV2.InputSubtract1 -> when (cell) {
-                DivisionCellName.Subtract1Hundreds ->
+                DivisionCell.Subtract1Hundreds ->
                     if (i.hasTensQuotient) {
                         i.subtract1Result / 100
                     } else null
 
-                DivisionCellName.Subtract1Tens ->
+                DivisionCell.Subtract1Tens ->
                     if (i.hasTensQuotient){
                         i.subtract1TensOnly % 10
                     } else {
                         i.remainder / 10
                     }
 
-                DivisionCellName.Subtract1Ones -> i.remainder % 10
+                DivisionCell.Subtract1Ones -> i.remainder % 10
                 else -> null
             }
 
-            DivisionPhaseV2.InputMultiply2 -> when (cell) {
-                DivisionCellName.CarryDivisorTensM2 -> (i.quotientOnes * i.divisorOnes) / 10
+            DivisionPhaseV2.PrepareNextOp -> null
 
-                DivisionCellName.Multiply2Hundreds ->
+            DivisionPhaseV2.InputMultiply2 -> when (cell) {
+                DivisionCell.CarryDivisorTensM2 -> (i.quotientOnes * i.divisorOnes) / 10
+
+                DivisionCell.Multiply2Hundreds ->
                     if(i.dividend >= 100) i.multiplyQuotientOnes / 100
                     else null
 
-                DivisionCellName.Multiply2Tens -> i.multiplyQuotientOnes / 10 % 10
+                DivisionCell.Multiply2Tens -> i.multiplyQuotientOnes / 10 % 10
 
-                DivisionCellName.Multiply2Ones -> i.multiplyQuotientOnes % 10
+                DivisionCell.Multiply2Ones -> i.multiplyQuotientOnes % 10
                 else -> null
             }
 
             DivisionPhaseV2.InputSubtract2 -> when (cell) {
-                DivisionCellName.Subtract2Tens -> i.remainder / 10
-                DivisionCellName.Subtract2Ones -> i.remainder % 10
+                DivisionCell.Subtract2Tens -> i.remainder / 10
+                DivisionCell.Subtract2Ones -> i.remainder % 10
                 else -> null
             }
 

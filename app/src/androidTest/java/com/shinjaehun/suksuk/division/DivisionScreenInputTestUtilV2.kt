@@ -2,6 +2,7 @@ package com.shinjaehun.suksuk.division
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextContains
+import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
@@ -10,6 +11,7 @@ import com.shinjaehun.suksuk.domain.division.factory.DivisionDomainStateV2Factor
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequenceProvider
 import com.shinjaehun.suksuk.domain.division.detector.DivisionPatternDetectorV2
 import com.shinjaehun.suksuk.domain.division.evaluator.DivisionPhaseEvaluatorV2
+import com.shinjaehun.suksuk.domain.division.model.DivisionPhaseV2
 import com.shinjaehun.suksuk.domain.division.sequence.creator.ThreeByTwoDivPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByOneDivPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByTwoDivPhaseSequenceCreator
@@ -21,27 +23,23 @@ fun ComposeContentTestRule.divisionCaseV2(
     divisor: Int,
     inputs: List<String>
 ) {
+
+    val savedStateHandle = SavedStateHandle(mapOf("autoStart" to false))
+
     val phaseSequenceProvider = DivisionPhaseSequenceProvider(
         TwoByOneDivPhaseSequenceCreator(),
         TwoByTwoDivPhaseSequenceCreator(),
         ThreeByTwoDivPhaseSequenceCreator(),
     )
     val viewModel = DivisionViewModelV2(
-        evaluator = DivisionPhaseEvaluatorV2(),
-        factory = DivisionDomainStateV2Factory(DivisionPatternDetectorV2, phaseSequenceProvider)
+        savedStateHandle = savedStateHandle,
+        phaseEvaluator = DivisionPhaseEvaluatorV2(),
+        domainStateFactory = DivisionDomainStateV2Factory(DivisionPatternDetectorV2, phaseSequenceProvider)
     )
 
     setContent {
-        DivisionScreenV2(viewModel = viewModel)
+        DivisionScreenV2(dividend, divisor, viewModel)
     }
-
-    waitForIdle()
-
-    this.runOnIdle {
-        viewModel.startNewProblem(dividend, divisor)
-    }
-
-    waitForIdle()
 
     var i = 0
     while (i < inputs.size) {
@@ -69,4 +67,5 @@ fun ComposeContentTestRule.divisionCaseV2(
     // 마지막 입력 후 "정답입니다!" 피드백 노출되어야 함
     this.onNodeWithTag("feedback").assertIsDisplayed()
     this.onNodeWithTag("feedback").assertTextContains("정답입니다!")
+
 }

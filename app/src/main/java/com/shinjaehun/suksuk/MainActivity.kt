@@ -4,13 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.LaunchedEffect
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.shinjaehun.suksuk.presentation.division.DivisionScreenV2
-import com.shinjaehun.suksuk.presentation.division.DivisionViewModelV2
-import com.shinjaehun.suksuk.presentation.division.legacy.DivisionScreen
 import com.shinjaehun.suksuk.presentation.multiplication.MultiplicationScreen
-import com.shinjaehun.suksuk.presentation.multiplication.MultiplicationViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,12 +13,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-//            val vm: DivisionViewModelV2 = hiltViewModel()
-            val vm: MultiplicationViewModel = hiltViewModel()
-            LaunchedEffect(Unit) {
-                vm.startNewProblem(48, 36)
-            }
-            MultiplicationScreen(viewModel = vm)
+//            MultiplicationScreen(multiplicand=48, multiplier=36)
+//            MultiplicationScreen(multiplicand=99, multiplier=99)
+//            MultiplicationScreen(multiplicand=55, multiplier=55)
+//            MultiplicationScreen(multiplicand=25, multiplier=40) // 이 경우 해결해야 함...
+//            MultiplicationScreen(multiplicand=80, multiplier=47)
+//            MultiplicationScreen(multiplicand=11, multiplier=11)
+            MultiplicationScreen(multiplicand=76, multiplier=89)
+//            DivisionScreenV2(dividend=978, divisor=21)
         }
     }
 }

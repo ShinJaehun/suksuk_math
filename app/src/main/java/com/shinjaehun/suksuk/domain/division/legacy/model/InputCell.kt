@@ -1,9 +1,9 @@
 package com.shinjaehun.suksuk.domain.division.legacy.model
 
-import com.shinjaehun.suksuk.domain.division.model.DivisionCellName
+import com.shinjaehun.suksuk.domain.division.model.DivisionCell
 
 data class InputCell(
-    val divisionCellName: DivisionCellName = DivisionCellName.None,
+    val divisionCell: DivisionCell = DivisionCell.None,
     val inputIdx: Int = -1,
     val value: String? = null,
     val editable: Boolean = false,

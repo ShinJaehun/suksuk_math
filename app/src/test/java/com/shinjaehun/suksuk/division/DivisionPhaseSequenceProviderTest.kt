@@ -8,7 +8,7 @@ import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequenceProvi
 import com.shinjaehun.suksuk.domain.division.sequence.creator.ThreeByTwoDivPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByOneDivPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByTwoDivPhaseSequenceCreator
-import com.shinjaehun.suksuk.domain.division.model.DivisionCellName
+import com.shinjaehun.suksuk.domain.division.model.DivisionCell
 import com.shinjaehun.suksuk.domain.division.model.DivisionDomainStateV2
 import com.shinjaehun.suksuk.domain.division.model.DivisionPhaseV2
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequence
@@ -58,23 +58,37 @@ class DivisionPhaseSequenceProviderTest {
         assertEquals(DivisionPatternV2.ThreeByTwo, pattern)
 
         // 2. 단계 수 확인 (네 코드 기준: 몫(십), 곱셈2, 뺄셈2, bring down, 몫(일), 곱셈2, 뺄셈, complete 등 = 11단계)
-        assertEquals(11, seq.steps.size)
+//        assertEquals(11, seq.steps.size)
+        assertEquals(12, seq.steps.size)
 
         // 3. 단계별 phase 검증 (필요 시 상세 검증)
+//        assertEquals(DivisionPhaseV2.InputQuotient,   seq.steps[0].phase)   // 몫 십의자리
+//        assertEquals(DivisionPhaseV2.InputMultiply1,   seq.steps[1].phase)   // 1차 곱셈(Tens)
+//        assertEquals(DivisionPhaseV2.InputMultiply1,   seq.steps[2].phase)   // 1차 곱셈(Hundreds)
+//        assertEquals(DivisionPhaseV2.InputBorrow,   seq.steps[3].phase)   // 1차 뺄셈(Tens)
+//        assertEquals(DivisionPhaseV2.InputSubtract1,   seq.steps[4].phase)   // 1차 뺄셈(Hundreds)
+//        assertEquals(DivisionPhaseV2.InputBringDown,  seq.steps[5].phase)   // Bring down Ones
+//        assertEquals(DivisionPhaseV2.InputQuotient,   seq.steps[6].phase)   // 몫 일의자리
+//        assertEquals(DivisionPhaseV2.InputMultiply2,   seq.steps[7].phase)   // 2차 곱셈(Ones)
+//        assertEquals(DivisionPhaseV2.InputMultiply2,   seq.steps[8].phase)   // 2차 곱셈(Tens)
+//        assertEquals(DivisionPhaseV2.InputSubtract2,   seq.steps[9].phase)   // 2차 뺄셈(Ones)
+//        assertEquals(DivisionPhaseV2.Complete,        seq.steps[10].phase)  // 완료
+
         assertEquals(DivisionPhaseV2.InputQuotient,   seq.steps[0].phase)   // 몫 십의자리
         assertEquals(DivisionPhaseV2.InputMultiply1,   seq.steps[1].phase)   // 1차 곱셈(Tens)
         assertEquals(DivisionPhaseV2.InputMultiply1,   seq.steps[2].phase)   // 1차 곱셈(Hundreds)
         assertEquals(DivisionPhaseV2.InputBorrow,   seq.steps[3].phase)   // 1차 뺄셈(Tens)
         assertEquals(DivisionPhaseV2.InputSubtract1,   seq.steps[4].phase)   // 1차 뺄셈(Hundreds)
         assertEquals(DivisionPhaseV2.InputBringDown,  seq.steps[5].phase)   // Bring down Ones
-        assertEquals(DivisionPhaseV2.InputQuotient,   seq.steps[6].phase)   // 몫 일의자리
-        assertEquals(DivisionPhaseV2.InputMultiply2,   seq.steps[7].phase)   // 2차 곱셈(Ones)
-        assertEquals(DivisionPhaseV2.InputMultiply2,   seq.steps[8].phase)   // 2차 곱셈(Tens)
-        assertEquals(DivisionPhaseV2.InputSubtract2,   seq.steps[9].phase)   // 2차 뺄셈(Ones)
-        assertEquals(DivisionPhaseV2.Complete,        seq.steps[10].phase)  // 완료
+        assertEquals(DivisionPhaseV2.PrepareNextOp,  seq.steps[6].phase)
+        assertEquals(DivisionPhaseV2.InputQuotient,   seq.steps[7].phase)   // 몫 일의자리
+        assertEquals(DivisionPhaseV2.InputMultiply2,   seq.steps[8].phase)   // 2차 곱셈(Ones)
+        assertEquals(DivisionPhaseV2.InputMultiply2,   seq.steps[9].phase)   // 2차 곱셈(Tens)
+        assertEquals(DivisionPhaseV2.InputSubtract2,   seq.steps[10].phase)   // 2차 뺄셈(Ones)
+        assertEquals(DivisionPhaseV2.Complete,        seq.steps[11].phase)  // 완료
 
         // 4. 세부 단계 속성 검증 (예: editableCells, highlightCells 등 필요 시 추가)
-        assertEquals(listOf(DivisionCellName.QuotientTens), seq.steps[0].editableCells)
+        assertEquals(listOf(DivisionCell.QuotientTens), seq.steps[0].editableCells)
         // ...필요시 각 단계별 세부 속성 assert 추가
 
         // 실제로 만들어지는 PhaseStep 정보와 비교하여, 구조적 일관성 체크
@@ -107,7 +121,7 @@ class DivisionPhaseSequenceProviderTest {
         val firstCell = seq.steps[3].editableCells.firstOrNull() ?:
             error("No editable cell at step 3")
         val correctInput = when (firstCell) {
-            DivisionCellName.Subtract1Tens, DivisionCellName.Subtract1Ones -> "0"
+            DivisionCell.Subtract1Tens, DivisionCell.Subtract1Ones -> "0"
             else -> error("Unexpected first editable cell at step 3: $firstCell")
         }
 

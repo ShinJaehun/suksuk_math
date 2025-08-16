@@ -1,6 +1,6 @@
 package com.shinjaehun.suksuk.domain.multiplication.model
 
-enum class MulCellName {
+enum class MulCell {
     None,
 
     MultiplicandHundreds,

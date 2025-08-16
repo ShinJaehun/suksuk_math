@@ -1,48 +1,95 @@
 package com.shinjaehun.suksuk.presentation.multiplication
 
-import com.shinjaehun.suksuk.common.viewmodel.BaseViewModel
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import com.shinjaehun.suksuk.domain.multiplication.evaluator.MulPhaseEvaluator
 import com.shinjaehun.suksuk.domain.multiplication.factory.MulDomainStateFactory
-import com.shinjaehun.suksuk.domain.multiplication.model.MulCellName
 import com.shinjaehun.suksuk.domain.multiplication.model.MulDomainState
-import com.shinjaehun.suksuk.domain.multiplication.sequence.MulPhaseStep
 import com.shinjaehun.suksuk.presentation.multiplication.model.MulUiState
 import com.shinjaehun.suksuk.presentation.multiplication.model.mapMultiplicationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
 class MultiplicationViewModel @Inject constructor(
-    private val evaluator: MulPhaseEvaluator,
-    private val factory: MulDomainStateFactory,
-//    private val generateProblem: GenerateMultiplicationProblem // ← 옵션2
-) : BaseViewModel<MulUiState, MulDomainState, MulPhaseStep, MulCellName>() {
+    savedStateHandle: SavedStateHandle = SavedStateHandle(),
+    private val phaseEvaluator: MulPhaseEvaluator,
+    private val domainStateFactory: MulDomainStateFactory,
+): ViewModel() {
+    private val autoStart: Boolean = savedStateHandle["autoStart"] ?: true
 
-    fun start(multiplicand: Int, multiplier: Int) = startNewProblem(multiplicand, multiplier)
+    private val _uiState = MutableStateFlow(MulUiState())
+    val uiState: StateFlow<MulUiState> = _uiState.asStateFlow()
 
-//    fun startRandom() {
-//        val (a, b) = generateProblem()
-//        startNewProblem(a, b)
-//    }
+    private val _currentInput = MutableStateFlow("")
+//    val currentInput: StateFlow<String> = _currentInput.asStateFlow()
 
-    override fun createDomain(vararg args: Int) =
-        factory.create(args[0], args[1])
+    private lateinit var domainState: MulDomainState
 
-    override fun steps(domain: MulDomainState) =
-        domain.phaseSequence.steps
+    init {
+        if(autoStart) {
+            startNewProblem(12, 34)
+        }
+    }
 
-    override fun currentStepIndex(domain: MulDomainState) =
-        domain.currentStepIndex
+    fun startNewProblem(multiplicand: Int, multiplier: Int) {
+        domainState = domainStateFactory.create(multiplicand, multiplier)
+        _currentInput.value = ""
+        emitUiState()
+    }
 
-    override fun editableCells(step: MulPhaseStep) =
-        step.editableCells
+    fun onDigitInput(digit: Int){
+        val step = domainState.phaseSequence.steps[domainState.currentStepIndex]
+        val maxLength = step.editableCells.size.coerceAtLeast(1)
+        _currentInput.value = (_currentInput.value + digit).takeLast(maxLength)
+        emitUiState()
+    }
 
-    override fun evaluate(domain: MulDomainState, inputsForThisStep: List<String>) =
-        evaluator.evaluate(domain, inputsForThisStep)
+    fun onEnter(){
+        if(_currentInput.value.isEmpty()) return
+        submitInput(_currentInput.value)
+        _currentInput.value = ""
+    }
 
-    override fun advance(domain: MulDomainState, addedInputs: List<String>, nextStepIndex: Int) =
-        domain.copy(inputs = domain.inputs + addedInputs, currentStepIndex = nextStepIndex)
+    fun submitInput(input: String){
+        val step = domainState.phaseSequence.steps[domainState.currentStepIndex]
+        val editableCount = step.editableCells.size
 
-    override fun mapToUi(domain: MulDomainState, currentInput: String) =
-        mapMultiplicationUiState(domain, currentInput)
+        val inputsForThisStep: List<String> =
+            if (editableCount > 1) input.padStart(editableCount, '?').chunked(1)
+            else listOf(input)
+
+        if (inputsForThisStep.size < editableCount || inputsForThisStep.any { it == "?" }) {
+            _currentInput.value = ""
+            emitUiState()
+            return
+        }
+        val eval = phaseEvaluator.evaluate(domainState, inputsForThisStep)
+
+        if (!eval.isCorrect) {
+            _currentInput.value = ""
+            emitUiState()
+            return
+        }
+
+        domainState = domainState.copy(
+            inputs = domainState.inputs + inputsForThisStep,
+            currentStepIndex = eval.nextStepIndex ?: domainState.currentStepIndex
+        )
+
+        _currentInput.value = ""
+        emitUiState()
+    }
+
+    fun onClear(){
+        _currentInput.value = ""
+        emitUiState()
+    }
+
+    private fun emitUiState() {
+        _uiState.value = mapMultiplicationUiState(domainState, _currentInput.value)
+    }
 }

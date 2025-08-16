@@ -36,8 +36,8 @@ class DivisionViewModelV2Test {
         val factory = DivisionDomainStateV2Factory(DivisionPatternDetectorV2, phaseSequenceProvider)
 
         viewModel = DivisionViewModelV2(
-            evaluator = phaseEvaluator,
-            factory = factory
+            phaseEvaluator = phaseEvaluator,
+            domainStateFactory = factory
         )
     }
 

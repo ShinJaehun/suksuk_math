@@ -1,10 +1,11 @@
 package com.shinjaehun.suksuk.presentation.multiplication.model
 
 import com.shinjaehun.suksuk.common.ui.Highlight
-import com.shinjaehun.suksuk.domain.multiplication.model.MulCellName
+import com.shinjaehun.suksuk.domain.multiplication.model.MulCell
 import com.shinjaehun.suksuk.domain.multiplication.model.MulDomainState
 import com.shinjaehun.suksuk.domain.multiplication.model.MulPhase
 import com.shinjaehun.suksuk.domain.multiplication.sequence.MulPhaseStep
+import com.shinjaehun.suksuk.presentation.division.model.getDefaultCellValue
 
 
 fun mapMultiplicationUiState(
@@ -12,56 +13,74 @@ fun mapMultiplicationUiState(
     currentInput: String
 ): MulUiState {
     val steps = domain.phaseSequence.steps
-    val stepIndex = domain.currentStepIndex.coerceIn(0, steps.lastIndex)
-    val curStep = steps[stepIndex]
+    val currentStepIndex = domain.currentStepIndex.coerceIn(0, steps.lastIndex)
+    val curPhaseStep = steps[currentStepIndex]
 
     // [0] 입력 인덱스 캐시
-    val inputIndexCache = mutableMapOf<MulCellName, Int?>()
-    fun inputIndexOf(cell: MulCellName): Int? =
+    val inputIndexCache = mutableMapOf<MulCell, Int?>()
+    fun inputIndexOf(cell: MulCell): Int? =
         inputIndexCache.getOrPut(cell) {
-            calculateInputIndexForCell(steps, stepIndex, cell)
+            calculateInputIndexForCell(steps, currentStepIndex, cell)
         }
+
+    val editableIndexCache: Map<MulCell, Int> =
+        curPhaseStep.editableCells.withIndex().associate { it.value to it.index }
+
+    val cleared = mutableSetOf<MulCell>()
+    for (i in 0..currentStepIndex) {
+        cleared += steps[i].clearCells
+    }
 
     // [1] 모든 셀 빌드
-    val cells = MulCellName.entries.associateWith { cellName ->
-        val isEditable = cellName in curStep.editableCells
-        val highlight = when {
-            isEditable -> Highlight.Editing
-            cellName in curStep.highlightCells -> Highlight.Related
-            else -> Highlight.None
-        }
+    val cells = MulCell.entries.associateWith { cellName ->
+        val isHidden = cellName in cleared
 
-        val idxInEditables = curStep.editableCells.indexOf(cellName)
+        val isEditableRaw = cellName in curPhaseStep.editableCells
+        val idxInEditables = editableIndexCache[cellName] ?: -1
         val inputIdx = inputIndexOf(cellName)
 
-        val value: String? = when {
-            // 1) 확정 입력
-            inputIdx != null && !domain.inputs.getOrNull(inputIdx).isNullOrEmpty() ->
-                domain.inputs[inputIdx]
+        val committed = inputIdx?.let { domain.inputs.getOrNull(it) }
+        val preview = if (idxInEditables >= 0) currentInput.getOrNull(idxInEditables)?.toString() else null
 
-            // 2) 현재 step 편집 중 + 아직 미확정 → currentInput 자리 분배
-            isEditable && inputIdx != null && domain.inputs.getOrNull(inputIdx).isNullOrEmpty() ->
-                currentInput.getOrNull(idxInEditables)?.toString() ?: "?"
-
-            // 3) 기본값
+        val rawValue: String? = when {
+//            // 1) 확정 입력
+//            inputIdx != null && !domain.inputs.getOrNull(inputIdx).isNullOrEmpty() ->
+//                domain.inputs[inputIdx]
+//
+//            // 2) 현재 step 편집 중 + 아직 미확정 → currentInput 자리 분배
+//            isEditableRaw && inputIdx != null && domain.inputs.getOrNull(inputIdx).isNullOrEmpty() ->
+//                currentInput.getOrNull(idxInEditables)?.toString() ?: "?"
+//
+//            // 3) 기본값
+//            else -> getDefaultCellValue(domain, cellName)
+            committed.isNullOrEmpty() && isEditableRaw -> preview ?: "?"
+            !committed.isNullOrEmpty() -> committed
             else -> getDefaultCellValue(domain, cellName)
         }
 
+        val valueForUi = if (isHidden) "" else (rawValue ?: "")
+        val isEditable = !isHidden && isEditableRaw
+
+        val highlight =  if (isHidden) Highlight.None
+            else if (isEditable) Highlight.Editing
+            else if (curPhaseStep.highlightCells.contains(cellName)) Highlight.Related else Highlight.None
+
         MulInputCell(
             cellName = cellName,
-            value = value,
+            value = valueForUi,
             editable = isEditable,
-            highlight = highlight
+            highlight = highlight,
+            hidden = isHidden
         )
     }
 
-    val isComplete = steps.getOrNull(stepIndex)?.phase is MulPhase.Complete
+    val isComplete = curPhaseStep.phase is MulPhase.Complete
     val feedback = if (isComplete) "정답입니다!" else null
 
     return MulUiState(
         cells = cells,
-        currentState = stepIndex,
-        isCompleted = (stepIndex == steps.lastIndex),
+        currentStep = currentStepIndex,
+        isCompleted = isComplete,
         feedback = feedback,
         pattern = domain.pattern
     )
@@ -77,12 +96,12 @@ fun mapMultiplicationUiState(
 private fun calculateInputIndexForCell(
     steps: List<MulPhaseStep>,
     stepIndex: Int,
-    cell: MulCellName
+    cell: MulCell
 ): Int? {
     var cursor = 0
     for (i in 0..stepIndex) {
-        val s = steps[i]
-        val editables = s.editableCells
+        val step = steps[i]
+        val editables = step.editableCells
 
         if (i < stepIndex) {
             // 과거 step: 모든 editable이 이미 확정되었다고 간주
@@ -109,26 +128,48 @@ private fun calculateInputIndexForCell(
  * 피연산자(피승수/승수) 고정 숫자 표기.
  * - 최대 multiplicand 3자리, multiplier 2자리 대응.
  */
+//private fun getDefaultCellValue(
+//    domain: MulDomainState,
+//    cellName: MulCell
+//): String? {
+//    val mc = domain.info.multiplicand.toString().padStart(3, ' ')
+//    val ml = domain.info.multiplier.toString().padStart(2, ' ')
+//
+//    val mcH = mc[mc.lastIndex - 2].takeIf { it.isDigit() }?.toString() ?: ""
+//    val mcT = mc[mc.lastIndex - 1].takeIf { it.isDigit() }?.toString() ?: ""
+//    val mcO = mc[mc.lastIndex - 0].takeIf { it.isDigit() }?.toString() ?: ""
+//
+//    val mlT = ml[ml.lastIndex - 1].takeIf { it.isDigit() }?.toString() ?: ""
+//    val mlO = ml[ml.lastIndex - 0].takeIf { it.isDigit() }?.toString() ?: ""
+//
+//    return when (cellName) {
+//        MulCell.MultiplicandHundreds -> mcH
+//        MulCell.MultiplicandTens     -> mcT
+//        MulCell.MultiplicandOnes     -> mcO
+//        MulCell.MultiplierTens       -> mlT
+//        MulCell.MultiplierOnes       -> mlO
+//        else -> null
+//    }
+//}
+
+private fun digitOrEmpty(n: Int, posFromRight: Int, width: Int, min: Int): String {
+    if (n < min) return ""
+    val s = n.toString().padStart(width, '0')
+    return s[s.lastIndex - posFromRight].toString()
+}
+
 private fun getDefaultCellValue(
     domain: MulDomainState,
-    cellName: MulCellName
-): String? {
-    val mc = domain.info.multiplicand.toString().padStart(3, ' ')
-    val ml = domain.info.multiplier.toString().padStart(2, ' ')
+    cellName: MulCell
+): String? = when (cellName) {
+    // multiplicand: 최대 3자리(백/십은 임계 미만이면 공백, 일의 자리는 항상 표시)
+    MulCell.MultiplicandHundreds -> digitOrEmpty(domain.info.multiplicand, posFromRight = 2, width = 3, min = 100)
+    MulCell.MultiplicandTens     -> digitOrEmpty(domain.info.multiplicand, posFromRight = 1, width = 3, min = 10)
+    MulCell.MultiplicandOnes     -> digitOrEmpty(domain.info.multiplicand, posFromRight = 0, width = 3, min = 0)
 
-    val mcH = mc[mc.lastIndex - 2].takeIf { it.isDigit() }?.toString() ?: ""
-    val mcT = mc[mc.lastIndex - 1].takeIf { it.isDigit() }?.toString() ?: ""
-    val mcO = mc[mc.lastIndex - 0].takeIf { it.isDigit() }?.toString() ?: ""
+    // multiplier: 최대 2자리(십의 자리는 임계 미만이면 공백, 일의 자리는 항상 표시)
+    MulCell.MultiplierTens       -> digitOrEmpty(domain.info.multiplier,   posFromRight = 1, width = 2, min = 10)
+    MulCell.MultiplierOnes       -> digitOrEmpty(domain.info.multiplier,   posFromRight = 0, width = 2, min = 0)
 
-    val mlT = ml[ml.lastIndex - 1].takeIf { it.isDigit() }?.toString() ?: ""
-    val mlO = ml[ml.lastIndex - 0].takeIf { it.isDigit() }?.toString() ?: ""
-
-    return when (cellName) {
-        MulCellName.MultiplicandHundreds -> mcH
-        MulCellName.MultiplicandTens     -> mcT
-        MulCellName.MultiplicandOnes     -> mcO
-        MulCellName.MultiplierTens       -> mlT
-        MulCellName.MultiplierOnes       -> mlO
-        else -> null
-    }
+    else -> null
 }

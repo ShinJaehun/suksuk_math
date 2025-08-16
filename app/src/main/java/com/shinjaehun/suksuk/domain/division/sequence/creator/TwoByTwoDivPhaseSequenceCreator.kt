@@ -3,7 +3,7 @@ package com.shinjaehun.suksuk.domain.division.sequence.creator
 import com.shinjaehun.suksuk.domain.division.info.DivisionStateInfo
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequence
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseStep
-import com.shinjaehun.suksuk.domain.division.model.DivisionCellName
+import com.shinjaehun.suksuk.domain.division.model.DivisionCell
 import com.shinjaehun.suksuk.domain.division.model.DivisionPhaseV2
 import javax.inject.Inject
 
@@ -17,10 +17,10 @@ class TwoByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeque
         // [1] 몫 입력 단계
         steps += DivisionPhaseStep(
             phase = DivisionPhaseV2.InputQuotient,
-            editableCells = listOf(DivisionCellName.QuotientOnes),
+            editableCells = listOf(DivisionCell.QuotientOnes),
             highlightCells = listOf(
-                DivisionCellName.DividendTens, DivisionCellName.DividendOnes,
-                DivisionCellName.DivisorTens, DivisionCellName.DivisorOnes
+                DivisionCell.DividendTens, DivisionCell.DividendOnes,
+                DivisionCell.DivisorTens, DivisionCell.DivisorOnes
             )
         )
 
@@ -28,26 +28,26 @@ class TwoByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeque
         if (isCarryRequiredInMultiply) {
             steps += DivisionPhaseStep(
                 phase = DivisionPhaseV2.InputMultiply1,
-                editableCells = listOf(DivisionCellName.CarryDivisorTensM1, DivisionCellName.Multiply1Ones),
-                highlightCells = listOf(DivisionCellName.DivisorOnes, DivisionCellName.QuotientOnes),
+                editableCells = listOf(DivisionCell.CarryDivisorTensM1, DivisionCell.Multiply1Ones),
+                highlightCells = listOf(DivisionCell.DivisorOnes, DivisionCell.QuotientOnes),
                 needsCarry = true
             )
         } else {
             steps += DivisionPhaseStep(
                 phase = DivisionPhaseV2.InputMultiply1,
-                editableCells = listOf(DivisionCellName.Multiply1Ones),
-                highlightCells = listOf(DivisionCellName.DivisorOnes, DivisionCellName.QuotientOnes)
+                editableCells = listOf(DivisionCell.Multiply1Ones),
+                highlightCells = listOf(DivisionCell.DivisorOnes, DivisionCell.QuotientOnes)
             )
         }
 
         // [3] 곱셈(십의 자리)
         steps += DivisionPhaseStep(
             phase = DivisionPhaseV2.InputMultiply1,
-            editableCells = listOf(DivisionCellName.Multiply1Tens),
+            editableCells = listOf(DivisionCell.Multiply1Tens),
             highlightCells = buildList {
-                add(DivisionCellName.DivisorTens)
-                add(DivisionCellName.QuotientOnes)
-                if (isCarryRequiredInMultiply) add(DivisionCellName.CarryDivisorTensM1)
+                add(DivisionCell.DivisorTens)
+                add(DivisionCell.QuotientOnes)
+                if (isCarryRequiredInMultiply) add(DivisionCell.CarryDivisorTensM1)
             }
         )
 
@@ -55,42 +55,42 @@ class TwoByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeque
         if (info.needsTensBorrowInS1) {
             steps += DivisionPhaseStep(
                 phase = DivisionPhaseV2.InputBorrow,
-                editableCells = listOf(DivisionCellName.BorrowDividendTens),
+                editableCells = listOf(DivisionCell.BorrowDividendTens),
                 highlightCells = listOf(
-                    DivisionCellName.DividendTens,
-                    DivisionCellName.DividendOnes,
-                    DivisionCellName.Multiply1Ones
+                    DivisionCell.DividendTens,
+                    DivisionCell.DividendOnes,
+                    DivisionCell.Multiply1Ones
                 ),
                 needsBorrow = true,
-                strikeThroughCells = listOf(DivisionCellName.DividendTens),
-                subtractLineTargets = setOf(DivisionCellName.BorrowDividendTens)
+                strikeThroughCells = listOf(DivisionCell.DividendTens),
+                subtractLineTargets = setOf(DivisionCell.BorrowDividendTens)
             )
         }
 
         // [5] 뺄셈 단계
         steps += DivisionPhaseStep(
             phase = DivisionPhaseV2.InputSubtract1,
-            editableCells = listOf(DivisionCellName.Subtract1Ones),
+            editableCells = listOf(DivisionCell.Subtract1Ones),
             highlightCells = buildList {
-                if (info.needsTensBorrowInS1) add(DivisionCellName.Borrowed10DividendOnes)
-                add(DivisionCellName.DividendOnes)
-                add(DivisionCellName.Multiply1Ones)
+                if (info.needsTensBorrowInS1) add(DivisionCell.Borrowed10DividendOnes)
+                add(DivisionCell.DividendOnes)
+                add(DivisionCell.Multiply1Ones)
             },
-            presetValues = if (info.needsTensBorrowInS1) mapOf(DivisionCellName.Borrowed10DividendOnes to "10") else emptyMap(),
-            strikeThroughCells = if (info.needsTensBorrowInS1) listOf(DivisionCellName.DividendTens) else emptyList(),
-            subtractLineTargets = setOf(DivisionCellName.Subtract1Ones)
+            presetValues = if (info.needsTensBorrowInS1) mapOf(DivisionCell.Borrowed10DividendOnes to "10") else emptyMap(),
+            strikeThroughCells = if (info.needsTensBorrowInS1) listOf(DivisionCell.DividendTens) else emptyList(),
+            subtractLineTargets = setOf(DivisionCell.Subtract1Ones)
         )
 
         if(info.has2DigitsRemainder) {
             steps += DivisionPhaseStep(
                 phase = DivisionPhaseV2.InputSubtract1,
-                editableCells = listOf(DivisionCellName.Subtract1Tens),
+                editableCells = listOf(DivisionCell.Subtract1Tens),
                 highlightCells = buildList {
-                    add(DivisionCellName.Multiply1Tens)
-                    if (info.needsTensBorrowInS1) add(DivisionCellName.BorrowDividendTens)
-                    else add(DivisionCellName.DividendTens)
+                    add(DivisionCell.Multiply1Tens)
+                    if (info.needsTensBorrowInS1) add(DivisionCell.BorrowDividendTens)
+                    else add(DivisionCell.DividendTens)
                 },
-                subtractLineTargets = setOf(DivisionCellName.Subtract1Tens)
+                subtractLineTargets = setOf(DivisionCell.Subtract1Tens)
             )
         }
 

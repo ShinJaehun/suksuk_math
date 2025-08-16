@@ -30,7 +30,7 @@ fun NumberText(
     modifier: Modifier = Modifier
 ) {
     LaunchedEffect(cell) {
-        println("🟠 [NumberText] ${cell.divisionCellName} | value=${cell.value} | editable=${cell.editable} | highlight=${cell.highlight}")
+        println("🟠 [NumberText] ${cell.divisionCell} | value=${cell.value} | editable=${cell.editable} | highlight=${cell.highlight}")
     }
 
     val textColor = when (cell.highlight) {
@@ -48,7 +48,7 @@ fun NumberText(
             fontSize = fontSize,
             color = textColor,
             textAlign = TextAlign.Center,
-            modifier = Modifier.testTag("${cell.divisionCellName}-cell"),
+            modifier = Modifier.testTag("${cell.divisionCell}-cell"),
 
             )
 //        LaunchedEffect(cell.value) {
@@ -67,7 +67,7 @@ fun NumberText(
                     contentDescription = "취소선",
                     modifier = Modifier
                         .matchParentSize()
-                        .testTag("${cell.divisionCellName}-crossed")
+                        .testTag("${cell.divisionCell}-crossed")
                 )
             }
         }
