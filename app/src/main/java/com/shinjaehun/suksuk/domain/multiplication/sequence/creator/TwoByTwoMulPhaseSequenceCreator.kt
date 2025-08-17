@@ -174,7 +174,8 @@ class TwoByTwoMulPhaseSequenceCreator @Inject constructor() : MulPhaseSequenceCr
             steps += MulPhaseStep( // Ones
                 phase = MulPhase.InputSum,
                 editableCells = listOf(MulCell.SumOnes),
-                highlightCells = listOf(MulCell.P1Ones)
+                highlightCells = listOf(MulCell.P1Ones),
+                totalLineTargets = setOf(MulCell.SumOnes)
             )
 
             if (info.carrySumHundreds > 0) {
@@ -182,13 +183,15 @@ class TwoByTwoMulPhaseSequenceCreator @Inject constructor() : MulPhaseSequenceCr
                     phase = MulPhase.InputSum,
                     editableCells = listOf(MulCell.CarrySumHundreds, MulCell.SumTens),
                     highlightCells = listOf(MulCell.P1Tens, MulCell.P2Tens),
-                    needsCarry = true
+                    needsCarry = true,
+                    totalLineTargets = setOf(MulCell.SumTens)
                 )
             } else {
                 steps += MulPhaseStep(
                     phase = MulPhase.InputSum,
                     editableCells = listOf(MulCell.SumTens),
-                    highlightCells = listOf(MulCell.P1Tens, MulCell.P2Tens)
+                    highlightCells = listOf(MulCell.P1Tens, MulCell.P2Tens),
+                    totalLineTargets = setOf(MulCell.SumTens)
                 )
             }
 
@@ -201,7 +204,8 @@ class TwoByTwoMulPhaseSequenceCreator @Inject constructor() : MulPhaseSequenceCr
                         MulCell.P2Hundreds,
                         MulCell.CarrySumHundreds
                     ),
-                    needsCarry = true
+                    needsCarry = true,
+                    totalLineTargets = setOf(MulCell.SumHundreds)
                 )
             } else {
                 steps += MulPhaseStep(
@@ -211,7 +215,8 @@ class TwoByTwoMulPhaseSequenceCreator @Inject constructor() : MulPhaseSequenceCr
                         MulCell.P1Hundreds,
                         MulCell.P2Hundreds,
                         MulCell.CarrySumHundreds
-                    )
+                    ),
+                    totalLineTargets = setOf(MulCell.SumHundreds)
                 )
             }
 
@@ -225,6 +230,7 @@ class TwoByTwoMulPhaseSequenceCreator @Inject constructor() : MulPhaseSequenceCr
                         MulCell.P2Thousands,
                         MulCell.CarrySumThousands
                     ),
+                    totalLineTargets = setOf(MulCell.SumThousands)
                 )
             }
         }

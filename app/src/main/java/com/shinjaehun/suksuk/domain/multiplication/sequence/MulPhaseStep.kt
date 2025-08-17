@@ -10,4 +10,5 @@ data class MulPhaseStep(
     val highlightCells: List<MulCell> = emptyList(),
     val needsCarry: Boolean = false,
     val clearCells: Set<MulCell> = emptySet(),
+    val totalLineTargets: Set<MulCell> = emptySet(),
 )

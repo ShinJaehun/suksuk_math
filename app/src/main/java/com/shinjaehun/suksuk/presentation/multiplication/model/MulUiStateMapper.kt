@@ -27,8 +27,13 @@ fun mapMultiplicationUiState(
         curPhaseStep.editableCells.withIndex().associate { it.value to it.index }
 
     val cleared = mutableSetOf<MulCell>()
+
+    val totalLineSet = mutableSetOf<MulCell>()
+
     for (i in 0..currentStepIndex) {
         cleared += steps[i].clearCells
+
+        totalLineSet += steps[i].totalLineTargets
     }
 
     // [1] 모든 셀 빌드
@@ -65,12 +70,15 @@ fun mapMultiplicationUiState(
             else if (isEditable) Highlight.Editing
             else if (curPhaseStep.highlightCells.contains(cellName)) Highlight.Related else Highlight.None
 
+        val totalLineType = if (totalLineSet.contains(cellName)) TotalLineType.Confirmed else TotalLineType.None
+
         MulInputCell(
             cellName = cellName,
             value = valueForUi,
             editable = isEditable,
             highlight = highlight,
-            hidden = isHidden
+            hidden = isHidden,
+            totalLineType = totalLineType
         )
     }
 

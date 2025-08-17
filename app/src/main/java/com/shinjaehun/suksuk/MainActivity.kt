@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.shinjaehun.suksuk.presentation.division.DivisionScreenV2
 import com.shinjaehun.suksuk.presentation.multiplication.MultiplicationScreen
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,8 +21,8 @@ class MainActivity : ComponentActivity() {
 //            MultiplicationScreen(multiplicand=80, multiplier=47)
 //            MultiplicationScreen(multiplicand=11, multiplier=11)
 //            MultiplicationScreen(multiplicand=76, multiplier=89)
-            MultiplicationScreen(multiplicand=76, multiplier=80)
-//            DivisionScreenV2(dividend=978, divisor=21)
+//            MultiplicationScreen(multiplicand=76, multiplier=80)
+            DivisionScreenV2(dividend=978, divisor=21)
         }
     }
 }

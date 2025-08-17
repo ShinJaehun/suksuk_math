@@ -18,6 +18,7 @@ import com.shinjaehun.suksuk.domain.multiplication.model.MulCell
 import com.shinjaehun.suksuk.domain.multiplication.model.MulPattern
 import com.shinjaehun.suksuk.presentation.multiplication.model.MulInputCell
 import com.shinjaehun.suksuk.presentation.multiplication.model.MulUiState
+import com.shinjaehun.suksuk.presentation.multiplication.model.TotalLineType
 
 
 @Composable
@@ -291,19 +292,21 @@ fun MultiplicationBoard2x2(
             )
         }
 
-        Image(
-            painter = painterResource(id = R.drawable.ic_horizontal_line_long),
-            contentDescription = "total-line",
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier
-                .constrainAs(totalLineRef) {
-                    top.linkTo(timesRef.bottom, margin = 160.dp)
-                    start.linkTo(timesRef.start, margin = (-20).dp) // division과 동일한 느낌의 좌측 여백
-                    width = Dimension.value(200.dp)                  // 리소스 길이에 맞춰 조정
-                    height = Dimension.value(4.dp)
-                }
-                .testTag("total-line")
-        )
+        if(uiState.cells.values.any { it.totalLineType == TotalLineType.Confirmed}) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_horizontal_line_long),
+                contentDescription = "total-line",
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier
+                    .constrainAs(totalLineRef) {
+                        top.linkTo(timesRef.bottom, margin = 160.dp)
+                        start.linkTo(timesRef.start, margin = (-20).dp) // division과 동일한 느낌의 좌측 여백
+                        width = Dimension.value(200.dp)                  // 리소스 길이에 맞춰 조정
+                        height = Dimension.value(4.dp)
+                    }
+                    .testTag("total-line")
+            )
+        }
 
         // ─────────────────────────────
         // 최종 합계

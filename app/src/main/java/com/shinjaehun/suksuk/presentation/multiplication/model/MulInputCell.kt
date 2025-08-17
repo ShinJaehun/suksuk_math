@@ -8,5 +8,11 @@ data class MulInputCell (
     val value: String? = null,
     val editable: Boolean = false,
     val highlight: Highlight = Highlight.None,
-    val hidden: Boolean = false
+    val hidden: Boolean = false,
+    val totalLineType: TotalLineType = TotalLineType.None
 )
+
+enum class TotalLineType {
+    None,
+    Confirmed
+}

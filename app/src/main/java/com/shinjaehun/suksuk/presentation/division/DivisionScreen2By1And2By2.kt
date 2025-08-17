@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -119,6 +120,7 @@ fun DivisionScreen2By1And2By2(
                     start.linkTo(dividendOnesRef.start)
                     bottom.linkTo(dividendOnesRef.top)
                 }
+                .semantics(mergeDescendants = true) {}    // 하위 구성 요소(Box -> Text)로 tag를 넘기는 듯
                 .testTag("borrowed10-dividend-cell")
         )
 

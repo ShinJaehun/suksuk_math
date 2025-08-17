@@ -21,7 +21,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class DivisionScreenTest {
+class DivisionUiTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
@@ -568,6 +568,4 @@ class DivisionScreenTest {
         composeTestRule.onNodeWithTag("feedback").assertIsDisplayed()
         composeTestRule.onNodeWithTag("feedback").assertTextContains("정답입니다!")
     }
-
-
 }
