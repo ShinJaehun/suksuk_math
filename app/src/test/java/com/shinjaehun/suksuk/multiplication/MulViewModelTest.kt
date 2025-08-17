@@ -208,6 +208,97 @@ class MultiplicationViewModelTest {
                 )
             ),
 
+            Triple(
+                "TwoByTwo: 48 × 36",
+                48 to 36,
+                listOf(
+                    // P1
+                    "48", "28",
+                    // P2
+                    "24", "14",
+                    // SUM (ones, tens(with carry), hundreds(with carry), thousands)
+                    "8", "12", "7", "1"
+                )
+            ),
+
+            Triple(
+                "TwoByTwo: 99 × 99",
+                99 to 99,
+                listOf(
+                    // P1 → 891
+                    "81", "89",
+                    // P2 → 891 (shifted)
+                    "81", "89",
+                    // SUM
+                    "1", "10", "18", "9"   // → 9801
+                )
+            ),
+
+            Triple(
+                "TwoByTwo: 55 × 55",
+                55 to 55,
+                listOf(
+                    // P1
+                    "25", "27",
+                    // P2
+                    "25", "27",
+                    // SUM
+                    "5", "12", "10", "3"   // → 3025
+                )
+            ),
+
+            Triple(
+                "TwoByTwo: 80 × 47",
+                80 to 47,
+                listOf(
+                    // P1
+                    "0", "56",
+                    // P2
+                    "0", "32",
+                    // SUM
+                    "0", "6", "7", "3"     // → 3760
+                )
+            ),
+
+            Triple(
+                "TwoByTwo: 76 × 89",
+                76 to 89,
+                listOf(
+                    // P1
+                    "54", "68",
+                    // P2
+                    "48", "60",
+                    // SUM
+                    "4", "16", "7", "6"    // → 6764
+                )
+            ),
+
+            // 11×11은 sumThousands==0 → 9스텝 (입력 7개: P1×2, P2×2, SUM×3)
+            Triple(
+                "TwoByTwo: 11 × 11",
+                11 to 11,
+                listOf(
+                    // P1
+                    "1", "1",
+                    // P2
+                    "1", "1",
+                    // SUM (thousands 없음)
+                    "1", "2", "1"          // → 121
+                )
+            ),
+
+            // 특례: multiplier의 1의 자리 0 (25×40) → 네 테스트 기준 4스텝 (입력 3개: InputMultiply1×3, Complete)
+            // P1 Ones = "0" preset/입력, 이후 ×십의 자리 수학을 P1 레인에서 두 스텝으로 처리
+            Triple(
+                "TwoByTwo: 25 × 40 (ones=0 특례)",
+                25 to 40,
+                listOf(
+                    "0",   // P1 Ones
+                    "20",  // (실수학: McandOnes×MlierT → carry=2, tens=0)
+                    "10"   // (실수학: McandTens×MlierT + carry → carry=1, hundreds=0)
+                )
+            )
+
 //            // === 3×2: 123 × 45 = 5535 (대표 예시, 캐리 혼합) ===
 //            // P1: 123×5 = 615 → P1Ones=5, c1=1; tens: 2×5+1=11→ P1Tens=1, c2=1; hundreds: 1×5+1=6→ P1Hundreds=6
 //            // P2: 123×4(십의 자리)=4920 → (shift)

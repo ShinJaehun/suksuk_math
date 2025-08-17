@@ -19,7 +19,8 @@ class MainActivity : ComponentActivity() {
 //            MultiplicationScreen(multiplicand=25, multiplier=40) // 이 경우 해결해야 함...
 //            MultiplicationScreen(multiplicand=80, multiplier=47)
 //            MultiplicationScreen(multiplicand=11, multiplier=11)
-            MultiplicationScreen(multiplicand=76, multiplier=89)
+//            MultiplicationScreen(multiplicand=76, multiplier=89)
+            MultiplicationScreen(multiplicand=76, multiplier=80)
 //            DivisionScreenV2(dividend=978, divisor=21)
         }
     }

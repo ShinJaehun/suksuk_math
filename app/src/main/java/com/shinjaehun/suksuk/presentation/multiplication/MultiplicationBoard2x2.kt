@@ -48,7 +48,7 @@ fun MultiplicationBoard2x2(
         ) = createRefs()
 
         val (
-            p1HundredsRef, p1TensRef, p1OnesRef,
+            p1ThousandsRef, p1HundredsRef, p1TensRef, p1OnesRef,
             p2ThousandsRef, p2HundredsRef, p2TensRef,
             sumThousandsRef, sumHundredsRef, sumTensRef, sumOnesRef
         ) = createRefs()
@@ -170,6 +170,19 @@ fun MultiplicationBoard2x2(
         //   Hundreds  Tens  Ones
         //   (T-1col)  (T)   (O)
         // ─────────────────────────────
+        uiState.cells[MulCell.P1Thousands]?.let { c ->
+            MulNumberText(
+                cell = c,
+                modifier = Modifier
+                    .width(cellWidth)
+                    .padding(horizontal = horizPadding)
+                    .constrainAs(p1ThousandsRef) {
+                        baseline.linkTo(p1TensRef.baseline)
+                        end.linkTo(p1HundredsRef.start) // Hundreds = T - 1col
+                    }
+            )
+        }
+
         uiState.cells[MulCell.P1Hundreds]?.let { c ->
             MulNumberText(
                 cell = c,
@@ -177,9 +190,8 @@ fun MultiplicationBoard2x2(
                     .width(cellWidth)
                     .padding(horizontal = horizPadding)
                     .constrainAs(p1HundredsRef) {
-//                        top.linkTo(lineRef.bottom, margin = row1)
                         baseline.linkTo(p1TensRef.baseline)
-                        end.linkTo(mcTensRef.start) // Hundreds = T - 1col
+                        end.linkTo(p1TensRef.start) // Hundreds = T - 1col
                     }
             )
         }
@@ -217,8 +229,8 @@ fun MultiplicationBoard2x2(
                     .width(cellWidth)
                     .padding(horizontal = horizPadding)
                     .constrainAs(p1OnesRef) {
-                        start.linkTo(mcOnesRef.start)
                         baseline.linkTo(p1TensRef.baseline)
+                        start.linkTo(p1TensRef.end)
                     }
             )
         }
@@ -401,6 +413,7 @@ fun PreviewMultiplicationBoard2x2() {
             this[MulCell.MultiplierOnes]    = MulInputCell(MulCell.MultiplierOnes,    value = "6")
 
             // 부분곱(예시)
+            this[MulCell.P1Thousands]  = MulInputCell(MulCell.P1Thousands,  value = "1")
             this[MulCell.P1Hundreds]      = MulInputCell(MulCell.P1Hundreds,      value = "2")
             this[MulCell.P1Tens]      = MulInputCell(MulCell.P1Tens,      value = "2")
             this[MulCell.P1Ones]      = MulInputCell(MulCell.P1Ones,      value = "8")

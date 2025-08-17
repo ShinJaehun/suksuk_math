@@ -17,6 +17,8 @@ object MulStateInfoBuilder {
         val p1Tens = m1TO % 10
         val carryP1Hundreds = m1TO / 10
 
+        val isMultiplierOnesZero = MlierO == 0
+
         val m1HO = McandH * MlierO + carryP1Hundreds
         val p1Hundreds = m1HO % 10
         val p1Thousands = m1HO / 10
@@ -70,7 +72,8 @@ object MulStateInfoBuilder {
             carrySumHundreds = carrySumHundreds,
             carrySumThousands = carrySumThousands,
             carrySumTenThousands = carrySumTenThousands,
-            total = total
+            total = total,
+            isMultiplierOnesZero = isMultiplierOnesZero
         )
     }
 }

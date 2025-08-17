@@ -30,5 +30,7 @@ data class MulStateInfo (
     val carrySumThousands: Int,
     val carrySumTenThousands: Int,
 
-    val total: Int
+    val total: Int,
+
+    val isMultiplierOnesZero: Boolean
 )

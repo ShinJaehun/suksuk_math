@@ -119,11 +119,34 @@ class MulPhaseEvaluator @Inject constructor() {
     ): Int? = when (phase) {
 
         MulPhase.InputMultiply1 -> when (cell) {
-            MulCell.CarryP1Tens     -> i.carryP1Tens
-            MulCell.P1Ones          -> i.product1Ones
-            MulCell.P1Tens          -> i.product1Tens
-            MulCell.P1Hundreds      -> i.product1Hundreds
-            MulCell.P1Thousands     -> i.product1Thousands
+            MulCell.CarryP1Tens -> {
+                if(i.isMultiplierOnesZero) {
+                    i.carryP2Tens
+                } else {
+                    i.carryP1Tens
+                }
+            }
+            MulCell.P1Ones -> i.product1Ones
+            MulCell.P1Tens -> {
+                if(i.isMultiplierOnesZero) {
+                    i.product2Tens
+                } else {
+                    i.product1Tens
+                }
+            }
+            MulCell.P1Hundreds ->
+                if(i.isMultiplierOnesZero) {
+                    i.product2Hundreds
+                } else {
+                    i.product1Hundreds
+                }
+            MulCell.P1Thousands     -> {
+                if(i.isMultiplierOnesZero) {
+                    i.product2Thousands
+                } else {
+                    i.product1Thousands
+                }
+            }
             else -> null
         }
 
