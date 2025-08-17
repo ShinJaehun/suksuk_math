@@ -22,7 +22,8 @@ class MainActivity : ComponentActivity() {
 //            MultiplicationScreen(multiplicand=11, multiplier=11)
 //            MultiplicationScreen(multiplicand=76, multiplier=89)
 //            MultiplicationScreen(multiplicand=76, multiplier=80)
-            DivisionScreenV2(dividend=978, divisor=21)
+            MultiplicationScreen(multiplicand=234, multiplier=50)
+//            DivisionScreenV2(dividend=978, divisor=21)
         }
     }
 }

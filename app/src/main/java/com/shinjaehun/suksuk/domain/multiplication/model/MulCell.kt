@@ -10,6 +10,7 @@ enum class MulCell {
     MultiplierTens,
     MultiplierOnes,
 
+    P1TenThousands,
     P1Thousands,
     P1Hundreds,
     P1Tens,

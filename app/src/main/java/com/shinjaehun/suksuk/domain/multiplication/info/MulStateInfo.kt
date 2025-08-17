@@ -32,5 +32,6 @@ data class MulStateInfo (
 
     val total: Int,
 
-    val isMultiplierOnesZero: Boolean
+    val isMultiplierOnesZero: Boolean,
+    val hasHundredsDigit: Boolean,
 )

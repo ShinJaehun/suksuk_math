@@ -297,43 +297,143 @@ class MultiplicationViewModelTest {
                     "20",  // (실수학: McandOnes×MlierT → carry=2, tens=0)
                     "10"   // (실수학: McandTens×MlierT + carry → carry=1, hundreds=0)
                 )
+            ),
+
+            // === 3×2: 123 × 45 = 5535 (대표 예시, 캐리 혼합) ===
+            // P1: 123×5 = 615 → P1Ones=5, c1=1; tens: 2×5+1=11→ P1Tens=1, c2=1; hundreds: 1×5+1=6→ P1Hundreds=6
+            // P2: 123×4(십의 자리)=4920 → (shift)
+            //   ones(shifted → tens): 3×4=12 → P2Tens=2, c=1
+            //   tens(shifted → hundreds): 2×4+1=9 → P2Hundreds=9, c=0
+            //   hundreds(shifted → thousands): 1×4=4 → P2Thousands=4
+            // SUM: 0615 + 4920 = 5535
+            Triple(
+                "ThreeByTwo: 123 × 45",
+                123 to 45,
+                listOf(
+                    // P1 (×5)
+                    "15","11","6",
+                    // P2 (×4, shift)
+                    "12","9","4",
+                    // SUM
+                    "5","3","15","5"  // CarrySumH=1, ones=5, tens=3, hundreds=5, thousands=5 → 5535
+                )
+            ),
+
+            Triple(
+                "ThreeByTwo: 234 × 56",
+                234 to 56,
+                listOf(
+                    // P1 (×6)
+                    "24","20","14",
+                    // P2 (×5, shift)
+                    "20","17","11",
+                    // SUM
+                    "4","0","11","3", "1" // =13104
+                )
+            ),
+
+            Triple(
+                "ThreeByTwo: 305 × 27",
+                305 to 27,
+                listOf(
+                    // P1 (×7)
+                    "35","3","21",
+                    // P2 (×2, shift)
+                    "10","1", "6",
+                    // SUM
+                    "5","3","2","8" // =8235
+                )
+            ),
+
+            Triple(
+                "ThreeByTwo: 999 × 99",
+                999 to 99,
+                listOf(
+                    // P1 (×9)
+                    "81","89","89",
+                    // P2 (×9, shift)
+                    "81","89","89",
+                    // SUM
+                    "1","10","19","18","9" // = 98901
+                )
+            ),
+
+
+            Triple(
+                "ThreeByTwo (edge): 340 × 90",
+                340 to 90,
+                listOf(
+                    "0", "0", "36", "30"
+                )
+            ),
+
+            // 2) 중간 자릿수 0 포함: 101 × 23 = 2323
+            //   - mcT=0 → 캐리 전달/스킵 동작 확인
+            Triple(
+                "ThreeByTwo (edge): 101 × 23",
+                101 to 23,
+                listOf(
+                    // P1 (×3)
+                    "3","0","3",
+                    // P2 (×2, shift)
+                    "2","0","2",
+                    // SUM
+                    "3","2","3","2" // = 2323
+                )
+            ),
+
+            // 3) 캐리 체인 길게: 587 × 96 = 56352
+            //   - carryP1Tens/Hundreds, carryP2Tens/Hundreds 모두 발생
+            //   - sumTenThousands > 0 확인
+            Triple(
+                "ThreeByTwo (edge): 587 × 96",
+                587 to 96,
+                listOf(
+                    // P1 (×6)
+                    "42","52","35",
+                    // P2 (×9, shift)
+                    "63","78","52",
+                    // SUM
+                    "2","5","13","6","5" // = 56352
+                )
+            ),
+
+            // 4) tens-only × tens-only: 110 × 20 = 2200
+            //   - P1 전부 0, P2에서만 값 생성, 합산 단순
+            Triple(
+                "ThreeByTwo (edge): 110 × 20",
+                110 to 20,
+                listOf(
+                    "0", "0", "2", "2"
+                )
+            ),
+
+            // 5) 백의 자리 0 + 큰 캐리 혼합: 405 × 19 = 7695
+            //   - mcH=4, mcT=0, mcO=5 조합으로 캐리/영자릿 혼재
+            Triple(
+                "ThreeByTwo (edge): 405 × 19",
+                405 to 19,
+                listOf(
+                    // P1 (×9)
+                    "45","4","36",
+                    // P2 (×1, shift)
+                    "5","0","4",
+                    // SUM
+                    "5","9","6","7" // = 7695
+                )
+            ),
+
+
+            Triple(
+                "ThreeByTwo (edge): 808 × 90",
+                808 to 90,
+                listOf(
+                    // P1 (×0)
+                    "0",
+                    // P2 (×9, shift)
+                    "72","7","72",
+                )
             )
-
-//            // === 3×2: 123 × 45 = 5535 (대표 예시, 캐리 혼합) ===
-//            // P1: 123×5 = 615 → P1Ones=5, c1=1; tens: 2×5+1=11→ P1Tens=1, c2=1; hundreds: 1×5+1=6→ P1Hundreds=6
-//            // P2: 123×4(십의 자리)=4920 → (shift)
-//            //   ones(shifted → tens): 3×4=12 → P2Tens=2, c=1
-//            //   tens(shifted → hundreds): 2×4+1=9 → P2Hundreds=9, c=0
-//            //   hundreds(shifted → thousands): 1×4=4 → P2Thousands=4
-//            // SUM: 0615 + 4920 = 5535
-//            Triple(
-//                "ThreeByTwo: 123 × 45",
-//                123 to 45,
-//                listOf(
-//                    // P1 (×5)
-//                    "1","5","1","1","6",
-//                    // P2 (×4, shift)
-//                    "1","2","9","4",
-//                    // SUM
-//                    "1","5","3","5","5"  // CarrySumH=1, ones=5, tens=3, hundreds=5, thousands=5 → 5535
-//                )
-//            ),
-
-//            // === 3×2: 150 × 30 = 4500 (0 처리/자리이동 검증) ===
-//            // P1: 150×0 = 0 → (대부분 스킵/0입력)
-//            // P2: 150×3(십의 자리)=450 → shift → 4500
-//            Triple(
-//                "ThreeByTwo: 150 × 30",
-//                150 to 30,
-//                listOf(
-//                    // P1 (×0)
-//                    "0","0","0",                 // 캐리/부분곱이 0으로 처리되는 흐름
-//                    // P2 (×3, shift)
-//                    "0","0","5","4",             // P2Tens=0, H=5, Th=4  (실제 네 순서에 맞게 조정)
-//                    // SUM
-//                    "0","0","0","5","4"          // 4500
-//                )
-//            ),
         )
 
         for ((name, pair, inputs) in cases) {
