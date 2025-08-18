@@ -1,10 +1,14 @@
 package com.shinjaehun.suksuk.presentation.division
 
+import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
@@ -20,17 +24,14 @@ import com.shinjaehun.suksuk.presentation.division.model.DivisionInputCellV2
 import com.shinjaehun.suksuk.presentation.division.model.DivisionUiStateV2
 import com.shinjaehun.suksuk.presentation.division.model.SubtractLineType
 
-
 @Composable
 fun DivisionScreen3By2(
     uiState: DivisionUiStateV2,
 ) {
-
     val cellWidth = 42.dp
     val borrowCellMinWidth = 32.dp
 
     val bracketStartMargin = 60.dp
-
 
     ConstraintLayout(
         modifier = Modifier
@@ -126,7 +127,7 @@ fun DivisionScreen3By2(
                     bottom.linkTo(dividendTensRef.top)
                     start.linkTo(dividendTensRef.start, margin = (-8).dp)
                 }
-                .testTag("borrowed10-dividend-cell")
+                .testTag("borrowed10-dividend-tens-cell")
         )
 
         val dividendTensBorrowCell =
@@ -169,7 +170,7 @@ fun DivisionScreen3By2(
                     start.linkTo(dividendOnesRef.start)
                     bottom.linkTo(dividendOnesRef.top)
                 }
-                .testTag("borrowed10-dividend-cell")
+                .testTag("borrowed10-dividend-ones-cell")
         )
 
         val divisorOnesCell =
@@ -194,7 +195,7 @@ fun DivisionScreen3By2(
                 .padding(horizontal = 8.dp)
                 .constrainAs(divisorTensRef) {
                     end.linkTo(divisorOnesRef.start)
-                    baseline.linkTo(dividendTensRef.baseline)
+                    top.linkTo(divisorOnesRef.top)
                 }
         )
 
@@ -249,8 +250,8 @@ fun DivisionScreen3By2(
                 .width(cellWidth)
                 .padding(horizontal = 8.dp)
                 .constrainAs(quotientOnesRef) {
-                    start.linkTo(quotientTensRef.end)
-                    baseline.linkTo(quotientTensRef.baseline)
+                    start.linkTo(dividendOnesRef.start)
+                    bottom.linkTo(dividendTensRef.top, margin = 40.dp)
                 }
         )
 
@@ -377,7 +378,6 @@ fun DivisionScreen3By2(
                 }
         )
 
-
         val subtract1OnesCell = uiState.cells[DivisionCell.Subtract1Ones] ?:
             DivisionInputCellV2(cellName = DivisionCell.Subtract1Ones)
         DivNumberText(
@@ -459,6 +459,7 @@ fun DivisionScreen3By2(
                     .testTag("subtraction2-line")
             )
         }
+        Log.d("UI-3x2", "after subline2")
 
         val subtract2TensCell = uiState.cells[DivisionCell.Subtract2Tens] ?:
             DivisionInputCellV2(cellName = DivisionCell.Subtract2Tens)

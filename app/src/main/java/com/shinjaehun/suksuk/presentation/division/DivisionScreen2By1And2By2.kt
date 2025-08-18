@@ -187,8 +187,8 @@ fun DivisionScreen2By1And2By2(
                 .width(cellWidth)
                 .padding(horizontal = 8.dp)
                 .constrainAs(quotientOnesRef) {
-                    start.linkTo(quotientTensRef.end)
-                    baseline.linkTo(quotientTensRef.baseline)
+                    start.linkTo(dividendOnesRef.start)
+                    bottom.linkTo(dividendTensRef.top, margin = 40.dp)
                 }
         )
 

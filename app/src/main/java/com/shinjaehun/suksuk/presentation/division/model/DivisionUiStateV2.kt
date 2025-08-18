@@ -9,5 +9,5 @@ data class DivisionUiStateV2(
     val currentStep: Int = 0,
     val isCompleted: Boolean = false,
     val feedback: String? = null,
-    val pattern: DivisionPatternV2 = DivisionPatternV2.TwoByTwo
+    val pattern: DivisionPatternV2? = null
 )
