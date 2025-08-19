@@ -1,23 +1,14 @@
 package com.shinjaehun.suksuk.division
 
+import androidx.lifecycle.SavedStateHandle
 import com.shinjaehun.suksuk.TestFactoryBuilders
-import com.shinjaehun.suksuk.domain.DomainStateFactory
-import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
-import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequenceProvider
 import com.shinjaehun.suksuk.domain.division.evaluator.DivisionPhaseEvaluatorV2
-import com.shinjaehun.suksuk.domain.division.sequence.creator.ThreeByTwoDivPhaseSequenceCreator
-import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByOneDivPhaseSequenceCreator
-import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByTwoDivPhaseSequenceCreator
-import com.shinjaehun.suksuk.domain.multiplication.info.MulStateInfo
-import com.shinjaehun.suksuk.domain.multiplication.sequence.MulPhaseSequence
-import com.shinjaehun.suksuk.domain.multiplication.sequence.MulPhaseSequenceProvider
-import com.shinjaehun.suksuk.domain.multiplication.sequence.creator.ThreeByTwoMulPhaseSequenceCreator
-import com.shinjaehun.suksuk.domain.multiplication.sequence.creator.TwoByTwoMulPhaseSequenceCreator
-import com.shinjaehun.suksuk.domain.pattern.MulPattern
+import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
 import com.shinjaehun.suksuk.presentation.division.DivisionViewModelV2
 import com.shinjaehun.suksuk.presentation.division.model.DivisionUiStateV2
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
@@ -29,6 +20,7 @@ class DivisionViewModelV2Test {
     fun setup() {
         val factory = TestFactoryBuilders.unifiedFactoryForDivision()
         viewModel = DivisionViewModelV2(
+            savedStateHandle = SavedStateHandle(mapOf("autoStart" to false)),
             phaseEvaluator = DivisionPhaseEvaluatorV2(),
             domainStateFactory = factory,
         )

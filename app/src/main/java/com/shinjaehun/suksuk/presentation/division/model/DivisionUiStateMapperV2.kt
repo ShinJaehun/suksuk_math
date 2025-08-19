@@ -1,21 +1,14 @@
 package com.shinjaehun.suksuk.presentation.division.model
 
-import com.shinjaehun.suksuk.common.ui.Highlight
-import com.shinjaehun.suksuk.domain.OpType
-import com.shinjaehun.suksuk.domain.Problem
-import com.shinjaehun.suksuk.domain.model.DivisionDomainStateV2
+import com.shinjaehun.suksuk.presentation.common.Highlight
+import com.shinjaehun.suksuk.domain.division.model.DivisionCell
 import com.shinjaehun.suksuk.domain.division.model.DivisionPhaseV2
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseStep
-import com.shinjaehun.suksuk.domain.division.model.DivisionCell
-import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
-import com.shinjaehun.suksuk.domain.pattern.detectPattern
+import com.shinjaehun.suksuk.domain.model.DivisionDomainStateV2
 import java.util.EnumMap
 
 fun mapDivisionUiStateV2(domain: DivisionDomainStateV2, currentInput: String): DivisionUiStateV2 {
-    val pattern = detectPattern(
-        Problem(OpType.Division, domain.info.dividend, domain.info.divisor)
-    ) as DivisionPatternV2
-
+    val pattern = domain.phaseSequence.pattern
     val steps = domain.phaseSequence.steps
     val currentStepIndex = domain.currentStepIndex.coerceIn(0, steps.lastIndex)
     val curPhaseStep = steps[currentStepIndex]
@@ -195,45 +188,6 @@ private fun buildSubtractLineTypes(
 
     return map
 }
-
-//fun assignSubtractLineType(
-//    cellName: DivisionCellName,
-//    subtractLineSet: Set<DivisionCellName>,
-//    currentTargets: Set<DivisionCellName>
-//): SubtractLineType {
-//    val isTarget = subtractLineSet.contains(cellName) || currentTargets.contains(cellName)
-//
-//    if (!isTarget) return SubtractLineType.None
-//
-//    return when (cellName) {
-//        in LINE1_ANCHORS -> SubtractLineType.SubtractLine1
-//        in LINE2_ANCHORS -> SubtractLineType.SubtractLine2
-//        else -> {
-//            // 렌더러가 Pending을 숨기면 Line1로 폴백하거나, 로그 남기기
-//            // println("WARN subtract-line unknown anchor=$cellName, fallback=Line1")
-//            SubtractLineType.SubtractLine1
-//        }
-//    }
-//}
-
-
-//fun calculateInputIndexForCell(
-//    steps: List<DivisionPhaseStep>,
-//    currentStep: Int,
-//    cell: DivisionCell
-//): Int? {
-//    var idx = 0
-//    for ((stepIdx, step) in steps.withIndex()) {
-//        for (c in step.editableCells) {
-//            if (c == cell) {
-//                // 현재 step 또는 이전 step에 속한 editable cell이면 idx 반환
-//                return if (stepIdx <= currentStep) idx else null
-//            }
-//            idx++
-//        }
-//    }
-//    return null
-//}
 
 private fun calculateInputIndexForCell(
     steps: List<DivisionPhaseStep>,

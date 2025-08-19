@@ -13,8 +13,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.shinjaehun.suksuk.data.DefaultProblemRouter
 import com.shinjaehun.suksuk.domain.OpType
+import com.shinjaehun.suksuk.domain.ProblemSessionFactory
 import com.shinjaehun.suksuk.domain.SessionMode
 import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
 import com.shinjaehun.suksuk.presentation.division.DivisionScreenV2
@@ -23,16 +23,17 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun DivisionScreenEntry(
+    problemFactory: ProblemSessionFactory,
     mode: SessionMode,
     pattern: DivisionPatternV2?,                          // ← 추가: "TwoByOne" | "TwoByTwo" | "ThreeByTwo"
     overrideOperands: Pair<Int, Int>?,       // 딥링크/디버그 시 1회 고정 문제
     onExit: () -> Unit
 ) {
-    val router = remember { DefaultProblemRouter() }
+//    val router = remember { DefaultProblemRouter() }
 
     // Source는 mode + pattern + override 조합에 종속
     val source = remember(mode, pattern, overrideOperands) {
-        router.openSession(
+        problemFactory.openSession(
             op = OpType.Division,
             mode = mode,
             pattern = pattern,

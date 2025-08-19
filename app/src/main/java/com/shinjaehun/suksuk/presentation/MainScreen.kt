@@ -24,14 +24,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shinjaehun.suksuk.R
-import com.shinjaehun.suksuk.ui.theme.SukSukTheme
 import com.shinjaehun.suksuk.presentation.component.OutlinedWhiteButton
+import com.shinjaehun.suksuk.ui.theme.SukSukTheme
 
 @Composable
 fun MainScreen(
@@ -74,9 +75,9 @@ fun MainScreen(
                 label = "문제풀기",
                 onClick = { showPicker = true },
                 modifier = Modifier
-                    .testTag("main_problem_button")
                     .widthIn(min = 160.dp)
                     .height(48.dp)
+                    .semantics { testTag = "main_problem_button" }
             )
         }
 

@@ -4,11 +4,18 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.shinjaehun.suksuk.domain.ProblemSessionFactory
+import com.shinjaehun.suksuk.presentation.division.DivisionScreenV2
 import com.shinjaehun.suksuk.ui.theme.SukSukTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var problemFactory: ProblemSessionFactory
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -22,10 +29,10 @@ class MainActivity : ComponentActivity() {
 //            MultiplicationScreen(multiplicand=76, multiplier=89)
 //            MultiplicationScreen(multiplicand=76, multiplier=80)
 //            MultiplicationScreen(multiplicand=234, multiplier=50)
-//            DivisionScreenV2(dividend=978, divisor=21)
+//            DivisionScreenV2(dividend=610, divisor=13)
 
             SukSukTheme {
-                AppNavHost()
+                AppNavHost(problemFactory)
             }
         }
     }

@@ -5,10 +5,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
 import com.shinjaehun.suksuk.presentation.component.InputPanel
 
@@ -23,7 +23,7 @@ fun DivisionScreenV2(
         viewModel.startNewProblem(dividend, divisor)
     }
 
-    val uiState = viewModel.uiState.collectAsState().value
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     if (uiState.pattern == null) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
@@ -34,8 +34,8 @@ fun DivisionScreenV2(
     Box(modifier = Modifier.fillMaxSize()){
         when(uiState.pattern) {
             DivisionPatternV2.TwoByOne,
-            DivisionPatternV2.TwoByTwo -> DivisionScreen2By1And2By2(uiState, uiState.pattern)
-            DivisionPatternV2.ThreeByTwo ->DivisionScreen3By2(uiState)
+            DivisionPatternV2.TwoByTwo -> DivisionBoard2By1And2By2(uiState, uiState.pattern)
+            DivisionPatternV2.ThreeByTwo ->DivisionBoard3By2(uiState)
         }
 
         Box(

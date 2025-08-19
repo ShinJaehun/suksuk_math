@@ -17,11 +17,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MultiplicationViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle = SavedStateHandle(),
+//    savedStateHandle: SavedStateHandle = SavedStateHandle(),
+    private val savedStateHandle: SavedStateHandle,
     private val phaseEvaluator: MulPhaseEvaluator,
     private val domainStateFactory: DomainStateFactory,
 ): ViewModel() {
-    private val autoStart: Boolean = savedStateHandle["autoStart"] ?: true
+//    private val autoStart: Boolean = savedStateHandle["autoStart"] ?: true
 
     private val _uiState = MutableStateFlow(MulUiState())
     val uiState: StateFlow<MulUiState> = _uiState.asStateFlow()
@@ -31,11 +32,11 @@ class MultiplicationViewModel @Inject constructor(
 
     private lateinit var domainState: MulDomainState
 
-    init {
-        if(autoStart) {
-            startNewProblem(12, 34)
-        }
-    }
+//    init {
+//        if(autoStart) {
+//            startNewProblem(12, 34)
+//        }
+//    }
 
     fun startNewProblem(multiplicand: Int, multiplier: Int) {
         val ds = domainStateFactory.create(Problem(OpType.Multiplication, multiplicand, multiplier))

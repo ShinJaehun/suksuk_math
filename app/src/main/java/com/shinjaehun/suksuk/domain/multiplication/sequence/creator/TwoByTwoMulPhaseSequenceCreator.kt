@@ -5,6 +5,7 @@ import com.shinjaehun.suksuk.domain.multiplication.model.MulCell
 import com.shinjaehun.suksuk.domain.multiplication.model.MulPhase
 import com.shinjaehun.suksuk.domain.multiplication.sequence.MulPhaseSequence
 import com.shinjaehun.suksuk.domain.multiplication.sequence.MulPhaseStep
+import com.shinjaehun.suksuk.domain.pattern.MulPattern
 import javax.inject.Inject
 
 class TwoByTwoMulPhaseSequenceCreator @Inject constructor() : MulPhaseSequenceCreator {
@@ -82,29 +83,6 @@ class TwoByTwoMulPhaseSequenceCreator @Inject constructor() : MulPhaseSequenceCr
                     highlightCells = listOf(MulCell.MultiplicandTens, MulCell.MultiplierOnes)
                 )
             }
-//
-//        // Hundreds (+Thousands)
-//        if(info.product1Thousands > 0) {
-//            steps += MulPhaseStep(
-//                phase = MulPhase.InputMultiply1,
-//                editableCells = listOf(MulCellName.P1Thousands, MulCellName.P1Hundreds),
-//                highlightCells = listOf(
-//                    MulCellName.MultiplicandHundreds,
-//                    MulCellName.MultiplierOnes,
-//                    MulCellName.CarryP1Hundreds
-//                ),
-//            )
-//        } else {
-//            steps += MulPhaseStep(
-//                phase = MulPhase.InputMultiply1,
-//                editableCells = listOf(MulCellName.P1Hundreds),
-//                highlightCells = listOf(
-//                    MulCellName.MultiplicandHundreds,
-//                    MulCellName.MultiplierOnes,
-//                    MulCellName.CarryP1Hundreds
-//                ),
-//            )
-//        }
 
             steps += MulPhaseStep(
                 phase = MulPhase.PrepareNextOp,
@@ -146,29 +124,6 @@ class TwoByTwoMulPhaseSequenceCreator @Inject constructor() : MulPhaseSequenceCr
                     highlightCells = listOf(MulCell.MultiplicandTens, MulCell.MultiplierTens)
                 )
             }
-
-//        // Thousands (+ TenThousands )
-//        if(info.product2Thousands > 0) {
-//            steps += MulPhaseStep(
-//                phase = MulPhase.InputMultiply2,
-//                editableCells = listOf(MulCellName.P2Thousands, MulCellName.P2Hundreds),
-//                highlightCells = listOf(
-//                    MulCellName.MultiplicandHundreds,
-//                    MulCellName.MultiplierTens,
-//                    MulCellName.CarryP2Hundreds
-//                ),
-//            )
-//        } else {
-//            steps += MulPhaseStep(
-//                phase = MulPhase.InputMultiply2,
-//                editableCells = listOf(MulCellName.P2Thousands),
-//                highlightCells = listOf(
-//                    MulCellName.MultiplicandHundreds,
-//                    MulCellName.MultiplierTens,
-//                    MulCellName.CarryP2Hundreds
-//                )
-//            )
-//        }
 
             // ---------- SUM ----------
             steps += MulPhaseStep( // Ones
@@ -239,7 +194,8 @@ class TwoByTwoMulPhaseSequenceCreator @Inject constructor() : MulPhaseSequenceCr
         steps += MulPhaseStep(phase = MulPhase.Complete)
 
         return MulPhaseSequence(
-            steps = steps
+            steps = steps,
+            pattern = MulPattern.TwoByTwo
         )
     }
 }

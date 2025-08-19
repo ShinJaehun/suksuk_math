@@ -3,6 +3,7 @@ package com.shinjaehun.suksuk.division
 import com.shinjaehun.suksuk.domain.division.model.DivisionPhaseV2
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseStep
 import com.shinjaehun.suksuk.domain.division.model.DivisionCell
+import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
 import com.shinjaehun.suksuk.presentation.division.model.mapDivisionUiStateV2
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
@@ -30,6 +31,7 @@ class DivisionUiStateV2BuilderTest {
             steps,
             currentStepIndex = 6,
             inputs = listOf("1", "3", "1", "6", "5", "1", "5", "1"),
+            pattern = DivisionPatternV2.TwoByOne
         )
 
         val uiState = mapDivisionUiStateV2(domainState, "")
@@ -63,6 +65,7 @@ class DivisionUiStateV2BuilderTest {
             steps,
             currentStepIndex = 6,
             inputs = listOf("1", "6", "1", "1", "1", "6", "5"),
+            pattern = DivisionPatternV2.TwoByOne
         )
 
         val uiState = mapDivisionUiStateV2(domainState, "")
@@ -95,6 +98,7 @@ class DivisionUiStateV2BuilderTest {
             steps,
             currentStepIndex = 6,
             inputs = listOf("1", "4", "0", "5", "1", "4", "1"),
+            pattern = DivisionPatternV2.TwoByOne
         )
 
         val uiState = mapDivisionUiStateV2(domainState, "")
@@ -120,8 +124,14 @@ class DivisionUiStateV2BuilderTest {
             DivisionPhaseStep(DivisionPhaseV2.InputSubtract1, listOf(DivisionCell.Subtract2Ones)),
             DivisionPhaseStep(DivisionPhaseV2.Complete)
         )
-        val domainState = createDomainState(50, 3, steps, currentStepIndex = 8,
-            inputs = listOf("1","3","2","0","6","1","8","1","2"))
+        val domainState = createDomainState(
+            50,
+            3,
+            steps,
+            currentStepIndex = 8,
+            inputs = listOf("1", "3", "2", "0", "6", "1", "8", "1", "2"),
+            pattern = DivisionPatternV2.TwoByOne
+        )
 
         val uiState = mapDivisionUiStateV2(domainState, "")
         assertEquals("1", uiState.cells[DivisionCell.QuotientTens]?.value)
@@ -142,8 +152,14 @@ class DivisionUiStateV2BuilderTest {
             DivisionPhaseStep(DivisionPhaseV2.InputSubtract1, listOf(DivisionCell.Subtract1Ones)),
             DivisionPhaseStep(DivisionPhaseV2.Complete)
         )
-        val domainState = createDomainState(24, 7, steps, currentStepIndex = 3,
-            inputs = listOf("3","2","1","3"))
+        val domainState = createDomainState(
+            24,
+            7,
+            steps,
+            currentStepIndex = 3,
+            inputs = listOf("3", "2", "1", "3"),
+            pattern = DivisionPatternV2.TwoByOne
+        )
 
         val uiState = mapDivisionUiStateV2(domainState, "")
         assertEquals("3", uiState.cells[DivisionCell.QuotientOnes]?.value)
@@ -161,8 +177,14 @@ class DivisionUiStateV2BuilderTest {
             DivisionPhaseStep(DivisionPhaseV2.InputSubtract1, listOf(DivisionCell.Subtract1Ones)),
             DivisionPhaseStep(DivisionPhaseV2.Complete)
         )
-        val domainState = createDomainState(62, 7, steps, currentStepIndex = 4,
-            inputs = listOf("8","5","6","5","6"))
+        val domainState = createDomainState(
+            62,
+            7,
+            steps,
+            currentStepIndex = 4,
+            inputs = listOf("8", "5", "6", "5", "6"),
+            pattern = DivisionPatternV2.TwoByOne
+        )
 
         val uiState = mapDivisionUiStateV2(domainState, "")
         assertEquals("8", uiState.cells[DivisionCell.QuotientOnes]?.value)
@@ -181,8 +203,14 @@ class DivisionUiStateV2BuilderTest {
             DivisionPhaseStep(DivisionPhaseV2.InputSubtract1, listOf(DivisionCell.Subtract1Ones)),
             DivisionPhaseStep(DivisionPhaseV2.Complete)
         )
-        val domainState = createDomainState(96, 12, steps, currentStepIndex = 4,
-            inputs = listOf("8","1","6","9","0"))
+        val domainState = createDomainState(
+            96,
+            12,
+            steps,
+            currentStepIndex = 4,
+            inputs = listOf("8", "1", "6", "9", "0"),
+            pattern = DivisionPatternV2.TwoByTwo
+        )
 
         val uiState = mapDivisionUiStateV2(domainState, "")
         assertEquals("8", uiState.cells[DivisionCell.QuotientOnes]?.value)
@@ -202,8 +230,14 @@ class DivisionUiStateV2BuilderTest {
             DivisionPhaseStep(DivisionPhaseV2.InputSubtract1, listOf(DivisionCell.Subtract1Ones)),
             DivisionPhaseStep(DivisionPhaseV2.Complete)
         )
-        val domainState = createDomainState(81, 12, steps, currentStepIndex = 5,
-            inputs = listOf("6","1","2","7","1","9"))
+        val domainState = createDomainState(
+            81,
+            12,
+            steps,
+            currentStepIndex = 5,
+            inputs = listOf("6", "1", "2", "7", "1", "9"),
+            pattern = DivisionPatternV2.TwoByTwo
+        )
 
         val uiState = mapDivisionUiStateV2(domainState, "")
         assertEquals("6", uiState.cells[DivisionCell.QuotientOnes]?.value)
@@ -223,8 +257,14 @@ class DivisionUiStateV2BuilderTest {
             DivisionPhaseStep(DivisionPhaseV2.InputSubtract1, listOf(DivisionCell.Subtract1Ones)),
             DivisionPhaseStep(DivisionPhaseV2.Complete)
         )
-        val domainState = createDomainState(68, 34, steps, currentStepIndex = 3,
-            inputs = listOf("2","8","6","0"))
+        val domainState = createDomainState(
+            68,
+            34,
+            steps,
+            currentStepIndex = 3,
+            inputs = listOf("2", "8", "6", "0"),
+            pattern = DivisionPatternV2.TwoByTwo
+        )
 
         val uiState = mapDivisionUiStateV2(domainState, "")
         assertEquals("2", uiState.cells[DivisionCell.QuotientOnes]?.value)
@@ -245,8 +285,14 @@ class DivisionUiStateV2BuilderTest {
             DivisionPhaseStep(DivisionPhaseV2.InputSubtract1, listOf(DivisionCell.Subtract1Ones)),
             DivisionPhaseStep(DivisionPhaseV2.Complete)
         )
-        val domainState = createDomainState(50, 22, steps, currentStepIndex = 4,
-            inputs = listOf("2","4","4","4","6"))
+        val domainState = createDomainState(
+            50,
+            22,
+            steps,
+            currentStepIndex = 4,
+            inputs = listOf("2", "4", "4", "4", "6"),
+            pattern = DivisionPatternV2.TwoByTwo
+        )
 
         val uiState = mapDivisionUiStateV2(domainState, "")
         assertEquals("2", uiState.cells[DivisionCell.QuotientOnes]?.value)
@@ -266,8 +312,14 @@ class DivisionUiStateV2BuilderTest {
             DivisionPhaseStep(DivisionPhaseV2.InputSubtract1, listOf(DivisionCell.Subtract1Tens)),
             DivisionPhaseStep(DivisionPhaseV2.Complete)
         )
-        val domainState = createDomainState(57, 22, steps, currentStepIndex = 5,
-            inputs = listOf("2","4","4","3","1"))
+        val domainState = createDomainState(
+            57,
+            22,
+            steps,
+            currentStepIndex = 5,
+            inputs = listOf("2", "4", "4", "3", "1"),
+            pattern = DivisionPatternV2.TwoByTwo
+        )
 
         val uiState = mapDivisionUiStateV2(domainState, "")
         assertEquals("2", uiState.cells[DivisionCell.QuotientOnes]?.value)
@@ -288,8 +340,14 @@ class DivisionUiStateV2BuilderTest {
             DivisionPhaseStep(DivisionPhaseV2.InputSubtract1, listOf(DivisionCell.Subtract1Tens)),
             DivisionPhaseStep(DivisionPhaseV2.Complete)
         )
-        val domainState = createDomainState(50, 13, steps, currentStepIndex = 6,
-            inputs = listOf("3","9","3","4","1","1"))
+        val domainState = createDomainState(
+            50,
+            13,
+            steps,
+            currentStepIndex = 6,
+            inputs = listOf("3", "9", "3", "4", "1", "1"),
+            pattern = DivisionPatternV2.TwoByTwo
+        )
 
         val uiState = mapDivisionUiStateV2(domainState, "")
         assertEquals("3", uiState.cells[DivisionCell.QuotientOnes]?.value)
@@ -310,8 +368,14 @@ class DivisionUiStateV2BuilderTest {
             DivisionPhaseStep(DivisionPhaseV2.InputSubtract1, listOf(DivisionCell.Subtract1Tens)),
             DivisionPhaseStep(DivisionPhaseV2.Complete)
         )
-        val domainState = createDomainState(95, 28, steps, currentStepIndex = 5,
-            inputs = listOf("3","2","4","8","1","1"))
+        val domainState = createDomainState(
+            95,
+            28,
+            steps,
+            currentStepIndex = 5,
+            inputs = listOf("3", "2", "4", "8", "1", "1"),
+            pattern = DivisionPatternV2.TwoByTwo
+        )
 
         val uiState = mapDivisionUiStateV2(domainState, "")
         assertEquals("3", uiState.cells[DivisionCell.QuotientOnes]?.value)
@@ -333,8 +397,14 @@ class DivisionUiStateV2BuilderTest {
             DivisionPhaseStep(DivisionPhaseV2.InputSubtract1, listOf(DivisionCell.Subtract1Tens)),
             DivisionPhaseStep(DivisionPhaseV2.Complete)
         )
-        val domainState = createDomainState(80, 17, steps, currentStepIndex = 6,
-            inputs = listOf("4","2","8","6","7","2","1"))
+        val domainState = createDomainState(
+            80,
+            17,
+            steps,
+            currentStepIndex = 6,
+            inputs = listOf("4", "2", "8", "6", "7", "2", "1"),
+            pattern = DivisionPatternV2.TwoByTwo
+        )
 
         val uiState = mapDivisionUiStateV2(domainState, "")
         assertEquals("4", uiState.cells[DivisionCell.QuotientOnes]?.value)

@@ -15,9 +15,11 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DivisionV2Module {
 
+    @Singleton
     @Provides
     fun providePhaseEvaluatorV2(): DivisionPhaseEvaluatorV2 = DivisionPhaseEvaluatorV2()
 
+    @Singleton
     @Provides
     fun providePhaseSequenceProvider(
         twoByOneCreator: TwoByOneDivPhaseSequenceCreator,

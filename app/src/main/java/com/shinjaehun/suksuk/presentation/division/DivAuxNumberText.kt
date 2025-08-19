@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shinjaehun.suksuk.R
-import com.shinjaehun.suksuk.common.ui.Highlight
+import com.shinjaehun.suksuk.presentation.common.Highlight
 import com.shinjaehun.suksuk.presentation.division.model.CrossOutType
 import com.shinjaehun.suksuk.presentation.division.model.DivisionInputCellV2
 

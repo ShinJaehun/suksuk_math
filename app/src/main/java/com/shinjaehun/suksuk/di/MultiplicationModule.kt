@@ -15,9 +15,11 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object MultiplicationModule {
 
+    @Singleton
     @Provides
     fun provideMulPhaseEvaluatorV2(): MulPhaseEvaluator = MulPhaseEvaluator()
 
+    @Singleton
     @Provides
     fun provideMulPhaseSequenceProvider(
         twoByTwoCreator: TwoByTwoMulPhaseSequenceCreator,

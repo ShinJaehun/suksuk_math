@@ -5,6 +5,7 @@ import com.shinjaehun.suksuk.domain.multiplication.model.MulCell
 import com.shinjaehun.suksuk.domain.multiplication.model.MulPhase
 import com.shinjaehun.suksuk.domain.multiplication.sequence.MulPhaseSequence
 import com.shinjaehun.suksuk.domain.multiplication.sequence.MulPhaseStep
+import com.shinjaehun.suksuk.domain.pattern.MulPattern
 import javax.inject.Inject
 
 class ThreeByTwoMulPhaseSequenceCreator @Inject constructor() : MulPhaseSequenceCreator {
@@ -288,9 +289,10 @@ class ThreeByTwoMulPhaseSequenceCreator @Inject constructor() : MulPhaseSequence
             }
         }
 
-
-
         steps += MulPhaseStep(phase = MulPhase.Complete)
-        return MulPhaseSequence(steps = steps)
+        return MulPhaseSequence(
+            steps = steps,
+            pattern = MulPattern.ThreeByTwo
+        )
     }
 }

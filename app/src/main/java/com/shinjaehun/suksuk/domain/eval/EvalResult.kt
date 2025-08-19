@@ -1,4 +1,4 @@
-package com.shinjaehun.suksuk.common.eval
+package com.shinjaehun.suksuk.domain.eval
 
 data class EvalResult(
     val isCorrect: Boolean,

@@ -1,24 +1,16 @@
 package com.shinjaehun.suksuk.presentation.multiplication.model
 
-import com.shinjaehun.suksuk.common.ui.Highlight
-import com.shinjaehun.suksuk.domain.OpType
-import com.shinjaehun.suksuk.domain.Problem
-import com.shinjaehun.suksuk.domain.multiplication.model.MulCell
+import com.shinjaehun.suksuk.presentation.common.Highlight
 import com.shinjaehun.suksuk.domain.model.MulDomainState
+import com.shinjaehun.suksuk.domain.multiplication.model.MulCell
 import com.shinjaehun.suksuk.domain.multiplication.model.MulPhase
 import com.shinjaehun.suksuk.domain.multiplication.sequence.MulPhaseStep
-import com.shinjaehun.suksuk.domain.pattern.MulPattern
-import com.shinjaehun.suksuk.domain.pattern.detectPattern
-
 
 fun mapMultiplicationUiState(
     domain: MulDomainState,
     currentInput: String
 ): MulUiState {
-    val pattern = detectPattern(
-        Problem(OpType.Multiplication, domain.info.multiplicand, domain.info.multiplier)
-    ) as MulPattern
-
+    val pattern = domain.phaseSequence.pattern
     val steps = domain.phaseSequence.steps
     val currentStepIndex = domain.currentStepIndex.coerceIn(0, steps.lastIndex)
     val curPhaseStep = steps[currentStepIndex]
@@ -143,36 +135,6 @@ private fun calculateInputIndexForCell(
  * 피연산자(피승수/승수) 고정 숫자 표기.
  * - 최대 multiplicand 3자리, multiplier 2자리 대응.
  */
-//private fun getDefaultCellValue(
-//    domain: MulDomainState,
-//    cellName: MulCell
-//): String? {
-//    val mc = domain.info.multiplicand.toString().padStart(3, ' ')
-//    val ml = domain.info.multiplier.toString().padStart(2, ' ')
-//
-//    val mcH = mc[mc.lastIndex - 2].takeIf { it.isDigit() }?.toString() ?: ""
-//    val mcT = mc[mc.lastIndex - 1].takeIf { it.isDigit() }?.toString() ?: ""
-//    val mcO = mc[mc.lastIndex - 0].takeIf { it.isDigit() }?.toString() ?: ""
-//
-//    val mlT = ml[ml.lastIndex - 1].takeIf { it.isDigit() }?.toString() ?: ""
-//    val mlO = ml[ml.lastIndex - 0].takeIf { it.isDigit() }?.toString() ?: ""
-//
-//    return when (cellName) {
-//        MulCell.MultiplicandHundreds -> mcH
-//        MulCell.MultiplicandTens     -> mcT
-//        MulCell.MultiplicandOnes     -> mcO
-//        MulCell.MultiplierTens       -> mlT
-//        MulCell.MultiplierOnes       -> mlO
-//        else -> null
-//    }
-//}
-
-private fun digitOrEmpty(n: Int, posFromRight: Int, width: Int, min: Int): String {
-    if (n < min) return ""
-    val s = n.toString().padStart(width, '0')
-    return s[s.lastIndex - posFromRight].toString()
-}
-
 private fun getDefaultCellValue(
     domain: MulDomainState,
     cellName: MulCell
@@ -187,4 +149,10 @@ private fun getDefaultCellValue(
     MulCell.MultiplierOnes       -> digitOrEmpty(domain.info.multiplier,   posFromRight = 0, width = 2, min = 0)
 
     else -> null
+}
+
+private fun digitOrEmpty(n: Int, posFromRight: Int, width: Int, min: Int): String {
+    if (n < min) return ""
+    val s = n.toString().padStart(width, '0')
+    return s[s.lastIndex - posFromRight].toString()
 }

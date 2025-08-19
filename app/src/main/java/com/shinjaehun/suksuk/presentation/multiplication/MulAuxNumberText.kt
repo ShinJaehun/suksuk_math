@@ -10,16 +10,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.shinjaehun.suksuk.common.ui.Highlight
+import com.shinjaehun.suksuk.presentation.common.Highlight
 import com.shinjaehun.suksuk.presentation.multiplication.model.MulInputCell
-
 
 @Composable
 fun MulAuxNumberText(
@@ -47,10 +45,6 @@ fun MulAuxNumberText(
             maxLines = 1,
             softWrap = false,
             overflow = TextOverflow.Clip,
-//            lineHeight = fontSize,
-//            style = MaterialTheme.typography.bodyMedium.copy(
-//                platformStyle = PlatformTextStyle(includeFontPadding = false)
-//            ),
             modifier = Modifier
                 .fillMaxWidth()
                 .testTag("${cell.cellName}-cell")

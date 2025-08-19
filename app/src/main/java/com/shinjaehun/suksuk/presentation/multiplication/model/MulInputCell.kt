@@ -1,6 +1,6 @@
 package com.shinjaehun.suksuk.presentation.multiplication.model
 
-import com.shinjaehun.suksuk.common.ui.Highlight
+import com.shinjaehun.suksuk.presentation.common.Highlight
 import com.shinjaehun.suksuk.domain.multiplication.model.MulCell
 
 data class MulInputCell (

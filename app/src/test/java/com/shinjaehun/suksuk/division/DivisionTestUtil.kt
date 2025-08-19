@@ -58,11 +58,11 @@ fun createDomainState(
     steps: List<DivisionPhaseStep>,
     currentStepIndex: Int,
     inputs: List<String> = emptyList(),
-//    pattern: DivisionPatternV2 = DivisionPatternDetectorV2.detectPattern(dividend, divisor)
+    pattern: DivisionPatternV2
 ): DivisionDomainStateV2 {
     val info = DivisionStateInfoBuilder.from(dividend, divisor)
     return DivisionDomainStateV2(
-        phaseSequence = DivisionPhaseSequence(steps),
+        phaseSequence = DivisionPhaseSequence(steps, pattern),
         currentStepIndex = currentStepIndex,
         inputs = inputs,
         info = info,

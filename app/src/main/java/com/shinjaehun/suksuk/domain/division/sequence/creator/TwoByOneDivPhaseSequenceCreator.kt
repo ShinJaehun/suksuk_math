@@ -5,6 +5,7 @@ import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequence
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseStep
 import com.shinjaehun.suksuk.domain.division.model.DivisionCell
 import com.shinjaehun.suksuk.domain.division.model.DivisionPhaseV2
+import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
 import javax.inject.Inject
 
 class TwoByOneDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSequenceCreator {
@@ -171,7 +172,8 @@ class TwoByOneDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeque
         steps += DivisionPhaseStep(phase = DivisionPhaseV2.Complete)
 
         return DivisionPhaseSequence(
-            steps = steps
+            steps = steps,
+            pattern = DivisionPatternV2.TwoByOne
         )
     }
 }

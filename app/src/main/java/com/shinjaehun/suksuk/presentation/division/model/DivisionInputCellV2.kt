@@ -1,6 +1,6 @@
 package com.shinjaehun.suksuk.presentation.division.model
 
-import com.shinjaehun.suksuk.common.ui.Highlight
+import com.shinjaehun.suksuk.presentation.common.Highlight
 import com.shinjaehun.suksuk.domain.division.model.DivisionCell
 
 data class DivisionInputCellV2(

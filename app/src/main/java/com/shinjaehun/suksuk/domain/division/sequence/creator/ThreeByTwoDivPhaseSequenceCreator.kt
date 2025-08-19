@@ -5,6 +5,7 @@ import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequence
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseStep
 import com.shinjaehun.suksuk.domain.division.model.DivisionCell
 import com.shinjaehun.suksuk.domain.division.model.DivisionPhaseV2
+import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
 import javax.inject.Inject
 
 class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSequenceCreator {
@@ -169,7 +170,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                             editableCells = listOf(DivisionCell.Multiply2Ones),
                             highlightCells = listOf(DivisionCell.QuotientOnes, DivisionCell.DivisorOnes),
                             // 혹시 이전 케이스 잔여값 방지
-                            presetValues = mapOf(DivisionCell.CarryDivisorTensM2 to "")
+//                            presetValues = mapOf(DivisionCell.CarryDivisorTensM2 to ""),
                         )
                         // Step 6-2: Hundreds → Tens 동시 입력 (carry 입력 없이)
                         steps += DivisionPhaseStep(
@@ -200,7 +201,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                             phase = DivisionPhaseV2.InputMultiply2,
                             editableCells = listOf(DivisionCell.Multiply2Ones),
                             highlightCells = listOf(DivisionCell.QuotientOnes, DivisionCell.DivisorOnes),
-                            presetValues = mapOf(DivisionCell.CarryDivisorTensM2 to "")
+//                            presetValues = mapOf(DivisionCell.CarryDivisorTensM2 to "")
                         )
                         steps += DivisionPhaseStep(
                             phase = DivisionPhaseV2.InputMultiply2,
@@ -636,7 +637,8 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
 //        }
 
         return DivisionPhaseSequence(
-            steps = steps
+            steps = steps,
+            pattern = DivisionPatternV2.ThreeByTwo
         )
     }
 }

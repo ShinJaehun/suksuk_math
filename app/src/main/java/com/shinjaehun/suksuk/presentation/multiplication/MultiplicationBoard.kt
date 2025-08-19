@@ -7,8 +7,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -22,7 +23,7 @@ import com.shinjaehun.suksuk.presentation.multiplication.model.TotalLineType
 
 
 @Composable
-fun MultiplicationBoard2x2(
+fun MultiplicationBoard(
     uiState: MulUiState
 ) {
     val cellWidth = 42.dp
@@ -210,7 +211,7 @@ fun MultiplicationBoard2x2(
                     width = Dimension.value(200.dp)                  // 리소스 길이에 맞춰 조정
                     height = Dimension.value(4.dp)
                 }
-                .testTag("mul-line1")
+                .semantics { testTag = "mul-line1" }
         )
 
         // ─────────────────────────────
@@ -390,7 +391,7 @@ fun MultiplicationBoard2x2(
                         width = Dimension.value(200.dp)                  // 리소스 길이에 맞춰 조정
                         height = Dimension.value(4.dp)
                     }
-                    .testTag("total-line")
+                    .semantics { testTag = "total-line" }
             )
         }
 
@@ -546,7 +547,7 @@ fun PreviewMultiplicationBoard2x2() {
         }
     )
 
-    MultiplicationBoard2x2(
+    MultiplicationBoard(
         uiState = previewUiState
     )
 }

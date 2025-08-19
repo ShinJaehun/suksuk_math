@@ -1,13 +1,12 @@
 package com.shinjaehun.suksuk.domain.multiplication.evaluator
 
-import com.shinjaehun.suksuk.common.eval.EvalResult
+import com.shinjaehun.suksuk.domain.eval.EvalResult
 import com.shinjaehun.suksuk.domain.multiplication.info.MulStateInfo
 import com.shinjaehun.suksuk.domain.multiplication.model.MulCell
 import com.shinjaehun.suksuk.domain.model.MulDomainState
 import com.shinjaehun.suksuk.domain.multiplication.model.MulPhase
-import javax.inject.Inject
 
-class MulPhaseEvaluator @Inject constructor() {
+class MulPhaseEvaluator {
     fun isCorrect(
         phase: MulPhase,
         cell: MulCell,
@@ -24,56 +23,6 @@ class MulPhaseEvaluator @Inject constructor() {
         domain: MulDomainState,
         inputsForThisStep: List<String>
     ): EvalResult {
-//        val step = domain.phaseSequence.steps[domain.currentStepIndex]
-//        val targetCell = step.editableCells.firstOrNull() ?: MulCellName.None
-//
-//        val ok = isCorrect(
-//            phase = step.phase,
-//            cell = targetCell,
-//            input = input,
-//            info = domain.info,
-//            stepIndex = domain.currentStepIndex,
-//            previousInputs = domain.inputs
-//        )
-//
-//        if (!ok) {
-//            return EvalResult(
-//                isCorrect = false,
-//                nextStepIndex = null,
-//                isFinished = false,
-//                normalizedInput = input.trim()
-//            )
-//        }
-//
-//        val next = domain.currentStepIndex + 1
-//        val finished = next >= domain.phaseSequence.steps.lastIndex
-//
-//        return EvalResult(
-//            isCorrect = true,
-//            nextStepIndex = next,
-//            isFinished = finished,
-//            normalizedInput = input.trim()
-//        )
-
-//        val step = domain.phaseSequence.steps[domain.currentStepIndex]
-//        val cells = step.editableCells
-//
-//        val allOk = cells.withIndex().all { (idx, cell) ->
-//            val user = inputsForThisStep.getOrNull(idx) ?: return@all false
-//            isCorrect(step.phase, cell, user, domain.info, domain.currentStepIndex, domain.inputs)
-//        }
-//        if (!allOk) return EvalResult(false, null, false, inputsForThisStep.joinToString(""))
-//
-//        val next = domain.currentStepIndex + 1
-//        val last = domain.phaseSequence.steps.lastIndex
-//        val finished = next >= last
-//
-//        return EvalResult(
-//            isCorrect = true,
-//            nextStepIndex = next,        // ✅ 항상 next로 이동 (Complete로 진입)
-//            isFinished = finished,       // ✅ Complete 진입 즉시 true
-//            normalizedInput = inputsForThisStep.joinToString("")
-//        )
 
         val steps = domain.phaseSequence.steps
         val currentStepIndex   = domain.currentStepIndex

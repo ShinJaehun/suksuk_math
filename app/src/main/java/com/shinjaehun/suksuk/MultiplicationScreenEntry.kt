@@ -13,8 +13,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.shinjaehun.suksuk.data.DefaultProblemRouter
 import com.shinjaehun.suksuk.domain.OpType
+import com.shinjaehun.suksuk.domain.ProblemSessionFactory
 import com.shinjaehun.suksuk.domain.SessionMode
 import com.shinjaehun.suksuk.domain.pattern.MulPattern
 import com.shinjaehun.suksuk.presentation.multiplication.MultiplicationScreen
@@ -23,14 +23,14 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MultiplicationScreenEntry(
+    problemFactory: ProblemSessionFactory,
     mode: SessionMode,
     pattern: MulPattern?,                         // "TwoByTwo" | "ThreeByTwo"
     overrideOperands: Pair<Int, Int>?,       // (옵션) 디버그/딥링크
     onExit: () -> Unit
 ) {
-    val router = remember { DefaultProblemRouter() }
     val source = remember(mode, pattern, overrideOperands) {
-        router.openSession(
+        problemFactory.openSession(
             op = OpType.Multiplication,
             mode = mode,
             pattern = pattern,

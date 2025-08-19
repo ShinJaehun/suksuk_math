@@ -1,6 +1,5 @@
 package com.shinjaehun.suksuk.presentation
 
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,14 +23,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,11 +40,8 @@ import com.shinjaehun.suksuk.R
 import com.shinjaehun.suksuk.presentation.component.OutlinedWhiteButton
 import com.shinjaehun.suksuk.ui.theme.SukSukTheme
 
-
 @Composable
 fun ProblemPickerDialog(
-//    onDismiss: () -> Unit,
-//    onSelect: (Operation) -> Unit
     onDismiss: () -> Unit,
     onChooseMultiply2x2: () -> Unit,
     onChooseMultiply3x2: () -> Unit,
@@ -54,11 +50,6 @@ fun ProblemPickerDialog(
     onChooseDivision3x2: () -> Unit,
     onChooseChallenge: () -> Unit,
 ) {
-
-    DisposableEffect(Unit) {
-        onDispose { Log.d("DIALOG", "disposed") }
-    }
-
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(usePlatformDefaultWidth = false)
@@ -146,7 +137,7 @@ fun ProblemPickerDialog(
                         modifier = Modifier
                             .width(150.dp)
                             .height(48.dp)           // 살짝 높이 주면 보기 좋음
-                            .testTag("dialog_dismiss_button")
+                            .semantics { testTag = "dialog_dismiss_button" }
                     )
                 }
             }

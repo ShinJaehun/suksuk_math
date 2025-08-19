@@ -2,7 +2,6 @@ package com.shinjaehun.suksuk.domain.generator
 
 import com.shinjaehun.suksuk.domain.OpType
 import com.shinjaehun.suksuk.domain.Problem
-import kotlin.math.max
 import kotlin.random.Random
 
 /**
@@ -32,7 +31,7 @@ object ProblemRules {
     /** 2÷1: 10..99 ÷ 2..9  (dividend > divisor 보장) */
     fun randomTwoByOneDiv(rng: Random): Problem {
         val divisor  = rng.nextInt(2, 10)             // 2..9
-        val from     = max(10, divisor + 1)           // ≥ 10
+        val from     = maxOf(10, divisor + 1)           // ≥ 10
         val dividend = rng.nextInt(from, 100)         // from..99
         return Problem(OpType.Division, dividend, divisor)
     }
@@ -40,7 +39,7 @@ object ProblemRules {
     /** 2÷2: 11..99 ÷ 10..98  (dividend > divisor 보장) */
     fun randomTwoByTwoDiv(rng: Random): Problem {
         val divisor  = rng.nextInt(10, 99)            // 10..98
-        val from     = max(11, divisor + 1)           // ≥ 11
+        val from     = maxOf(11, divisor + 1)           // ≥ 11
         val dividend = rng.nextInt(from, 100)         // from..99
         return Problem(OpType.Division, dividend, divisor)
     }
@@ -48,7 +47,7 @@ object ProblemRules {
     /** 3÷2: 101..999 ÷ 10..99 (dividend > divisor 보장) */
     fun randomThreeByTwoDiv(rng: Random): Problem {
         val divisor  = rng.nextInt(10, 100)           // 10..99
-        val from     = max(101, divisor + 1)          // ≥ 101
+        val from     = maxOf(101, divisor + 1)          // ≥ 101
         val dividend = rng.nextInt(from, 1000)        // from..999
         return Problem(OpType.Division, dividend, divisor)
     }

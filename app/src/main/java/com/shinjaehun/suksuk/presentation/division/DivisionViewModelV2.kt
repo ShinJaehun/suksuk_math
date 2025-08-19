@@ -17,12 +17,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DivisionViewModelV2 @Inject constructor(
-    savedStateHandle: SavedStateHandle = SavedStateHandle(),
+//    savedStateHandle: SavedStateHandle = SavedStateHandle(),
+    private val savedStateHandle: SavedStateHandle,
     private val phaseEvaluator: DivisionPhaseEvaluatorV2,
     private val domainStateFactory: DomainStateFactory,
 ): ViewModel() {
-
-    private val autoStart: Boolean = savedStateHandle["autoStart"] ?: true
+//    private val autoStart: Boolean = savedStateHandle["autoStart"] ?: true
 
     private val _uiState = MutableStateFlow(DivisionUiStateV2())
     val uiState: StateFlow<DivisionUiStateV2> = _uiState.asStateFlow()
@@ -32,8 +32,8 @@ class DivisionViewModelV2 @Inject constructor(
 
     private lateinit var domainState: DivisionDomainStateV2
 
-    init {
-        if(autoStart){
+//    init {
+//        if(autoStart){
 //            startNewProblem(68, 34) //TwoByTwo_NoCarry_NoBorrow_1DigitRem
 //            startNewProblem(57, 22) //TwoByTwo_NoCarry_NoBorrow_2DigitRem
 //            startNewProblem(50, 22) //TwoByTwo_NoCarry_Borrow_1DigitRem
@@ -118,8 +118,8 @@ class DivisionViewModelV2 @Inject constructor(
 //            startNewProblem(101,51) //
 //            startNewProblem(229,23) //
 //            startNewProblem(214,23) //
-        }
-    }
+//        }
+//    }
 
     fun startNewProblem(dividend: Int, divisor: Int) {
         val problem = Problem(OpType.Division, dividend, divisor)

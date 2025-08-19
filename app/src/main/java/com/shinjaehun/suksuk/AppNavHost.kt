@@ -1,23 +1,20 @@
 package com.shinjaehun.suksuk
 
-import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.shinjaehun.suksuk.domain.ProblemSessionFactory
 import com.shinjaehun.suksuk.domain.SessionMode
 import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
 import com.shinjaehun.suksuk.domain.pattern.MulPattern
 import com.shinjaehun.suksuk.presentation.ChallengeScreen
 import com.shinjaehun.suksuk.presentation.MainScreen
-import com.shinjaehun.suksuk.presentation.division.DivisionViewModelV2
 
 @Composable
-fun AppNavHost() {
+fun AppNavHost(problemFactory: ProblemSessionFactory) {
     val nav = rememberNavController()
     NavHost(navController = nav, startDestination = Routes.Main) {
 
@@ -68,6 +65,7 @@ fun AppNavHost() {
             val divPattern = parseDivisionPatternOrNull(patternStr)
 
             DivisionScreenEntry(
+                problemFactory = problemFactory,
                 mode = mode,
                 pattern = divPattern,                // ← enum 전달
                 overrideOperands = override,
@@ -96,6 +94,7 @@ fun AppNavHost() {
             val mulPattern = parseMulPatternOrNull(patternStr)
 
             MultiplicationScreenEntry(
+                problemFactory = problemFactory,
                 mode = mode,
                 pattern = mulPattern,                // ← enum 전달
                 overrideOperands = override,
@@ -123,11 +122,4 @@ private fun parseMulPatternOrNull(s: String): MulPattern? = when (s) {
     "TwoByTwo"   -> MulPattern.TwoByTwo
     "ThreeByTwo" -> MulPattern.ThreeByTwo
     else         -> null
-}
-
-private fun defaultDivisionOperands(pattern: String): Pair<Int, Int> = when (pattern) {
-    "TwoByOne"   -> 72 to 6
-    "TwoByTwo"   -> 68 to 34
-    "ThreeByTwo" -> 682 to 31
-    else         -> 68 to 34
 }

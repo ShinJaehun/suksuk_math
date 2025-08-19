@@ -8,5 +8,5 @@ data class MulUiState(
     val currentStep: Int = 0,
     val isCompleted: Boolean = false,
     val feedback: String? = null,
-    val pattern: MulPattern = MulPattern.TwoByTwo
+    val pattern: MulPattern? = null
 )

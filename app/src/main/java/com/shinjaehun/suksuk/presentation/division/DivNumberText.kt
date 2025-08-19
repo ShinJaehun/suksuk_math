@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shinjaehun.suksuk.R
-import com.shinjaehun.suksuk.common.ui.Highlight
+import com.shinjaehun.suksuk.presentation.common.Highlight
 import com.shinjaehun.suksuk.presentation.division.model.CrossOutType
 import com.shinjaehun.suksuk.presentation.division.model.DivisionInputCellV2
 
@@ -50,26 +50,6 @@ fun DivNumberText(
             modifier = Modifier.testTag("${cell.cellName}-cell"),
 
             )
-//        LaunchedEffect(cell.value) {
-//            println("💬 [SemanticsTest] NumberText(${cell.cellName}) = '${cell.value}'")
-//        }
-
-//        if (cell.crossOutColor != CrossOutColor.None) {
-//            val painter = when(cell.crossOutColor){
-//                CrossOutColor.Pending -> painterResource(R.drawable.ic_strikethrough_pending)
-//                CrossOutColor.Confirmed -> painterResource(R.drawable.ic_strikethrough_confirmed)
-//                else -> null
-//            }
-//            painter?.let {
-//                Image(
-//                    painter = it,
-//                    contentDescription = "취소선",
-//                    modifier = Modifier
-//                        .matchParentSize()
-//                        .testTag("${cell.cellName}-crossed")
-//                )
-//            }
-//        }
 
         if (cell.crossOutType != CrossOutType.None) {
             val painter = when(cell.crossOutType){
