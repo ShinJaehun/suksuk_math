@@ -2,9 +2,11 @@ package com.shinjaehun.suksuk.presentation.multiplication
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.shinjaehun.suksuk.domain.DomainStateFactory
+import com.shinjaehun.suksuk.domain.OpType
+import com.shinjaehun.suksuk.domain.Problem
 import com.shinjaehun.suksuk.domain.multiplication.evaluator.MulPhaseEvaluator
-import com.shinjaehun.suksuk.domain.multiplication.factory.MulDomainStateFactory
-import com.shinjaehun.suksuk.domain.multiplication.model.MulDomainState
+import com.shinjaehun.suksuk.domain.model.MulDomainState
 import com.shinjaehun.suksuk.presentation.multiplication.model.MulUiState
 import com.shinjaehun.suksuk.presentation.multiplication.model.mapMultiplicationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +19,7 @@ import javax.inject.Inject
 class MultiplicationViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle = SavedStateHandle(),
     private val phaseEvaluator: MulPhaseEvaluator,
-    private val domainStateFactory: MulDomainStateFactory,
+    private val domainStateFactory: DomainStateFactory,
 ): ViewModel() {
     private val autoStart: Boolean = savedStateHandle["autoStart"] ?: true
 
@@ -36,7 +38,9 @@ class MultiplicationViewModel @Inject constructor(
     }
 
     fun startNewProblem(multiplicand: Int, multiplier: Int) {
-        domainState = domainStateFactory.create(multiplicand, multiplier)
+        val ds = domainStateFactory.create(Problem(OpType.Multiplication, multiplicand, multiplier))
+        require(ds is MulDomainState) { "Expected MulDomainState, got ${ds::class.simpleName}" }
+        domainState = ds
         _currentInput.value = ""
         emitUiState()
     }
@@ -90,6 +94,10 @@ class MultiplicationViewModel @Inject constructor(
     }
 
     private fun emitUiState() {
+        if (!::domainState.isInitialized) {
+            _uiState.value = MulUiState()
+            return
+        }
         _uiState.value = mapMultiplicationUiState(domainState, _currentInput.value)
     }
 }

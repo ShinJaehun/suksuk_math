@@ -2,14 +2,19 @@ package com.shinjaehun.suksuk
 
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.shinjaehun.suksuk.domain.SessionMode
+import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
+import com.shinjaehun.suksuk.domain.pattern.MulPattern
 import com.shinjaehun.suksuk.presentation.ChallengeScreen
 import com.shinjaehun.suksuk.presentation.MainScreen
+import com.shinjaehun.suksuk.presentation.division.DivisionViewModelV2
 
 @Composable
 fun AppNavHost() {
@@ -52,16 +57,19 @@ fun AppNavHost() {
                 navArgument("b")       { type = NavType.IntType;    defaultValue = -1 },
             )
         ) { e ->
-            val mode = SessionMode.valueOf(e.arguments!!.getString("mode")!!)
-            val pattern = e.arguments!!.getString("pattern")!!
+            val modeStr = e.arguments!!.getString("mode")!!
+            val patternStr = e.arguments!!.getString("pattern")!!
+            val mode = SessionMode.valueOf(modeStr)
 
             val override = e.arguments!!.getInt("a").takeIf { it >= 0 }?.let { a ->
                 e.arguments!!.getInt("b").takeIf { it >= 0 }?.let { b -> a to b }
             }
 
+            val divPattern = parseDivisionPatternOrNull(patternStr)
+
             DivisionScreenEntry(
                 mode = mode,
-                pattern = pattern,                 // ✅ 꼭 전달
+                pattern = divPattern,                // ← enum 전달
                 overrideOperands = override,
                 onExit = { nav.popBackStack() }
             )
@@ -77,22 +85,49 @@ fun AppNavHost() {
                 navArgument("b")       { type = NavType.IntType;    defaultValue = -1 },
             )
         ) { e ->
-            val mode = SessionMode.valueOf(e.arguments!!.getString("mode")!!)
-            val pattern = e.arguments!!.getString("pattern")!!
+            val modeStr = e.arguments!!.getString("mode")!!
+            val patternStr = e.arguments!!.getString("pattern")!!
+            val mode = SessionMode.valueOf(modeStr)
+
             val override = e.arguments!!.getInt("a").takeIf { it >= 0 }?.let { a ->
                 e.arguments!!.getInt("b").takeIf { it >= 0 }?.let { b -> a to b }
             }
 
+            val mulPattern = parseMulPatternOrNull(patternStr)
+
             MultiplicationScreenEntry(
                 mode = mode,
-                pattern = pattern,
+                pattern = mulPattern,                // ← enum 전달
                 overrideOperands = override,
                 onExit = { nav.popBackStack() }
             )
         }
 
+
         composable(Routes.Challenge) {
             ChallengeScreen() // 내부에서 ChallengeSource 사용하도록 구성
         }
     }
+
+
+}
+
+private fun parseDivisionPatternOrNull(s: String): DivisionPatternV2? = when (s) {
+    "TwoByOne"   -> DivisionPatternV2.TwoByOne
+    "TwoByTwo"   -> DivisionPatternV2.TwoByTwo
+    "ThreeByTwo" -> DivisionPatternV2.ThreeByTwo
+    else         -> null
+}
+
+private fun parseMulPatternOrNull(s: String): MulPattern? = when (s) {
+    "TwoByTwo"   -> MulPattern.TwoByTwo
+    "ThreeByTwo" -> MulPattern.ThreeByTwo
+    else         -> null
+}
+
+private fun defaultDivisionOperands(pattern: String): Pair<Int, Int> = when (pattern) {
+    "TwoByOne"   -> 72 to 6
+    "TwoByTwo"   -> 68 to 34
+    "ThreeByTwo" -> 682 to 31
+    else         -> 68 to 34
 }

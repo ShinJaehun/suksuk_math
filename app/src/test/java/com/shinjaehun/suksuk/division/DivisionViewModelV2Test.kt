@@ -1,13 +1,19 @@
 package com.shinjaehun.suksuk.division
 
-import com.shinjaehun.suksuk.domain.division.factory.DivisionDomainStateV2Factory
-import com.shinjaehun.suksuk.domain.division.model.DivisionPatternV2
+import com.shinjaehun.suksuk.TestFactoryBuilders
+import com.shinjaehun.suksuk.domain.DomainStateFactory
+import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequenceProvider
-import com.shinjaehun.suksuk.domain.division.detector.DivisionPatternDetectorV2
 import com.shinjaehun.suksuk.domain.division.evaluator.DivisionPhaseEvaluatorV2
 import com.shinjaehun.suksuk.domain.division.sequence.creator.ThreeByTwoDivPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByOneDivPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByTwoDivPhaseSequenceCreator
+import com.shinjaehun.suksuk.domain.multiplication.info.MulStateInfo
+import com.shinjaehun.suksuk.domain.multiplication.sequence.MulPhaseSequence
+import com.shinjaehun.suksuk.domain.multiplication.sequence.MulPhaseSequenceProvider
+import com.shinjaehun.suksuk.domain.multiplication.sequence.creator.ThreeByTwoMulPhaseSequenceCreator
+import com.shinjaehun.suksuk.domain.multiplication.sequence.creator.TwoByTwoMulPhaseSequenceCreator
+import com.shinjaehun.suksuk.domain.pattern.MulPattern
 import com.shinjaehun.suksuk.presentation.division.DivisionViewModelV2
 import com.shinjaehun.suksuk.presentation.division.model.DivisionUiStateV2
 import kotlinx.coroutines.test.runTest
@@ -21,23 +27,10 @@ class DivisionViewModelV2Test {
 
     @Before
     fun setup() {
-
-        val twoByOneCreator = TwoByOneDivPhaseSequenceCreator()
-        val twoByTwoCreator = TwoByTwoDivPhaseSequenceCreator()
-        val threeByTwoCreator = ThreeByTwoDivPhaseSequenceCreator()
-
-        val phaseSequenceProvider = DivisionPhaseSequenceProvider(
-            twoByOneCreator,
-            twoByTwoCreator,
-            threeByTwoCreator,
-        )
-        val phaseEvaluator = DivisionPhaseEvaluatorV2()
-
-        val factory = DivisionDomainStateV2Factory(DivisionPatternDetectorV2, phaseSequenceProvider)
-
+        val factory = TestFactoryBuilders.unifiedFactoryForDivision()
         viewModel = DivisionViewModelV2(
-            phaseEvaluator = phaseEvaluator,
-            domainStateFactory = factory
+            phaseEvaluator = DivisionPhaseEvaluatorV2(),
+            domainStateFactory = factory,
         )
     }
 

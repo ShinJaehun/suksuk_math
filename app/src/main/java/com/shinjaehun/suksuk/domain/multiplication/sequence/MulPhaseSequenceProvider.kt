@@ -1,7 +1,7 @@
 package com.shinjaehun.suksuk.domain.multiplication.sequence
 
 import com.shinjaehun.suksuk.domain.multiplication.info.MulStateInfo
-import com.shinjaehun.suksuk.domain.multiplication.model.MulPattern
+import com.shinjaehun.suksuk.domain.pattern.MulPattern
 import com.shinjaehun.suksuk.domain.multiplication.sequence.creator.ThreeByTwoMulPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.multiplication.sequence.creator.TwoByTwoMulPhaseSequenceCreator
 import javax.inject.Inject

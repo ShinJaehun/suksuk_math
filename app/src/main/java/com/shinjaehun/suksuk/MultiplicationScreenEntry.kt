@@ -1,9 +1,11 @@
 package com.shinjaehun.suksuk
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -14,6 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.shinjaehun.suksuk.data.DefaultProblemRouter
 import com.shinjaehun.suksuk.domain.OpType
 import com.shinjaehun.suksuk.domain.SessionMode
+import com.shinjaehun.suksuk.domain.pattern.MulPattern
 import com.shinjaehun.suksuk.presentation.multiplication.MultiplicationScreen
 import com.shinjaehun.suksuk.presentation.multiplication.MultiplicationViewModel
 import kotlinx.coroutines.launch
@@ -21,7 +24,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MultiplicationScreenEntry(
     mode: SessionMode,
-    pattern: String,                         // "TwoByTwo" | "ThreeByTwo"
+    pattern: MulPattern?,                         // "TwoByTwo" | "ThreeByTwo"
     overrideOperands: Pair<Int, Int>?,       // (옵션) 디버그/딥링크
     onExit: () -> Unit
 ) {
@@ -44,7 +47,7 @@ fun MultiplicationScreenEntry(
     // 첫 문제 요청 + 스트림 구독 → VM 시작 + 피연산자 기억
     LaunchedEffect(source) {
         // 1) 먼저 수집 시작 (child coroutine)
-        val collectJob = launch {
+        launch {
             source.problems.collect { p ->
                 // 화면 전달용 값 업데이트
                 currentOperands.value = p.a to p.b
@@ -70,8 +73,12 @@ fun MultiplicationScreenEntry(
         }
     }
 
+    DisposableEffect(source) {
+        onDispose { source.stop() }
+    }
+
     // 뒤로가기 핸들
-    androidx.activity.compose.BackHandler {
+    BackHandler {
         source.stop()
         onExit()
     }

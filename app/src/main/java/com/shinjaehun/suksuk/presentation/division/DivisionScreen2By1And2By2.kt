@@ -15,7 +15,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.shinjaehun.suksuk.R
 import com.shinjaehun.suksuk.domain.division.model.DivisionCell
-import com.shinjaehun.suksuk.domain.division.model.DivisionPatternV2
+import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
 import com.shinjaehun.suksuk.presentation.division.model.DivisionInputCellV2
 import com.shinjaehun.suksuk.presentation.division.model.DivisionUiStateV2
 import com.shinjaehun.suksuk.presentation.division.model.SubtractLineType

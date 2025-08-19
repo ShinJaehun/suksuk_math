@@ -4,7 +4,7 @@ import com.shinjaehun.suksuk.common.eval.EvalResult
 import com.shinjaehun.suksuk.domain.division.info.DivisionStateInfo
 import com.shinjaehun.suksuk.domain.division.model.DivisionPhaseV2
 import com.shinjaehun.suksuk.domain.division.model.DivisionCell
-import com.shinjaehun.suksuk.domain.division.model.DivisionDomainStateV2
+import com.shinjaehun.suksuk.domain.model.DivisionDomainStateV2
 import javax.inject.Inject
 
 class DivisionPhaseEvaluatorV2 @Inject constructor() {

@@ -1,8 +1,11 @@
 package com.shinjaehun.suksuk.division
 
-import com.shinjaehun.suksuk.domain.division.model.DivisionPatternV2
-import com.shinjaehun.suksuk.domain.division.detector.DivisionPatternDetectorV2
+import com.shinjaehun.suksuk.domain.OpType
+import com.shinjaehun.suksuk.domain.Problem
+import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
+import com.shinjaehun.suksuk.domain.pattern.detectPattern
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.fail
 import org.junit.Test
 
 class DivisionPatternDetectorV2Test {
@@ -22,7 +25,13 @@ class DivisionPatternDetectorV2Test {
 
     private fun assertPatternV2Cases(cases: List<Triple<Int, Int, DivisionPatternV2>>) {
         for ((dividend, divisor, expected) in cases) {
-            val actual = DivisionPatternDetectorV2.detectPattern(dividend, divisor)
+            val problem = Problem(OpType.Division, dividend, divisor)
+            val opPattern = detectPattern(problem)
+
+            val actual = when (opPattern) {
+                is DivisionPatternV2 -> opPattern
+                else -> fail("Expected DivisionPatternV2 but got $opPattern for $dividend ÷ $divisor")
+            }
             assertEquals("입력: $dividend ÷ $divisor", expected, actual)
         }
     }

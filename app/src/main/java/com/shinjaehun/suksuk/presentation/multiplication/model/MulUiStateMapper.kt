@@ -1,17 +1,24 @@
 package com.shinjaehun.suksuk.presentation.multiplication.model
 
 import com.shinjaehun.suksuk.common.ui.Highlight
+import com.shinjaehun.suksuk.domain.OpType
+import com.shinjaehun.suksuk.domain.Problem
 import com.shinjaehun.suksuk.domain.multiplication.model.MulCell
-import com.shinjaehun.suksuk.domain.multiplication.model.MulDomainState
+import com.shinjaehun.suksuk.domain.model.MulDomainState
 import com.shinjaehun.suksuk.domain.multiplication.model.MulPhase
 import com.shinjaehun.suksuk.domain.multiplication.sequence.MulPhaseStep
-import com.shinjaehun.suksuk.presentation.division.model.getDefaultCellValue
+import com.shinjaehun.suksuk.domain.pattern.MulPattern
+import com.shinjaehun.suksuk.domain.pattern.detectPattern
 
 
 fun mapMultiplicationUiState(
     domain: MulDomainState,
     currentInput: String
 ): MulUiState {
+    val pattern = detectPattern(
+        Problem(OpType.Multiplication, domain.info.multiplicand, domain.info.multiplier)
+    ) as MulPattern
+
     val steps = domain.phaseSequence.steps
     val currentStepIndex = domain.currentStepIndex.coerceIn(0, steps.lastIndex)
     val curPhaseStep = steps[currentStepIndex]
@@ -90,7 +97,7 @@ fun mapMultiplicationUiState(
         currentStep = currentStepIndex,
         isCompleted = isComplete,
         feedback = feedback,
-        pattern = domain.pattern
+        pattern = pattern
     )
 }
 

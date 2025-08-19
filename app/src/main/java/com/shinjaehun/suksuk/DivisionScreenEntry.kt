@@ -1,10 +1,11 @@
 package com.shinjaehun.suksuk
 
-import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -15,9 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.shinjaehun.suksuk.data.DefaultProblemRouter
 import com.shinjaehun.suksuk.domain.OpType
 import com.shinjaehun.suksuk.domain.SessionMode
-import com.shinjaehun.suksuk.domain.division.model.DivisionPatternV2
-import com.shinjaehun.suksuk.presentation.division.DivisionScreen2By1And2By2
-import com.shinjaehun.suksuk.presentation.division.DivisionScreen3By2
+import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
 import com.shinjaehun.suksuk.presentation.division.DivisionScreenV2
 import com.shinjaehun.suksuk.presentation.division.DivisionViewModelV2
 import kotlinx.coroutines.launch
@@ -25,7 +24,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun DivisionScreenEntry(
     mode: SessionMode,
-    pattern: String,                          // ← 추가: "TwoByOne" | "TwoByTwo" | "ThreeByTwo"
+    pattern: DivisionPatternV2?,                          // ← 추가: "TwoByOne" | "TwoByTwo" | "ThreeByTwo"
     overrideOperands: Pair<Int, Int>?,       // 딥링크/디버그 시 1회 고정 문제
     onExit: () -> Unit
 ) {
@@ -49,7 +48,7 @@ fun DivisionScreenEntry(
     // 첫 문제 + 이후 문제 공급
     LaunchedEffect(source) {
         // 1) 먼저 수집 시작 (child coroutine)
-        val collectJob = launch {
+        launch {
             source.problems.collect { p ->
                 // 화면 전달용 값 업데이트
                 currentOperands.value = p.a to p.b
@@ -73,8 +72,13 @@ fun DivisionScreenEntry(
         }
     }
 
+    // 항상 세션 정리
+    DisposableEffect(source) {
+        onDispose { source.stop() }
+    }
+
     // 뒤로가기 → 세션 정리 후 종료
-    androidx.activity.compose.BackHandler {
+    BackHandler {
         source.stop()
         onExit()
     }

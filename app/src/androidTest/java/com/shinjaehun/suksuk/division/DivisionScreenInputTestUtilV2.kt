@@ -7,9 +7,8 @@ import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.lifecycle.SavedStateHandle
-import com.shinjaehun.suksuk.domain.division.factory.DivisionDomainStateV2Factory
+import com.shinjaehun.suksuk.TestFactoryBuilders
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequenceProvider
-import com.shinjaehun.suksuk.domain.division.detector.DivisionPatternDetectorV2
 import com.shinjaehun.suksuk.domain.division.evaluator.DivisionPhaseEvaluatorV2
 import com.shinjaehun.suksuk.domain.division.model.DivisionPhaseV2
 import com.shinjaehun.suksuk.domain.division.sequence.creator.ThreeByTwoDivPhaseSequenceCreator
@@ -25,16 +24,12 @@ fun ComposeContentTestRule.divisionCaseV2(
 ) {
 
     val savedStateHandle = SavedStateHandle(mapOf("autoStart" to false))
+    val factory = TestFactoryBuilders.unifiedFactoryForDivision()
 
-    val phaseSequenceProvider = DivisionPhaseSequenceProvider(
-        TwoByOneDivPhaseSequenceCreator(),
-        TwoByTwoDivPhaseSequenceCreator(),
-        ThreeByTwoDivPhaseSequenceCreator(),
-    )
     val viewModel = DivisionViewModelV2(
         savedStateHandle = savedStateHandle,
         phaseEvaluator = DivisionPhaseEvaluatorV2(),
-        domainStateFactory = DivisionDomainStateV2Factory(DivisionPatternDetectorV2, phaseSequenceProvider)
+        domainStateFactory = factory
     )
 
     setContent {

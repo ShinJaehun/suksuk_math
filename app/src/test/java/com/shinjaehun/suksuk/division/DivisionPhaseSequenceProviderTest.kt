@@ -1,17 +1,19 @@
 package com.shinjaehun.suksuk.division
 
+import com.shinjaehun.suksuk.domain.OpType
+import com.shinjaehun.suksuk.domain.Problem
 import com.shinjaehun.suksuk.domain.division.info.DivisionStateInfoBuilder
-import com.shinjaehun.suksuk.domain.division.detector.DivisionPatternDetectorV2
 import com.shinjaehun.suksuk.domain.division.evaluator.DivisionPhaseEvaluatorV2
-import com.shinjaehun.suksuk.domain.division.model.DivisionPatternV2
+import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequenceProvider
 import com.shinjaehun.suksuk.domain.division.sequence.creator.ThreeByTwoDivPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByOneDivPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByTwoDivPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.model.DivisionCell
-import com.shinjaehun.suksuk.domain.division.model.DivisionDomainStateV2
+import com.shinjaehun.suksuk.domain.model.DivisionDomainStateV2
 import com.shinjaehun.suksuk.domain.division.model.DivisionPhaseV2
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequence
+import com.shinjaehun.suksuk.domain.pattern.detectPattern
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import org.junit.Test
@@ -29,7 +31,10 @@ class DivisionPhaseSequenceProviderTest {
         val dividend = 68
         val divisor = 34
 
-        val pattern = DivisionPatternDetectorV2.detectPattern(dividend, divisor)
+        val problem = Problem(OpType.Division, dividend, divisor)
+        val opPattern = detectPattern(problem)
+        val pattern = opPattern as DivisionPatternV2
+
         val info = DivisionStateInfoBuilder.from(dividend, divisor)
         val seq = provider.make(pattern, info)
 
@@ -50,7 +55,10 @@ class DivisionPhaseSequenceProviderTest {
         val dividend = 432
         val divisor = 12
 
-        val pattern = DivisionPatternDetectorV2.detectPattern(dividend, divisor)
+        val problem = Problem(OpType.Division, dividend, divisor)
+        val opPattern = detectPattern(problem)
+        val pattern = opPattern as DivisionPatternV2
+
         val info = DivisionStateInfoBuilder.from(dividend, divisor)
         val seq = provider.make(pattern, info)
 
@@ -100,7 +108,10 @@ class DivisionPhaseSequenceProviderTest {
         val dividend = 68
         val divisor = 34
 
-        val pattern = DivisionPatternDetectorV2.detectPattern(dividend, divisor)
+        val problem = Problem(OpType.Division, dividend, divisor)
+        val opPattern = detectPattern(problem)
+        val pattern = opPattern as DivisionPatternV2
+
         val info = DivisionStateInfoBuilder.from(dividend, divisor)
         val seq = provider.make(pattern, info)
 
@@ -115,7 +126,7 @@ class DivisionPhaseSequenceProviderTest {
             currentStepIndex = 3, // InputSubtract1
             inputs = emptyList(),
             info = info,
-            pattern = pattern
+//            pattern = pattern
         )
 
         val firstCell = seq.steps[3].editableCells.firstOrNull() ?:

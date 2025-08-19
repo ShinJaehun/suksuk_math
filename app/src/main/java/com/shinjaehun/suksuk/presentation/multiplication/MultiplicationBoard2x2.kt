@@ -15,7 +15,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.shinjaehun.suksuk.R
 import com.shinjaehun.suksuk.domain.multiplication.model.MulCell
-import com.shinjaehun.suksuk.domain.multiplication.model.MulPattern
+import com.shinjaehun.suksuk.domain.pattern.MulPattern
 import com.shinjaehun.suksuk.presentation.multiplication.model.MulInputCell
 import com.shinjaehun.suksuk.presentation.multiplication.model.MulUiState
 import com.shinjaehun.suksuk.presentation.multiplication.model.TotalLineType

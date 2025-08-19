@@ -1,7 +1,7 @@
 package com.shinjaehun.suksuk.presentation.multiplication.model
 
 import com.shinjaehun.suksuk.domain.multiplication.model.MulCell
-import com.shinjaehun.suksuk.domain.multiplication.model.MulPattern
+import com.shinjaehun.suksuk.domain.pattern.MulPattern
 
 data class MulUiState(
     val cells: Map<MulCell, MulInputCell> = emptyMap(),

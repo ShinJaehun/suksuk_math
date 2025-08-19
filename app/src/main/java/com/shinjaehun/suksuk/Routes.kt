@@ -11,15 +11,9 @@ object Routes {
     // 예: multiplication?mode=Practice&pattern=TwoByTwo[&a=76&b=89]
     const val Multiplication = "multiplication?mode={mode}&pattern={pattern}&a={a}&b={b}"
 
-    fun division(mode: SessionMode, pattern: String, a: Int? = null, b: Int? = null) =
-        buildString {
-            append("division?mode=${mode.name}&pattern=$pattern")
-            if (a != null && b != null) append("&a=$a&b=$b")
-        }
+    fun division(mode: SessionMode, pattern: String, a: Int = -1, b: Int = -1): String =
+        "division?mode=${mode.name}&pattern=$pattern&a=$a&b=$b"
 
-    fun multiplication(mode: SessionMode, pattern: String, a: Int? = null, b: Int? = null) =
-        buildString {
-            append("multiplication?mode=${mode.name}&pattern=$pattern")
-            if (a != null && b != null) append("&a=$a&b=$b")
-        }
+    fun multiplication(mode: SessionMode, pattern: String, a: Int = -1, b: Int = -1): String =
+        "multiplication?mode=${mode.name}&pattern=$pattern&a=$a&b=$b"
 }

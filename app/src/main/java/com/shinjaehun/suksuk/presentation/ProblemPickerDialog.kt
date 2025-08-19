@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.shinjaehun.suksuk.Operation
 import com.shinjaehun.suksuk.R
 import com.shinjaehun.suksuk.presentation.component.OutlinedWhiteButton
 import com.shinjaehun.suksuk.ui.theme.SukSukTheme
@@ -45,8 +44,15 @@ import com.shinjaehun.suksuk.ui.theme.SukSukTheme
 
 @Composable
 fun ProblemPickerDialog(
+//    onDismiss: () -> Unit,
+//    onSelect: (Operation) -> Unit
     onDismiss: () -> Unit,
-    onSelect: (Operation) -> Unit
+    onChooseMultiply2x2: () -> Unit,
+    onChooseMultiply3x2: () -> Unit,
+    onChooseDivision2x1: () -> Unit,
+    onChooseDivision2x2: () -> Unit,
+    onChooseDivision3x2: () -> Unit,
+    onChooseChallenge: () -> Unit,
 ) {
 
     DisposableEffect(Unit) {
@@ -89,12 +95,12 @@ fun ProblemPickerDialog(
                             OptionTile(
                                 imageRes = R.drawable.multiply22,
                                 label = "두 자리 X 두 자리"
-                            ) { onSelect(Operation.Multiply22) }
+                            ) { onChooseMultiply2x2() }
 
                             OptionTile(
                                 imageRes = R.drawable.multiply32,
                                 label = "세 자리 X 두 자리"
-                            ) { onSelect(Operation.Multiply32) }
+                            ) { onChooseMultiply3x2() }
                         }
 
                         Row(
@@ -106,12 +112,12 @@ fun ProblemPickerDialog(
                             OptionTile(
                                 imageRes = R.drawable.divide21,
                                 label = "두 자리 ÷ 한 자리"
-                            ) { onSelect(Operation.Divide21) }
+                            ) { onChooseDivision2x1() }
 
                             OptionTile(
                                 imageRes = R.drawable.divide22,
                                 label = "두 자리 ÷ 두 자리"
-                            ) { onSelect(Operation.Divide22) }
+                            ) { onChooseDivision2x2() }
                         }
 
                         Row(
@@ -123,12 +129,12 @@ fun ProblemPickerDialog(
                             OptionTile(
                                 imageRes = R.drawable.divide32,
                                 label = "세 자리 ÷ 두 자리"
-                            ) { onSelect(Operation.Divide32) }
+                            ) { onChooseDivision3x2() }
 
                             OptionTile(
                                 imageRes = R.drawable.challenge,
                                 label = "도전! 문제풀기"
-                            ) { onSelect(Operation.Challenge) }
+                            ) { onChooseChallenge() }
                         }
                     }
 
@@ -192,7 +198,12 @@ fun ProblemPickerDialogPreview() {
         Surface {
             ProblemPickerDialog(
                 onDismiss = {},
-                onSelect = {}
+                onChooseMultiply2x2 = {},
+                onChooseMultiply3x2 = {},
+                onChooseDivision2x1 = {},
+                onChooseDivision2x2 = {},
+                onChooseDivision3x2 = {},
+                onChooseChallenge  = {}
             )
         }
     }

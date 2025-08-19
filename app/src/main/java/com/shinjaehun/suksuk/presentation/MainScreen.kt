@@ -29,7 +29,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.shinjaehun.suksuk.Operation
 import com.shinjaehun.suksuk.R
 import com.shinjaehun.suksuk.ui.theme.SukSukTheme
 import com.shinjaehun.suksuk.presentation.component.OutlinedWhiteButton
@@ -95,16 +94,29 @@ fun MainScreen(
     if (showPicker) {
         ProblemPickerDialog(
             onDismiss = { showPicker = false },
-            onSelect = { op ->
+            onChooseMultiply2x2 = {
                 showPicker = false
-                when (op) {
-                    Operation.Multiply22 -> onChooseMultiply2x2()
-                    Operation.Multiply32 -> onChooseMultiply3x2()
-                    Operation.Divide21   -> onChooseDivision2x1()
-                    Operation.Divide22   -> onChooseDivision2x2()
-                    Operation.Divide32   -> onChooseDivision3x2()
-                    Operation.Challenge  -> onChooseChallenge()
-                }
+                onChooseMultiply2x2()
+            },
+            onChooseMultiply3x2 = {
+                showPicker = false
+                onChooseMultiply3x2()
+            },
+            onChooseDivision2x1 = {
+                showPicker = false
+                onChooseDivision2x1()
+            },
+            onChooseDivision2x2 = {
+                showPicker = false
+                onChooseDivision2x2()
+            },
+            onChooseDivision3x2 = {
+                showPicker = false
+                onChooseDivision3x2()
+            },
+            onChooseChallenge = {
+                showPicker = false
+                onChooseChallenge()
             }
         )
     }

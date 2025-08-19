@@ -1,15 +1,21 @@
 package com.shinjaehun.suksuk.presentation.division.model
 
 import com.shinjaehun.suksuk.common.ui.Highlight
-import com.shinjaehun.suksuk.domain.division.model.DivisionDomainStateV2
+import com.shinjaehun.suksuk.domain.OpType
+import com.shinjaehun.suksuk.domain.Problem
+import com.shinjaehun.suksuk.domain.model.DivisionDomainStateV2
 import com.shinjaehun.suksuk.domain.division.model.DivisionPhaseV2
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseStep
 import com.shinjaehun.suksuk.domain.division.model.DivisionCell
-import com.shinjaehun.suksuk.domain.multiplication.model.MulCell
-import com.shinjaehun.suksuk.domain.multiplication.sequence.MulPhaseStep
+import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
+import com.shinjaehun.suksuk.domain.pattern.detectPattern
 import java.util.EnumMap
 
 fun mapDivisionUiStateV2(domain: DivisionDomainStateV2, currentInput: String): DivisionUiStateV2 {
+    val pattern = detectPattern(
+        Problem(OpType.Division, domain.info.dividend, domain.info.divisor)
+    ) as DivisionPatternV2
+
     val steps = domain.phaseSequence.steps
     val currentStepIndex = domain.currentStepIndex.coerceIn(0, steps.lastIndex)
     val curPhaseStep = steps[currentStepIndex]
@@ -144,7 +150,7 @@ fun mapDivisionUiStateV2(domain: DivisionDomainStateV2, currentInput: String): D
         currentStep = currentStepIndex,
         isCompleted = isComplete,
         feedback = feedback,
-        pattern = domain.pattern
+        pattern = pattern
     )
 }
 

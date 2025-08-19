@@ -1,15 +1,18 @@
 package com.shinjaehun.suksuk.data
 
-import android.util.Log
 import com.shinjaehun.suksuk.domain.OpType
 import com.shinjaehun.suksuk.domain.ProblemSource
 import com.shinjaehun.suksuk.domain.SessionMode
+import com.shinjaehun.suksuk.domain.pattern.OperationPattern
+import kotlin.random.Random
 
-class DefaultProblemRouter {
+class DefaultProblemRouter(
+    private val randomProvider: () -> Random = { Random(System.currentTimeMillis()) }
+) {
     fun openSession(
         op: OpType,
         mode: SessionMode,
-        pattern: String? = null,                // Practice/Division에는 반드시 필요
+        pattern: OperationPattern? = null, // Practice 모드에서 필요
         overrideOperands: Pair<Int, Int>? = null
     ): ProblemSource {
 
@@ -19,11 +22,11 @@ class DefaultProblemRouter {
 
         return when (mode) {
             SessionMode.Practice -> {
-                require(pattern != null) { "Practice mode requires pattern (e.g., TwoByTwo)" }
-                LocalRandomSource(op = op, pattern = pattern) // 패턴 고정
+                val pat = requireNotNull(pattern) { "Practice mode requires pattern (e.g., TwoByTwo)" }
+                LocalRandomSource(op = op, pattern = pat, rng = randomProvider()) // 패턴 고정
             }
             SessionMode.Challenge -> {
-                ChallengeSource()        // 패턴까지 랜덤
+                ChallengeSource(rng = randomProvider())        // 패턴까지 랜덤
             }
 //            SessionMode.Class -> LocalRandomSource(op, pattern ?: "TwoByTwo") // 임시. 나중에 WebSocketSource
             SessionMode.DebugFixed -> {

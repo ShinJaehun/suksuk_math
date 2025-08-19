@@ -1,4 +1,4 @@
-package com.shinjaehun.suksuk.domain.multiplication.model
+package com.shinjaehun.suksuk.domain.model
 
 import com.shinjaehun.suksuk.domain.multiplication.info.MulStateInfo
 import com.shinjaehun.suksuk.domain.multiplication.sequence.MulPhaseSequence
@@ -8,5 +8,5 @@ data class MulDomainState(
     val currentStepIndex: Int = 0,
     val inputs: List<String> = emptyList(),
     val info: MulStateInfo,
-    val pattern: MulPattern
-)
+//    val pattern: MulPattern
+): DomainState

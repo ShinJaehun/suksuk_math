@@ -2,8 +2,10 @@ package com.shinjaehun.suksuk.presentation.division
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.shinjaehun.suksuk.domain.division.model.DivisionDomainStateV2
-import com.shinjaehun.suksuk.domain.division.factory.DivisionDomainStateV2Factory
+import com.shinjaehun.suksuk.domain.DomainStateFactory
+import com.shinjaehun.suksuk.domain.OpType
+import com.shinjaehun.suksuk.domain.Problem
+import com.shinjaehun.suksuk.domain.model.DivisionDomainStateV2
 import com.shinjaehun.suksuk.domain.division.evaluator.DivisionPhaseEvaluatorV2
 import com.shinjaehun.suksuk.presentation.division.model.DivisionUiStateV2
 import com.shinjaehun.suksuk.presentation.division.model.mapDivisionUiStateV2
@@ -17,7 +19,7 @@ import javax.inject.Inject
 class DivisionViewModelV2 @Inject constructor(
     savedStateHandle: SavedStateHandle = SavedStateHandle(),
     private val phaseEvaluator: DivisionPhaseEvaluatorV2,
-    private val domainStateFactory: DivisionDomainStateV2Factory,
+    private val domainStateFactory: DomainStateFactory,
 ): ViewModel() {
 
     private val autoStart: Boolean = savedStateHandle["autoStart"] ?: true
@@ -120,7 +122,10 @@ class DivisionViewModelV2 @Inject constructor(
     }
 
     fun startNewProblem(dividend: Int, divisor: Int) {
-        domainState = domainStateFactory.create(dividend, divisor)
+        val problem = Problem(OpType.Division, dividend, divisor)
+        val ds = domainStateFactory.create(problem)
+        require(ds is DivisionDomainStateV2) { "Expected DivisionDomainStateV2, got ${ds::class.simpleName}" }
+        domainState = ds
         _currentInput.value = ""
         emitUiState()
     }
@@ -186,6 +191,10 @@ class DivisionViewModelV2 @Inject constructor(
     }
 
     private fun emitUiState() {
+        if (!::domainState.isInitialized) {   // 안전가드(초기 렌더링)
+            _uiState.value = DivisionUiStateV2()
+            return
+        }
         _uiState.value = mapDivisionUiStateV2(domainState, _currentInput.value)
     }
 }

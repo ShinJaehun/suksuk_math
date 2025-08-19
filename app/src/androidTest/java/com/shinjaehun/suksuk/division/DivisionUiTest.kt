@@ -8,9 +8,8 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.lifecycle.SavedStateHandle
-import com.shinjaehun.suksuk.domain.division.detector.DivisionPatternDetectorV2
+import com.shinjaehun.suksuk.TestFactoryBuilders
 import com.shinjaehun.suksuk.domain.division.evaluator.DivisionPhaseEvaluatorV2
-import com.shinjaehun.suksuk.domain.division.factory.DivisionDomainStateV2Factory
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequenceProvider
 import com.shinjaehun.suksuk.domain.division.sequence.creator.ThreeByTwoDivPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByOneDivPhaseSequenceCreator
@@ -32,18 +31,11 @@ class DivisionUiTest {
     @Before
     fun setup() {
         val savedStateHandle = SavedStateHandle(mapOf("autoStart" to false))
-
-        val phaseSequenceProvider = DivisionPhaseSequenceProvider(
-            TwoByOneDivPhaseSequenceCreator(),
-            TwoByTwoDivPhaseSequenceCreator(),
-            ThreeByTwoDivPhaseSequenceCreator(),
-        )
-        val phaseEvaluator = DivisionPhaseEvaluatorV2()
-        val factory = DivisionDomainStateV2Factory(DivisionPatternDetectorV2, phaseSequenceProvider)
+        val factory = TestFactoryBuilders.unifiedFactoryForDivision()
 
         viewModel = DivisionViewModelV2(
             savedStateHandle = savedStateHandle,
-            phaseEvaluator = phaseEvaluator,
+            phaseEvaluator = DivisionPhaseEvaluatorV2(),
             domainStateFactory = factory
         )
     }

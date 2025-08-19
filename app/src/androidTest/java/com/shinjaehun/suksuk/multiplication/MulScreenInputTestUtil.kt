@@ -6,9 +6,8 @@ import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.lifecycle.SavedStateHandle
-import com.shinjaehun.suksuk.domain.multiplication.detector.MulPatternDetector
+import com.shinjaehun.suksuk.TestFactoryBuilders
 import com.shinjaehun.suksuk.domain.multiplication.evaluator.MulPhaseEvaluator
-import com.shinjaehun.suksuk.domain.multiplication.factory.MulDomainStateFactory
 import com.shinjaehun.suksuk.domain.multiplication.sequence.MulPhaseSequenceProvider
 import com.shinjaehun.suksuk.domain.multiplication.sequence.creator.ThreeByTwoMulPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.multiplication.sequence.creator.TwoByTwoMulPhaseSequenceCreator
@@ -22,15 +21,12 @@ fun ComposeContentTestRule.multiplicationCase(
 ) {
     val savedStateHandle = SavedStateHandle(mapOf("autoStart" to false))
 
-    // 네 프로젝트 실제 클래스명으로 치환
-    val phaseSequenceProvider = MulPhaseSequenceProvider(
-        TwoByTwoMulPhaseSequenceCreator(),
-        ThreeByTwoMulPhaseSequenceCreator(),
-    )
+    val factory = TestFactoryBuilders.unifiedFactoryForMultiplication()
+
     val viewModel = MultiplicationViewModel(
         savedStateHandle = savedStateHandle,
         phaseEvaluator = MulPhaseEvaluator(),
-        domainStateFactory = MulDomainStateFactory(MulPatternDetector, phaseSequenceProvider)
+        domainStateFactory = factory
     )
 
     setContent {

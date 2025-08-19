@@ -1,8 +1,6 @@
 package com.shinjaehun.suksuk.di
 
-import com.shinjaehun.suksuk.domain.multiplication.detector.MulPatternDetector
 import com.shinjaehun.suksuk.domain.multiplication.evaluator.MulPhaseEvaluator
-import com.shinjaehun.suksuk.domain.multiplication.factory.MulDomainStateFactory
 import com.shinjaehun.suksuk.domain.multiplication.sequence.MulPhaseSequenceProvider
 import com.shinjaehun.suksuk.domain.multiplication.sequence.creator.ThreeByTwoMulPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.multiplication.sequence.creator.TwoByTwoMulPhaseSequenceCreator
@@ -29,13 +27,13 @@ object MultiplicationModule {
         threeByTwoCreator,
     )
 
-    @Singleton
-    @Provides
-    fun provideMulDomainStateV2Factory(
-        patternDetector: MulPatternDetector,
-        phaseSequenceProvider: MulPhaseSequenceProvider,
-    ): MulDomainStateFactory = MulDomainStateFactory(
-        patternDetector,
-        phaseSequenceProvider
-    )
+//    @Singleton
+//    @Provides
+//    fun provideMulDomainStateV2Factory(
+//        patternDetector: MulPatternDetector,
+//        phaseSequenceProvider: MulPhaseSequenceProvider,
+//    ): MulDomainStateFactory = MulDomainStateFactory(
+//        patternDetector,
+//        phaseSequenceProvider
+//    )
 }

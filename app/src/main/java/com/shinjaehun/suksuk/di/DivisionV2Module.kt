@@ -1,8 +1,6 @@
 package com.shinjaehun.suksuk.di
 
-import com.shinjaehun.suksuk.domain.division.factory.DivisionDomainStateV2Factory
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequenceProvider
-import com.shinjaehun.suksuk.domain.division.detector.DivisionPatternDetectorV2
 import com.shinjaehun.suksuk.domain.division.evaluator.DivisionPhaseEvaluatorV2
 import com.shinjaehun.suksuk.domain.division.sequence.creator.ThreeByTwoDivPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByOneDivPhaseSequenceCreator
@@ -31,10 +29,10 @@ object DivisionV2Module {
         threeByTwoCreator,
     )
 
-    @Singleton
-    @Provides
-    fun provideDomainState2Factory(
-        patternDetector: DivisionPatternDetectorV2,
-        phaseSequenceProvider: DivisionPhaseSequenceProvider,
-    ): DivisionDomainStateV2Factory = DivisionDomainStateV2Factory(patternDetector, phaseSequenceProvider)
+//    @Singleton
+//    @Provides
+//    fun provideDomainState2Factory(
+//        patternDetector: DivisionPatternDetectorV2,
+//        phaseSequenceProvider: DivisionPhaseSequenceProvider,
+//    ): DivisionDomainStateV2Factory = DivisionDomainStateV2Factory(patternDetector, phaseSequenceProvider)
 }

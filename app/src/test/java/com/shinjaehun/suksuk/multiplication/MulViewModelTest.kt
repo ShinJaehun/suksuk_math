@@ -1,9 +1,8 @@
 package com.shinjaehun.suksuk.multiplication
 
-import com.shinjaehun.suksuk.domain.multiplication.detector.MulPatternDetector
+import com.shinjaehun.suksuk.TestFactoryBuilders
 import com.shinjaehun.suksuk.domain.multiplication.evaluator.MulPhaseEvaluator
-import com.shinjaehun.suksuk.domain.multiplication.factory.MulDomainStateFactory
-import com.shinjaehun.suksuk.domain.multiplication.model.MulPattern
+import com.shinjaehun.suksuk.domain.pattern.MulPattern
 import com.shinjaehun.suksuk.domain.multiplication.sequence.MulPhaseSequenceProvider
 import com.shinjaehun.suksuk.domain.multiplication.sequence.creator.ThreeByTwoMulPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.multiplication.sequence.creator.TwoByTwoMulPhaseSequenceCreator
@@ -21,24 +20,9 @@ class MultiplicationViewModelTest {
 
     @Before
     fun setup() {
-        // Phase Sequence 생성기
-        val twoByTwoCreator   = TwoByTwoMulPhaseSequenceCreator()
-        val threeByTwoCreator = ThreeByTwoMulPhaseSequenceCreator()
-
-        val phaseSequenceProvider = MulPhaseSequenceProvider(
-            twoByTwoCreator,
-            threeByTwoCreator
-        )
-
-        val phaseEvaluator = MulPhaseEvaluator()
-
-        val factory = MulDomainStateFactory(
-            patternDetector = MulPatternDetector,
-            phaseSequenceProvider = phaseSequenceProvider
-        )
-
+        val factory = TestFactoryBuilders.unifiedFactoryForMultiplication()
         viewModel = MultiplicationViewModel(
-            phaseEvaluator = phaseEvaluator,
+            phaseEvaluator = MulPhaseEvaluator(),
             domainStateFactory = factory
         )
     }

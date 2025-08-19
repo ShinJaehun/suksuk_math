@@ -4,7 +4,7 @@ import com.shinjaehun.suksuk.domain.division.info.DivisionStateInfo
 import com.shinjaehun.suksuk.domain.division.sequence.creator.ThreeByTwoDivPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByOneDivPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByTwoDivPhaseSequenceCreator
-import com.shinjaehun.suksuk.domain.division.model.DivisionPatternV2
+import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
 import javax.inject.Inject
 
 class DivisionPhaseSequenceProvider @Inject constructor(

@@ -11,9 +11,8 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.lifecycle.SavedStateHandle
-import com.shinjaehun.suksuk.domain.multiplication.detector.MulPatternDetector
+import com.shinjaehun.suksuk.TestFactoryBuilders
 import com.shinjaehun.suksuk.domain.multiplication.evaluator.MulPhaseEvaluator
-import com.shinjaehun.suksuk.domain.multiplication.factory.MulDomainStateFactory
 import com.shinjaehun.suksuk.domain.multiplication.sequence.MulPhaseSequenceProvider
 import com.shinjaehun.suksuk.domain.multiplication.sequence.creator.ThreeByTwoMulPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.multiplication.sequence.creator.TwoByTwoMulPhaseSequenceCreator
@@ -35,17 +34,11 @@ class MultiplicationUiTest {
     @Before
     fun setup() {
         val savedStateHandle = SavedStateHandle(mapOf("autoStart" to false))
-
-        val phaseSequenceProvider = MulPhaseSequenceProvider(
-            TwoByTwoMulPhaseSequenceCreator(),
-            ThreeByTwoMulPhaseSequenceCreator(),
-        )
-        val phaseEvaluator = MulPhaseEvaluator()
-        val factory = MulDomainStateFactory(MulPatternDetector, phaseSequenceProvider)
+        val factory = TestFactoryBuilders.unifiedFactoryForMultiplication()
 
         viewModel = MultiplicationViewModel(
             savedStateHandle = savedStateHandle,
-            phaseEvaluator = phaseEvaluator,
+            phaseEvaluator = MulPhaseEvaluator(),
             domainStateFactory = factory
         )
     }

@@ -3,7 +3,7 @@ package com.shinjaehun.suksuk.domain.multiplication.evaluator
 import com.shinjaehun.suksuk.common.eval.EvalResult
 import com.shinjaehun.suksuk.domain.multiplication.info.MulStateInfo
 import com.shinjaehun.suksuk.domain.multiplication.model.MulCell
-import com.shinjaehun.suksuk.domain.multiplication.model.MulDomainState
+import com.shinjaehun.suksuk.domain.model.MulDomainState
 import com.shinjaehun.suksuk.domain.multiplication.model.MulPhase
 import javax.inject.Inject
 
