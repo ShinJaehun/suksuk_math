@@ -4,17 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import com.shinjaehun.suksuk.presentation.ChallengeScreen
-import com.shinjaehun.suksuk.presentation.MainScreen
-import com.shinjaehun.suksuk.presentation.division.DivisionScreenV2
-import com.shinjaehun.suksuk.presentation.division.legacy.DivisionScreen
-import com.shinjaehun.suksuk.presentation.multiplication.MultiplicationScreen
 import com.shinjaehun.suksuk.ui.theme.SukSukTheme
 import dagger.hilt.android.AndroidEntryPoint
 

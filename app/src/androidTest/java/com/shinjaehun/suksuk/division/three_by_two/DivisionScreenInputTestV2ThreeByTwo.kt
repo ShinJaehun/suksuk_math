@@ -2,7 +2,6 @@ package com.shinjaehun.suksuk.division.three_by_two
 
 import androidx.compose.ui.test.junit4.createComposeRule
 import com.shinjaehun.suksuk.division.divisionCaseV2
-import com.shinjaehun.suksuk.division.legacy.divisionCase
 import org.junit.Rule
 import org.junit.Test
 
