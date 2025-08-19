@@ -20,11 +20,11 @@ import androidx.compose.ui.unit.sp
 import com.shinjaehun.suksuk.R
 import com.shinjaehun.suksuk.presentation.common.Highlight
 import com.shinjaehun.suksuk.presentation.division.model.CrossOutType
-import com.shinjaehun.suksuk.presentation.division.model.DivisionInputCellV2
+import com.shinjaehun.suksuk.presentation.division.model.DivisionInputCell
 
 @Composable
 fun DivAuxNumberText(
-    cell: DivisionInputCellV2,
+    cell: DivisionInputCell,
     defaultColor: Color = Color.Black,
     fontSize: TextUnit = 20.sp,
     width: Dp = 42.dp,

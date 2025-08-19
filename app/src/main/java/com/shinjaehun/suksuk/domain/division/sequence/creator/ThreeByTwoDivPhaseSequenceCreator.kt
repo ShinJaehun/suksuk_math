@@ -4,8 +4,8 @@ import com.shinjaehun.suksuk.domain.division.info.DivisionStateInfo
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequence
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseStep
 import com.shinjaehun.suksuk.domain.division.model.DivisionCell
-import com.shinjaehun.suksuk.domain.division.model.DivisionPhaseV2
-import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
+import com.shinjaehun.suksuk.domain.division.model.DivisionPhase
+import com.shinjaehun.suksuk.domain.pattern.DivisionPattern
 import javax.inject.Inject
 
 class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSequenceCreator {
@@ -20,7 +20,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
         if (info.hasTensQuotient) {
             // [1] 몫 십의 자리 입력
             steps += DivisionPhaseStep(
-                phase = DivisionPhaseV2.InputQuotient,
+                phase = DivisionPhase.InputQuotient,
                 editableCells = listOf(DivisionCell.QuotientTens),
                 highlightCells = listOf(DivisionCell.DividendHundreds, DivisionCell.DividendTens, DivisionCell.DivisorTens, DivisionCell.DivisorOnes)
             )
@@ -28,21 +28,21 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
             // [2] 1차 곱셈 (몫 십의 자리 × 제수) -- Carry 없음
             if(info.isCarryRequiredInMultiplyQuotientTens){
                 steps += DivisionPhaseStep(
-                    phase = DivisionPhaseV2.InputMultiply1,
+                    phase = DivisionPhase.InputMultiply1,
                     editableCells = listOf(DivisionCell.CarryDivisorTensM1, DivisionCell.Multiply1Tens),
                     highlightCells = listOf(DivisionCell.DivisorOnes, DivisionCell.QuotientTens),
                     needsCarry = true
                 )
             } else {
                 steps += DivisionPhaseStep(
-                    phase = DivisionPhaseV2.InputMultiply1,
+                    phase = DivisionPhase.InputMultiply1,
                     editableCells = listOf(DivisionCell.Multiply1Tens),
                     highlightCells = listOf(DivisionCell.DivisorOnes, DivisionCell.QuotientTens),
                 )
             }
 
             steps += DivisionPhaseStep(
-                phase = DivisionPhaseV2.InputMultiply1,
+                phase = DivisionPhase.InputMultiply1,
                 editableCells = listOf(DivisionCell.Multiply1Hundreds),
                 highlightCells = buildList {
                     if(info.isCarryRequiredInMultiplyQuotientTens) {
@@ -55,7 +55,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
 
             if(info.needsHundredsBorrowInS1) {
                 steps += DivisionPhaseStep(
-                    phase = DivisionPhaseV2.InputBorrow,
+                    phase = DivisionPhase.InputBorrow,
                     editableCells = listOf(DivisionCell.BorrowDividendHundreds),
                     highlightCells = listOf(
                         DivisionCell.DividendHundreds,
@@ -70,7 +70,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
 
             // [3] 1차 뺄셈 (Borrow 없음)
             steps += DivisionPhaseStep(
-                phase = DivisionPhaseV2.InputSubtract1,
+                phase = DivisionPhase.InputSubtract1,
                 editableCells = listOf(DivisionCell.Subtract1Tens),
                 highlightCells = buildList {
                     if(info.needsHundredsBorrowInS1){
@@ -92,7 +92,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
 
             if (is2DigitsInSubtract1) {
                steps += DivisionPhaseStep(
-                   phase = DivisionPhaseV2.InputSubtract1,
+                   phase = DivisionPhase.InputSubtract1,
                    editableCells = listOf(DivisionCell.Subtract1Hundreds),
                    highlightCells = buildList {
                        if(info.needsHundredsBorrowInS1){
@@ -108,7 +108,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
 
             // [4] Bring down 일의 자리
             steps += DivisionPhaseStep(
-                phase = DivisionPhaseV2.InputBringDown,
+                phase = DivisionPhase.InputBringDown,
                 editableCells = listOf(DivisionCell.Subtract1Ones),
                 highlightCells = listOf(DivisionCell.DividendOnes),
                 presetValues = if(info.shouldLeaveSubtract1TensEmpty){
@@ -120,14 +120,14 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
             )
 
             steps += DivisionPhaseStep(
-                phase = DivisionPhaseV2.PrepareNextOp,
+                phase = DivisionPhase.PrepareNextOp,
                 editableCells = emptyList(),
                 clearCells = setOf(DivisionCell.CarryDivisorTensM1)
             )
 
             // [5] 몫 일의 자리 입력
             steps += DivisionPhaseStep(
-                phase = DivisionPhaseV2.InputQuotient,
+                phase = DivisionPhase.InputQuotient,
                 editableCells = listOf(DivisionCell.QuotientOnes),
                 highlightCells = buildList {
                     if(is2DigitsInSubtract1) add(DivisionCell.Subtract1Hundreds)
@@ -149,14 +149,14 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                     is3DigitsMultiplyQuotientOnes && info.isCarryRequiredInMultiplyQuotientOnes -> {
                         // Step 6-1: carry + ones
                         steps += DivisionPhaseStep(
-                            phase = DivisionPhaseV2.InputMultiply2,
+                            phase = DivisionPhase.InputMultiply2,
                             editableCells = listOf(DivisionCell.CarryDivisorTensM2, DivisionCell.Multiply2Ones),
                             highlightCells = listOf(DivisionCell.DivisorOnes, DivisionCell.QuotientOnes),
                             needsCarry = true
                         )
                         // Step 6-2: Hundreds → Tens 동시 입력
                         steps += DivisionPhaseStep(
-                            phase = DivisionPhaseV2.InputMultiply2,
+                            phase = DivisionPhase.InputMultiply2,
                             editableCells = listOf(DivisionCell.Multiply2Hundreds, DivisionCell.Multiply2Tens),
                             highlightCells = listOf(DivisionCell.QuotientOnes, DivisionCell.DivisorTens, DivisionCell.CarryDivisorTensM2)
                         )
@@ -166,7 +166,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                     is3DigitsMultiplyQuotientOnes && !info.isCarryRequiredInMultiplyQuotientOnes -> {
                         // Step 6-1: ones만
                         steps += DivisionPhaseStep(
-                            phase = DivisionPhaseV2.InputMultiply2,
+                            phase = DivisionPhase.InputMultiply2,
                             editableCells = listOf(DivisionCell.Multiply2Ones),
                             highlightCells = listOf(DivisionCell.QuotientOnes, DivisionCell.DivisorOnes),
                             // 혹시 이전 케이스 잔여값 방지
@@ -174,7 +174,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                         )
                         // Step 6-2: Hundreds → Tens 동시 입력 (carry 입력 없이)
                         steps += DivisionPhaseStep(
-                            phase = DivisionPhaseV2.InputMultiply2,
+                            phase = DivisionPhase.InputMultiply2,
                             editableCells = listOf(DivisionCell.Multiply2Hundreds, DivisionCell.Multiply2Tens),
                             highlightCells = listOf(DivisionCell.QuotientOnes, DivisionCell.DivisorTens)
                         )
@@ -183,13 +183,13 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                     // 2자리 + 캐리 있음 (예: 27×4=108은 3자리라 위로 감, 이 케이스는 예: 19×6=114? → 3자리라 위로. 실제 2자리+캐리는 드뭄)
                     !is3DigitsMultiplyQuotientOnes && info.isCarryRequiredInMultiplyQuotientOnes -> {
                         steps += DivisionPhaseStep(
-                            phase = DivisionPhaseV2.InputMultiply2,
+                            phase = DivisionPhase.InputMultiply2,
                             editableCells = listOf(DivisionCell.CarryDivisorTensM2, DivisionCell.Multiply2Ones),
                             highlightCells = listOf(DivisionCell.DivisorOnes, DivisionCell.QuotientOnes),
                             needsCarry = true
                         )
                         steps += DivisionPhaseStep(
-                            phase = DivisionPhaseV2.InputMultiply2,
+                            phase = DivisionPhase.InputMultiply2,
                             editableCells = listOf(DivisionCell.Multiply2Tens),
                             highlightCells = listOf(DivisionCell.QuotientOnes, DivisionCell.DivisorTens, DivisionCell.CarryDivisorTensM2)
                         )
@@ -198,13 +198,13 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                     // 2자리 + 캐리 없음 (예: 60×1=60)
                     else -> {
                         steps += DivisionPhaseStep(
-                            phase = DivisionPhaseV2.InputMultiply2,
+                            phase = DivisionPhase.InputMultiply2,
                             editableCells = listOf(DivisionCell.Multiply2Ones),
                             highlightCells = listOf(DivisionCell.QuotientOnes, DivisionCell.DivisorOnes),
 //                            presetValues = mapOf(DivisionCell.CarryDivisorTensM2 to "")
                         )
                         steps += DivisionPhaseStep(
-                            phase = DivisionPhaseV2.InputMultiply2,
+                            phase = DivisionPhase.InputMultiply2,
                             editableCells = listOf(DivisionCell.Multiply2Tens),
                             highlightCells = listOf(DivisionCell.QuotientOnes, DivisionCell.DivisorTens)
                         )
@@ -214,7 +214,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                 if (info.needsDoubleBorrowInS2) {
                     // [DB1] hbs 입력
                     steps += DivisionPhaseStep(
-                        phase = DivisionPhaseV2.InputBorrow,
+                        phase = DivisionPhase.InputBorrow,
                         editableCells = listOf(DivisionCell.BorrowSubtract1Hundreds),
                         highlightCells = listOf(
                             DivisionCell.Subtract1Hundreds,
@@ -229,7 +229,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                     )
                     // [DB2] tbs 입력
                     steps += DivisionPhaseStep(
-                        phase = DivisionPhaseV2.InputBorrow,
+                        phase = DivisionPhase.InputBorrow,
                         editableCells = listOf(DivisionCell.BorrowSubtract1Tens),
                         highlightCells = listOf(
                             DivisionCell.Borrowed10Subtract1Tens,
@@ -243,7 +243,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                     )
                     // [DB3] Ones
                     steps += DivisionPhaseStep(
-                        phase = DivisionPhaseV2.InputSubtract2,
+                        phase = DivisionPhase.InputSubtract2,
                         editableCells = listOf(DivisionCell.Subtract2Ones),
                         highlightCells = listOf(
                             DivisionCell.Borrowed10Subtract1Ones,
@@ -257,7 +257,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                     // [DB4] Tens (게이팅은 tensResFinal)
                     if (info.shouldPerformSubtractTensStep) {
                         steps += DivisionPhaseStep(
-                            phase = DivisionPhaseV2.InputSubtract2,
+                            phase = DivisionPhase.InputSubtract2,
                             editableCells = listOf(DivisionCell.Subtract2Tens),
                             highlightCells = listOf(
                                 DivisionCell.BorrowSubtract1Tens,
@@ -273,7 +273,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                     if (info.needsHundredsBorrowInS2) {
                         // Ones 먼저 (예: 9−9=0)
                         steps += DivisionPhaseStep(
-                            phase = DivisionPhaseV2.InputSubtract2,
+                            phase = DivisionPhase.InputSubtract2,
                             editableCells = listOf(DivisionCell.Subtract2Ones),
                             highlightCells = listOf(DivisionCell.Subtract1Ones, DivisionCell.Multiply2Ones),
                             subtractLineTargets = setOf(DivisionCell.Subtract2Ones)
@@ -281,7 +281,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
 
                         if (!info.skipHundredsBorrowInS2) {
                             steps += DivisionPhaseStep(
-                                phase = DivisionPhaseV2.InputBorrow,
+                                phase = DivisionPhase.InputBorrow,
                                 editableCells = listOf(DivisionCell.BorrowSubtract1Hundreds),
                                 highlightCells = listOf(
                                     DivisionCell.Subtract1Hundreds,
@@ -297,7 +297,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                         // Tens 단계 (게이팅은 tensResFinal)
                         if (info.shouldPerformSubtractTensStep) {
                             steps += DivisionPhaseStep(
-                                phase = DivisionPhaseV2.InputSubtract2,
+                                phase = DivisionPhase.InputSubtract2,
                                 editableCells = listOf(DivisionCell.Subtract2Tens),
                                 highlightCells = buildList {
                                     if (info.skipHundredsBorrowInS2) add(DivisionCell.Subtract1Hundreds)
@@ -320,7 +320,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                     // ─ tbs만 ─
                     else if (info.needsTensBorrowInS2) {
                         steps += DivisionPhaseStep(
-                            phase = DivisionPhaseV2.InputBorrow,
+                            phase = DivisionPhase.InputBorrow,
                             editableCells = listOf(DivisionCell.BorrowSubtract1Tens),
                             highlightCells = listOf(
                                 DivisionCell.Subtract1Tens,
@@ -332,7 +332,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                             subtractLineTargets = setOf(DivisionCell.BorrowSubtract1Tens)
                         )
                         steps += DivisionPhaseStep(
-                            phase = DivisionPhaseV2.InputSubtract2,
+                            phase = DivisionPhase.InputSubtract2,
                             editableCells = listOf(DivisionCell.Subtract2Ones),
                             highlightCells = listOf(
                                 DivisionCell.Borrowed10Subtract1Ones,
@@ -346,7 +346,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
 
                         if (info.shouldPerformSubtractTensStep) {
                             steps += DivisionPhaseStep(
-                                phase = DivisionPhaseV2.InputSubtract2,
+                                phase = DivisionPhase.InputSubtract2,
                                 editableCells = listOf(DivisionCell.Subtract2Tens),
                                 highlightCells = listOf(DivisionCell.BorrowSubtract1Tens, DivisionCell.Multiply2Tens),
                                 subtractLineTargets = setOf(DivisionCell.Subtract2Tens)
@@ -356,14 +356,14 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                     // ─ borrow 없음 ─
                     else {
                         steps += DivisionPhaseStep(
-                            phase = DivisionPhaseV2.InputSubtract2,
+                            phase = DivisionPhase.InputSubtract2,
                             editableCells = listOf(DivisionCell.Subtract2Ones),
                             highlightCells = listOf(DivisionCell.Subtract1Ones, DivisionCell.Multiply2Ones),
                             subtractLineTargets = setOf(DivisionCell.Subtract2Ones)
                         )
                         if (info.shouldPerformSubtractTensStep) {
                             steps += DivisionPhaseStep(
-                                phase = DivisionPhaseV2.InputSubtract2,
+                                phase = DivisionPhase.InputSubtract2,
                                 editableCells = listOf(DivisionCell.Subtract2Tens),
                                 highlightCells = listOf(DivisionCell.Subtract1Tens, DivisionCell.Multiply2Tens),
                                 subtractLineTargets = setOf(DivisionCell.Subtract2Tens)
@@ -375,7 +375,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
         } else {
             // one quotient
             steps += DivisionPhaseStep(
-                phase = DivisionPhaseV2.InputQuotient,
+                phase = DivisionPhase.InputQuotient,
                 editableCells = listOf(DivisionCell.QuotientOnes),
                 highlightCells = listOf(
                     DivisionCell.DividendHundreds, DivisionCell.DividendTens, DivisionCell.DividendOnes,
@@ -388,7 +388,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                 is3DigitsMultiplyQuotientOnes && info.isCarryRequiredInMultiplyQuotientOnes -> {
                     // Step 2-1: carry + ones
                     steps += DivisionPhaseStep(
-                        phase = DivisionPhaseV2.InputMultiply1,
+                        phase = DivisionPhase.InputMultiply1,
                         editableCells = listOf(
                             DivisionCell.CarryDivisorTensM1,
                             DivisionCell.Multiply1Ones
@@ -398,7 +398,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                     )
                     // Step 2-2: Hundreds → Tens 동시 입력
                     steps += DivisionPhaseStep(
-                        phase = DivisionPhaseV2.InputMultiply1,
+                        phase = DivisionPhase.InputMultiply1,
                         editableCells = listOf(DivisionCell.Multiply1Hundreds, DivisionCell.Multiply1Tens),
                         highlightCells = listOf(
                             DivisionCell.QuotientOnes,
@@ -411,13 +411,13 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                 is3DigitsMultiplyQuotientOnes && !info.isCarryRequiredInMultiplyQuotientOnes -> {
                     // Step 2-1: ones만
                     steps += DivisionPhaseStep(
-                        phase = DivisionPhaseV2.InputMultiply1,
+                        phase = DivisionPhase.InputMultiply1,
                         editableCells = listOf(DivisionCell.Multiply1Ones),
                         highlightCells = listOf(DivisionCell.QuotientOnes, DivisionCell.DivisorOnes),
                     )
                     // Step 2-2: Hundreds → Tens
                     steps += DivisionPhaseStep(
-                        phase = DivisionPhaseV2.InputMultiply1,
+                        phase = DivisionPhase.InputMultiply1,
                         editableCells = listOf(DivisionCell.Multiply1Hundreds, DivisionCell.Multiply1Tens),
                         highlightCells = listOf(DivisionCell.QuotientOnes, DivisionCell.DivisorTens)
                     )
@@ -426,14 +426,14 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                 !is3DigitsMultiplyQuotientOnes && info.isCarryRequiredInMultiplyQuotientOnes -> {
                     // carry + ones 먼저
                     steps += DivisionPhaseStep(
-                        phase = DivisionPhaseV2.InputMultiply1,
+                        phase = DivisionPhase.InputMultiply1,
                         editableCells = listOf(DivisionCell.CarryDivisorTensM1, DivisionCell.Multiply1Ones),
                         highlightCells = listOf(DivisionCell.DivisorOnes, DivisionCell.QuotientOnes),
                         needsCarry = true
                     )
                     // 그 다음 tens (Hundreds는 없음)
                     steps += DivisionPhaseStep(
-                        phase = DivisionPhaseV2.InputMultiply1,
+                        phase = DivisionPhase.InputMultiply1,
                         editableCells = listOf(DivisionCell.Multiply1Tens),
                         highlightCells = listOf(
                             DivisionCell.QuotientOnes, DivisionCell.DivisorTens, DivisionCell.CarryDivisorTensM1
@@ -443,12 +443,12 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                 // 2자리 + 캐리 없음
                 else -> {
                     steps += DivisionPhaseStep(
-                        phase = DivisionPhaseV2.InputMultiply1,
+                        phase = DivisionPhase.InputMultiply1,
                         editableCells = listOf(DivisionCell.Multiply1Ones),
                         highlightCells = listOf(DivisionCell.QuotientOnes, DivisionCell.DivisorOnes),
                     )
                     steps += DivisionPhaseStep(
-                        phase = DivisionPhaseV2.InputMultiply1,
+                        phase = DivisionPhase.InputMultiply1,
                         editableCells = listOf(DivisionCell.Multiply1Tens),
                         highlightCells = listOf(DivisionCell.QuotientOnes, DivisionCell.DivisorTens)
                     )
@@ -461,7 +461,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                 info.needsDoubleBorrowInS1 -> {
                     // [DB1] 백의 자리에서 십의 자리로 차용
                     steps += DivisionPhaseStep(
-                        phase = DivisionPhaseV2.InputBorrow,
+                        phase = DivisionPhase.InputBorrow,
                         editableCells = listOf(DivisionCell.BorrowDividendHundreds),
 //                        highlightCells = listOf(CellName.DividendHundreds),
                         highlightCells = listOf(
@@ -477,7 +477,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                     )
                     // [DB2] 십의 자리에서 일의 자리로 차용 (Borrowed10Subtract1Tens=10 세팅)
                     steps += DivisionPhaseStep(
-                        phase = DivisionPhaseV2.InputBorrow,
+                        phase = DivisionPhase.InputBorrow,
                         editableCells = listOf(DivisionCell.BorrowDividendTens),
 //                        highlightCells = listOf(CellName.Borrowed10DividendTens),
                         highlightCells = listOf(
@@ -494,7 +494,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                     )
                     // [DB3] 일의 자리 뺄셈 (Borrowed10Subtract1Ones=10 세팅)
                     steps += DivisionPhaseStep(
-                        phase = DivisionPhaseV2.InputSubtract1,
+                        phase = DivisionPhase.InputSubtract1,
                         editableCells = listOf(DivisionCell.Subtract1Ones),
                         highlightCells = listOf(
                             DivisionCell.Borrowed10DividendOnes,
@@ -508,7 +508,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                     // [DB4] 십의 자리 뺄셈
                     if (info.shouldPerformSubtractTensStep) {
                         steps += DivisionPhaseStep(
-                            phase = DivisionPhaseV2.InputSubtract1,
+                            phase = DivisionPhase.InputSubtract1,
                             editableCells = listOf(DivisionCell.Subtract1Tens),
                             highlightCells = listOf(
                                 DivisionCell.BorrowDividendTens,
@@ -524,7 +524,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                 info.needsHundredsBorrowInS1 -> {
                     // 일의 자리 먼저 처리 (차용 없이 가능한 경우가 많음)
                     steps += DivisionPhaseStep(
-                        phase = DivisionPhaseV2.InputSubtract1,
+                        phase = DivisionPhase.InputSubtract1,
                         editableCells = listOf(DivisionCell.Subtract1Ones),
                         highlightCells = listOf(DivisionCell.DividendOnes, DivisionCell.Multiply1Ones),
                         subtractLineTargets = setOf(DivisionCell.Subtract1Ones)
@@ -532,7 +532,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
 
                     if (!info.skipHundredsBorrowInS1) {
                         steps += DivisionPhaseStep(
-                            phase = DivisionPhaseV2.InputBorrow,
+                            phase = DivisionPhase.InputBorrow,
                             editableCells = listOf(DivisionCell.BorrowDividendHundreds),
                             highlightCells = listOf(
                                 DivisionCell.DividendHundreds,
@@ -548,7 +548,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                     if(info.shouldPerformSubtractTensStep) {
                         // 십의 자리 (Borrowed10Subtract1Tens=10 preset)
                         steps += DivisionPhaseStep(
-                            phase = DivisionPhaseV2.InputSubtract1,
+                            phase = DivisionPhase.InputSubtract1,
                             editableCells = listOf(DivisionCell.Subtract1Tens),
                             highlightCells = buildList {
                                 if(info.skipHundredsBorrowInS1) add(DivisionCell.DividendHundreds)
@@ -573,7 +573,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                 info.needsTensBorrowInS1 -> {
                     // 십→일 차용
                     steps += DivisionPhaseStep(
-                        phase = DivisionPhaseV2.InputBorrow,
+                        phase = DivisionPhase.InputBorrow,
                         editableCells = listOf(DivisionCell.BorrowDividendTens),
                         highlightCells = listOf(
                             DivisionCell.DividendTens,
@@ -586,7 +586,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                     )
                     // 일의 자리
                     steps += DivisionPhaseStep(
-                        phase = DivisionPhaseV2.InputSubtract1,
+                        phase = DivisionPhase.InputSubtract1,
                         editableCells = listOf(DivisionCell.Subtract1Ones),
                         highlightCells = listOf(
                             DivisionCell.Borrowed10DividendOnes,
@@ -600,7 +600,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                     // 십의 자리
                     if(info.shouldPerformSubtractTensStep) {
                         steps += DivisionPhaseStep(
-                            phase = DivisionPhaseV2.InputSubtract1,
+                            phase = DivisionPhase.InputSubtract1,
                             editableCells = listOf(DivisionCell.Subtract1Tens),
                             highlightCells = listOf(DivisionCell.BorrowDividendTens, DivisionCell.Multiply1Tens),
                             subtractLineTargets = setOf(DivisionCell.Subtract1Tens)
@@ -611,14 +611,14 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
                 // ─ borrow 없음 ─
                 else -> {
                     steps += DivisionPhaseStep(
-                        phase = DivisionPhaseV2.InputSubtract1,
+                        phase = DivisionPhase.InputSubtract1,
                         editableCells = listOf(DivisionCell.Subtract1Ones),
                         highlightCells = listOf(DivisionCell.DividendOnes, DivisionCell.Multiply1Ones),
                         subtractLineTargets = setOf(DivisionCell.Subtract1Ones)
                     )
                     if(info.shouldPerformSubtractTensStep) {
                         steps += DivisionPhaseStep(
-                            phase = DivisionPhaseV2.InputSubtract1,
+                            phase = DivisionPhase.InputSubtract1,
                             editableCells = listOf(DivisionCell.Subtract1Tens),
                             highlightCells = listOf(DivisionCell.DividendTens, DivisionCell.Multiply1Tens),
                             subtractLineTargets = setOf(DivisionCell.Subtract1Tens)
@@ -629,7 +629,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
         }
         // [8] 완료 단계
         steps += DivisionPhaseStep(
-            phase = DivisionPhaseV2.Complete,
+            phase = DivisionPhase.Complete,
         )
 
 //        steps.forEachIndexed { idx, step ->
@@ -638,7 +638,7 @@ class ThreeByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeq
 
         return DivisionPhaseSequence(
             steps = steps,
-            pattern = DivisionPatternV2.ThreeByTwo
+            pattern = DivisionPattern.ThreeByTwo
         )
     }
 }

@@ -15,20 +15,20 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.shinjaehun.suksuk.R
 import com.shinjaehun.suksuk.domain.division.model.DivisionCell
-import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
-import com.shinjaehun.suksuk.presentation.division.model.DivisionUiStateV2
+import com.shinjaehun.suksuk.domain.pattern.DivisionPattern
+import com.shinjaehun.suksuk.presentation.division.model.DivisionUiState
 import com.shinjaehun.suksuk.presentation.division.model.SubtractLineType
 
 @Composable
 fun DivisionBoard2By1And2By2(
-    uiState: DivisionUiStateV2,
-    pattern: DivisionPatternV2
+    uiState: DivisionUiState,
+    pattern: DivisionPattern
 ) {
 
     val cellWidth = 42.dp
 
     val bracketStartMargin = when(pattern) {
-        DivisionPatternV2.TwoByOne -> 60.dp
+        DivisionPattern.TwoByOne -> 60.dp
         else -> 90.dp
     }
 

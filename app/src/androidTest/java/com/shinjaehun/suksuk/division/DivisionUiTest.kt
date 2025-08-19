@@ -9,13 +9,9 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.lifecycle.SavedStateHandle
 import com.shinjaehun.suksuk.TestFactoryBuilders
-import com.shinjaehun.suksuk.domain.division.evaluator.DivisionPhaseEvaluatorV2
-import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequenceProvider
-import com.shinjaehun.suksuk.domain.division.sequence.creator.ThreeByTwoDivPhaseSequenceCreator
-import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByOneDivPhaseSequenceCreator
-import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByTwoDivPhaseSequenceCreator
-import com.shinjaehun.suksuk.presentation.division.DivisionScreenV2
-import com.shinjaehun.suksuk.presentation.division.DivisionViewModelV2
+import com.shinjaehun.suksuk.domain.division.evaluator.DivisionPhaseEvaluator
+import com.shinjaehun.suksuk.presentation.division.DivisionScreen
+import com.shinjaehun.suksuk.presentation.division.DivisionViewModel
 import junit.framework.TestCase.assertTrue
 import org.junit.Before
 import org.junit.Rule
@@ -26,16 +22,16 @@ class DivisionUiTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private lateinit var viewModel: DivisionViewModelV2
+    private lateinit var viewModel: DivisionViewModel
 
     @Before
     fun setup() {
         val savedStateHandle = SavedStateHandle(mapOf("autoStart" to false))
         val factory = TestFactoryBuilders.unifiedFactoryForDivision()
 
-        viewModel = DivisionViewModelV2(
+        viewModel = DivisionViewModel(
             savedStateHandle = savedStateHandle,
-            phaseEvaluator = DivisionPhaseEvaluatorV2(),
+            phaseEvaluator = DivisionPhaseEvaluator(),
             domainStateFactory = factory
         )
     }
@@ -43,7 +39,7 @@ class DivisionUiTest {
     // ---- 공통 헬퍼 ----
     private fun setDivision(dividend: Int, divisor: Int) {
         composeTestRule.setContent {
-            DivisionScreenV2(
+            DivisionScreen(
                 dividend = dividend,
                 divisor = divisor,
                 viewModel = viewModel
@@ -159,7 +155,7 @@ class DivisionUiTest {
 
         composeTestRule.onNodeWithTag("subtraction1-line").assertDoesNotExist()
 
-        // 직접 submitInput도 가능 (V2)
+        // 직접 submitInput도 가능
         composeTestRule.runOnIdle { viewModel.submitInput("2") }
         composeTestRule.waitForIdle()
         composeTestRule.runOnIdle { viewModel.submitInput("8") }

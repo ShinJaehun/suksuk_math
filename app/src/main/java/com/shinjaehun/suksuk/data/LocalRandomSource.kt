@@ -4,7 +4,7 @@ import com.shinjaehun.suksuk.domain.OpType
 import com.shinjaehun.suksuk.domain.Problem
 import com.shinjaehun.suksuk.domain.generator.ProblemRules
 import com.shinjaehun.suksuk.domain.ProblemSource
-import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
+import com.shinjaehun.suksuk.domain.pattern.DivisionPattern
 import com.shinjaehun.suksuk.domain.pattern.MulPattern
 import com.shinjaehun.suksuk.domain.pattern.OperationPattern
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -35,9 +35,9 @@ class LocalRandomSource(
                 else -> error("unsupported multiplication pattern: $pattern")
             }
             OpType.Division -> when (pattern) {
-                DivisionPatternV2.TwoByOne -> ProblemRules.randomTwoByOneDiv(rng)
-                DivisionPatternV2.TwoByTwo -> ProblemRules.randomTwoByTwoDiv(rng)
-                DivisionPatternV2.ThreeByTwo -> ProblemRules.randomThreeByTwoDiv(rng)
+                DivisionPattern.TwoByOne -> ProblemRules.randomTwoByOneDiv(rng)
+                DivisionPattern.TwoByTwo -> ProblemRules.randomTwoByTwoDiv(rng)
+                DivisionPattern.ThreeByTwo -> ProblemRules.randomThreeByTwoDiv(rng)
                 else -> error("unsupported division pattern: $pattern")
             }
         }

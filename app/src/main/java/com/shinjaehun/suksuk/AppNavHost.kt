@@ -8,7 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.shinjaehun.suksuk.domain.ProblemSessionFactory
 import com.shinjaehun.suksuk.domain.SessionMode
-import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
+import com.shinjaehun.suksuk.domain.pattern.DivisionPattern
 import com.shinjaehun.suksuk.domain.pattern.MulPattern
 import com.shinjaehun.suksuk.presentation.ChallengeScreen
 import com.shinjaehun.suksuk.presentation.MainScreen
@@ -111,10 +111,10 @@ fun AppNavHost(problemFactory: ProblemSessionFactory) {
 
 }
 
-private fun parseDivisionPatternOrNull(s: String): DivisionPatternV2? = when (s) {
-    "TwoByOne"   -> DivisionPatternV2.TwoByOne
-    "TwoByTwo"   -> DivisionPatternV2.TwoByTwo
-    "ThreeByTwo" -> DivisionPatternV2.ThreeByTwo
+private fun parseDivisionPatternOrNull(s: String): DivisionPattern? = when (s) {
+    "TwoByOne"   -> DivisionPattern.TwoByOne
+    "TwoByTwo"   -> DivisionPattern.TwoByTwo
+    "ThreeByTwo" -> DivisionPattern.ThreeByTwo
     else         -> null
 }
 

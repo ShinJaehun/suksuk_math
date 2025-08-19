@@ -16,14 +16,14 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.shinjaehun.suksuk.R
 import com.shinjaehun.suksuk.domain.division.model.DivisionCell
-import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
-import com.shinjaehun.suksuk.presentation.division.model.DivisionInputCellV2
-import com.shinjaehun.suksuk.presentation.division.model.DivisionUiStateV2
+import com.shinjaehun.suksuk.domain.pattern.DivisionPattern
+import com.shinjaehun.suksuk.presentation.division.model.DivisionInputCell
+import com.shinjaehun.suksuk.presentation.division.model.DivisionUiState
 import com.shinjaehun.suksuk.presentation.division.model.SubtractLineType
 
 @Composable
 fun DivisionBoard3By2(
-    uiState: DivisionUiStateV2,
+    uiState: DivisionUiState,
 ) {
     val cellWidth = 42.dp
     val borrowCellMinWidth = 32.dp
@@ -538,18 +538,18 @@ fun PreviewDivisionStageScreen() {
         DivisionCell.CarryDivisorTensM2
     )
 
-    val fakeUiState = DivisionUiStateV2(
+    val fakeUiState = DivisionUiState(
         cells = allCells.associateWith { cellName ->
-            DivisionInputCellV2(cellName = cellName, value = "?")
+            DivisionInputCell(cellName = cellName, value = "?")
         },
-        pattern = DivisionPatternV2.ThreeByTwo,
+        pattern = DivisionPattern.ThreeByTwo,
         feedback = null // 또는 "정답입니다!" 등
     )
 
     val newUiState = fakeUiState.copy(
         cells = fakeUiState.cells.toMutableMap().apply {
             this[DivisionCell.Borrowed10Subtract1Tens] =
-                DivisionInputCellV2(
+                DivisionInputCell(
                     cellName = DivisionCell.Borrowed10Subtract1Tens,
                     value = "10"
                 )

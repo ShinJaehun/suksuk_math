@@ -3,17 +3,17 @@ package com.shinjaehun.suksuk.division
 import com.shinjaehun.suksuk.domain.OpType
 import com.shinjaehun.suksuk.domain.Problem
 import com.shinjaehun.suksuk.domain.division.info.DivisionStateInfoBuilder
-import com.shinjaehun.suksuk.domain.model.DivisionDomainStateV2
+import com.shinjaehun.suksuk.domain.model.DivisionDomainState
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequenceProvider
-import com.shinjaehun.suksuk.presentation.division.model.DivisionUiStateV2
+import com.shinjaehun.suksuk.presentation.division.model.DivisionUiState
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequence
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseStep
 import com.shinjaehun.suksuk.domain.division.sequence.creator.ThreeByTwoDivPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByOneDivPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByTwoDivPhaseSequenceCreator
-import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
+import com.shinjaehun.suksuk.domain.pattern.DivisionPattern
 import com.shinjaehun.suksuk.domain.pattern.detectPattern
-import com.shinjaehun.suksuk.presentation.division.model.mapDivisionUiStateV2
+import com.shinjaehun.suksuk.presentation.division.model.mapDivisionUiState
 
 fun makeDomainStateForTest(
     dividend: Int,
@@ -25,15 +25,15 @@ fun makeDomainStateForTest(
         twoByTwoCreator = TwoByTwoDivPhaseSequenceCreator(),
         threeByTwoCreator = ThreeByTwoDivPhaseSequenceCreator(),
     )
-): DivisionDomainStateV2 {
+): DivisionDomainState {
     val problem = Problem(OpType.Division, dividend, divisor)
     val opPattern = detectPattern(problem)
-    val pattern = opPattern as DivisionPatternV2
+    val pattern = opPattern as DivisionPattern
 
     val info = DivisionStateInfoBuilder.from(dividend, divisor)
     val sequence = sequenceProvider.make(pattern, info)
 
-    return DivisionDomainStateV2(
+    return DivisionDomainState(
         phaseSequence = sequence,
         currentStepIndex = step,
         inputs = inputs,
@@ -47,9 +47,9 @@ fun makeUiStateForTest(
     divisor: Int,
     step: Int,
     inputs: List<String> = emptyList()
-): DivisionUiStateV2 {
+): DivisionUiState {
     val domain = makeDomainStateForTest(dividend, divisor, step, inputs)
-    return mapDivisionUiStateV2(domain, currentInput = "")
+    return mapDivisionUiState(domain, currentInput = "")
 }
 
 fun createDomainState(
@@ -58,10 +58,10 @@ fun createDomainState(
     steps: List<DivisionPhaseStep>,
     currentStepIndex: Int,
     inputs: List<String> = emptyList(),
-    pattern: DivisionPatternV2
-): DivisionDomainStateV2 {
+    pattern: DivisionPattern
+): DivisionDomainState {
     val info = DivisionStateInfoBuilder.from(dividend, divisor)
-    return DivisionDomainStateV2(
+    return DivisionDomainState(
         phaseSequence = DivisionPhaseSequence(steps, pattern),
         currentStepIndex = currentStepIndex,
         inputs = inputs,

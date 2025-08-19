@@ -3,15 +3,15 @@ package com.shinjaehun.suksuk.division
 import com.shinjaehun.suksuk.domain.OpType
 import com.shinjaehun.suksuk.domain.Problem
 import com.shinjaehun.suksuk.domain.division.info.DivisionStateInfoBuilder
-import com.shinjaehun.suksuk.domain.division.evaluator.DivisionPhaseEvaluatorV2
-import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
+import com.shinjaehun.suksuk.domain.division.evaluator.DivisionPhaseEvaluator
+import com.shinjaehun.suksuk.domain.pattern.DivisionPattern
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequenceProvider
 import com.shinjaehun.suksuk.domain.division.sequence.creator.ThreeByTwoDivPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByOneDivPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.sequence.creator.TwoByTwoDivPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.division.model.DivisionCell
-import com.shinjaehun.suksuk.domain.model.DivisionDomainStateV2
-import com.shinjaehun.suksuk.domain.division.model.DivisionPhaseV2
+import com.shinjaehun.suksuk.domain.model.DivisionDomainState
+import com.shinjaehun.suksuk.domain.division.model.DivisionPhase
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequence
 import com.shinjaehun.suksuk.domain.pattern.detectPattern
 import junit.framework.TestCase.assertEquals
@@ -33,21 +33,21 @@ class DivisionPhaseSequenceProviderTest {
 
         val problem = Problem(OpType.Division, dividend, divisor)
         val opPattern = detectPattern(problem)
-        val pattern = opPattern as DivisionPatternV2
+        val pattern = opPattern as DivisionPattern
 
         val info = DivisionStateInfoBuilder.from(dividend, divisor)
         val seq = provider.make(pattern, info)
 
         // 예: PhaseStep 단계 수, 각 phase 타입 등 비교
-        assertEquals(DivisionPatternV2.TwoByTwo, pattern)
+        assertEquals(DivisionPattern.TwoByTwo, pattern)
         assertEquals(5, seq.steps.size) // 단계수 예시
 
         // 단계별 phase 검증 (구체 패턴에 따라)
-        assertEquals(DivisionPhaseV2.InputQuotient, seq.steps[0].phase)
-        assertEquals(DivisionPhaseV2.InputMultiply1, seq.steps[1].phase)
-        assertEquals(DivisionPhaseV2.InputMultiply1, seq.steps[2].phase)
-        assertEquals(DivisionPhaseV2.InputSubtract1, seq.steps[3].phase)
-        assertEquals(DivisionPhaseV2.Complete, seq.steps[4].phase)
+        assertEquals(DivisionPhase.InputQuotient, seq.steps[0].phase)
+        assertEquals(DivisionPhase.InputMultiply1, seq.steps[1].phase)
+        assertEquals(DivisionPhase.InputMultiply1, seq.steps[2].phase)
+        assertEquals(DivisionPhase.InputSubtract1, seq.steps[3].phase)
+        assertEquals(DivisionPhase.Complete, seq.steps[4].phase)
     }
 
     @Test
@@ -57,43 +57,31 @@ class DivisionPhaseSequenceProviderTest {
 
         val problem = Problem(OpType.Division, dividend, divisor)
         val opPattern = detectPattern(problem)
-        val pattern = opPattern as DivisionPatternV2
+        val pattern = opPattern as DivisionPattern
 
         val info = DivisionStateInfoBuilder.from(dividend, divisor)
         val seq = provider.make(pattern, info)
 
         // 1. 패턴 확인
-        assertEquals(DivisionPatternV2.ThreeByTwo, pattern)
+        assertEquals(DivisionPattern.ThreeByTwo, pattern)
 
         // 2. 단계 수 확인 (네 코드 기준: 몫(십), 곱셈2, 뺄셈2, bring down, 몫(일), 곱셈2, 뺄셈, complete 등 = 11단계)
 //        assertEquals(11, seq.steps.size)
         assertEquals(12, seq.steps.size)
 
         // 3. 단계별 phase 검증 (필요 시 상세 검증)
-//        assertEquals(DivisionPhaseV2.InputQuotient,   seq.steps[0].phase)   // 몫 십의자리
-//        assertEquals(DivisionPhaseV2.InputMultiply1,   seq.steps[1].phase)   // 1차 곱셈(Tens)
-//        assertEquals(DivisionPhaseV2.InputMultiply1,   seq.steps[2].phase)   // 1차 곱셈(Hundreds)
-//        assertEquals(DivisionPhaseV2.InputBorrow,   seq.steps[3].phase)   // 1차 뺄셈(Tens)
-//        assertEquals(DivisionPhaseV2.InputSubtract1,   seq.steps[4].phase)   // 1차 뺄셈(Hundreds)
-//        assertEquals(DivisionPhaseV2.InputBringDown,  seq.steps[5].phase)   // Bring down Ones
-//        assertEquals(DivisionPhaseV2.InputQuotient,   seq.steps[6].phase)   // 몫 일의자리
-//        assertEquals(DivisionPhaseV2.InputMultiply2,   seq.steps[7].phase)   // 2차 곱셈(Ones)
-//        assertEquals(DivisionPhaseV2.InputMultiply2,   seq.steps[8].phase)   // 2차 곱셈(Tens)
-//        assertEquals(DivisionPhaseV2.InputSubtract2,   seq.steps[9].phase)   // 2차 뺄셈(Ones)
-//        assertEquals(DivisionPhaseV2.Complete,        seq.steps[10].phase)  // 완료
-
-        assertEquals(DivisionPhaseV2.InputQuotient,   seq.steps[0].phase)   // 몫 십의자리
-        assertEquals(DivisionPhaseV2.InputMultiply1,   seq.steps[1].phase)   // 1차 곱셈(Tens)
-        assertEquals(DivisionPhaseV2.InputMultiply1,   seq.steps[2].phase)   // 1차 곱셈(Hundreds)
-        assertEquals(DivisionPhaseV2.InputBorrow,   seq.steps[3].phase)   // 1차 뺄셈(Tens)
-        assertEquals(DivisionPhaseV2.InputSubtract1,   seq.steps[4].phase)   // 1차 뺄셈(Hundreds)
-        assertEquals(DivisionPhaseV2.InputBringDown,  seq.steps[5].phase)   // Bring down Ones
-        assertEquals(DivisionPhaseV2.PrepareNextOp,  seq.steps[6].phase)
-        assertEquals(DivisionPhaseV2.InputQuotient,   seq.steps[7].phase)   // 몫 일의자리
-        assertEquals(DivisionPhaseV2.InputMultiply2,   seq.steps[8].phase)   // 2차 곱셈(Ones)
-        assertEquals(DivisionPhaseV2.InputMultiply2,   seq.steps[9].phase)   // 2차 곱셈(Tens)
-        assertEquals(DivisionPhaseV2.InputSubtract2,   seq.steps[10].phase)   // 2차 뺄셈(Ones)
-        assertEquals(DivisionPhaseV2.Complete,        seq.steps[11].phase)  // 완료
+        assertEquals(DivisionPhase.InputQuotient,   seq.steps[0].phase)   // 몫 십의자리
+        assertEquals(DivisionPhase.InputMultiply1,   seq.steps[1].phase)   // 1차 곱셈(Tens)
+        assertEquals(DivisionPhase.InputMultiply1,   seq.steps[2].phase)   // 1차 곱셈(Hundreds)
+        assertEquals(DivisionPhase.InputBorrow,   seq.steps[3].phase)   // 1차 뺄셈(Tens)
+        assertEquals(DivisionPhase.InputSubtract1,   seq.steps[4].phase)   // 1차 뺄셈(Hundreds)
+        assertEquals(DivisionPhase.InputBringDown,  seq.steps[5].phase)   // Bring down Ones
+        assertEquals(DivisionPhase.PrepareNextOp,  seq.steps[6].phase)
+        assertEquals(DivisionPhase.InputQuotient,   seq.steps[7].phase)   // 몫 일의자리
+        assertEquals(DivisionPhase.InputMultiply2,   seq.steps[8].phase)   // 2차 곱셈(Ones)
+        assertEquals(DivisionPhase.InputMultiply2,   seq.steps[9].phase)   // 2차 곱셈(Tens)
+        assertEquals(DivisionPhase.InputSubtract2,   seq.steps[10].phase)   // 2차 뺄셈(Ones)
+        assertEquals(DivisionPhase.Complete,        seq.steps[11].phase)  // 완료
 
         // 4. 세부 단계 속성 검증 (예: editableCells, highlightCells 등 필요 시 추가)
         assertEquals(listOf(DivisionCell.QuotientTens), seq.steps[0].editableCells)
@@ -110,18 +98,18 @@ class DivisionPhaseSequenceProviderTest {
 
         val problem = Problem(OpType.Division, dividend, divisor)
         val opPattern = detectPattern(problem)
-        val pattern = opPattern as DivisionPatternV2
+        val pattern = opPattern as DivisionPattern
 
         val info = DivisionStateInfoBuilder.from(dividend, divisor)
         val seq = provider.make(pattern, info)
 
         // sanity checks
-        assertEquals(DivisionPatternV2.TwoByTwo, pattern)
+        assertEquals(DivisionPattern.TwoByTwo, pattern)
         assertEquals(5, seq.steps.size)
-        assertEquals(DivisionPhaseV2.InputSubtract1, seq.steps[3].phase)
-        assertEquals(DivisionPhaseV2.Complete, seq.steps[4].phase)
+        assertEquals(DivisionPhase.InputSubtract1, seq.steps[3].phase)
+        assertEquals(DivisionPhase.Complete, seq.steps[4].phase)
 
-        val domain = DivisionDomainStateV2(
+        val domain = DivisionDomainState(
             phaseSequence = seq,
             currentStepIndex = 3, // InputSubtract1
             inputs = emptyList(),
@@ -136,7 +124,7 @@ class DivisionPhaseSequenceProviderTest {
             else -> error("Unexpected first editable cell at step 3: $firstCell")
         }
 
-        val evaluator = DivisionPhaseEvaluatorV2()
+        val evaluator = DivisionPhaseEvaluator()
 
         // when
         val result = evaluator.evaluate(domain, inputsForStep(seq, 3, correctInput))

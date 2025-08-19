@@ -17,7 +17,7 @@ object MultiplicationModule {
 
     @Singleton
     @Provides
-    fun provideMulPhaseEvaluatorV2(): MulPhaseEvaluator = MulPhaseEvaluator()
+    fun provideMulPhaseEvaluator(): MulPhaseEvaluator = MulPhaseEvaluator()
 
     @Singleton
     @Provides
@@ -28,14 +28,4 @@ object MultiplicationModule {
         twoByTwoCreator,
         threeByTwoCreator,
     )
-
-//    @Singleton
-//    @Provides
-//    fun provideMulDomainStateV2Factory(
-//        patternDetector: MulPatternDetector,
-//        phaseSequenceProvider: MulPhaseSequenceProvider,
-//    ): MulDomainStateFactory = MulDomainStateFactory(
-//        patternDetector,
-//        phaseSequenceProvider
-//    )
 }

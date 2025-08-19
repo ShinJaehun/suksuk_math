@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.shinjaehun.suksuk.domain.ProblemSessionFactory
-import com.shinjaehun.suksuk.presentation.division.DivisionScreenV2
 import com.shinjaehun.suksuk.ui.theme.SukSukTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -29,7 +28,7 @@ class MainActivity : ComponentActivity() {
 //            MultiplicationScreen(multiplicand=76, multiplier=89)
 //            MultiplicationScreen(multiplicand=76, multiplier=80)
 //            MultiplicationScreen(multiplicand=234, multiplier=50)
-//            DivisionScreenV2(dividend=610, divisor=13)
+//            DivisionScreen(dividend=610, divisor=13)
 
             SukSukTheme {
                 AppNavHost(problemFactory)

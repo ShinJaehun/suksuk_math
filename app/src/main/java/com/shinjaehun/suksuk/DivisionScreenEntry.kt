@@ -16,21 +16,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.shinjaehun.suksuk.domain.OpType
 import com.shinjaehun.suksuk.domain.ProblemSessionFactory
 import com.shinjaehun.suksuk.domain.SessionMode
-import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
-import com.shinjaehun.suksuk.presentation.division.DivisionScreenV2
-import com.shinjaehun.suksuk.presentation.division.DivisionViewModelV2
+import com.shinjaehun.suksuk.domain.pattern.DivisionPattern
+import com.shinjaehun.suksuk.presentation.division.DivisionScreen
+import com.shinjaehun.suksuk.presentation.division.DivisionViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun DivisionScreenEntry(
     problemFactory: ProblemSessionFactory,
     mode: SessionMode,
-    pattern: DivisionPatternV2?,                          // ← 추가: "TwoByOne" | "TwoByTwo" | "ThreeByTwo"
+    pattern: DivisionPattern?,                          // ← 추가: "TwoByOne" | "TwoByTwo" | "ThreeByTwo"
     overrideOperands: Pair<Int, Int>?,       // 딥링크/디버그 시 1회 고정 문제
     onExit: () -> Unit
 ) {
-//    val router = remember { DefaultProblemRouter() }
-
     // Source는 mode + pattern + override 조합에 종속
     val source = remember(mode, pattern, overrideOperands) {
         problemFactory.openSession(
@@ -41,7 +39,7 @@ fun DivisionScreenEntry(
         )
     }
 
-    val vm: DivisionViewModelV2 = hiltViewModel()
+    val vm: DivisionViewModel = hiltViewModel()
 
     // ⬇️ 현재 문제의 피연산자를 화면 레벨에서 기억
     val currentOperands = remember { mutableStateOf<Pair<Int, Int>?>(null) }
@@ -85,14 +83,14 @@ fun DivisionScreenEntry(
     }
 
     // 렌더
-    // ✅ DivisionScreenV2가 내부에서 pattern 분기하므로 Entry에서는 그대로 넘기기만 하면 됨
+    // DivisionScreen 내부에서 pattern 분기하므로 Entry에서는 그대로 넘기기만 하면 됨
     val operands = currentOperands.value
     if (operands == null) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
         }
     } else {
-        DivisionScreenV2(
+        DivisionScreen(
             dividend = operands.first,
             divisor  = operands.second,
             viewModel = vm

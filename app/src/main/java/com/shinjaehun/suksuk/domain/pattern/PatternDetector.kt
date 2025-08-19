@@ -12,9 +12,9 @@ fun detectPattern(p: Problem): OperationPattern = when (p.type) {
         else   -> error("Unsupported multiplication pattern: ${p.a}×${p.b}")
     }
     OpType.Division -> when (p.a.digits() to p.b.digits()) {
-        2 to 1 -> DivisionPatternV2.TwoByOne
-        2 to 2 -> DivisionPatternV2.TwoByTwo
-        3 to 2 -> DivisionPatternV2.ThreeByTwo
+        2 to 1 -> DivisionPattern.TwoByOne
+        2 to 2 -> DivisionPattern.TwoByTwo
+        3 to 2 -> DivisionPattern.ThreeByTwo
         else   -> error("Unsupported division pattern: ${p.a}÷${p.b}")
     }
 }

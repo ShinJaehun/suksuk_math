@@ -1,10 +1,10 @@
 package com.shinjaehun.suksuk.domain.division.sequence
 
 import com.shinjaehun.suksuk.domain.division.model.DivisionCell
-import com.shinjaehun.suksuk.domain.division.model.DivisionPhaseV2
+import com.shinjaehun.suksuk.domain.division.model.DivisionPhase
 
 data class DivisionPhaseStep(
-    val phase: DivisionPhaseV2,
+    val phase: DivisionPhase,
     val editableCells: List<DivisionCell> = emptyList(),
     val highlightCells: List<DivisionCell> = emptyList(),
     val needsBorrow: Boolean = false,

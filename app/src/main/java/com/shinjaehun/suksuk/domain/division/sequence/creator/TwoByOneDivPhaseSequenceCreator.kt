@@ -4,8 +4,8 @@ import com.shinjaehun.suksuk.domain.division.info.DivisionStateInfo
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequence
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseStep
 import com.shinjaehun.suksuk.domain.division.model.DivisionCell
-import com.shinjaehun.suksuk.domain.division.model.DivisionPhaseV2
-import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
+import com.shinjaehun.suksuk.domain.division.model.DivisionPhase
+import com.shinjaehun.suksuk.domain.pattern.DivisionPattern
 import javax.inject.Inject
 
 class TwoByOneDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSequenceCreator {
@@ -17,26 +17,26 @@ class TwoByOneDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeque
 
         if (info.hasTensQuotient) {
             steps += DivisionPhaseStep(
-                phase = DivisionPhaseV2.InputQuotient,
+                phase = DivisionPhase.InputQuotient,
                 editableCells = listOf(DivisionCell.QuotientTens),
                 highlightCells = listOf(DivisionCell.DividendTens, DivisionCell.DivisorOnes)
             )
 
             steps += DivisionPhaseStep(
-                phase = DivisionPhaseV2.InputMultiply1,
+                phase = DivisionPhase.InputMultiply1,
                 editableCells = listOf(DivisionCell.Multiply1Tens),
                 highlightCells = listOf(DivisionCell.DivisorOnes, DivisionCell.QuotientTens),
             )
 
             steps += DivisionPhaseStep(
-                phase = DivisionPhaseV2.InputSubtract1,
+                phase = DivisionPhase.InputSubtract1,
                 editableCells = listOf(DivisionCell.Subtract1Tens),
                 highlightCells = listOf(DivisionCell.DividendTens, DivisionCell.Multiply1Tens),
                 subtractLineTargets = setOf(DivisionCell.Subtract1Tens)
             )
 
             steps += DivisionPhaseStep(
-                phase = DivisionPhaseV2.InputBringDown,
+                phase = DivisionPhase.InputBringDown,
                 editableCells = listOf(DivisionCell.Subtract1Ones),
                 highlightCells = listOf(DivisionCell.DividendOnes),
                 presetValues = if (info.shouldLeaveSubtract1TensEmpty){
@@ -47,7 +47,7 @@ class TwoByOneDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeque
             )
 
             steps += DivisionPhaseStep(
-                phase = DivisionPhaseV2.InputQuotient,
+                phase = DivisionPhase.InputQuotient,
                 editableCells = listOf(DivisionCell.QuotientOnes),
                 highlightCells = listOf(DivisionCell.DivisorOnes, DivisionCell.Subtract1Tens, DivisionCell.Subtract1Ones),
             )
@@ -56,13 +56,13 @@ class TwoByOneDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeque
 
                 if (is2DigitsMultiply) {
                     steps += DivisionPhaseStep(
-                        phase = DivisionPhaseV2.InputMultiply2,
+                        phase = DivisionPhase.InputMultiply2,
                         editableCells = listOf(DivisionCell.Multiply2Tens, DivisionCell.Multiply2Ones),
                         highlightCells = listOf(DivisionCell.DivisorOnes, DivisionCell.QuotientOnes),
                     )
                 } else {
                     steps += DivisionPhaseStep(
-                        phase = DivisionPhaseV2.InputMultiply2,
+                        phase = DivisionPhase.InputMultiply2,
                         editableCells = listOf(DivisionCell.Multiply2Ones),
                         highlightCells = listOf(DivisionCell.DivisorOnes, DivisionCell.QuotientOnes),
                     )
@@ -70,7 +70,7 @@ class TwoByOneDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeque
 
                 if (info.performedTensBorrowInS2) {
                     steps += DivisionPhaseStep(
-                        phase = DivisionPhaseV2.InputBorrow,
+                        phase = DivisionPhase.InputBorrow,
                         editableCells = listOf(DivisionCell.BorrowSubtract1Tens),
                         highlightCells = listOf(
                             DivisionCell.Subtract1Tens,
@@ -84,7 +84,7 @@ class TwoByOneDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeque
                 }
 
                 steps += DivisionPhaseStep(
-                    phase = DivisionPhaseV2.InputSubtract2,
+                    phase = DivisionPhase.InputSubtract2,
                     editableCells = listOf(DivisionCell.Subtract2Ones),
                     highlightCells = buildList {
                         if (info.performedTensBorrowInS2) {
@@ -110,7 +110,7 @@ class TwoByOneDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeque
         } else {
 
             steps += DivisionPhaseStep(
-                phase = DivisionPhaseV2.InputQuotient,
+                phase = DivisionPhase.InputQuotient,
                 editableCells = listOf(DivisionCell.QuotientOnes),
                 highlightCells = listOf(DivisionCell.DividendTens, DivisionCell.DividendOnes, DivisionCell.DivisorOnes)
             )
@@ -118,14 +118,14 @@ class TwoByOneDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeque
             when {
                 is2DigitsMultiply -> {
                     steps += DivisionPhaseStep(
-                        phase = DivisionPhaseV2.InputMultiply1,
+                        phase = DivisionPhase.InputMultiply1,
                         editableCells = listOf(DivisionCell.Multiply1Tens, DivisionCell.Multiply1Ones),
                         highlightCells = listOf(DivisionCell.DivisorOnes, DivisionCell.QuotientOnes)
                     )
                 }
                 else -> {
                     steps += DivisionPhaseStep(
-                        phase = DivisionPhaseV2.InputMultiply1,
+                        phase = DivisionPhase.InputMultiply1,
                         editableCells = listOf(DivisionCell.Multiply1Ones),
                         highlightCells = listOf(DivisionCell.DivisorOnes, DivisionCell.QuotientOnes)
                     )
@@ -134,7 +134,7 @@ class TwoByOneDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeque
 
             if (info.needsTensBorrowInS1 && !info.skipTensBorrowInS1) {
                 steps += DivisionPhaseStep(
-                    phase = DivisionPhaseV2.InputBorrow,
+                    phase = DivisionPhase.InputBorrow,
                     editableCells = listOf(DivisionCell.BorrowDividendTens),
                     highlightCells = listOf(
                         DivisionCell.DividendTens,
@@ -147,7 +147,7 @@ class TwoByOneDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeque
                 )
 
                 steps += DivisionPhaseStep(
-                    phase = DivisionPhaseV2.InputSubtract1,
+                    phase = DivisionPhase.InputSubtract1,
                     editableCells = listOf(DivisionCell.Subtract1Ones),
                     highlightCells = listOf(DivisionCell.Borrowed10DividendOnes, DivisionCell.Multiply1Ones, DivisionCell.DividendOnes),
                     presetValues = mapOf(DivisionCell.Borrowed10DividendOnes to "10"),
@@ -156,7 +156,7 @@ class TwoByOneDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeque
                 )
             } else {
                 steps += DivisionPhaseStep(
-                    phase = DivisionPhaseV2.InputSubtract1,
+                    phase = DivisionPhase.InputSubtract1,
                     editableCells = listOf(DivisionCell.Subtract1Ones),
                     highlightCells = buildList {
                         if(info.skipTensBorrowInS1) add(DivisionCell.DividendTens)
@@ -169,11 +169,11 @@ class TwoByOneDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeque
 
         }
 
-        steps += DivisionPhaseStep(phase = DivisionPhaseV2.Complete)
+        steps += DivisionPhaseStep(phase = DivisionPhase.Complete)
 
         return DivisionPhaseSequence(
             steps = steps,
-            pattern = DivisionPatternV2.TwoByOne
+            pattern = DivisionPattern.TwoByOne
         )
     }
 }

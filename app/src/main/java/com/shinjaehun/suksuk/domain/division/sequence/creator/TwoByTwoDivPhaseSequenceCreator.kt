@@ -4,8 +4,8 @@ import com.shinjaehun.suksuk.domain.division.info.DivisionStateInfo
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseSequence
 import com.shinjaehun.suksuk.domain.division.sequence.DivisionPhaseStep
 import com.shinjaehun.suksuk.domain.division.model.DivisionCell
-import com.shinjaehun.suksuk.domain.division.model.DivisionPhaseV2
-import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
+import com.shinjaehun.suksuk.domain.division.model.DivisionPhase
+import com.shinjaehun.suksuk.domain.pattern.DivisionPattern
 import javax.inject.Inject
 
 class TwoByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSequenceCreator {
@@ -17,7 +17,7 @@ class TwoByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeque
 
         // [1] 몫 입력 단계
         steps += DivisionPhaseStep(
-            phase = DivisionPhaseV2.InputQuotient,
+            phase = DivisionPhase.InputQuotient,
             editableCells = listOf(DivisionCell.QuotientOnes),
             highlightCells = listOf(
                 DivisionCell.DividendTens, DivisionCell.DividendOnes,
@@ -28,14 +28,14 @@ class TwoByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeque
         // [2] 곱셈(일의 자리, Carry 여부 반영)
         if (isCarryRequiredInMultiply) {
             steps += DivisionPhaseStep(
-                phase = DivisionPhaseV2.InputMultiply1,
+                phase = DivisionPhase.InputMultiply1,
                 editableCells = listOf(DivisionCell.CarryDivisorTensM1, DivisionCell.Multiply1Ones),
                 highlightCells = listOf(DivisionCell.DivisorOnes, DivisionCell.QuotientOnes),
                 needsCarry = true
             )
         } else {
             steps += DivisionPhaseStep(
-                phase = DivisionPhaseV2.InputMultiply1,
+                phase = DivisionPhase.InputMultiply1,
                 editableCells = listOf(DivisionCell.Multiply1Ones),
                 highlightCells = listOf(DivisionCell.DivisorOnes, DivisionCell.QuotientOnes)
             )
@@ -43,7 +43,7 @@ class TwoByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeque
 
         // [3] 곱셈(십의 자리)
         steps += DivisionPhaseStep(
-            phase = DivisionPhaseV2.InputMultiply1,
+            phase = DivisionPhase.InputMultiply1,
             editableCells = listOf(DivisionCell.Multiply1Tens),
             highlightCells = buildList {
                 add(DivisionCell.DivisorTens)
@@ -55,7 +55,7 @@ class TwoByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeque
         // [4] 받아내림 단계 (필요한 경우만)
         if (info.needsTensBorrowInS1) {
             steps += DivisionPhaseStep(
-                phase = DivisionPhaseV2.InputBorrow,
+                phase = DivisionPhase.InputBorrow,
                 editableCells = listOf(DivisionCell.BorrowDividendTens),
                 highlightCells = listOf(
                     DivisionCell.DividendTens,
@@ -70,7 +70,7 @@ class TwoByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeque
 
         // [5] 뺄셈 단계
         steps += DivisionPhaseStep(
-            phase = DivisionPhaseV2.InputSubtract1,
+            phase = DivisionPhase.InputSubtract1,
             editableCells = listOf(DivisionCell.Subtract1Ones),
             highlightCells = buildList {
                 if (info.needsTensBorrowInS1) add(DivisionCell.Borrowed10DividendOnes)
@@ -84,7 +84,7 @@ class TwoByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeque
 
         if(info.has2DigitsRemainder) {
             steps += DivisionPhaseStep(
-                phase = DivisionPhaseV2.InputSubtract1,
+                phase = DivisionPhase.InputSubtract1,
                 editableCells = listOf(DivisionCell.Subtract1Tens),
                 highlightCells = buildList {
                     add(DivisionCell.Multiply1Tens)
@@ -96,11 +96,11 @@ class TwoByTwoDivPhaseSequenceCreator @Inject constructor() : DivisionPhaseSeque
         }
 
         // [6] 완료 단계
-        steps += DivisionPhaseStep(phase = DivisionPhaseV2.Complete)
+        steps += DivisionPhaseStep(phase = DivisionPhase.Complete)
 
         return DivisionPhaseSequence(
             steps = steps,
-            pattern = DivisionPatternV2.TwoByTwo
+            pattern = DivisionPattern.TwoByTwo
         )
     }
 

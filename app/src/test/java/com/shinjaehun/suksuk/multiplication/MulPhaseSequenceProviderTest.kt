@@ -8,7 +8,6 @@ import com.shinjaehun.suksuk.domain.multiplication.model.MulPhase
 import com.shinjaehun.suksuk.domain.multiplication.sequence.MulPhaseSequenceProvider
 import com.shinjaehun.suksuk.domain.multiplication.sequence.creator.ThreeByTwoMulPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.multiplication.sequence.creator.TwoByTwoMulPhaseSequenceCreator
-import com.shinjaehun.suksuk.domain.pattern.DivisionPatternV2
 import com.shinjaehun.suksuk.domain.pattern.detectPattern
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
