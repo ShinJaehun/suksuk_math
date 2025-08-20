@@ -8,6 +8,5 @@ data class DivisionUiState(
     val cells: Map<DivisionCell, DivisionInputCell> = emptyMap(),
     val currentStep: Int = 0,
     val isCompleted: Boolean = false,
-    val feedback: String? = null,
     val pattern: DivisionPattern? = null
 )

@@ -19,24 +19,39 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.shinjaehun.suksuk.presentation.common.effects.AudioPlayer
+import com.shinjaehun.suksuk.presentation.common.effects.LocalAudioPlayer
 
 @Composable
-fun NumberPad(onNumber: (Int) -> Unit, onClear: () -> Unit, onEnter: () -> Unit) {
+fun NumberPad(
+    onNumber: (Int) -> Unit,
+    onClear: () -> Unit,
+    onEnter: () -> Unit,
+    audioPlayer: AudioPlayer = LocalAudioPlayer.current,
+    playOnTap: Boolean = true
+) {
+
+    fun tap(action: () -> Unit) {
+        if (playOnTap) {
+            audioPlayer.playClick()
+        }
+        action()
+    }
+
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         listOf(listOf(1, 2, 3), listOf(4, 5, 6), listOf(7, 8, 9), listOf(-1, 0, -2)).forEach { row ->
             Row {
                 row.forEach { num ->
                     when (num) {
-                        -1 -> CircleButton(label = "⟲", onClick = onClear)
+                        -1 -> CircleButton(label = "⟲") { tap(onClear) }
                         -2 -> CircleButton(
                             label = "↵",
                             modifier = Modifier.testTag("numpad-enter"),
-                            onClick = onEnter
-                        )
+                        ) { tap(onEnter)}
                         else -> CircleButton(
                             label = num.toString(),
                             modifier = Modifier.testTag("numpad-$num")
-                        ) { onNumber(num) }
+                        ) { tap { onNumber(num) } }
                     }
                     Spacer(Modifier.width(8.dp))
                 }

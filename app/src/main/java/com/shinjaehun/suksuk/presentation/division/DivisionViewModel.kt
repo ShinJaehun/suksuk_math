@@ -7,10 +7,14 @@ import com.shinjaehun.suksuk.domain.OpType
 import com.shinjaehun.suksuk.domain.Problem
 import com.shinjaehun.suksuk.domain.model.DivisionDomainState
 import com.shinjaehun.suksuk.domain.division.evaluator.DivisionPhaseEvaluator
+import com.shinjaehun.suksuk.presentation.common.feedback.FeedbackEvent
+import com.shinjaehun.suksuk.presentation.common.feedback.FeedbackMessages
+import com.shinjaehun.suksuk.presentation.common.feedback.FeedbackProvider
 import com.shinjaehun.suksuk.presentation.division.model.DivisionUiState
 import com.shinjaehun.suksuk.presentation.division.model.mapDivisionUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
@@ -21,6 +25,7 @@ class DivisionViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val phaseEvaluator: DivisionPhaseEvaluator,
     private val domainStateFactory: DomainStateFactory,
+    private val feedbackProvider: FeedbackProvider
 ): ViewModel() {
 //    private val autoStart: Boolean = savedStateHandle["autoStart"] ?: true
 
@@ -31,6 +36,10 @@ class DivisionViewModel @Inject constructor(
 //    val currentInput: StateFlow<String> = _currentInput.asStateFlow()
 
     private lateinit var domainState: DivisionDomainState
+
+    val feedbackEvents: SharedFlow<FeedbackEvent> get() = feedbackProvider.events
+
+    private var lastProblem: Problem? = null
 
 //    init {
 //        if(autoStart){
@@ -121,13 +130,29 @@ class DivisionViewModel @Inject constructor(
 //        }
 //    }
 
-    fun startNewProblem(dividend: Int, divisor: Int) {
-        val problem = Problem(OpType.Division, dividend, divisor)
+//    fun startNewProblem(dividend: Int, divisor: Int) {
+//        val problem = Problem(OpType.Division, dividend, divisor)
+//        val ds = domainStateFactory.create(problem)
+//        require(ds is DivisionDomainState) { "Expected DivisionDomainState, got ${ds::class.simpleName}" }
+//        domainState = ds
+//        _currentInput.value = ""
+//        emitUiState()
+//    }
+
+    fun startNewProblem(problem: Problem) {
+        require(problem.type == OpType.Division) { "DivisionViewModel expects Division problem, got ${problem.type}" }
+        if (problem == lastProblem) return
+        lastProblem = problem
         val ds = domainStateFactory.create(problem)
         require(ds is DivisionDomainState) { "Expected DivisionDomainState, got ${ds::class.simpleName}" }
         domainState = ds
         _currentInput.value = ""
         emitUiState()
+    }
+
+    // (기존) 파라미터 버전 유지
+    fun startNewProblem(dividend: Int, divisor: Int) {
+        startNewProblem(Problem(OpType.Division, dividend, divisor))
     }
 
     fun onDigitInput(digit: Int) {
@@ -170,15 +195,22 @@ class DivisionViewModel @Inject constructor(
         val eval = phaseEvaluator.evaluate(domainState, inputsForThisStep)
 
         if (!eval.isCorrect) {
+            feedbackProvider.wrong(FeedbackMessages.randomWrong())
             _currentInput.value = ""
             emitUiState()
             return
         }
 
+        feedbackProvider.correct(FeedbackMessages.randomCorrect())
+
         domainState = domainState.copy(
             inputs = domainState.inputs + inputsForThisStep,
             currentStepIndex = eval.nextStepIndex ?: domainState.currentStepIndex
         )
+
+        if (eval.isFinished) {
+            feedbackProvider.phaseCompleted()
+        }
 
         _currentInput.value = ""
         emitUiState()

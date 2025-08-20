@@ -1,13 +1,23 @@
 package com.shinjaehun.suksuk.division
 
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextContains
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.lifecycle.SavedStateHandle
+import com.shinjaehun.suksuk.DummyFeedbackProvider
+import com.shinjaehun.suksuk.NoopAudioPlayer
+import com.shinjaehun.suksuk.NoopHaptic
 import com.shinjaehun.suksuk.TestFactoryBuilders
 import com.shinjaehun.suksuk.domain.division.evaluator.DivisionPhaseEvaluator
+import com.shinjaehun.suksuk.presentation.common.effects.LocalAudioPlayer
+import com.shinjaehun.suksuk.presentation.common.feedback.FeedbackProviderImpl
 import com.shinjaehun.suksuk.presentation.division.DivisionScreen
 import com.shinjaehun.suksuk.presentation.division.DivisionViewModel
 
@@ -16,45 +26,72 @@ fun ComposeContentTestRule.divisionCase(
     divisor: Int,
     inputs: List<String>
 ) {
-
     val savedStateHandle = SavedStateHandle(mapOf("autoStart" to false))
     val factory = TestFactoryBuilders.unifiedFactoryForDivision()
+    val feedbackProvider = FeedbackProviderImpl()
 
     val viewModel = DivisionViewModel(
         savedStateHandle = savedStateHandle,
         phaseEvaluator = DivisionPhaseEvaluator(),
-        domainStateFactory = factory
+        domainStateFactory = factory,
+        feedbackProvider = feedbackProvider
     )
 
+    viewModel.startNewProblem(dividend, divisor)
     setContent {
-        DivisionScreen(dividend, divisor, viewModel)
+        CompositionLocalProvider(
+            LocalAudioPlayer provides NoopAudioPlayer,
+            LocalHapticFeedback provides NoopHaptic
+        ) {
+            DivisionScreen(
+                viewModel,
+                onNextProblem = {},
+                onExit = {},
+            )
+        }
     }
 
-    var i = 0
-    while (i < inputs.size) {
-        val input = inputs[i]
-        if (input.length == 1) {
-            this.onNodeWithTag("numpad-$input").performClick()
-            this.onNodeWithTag("numpad-enter").performClick()
-        } else if (input.length == 2) {
-            this.onNodeWithTag("numpad-${input[0]}").performClick()
-            this.onNodeWithTag("numpad-${input[1]}").performClick()
-            this.onNodeWithTag("numpad-enter").performClick()
-        } else {
-            error("지원하지 않는 입력: $input")
+    inputs.forEachIndexed { idx, input ->
+        when (input.length) {
+            1 -> {
+                onNodeWithTag("numpad-$input").performClick()
+                onNodeWithTag("numpad-enter").performClick()
+            }
+            2 -> {
+                onNodeWithTag("numpad-${input[0]}").performClick()
+                onNodeWithTag("numpad-${input[1]}").performClick()
+                onNodeWithTag("numpad-enter").performClick()
+            }
+            else -> error("지원하지 않는 입력: $input")
         }
 
         waitForIdle()
 
-        // 정답 feedback 노출 전까지는 오답 피드백 존재하면 안 됨
-        if (i < inputs.lastIndex)
-            this.onNodeWithTag("feedback").assertDoesNotExist()
-        i++
+        // 중간엔 완료 오버레이가 아직 없어야 함
+        if (idx < inputs.lastIndex) {
+            onAllNodes(
+                hasContentDescription("참 잘했어요"),
+                useUnmergedTree = true
+            ).assertCountEquals(0)
+        }
 
     }
+    // 마지막 입력 후: 완료 오버레이(이미지)가 붙을 때까지 기다림
+    waitUntil(timeoutMillis = 3_000) {
+        onAllNodes(
+            hasContentDescription("참 잘했어요"),
+            useUnmergedTree = true
+        ).fetchSemanticsNodes().isNotEmpty()
+    }
 
-    // 마지막 입력 후 "정답입니다!" 피드백 노출되어야 함
-    this.onNodeWithTag("feedback").assertIsDisplayed()
-    this.onNodeWithTag("feedback").assertTextContains("정답입니다!")
+    // 실제로 보이는지 단언
+    onNode(
+        hasContentDescription("참 잘했어요"),
+        useUnmergedTree = true
+    ).assertIsDisplayed()
+
+    // (선택) 안내 텍스트도 같이 확인
+    onNodeWithText("그림을 누르면 다음 문제!", useUnmergedTree = true)
+        .assertIsDisplayed()
 
 }

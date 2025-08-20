@@ -1,15 +1,24 @@
 package com.shinjaehun.suksuk.division
 
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.lifecycle.SavedStateHandle
+import com.shinjaehun.suksuk.DummyFeedbackProvider
+import com.shinjaehun.suksuk.NoopAudioPlayer
+import com.shinjaehun.suksuk.NoopHaptic
 import com.shinjaehun.suksuk.TestFactoryBuilders
 import com.shinjaehun.suksuk.domain.division.evaluator.DivisionPhaseEvaluator
+import com.shinjaehun.suksuk.presentation.common.effects.LocalAudioPlayer
 import com.shinjaehun.suksuk.presentation.division.DivisionScreen
 import com.shinjaehun.suksuk.presentation.division.DivisionViewModel
 import junit.framework.TestCase.assertTrue
@@ -32,18 +41,25 @@ class DivisionUiTest {
         viewModel = DivisionViewModel(
             savedStateHandle = savedStateHandle,
             phaseEvaluator = DivisionPhaseEvaluator(),
-            domainStateFactory = factory
+            domainStateFactory = factory,
+            feedbackProvider = DummyFeedbackProvider
         )
     }
 
     // ---- 공통 헬퍼 ----
     private fun setDivision(dividend: Int, divisor: Int) {
+        viewModel.startNewProblem(dividend, divisor)
         composeTestRule.setContent {
-            DivisionScreen(
-                dividend = dividend,
-                divisor = divisor,
-                viewModel = viewModel
-            )
+            CompositionLocalProvider(
+                LocalAudioPlayer provides NoopAudioPlayer,
+                LocalHapticFeedback provides NoopHaptic
+            ) {
+                DivisionScreen(
+                    viewModel = viewModel,
+                    onNextProblem = {},
+                    onExit = {}
+                )
+            }
         }
         // LaunchedEffect가 startNewProblem을 부르도록 잠깐 대기
         composeTestRule.waitForIdle()
@@ -52,44 +68,6 @@ class DivisionUiTest {
     private fun tapAndEnter(input: String) {
         composeTestRule.onNodeWithTag("numpad-$input").performClick()
         composeTestRule.onNodeWithTag("numpad-enter").performClick()
-    }
-
-    // ---- 대표 테스트 몇 개 변환 예시 ----
-
-    @Test
-    fun test_TwoByOne_UIFlow() {
-        setDivision(93, 8)
-
-        val scenario = listOf("1", "8", "1", "3", "1", "8", "5")
-        for (i in scenario.indices) {
-            tapAndEnter(scenario[i])
-            if (i < scenario.lastIndex) {
-                composeTestRule.onNodeWithTag("feedback").assertDoesNotExist()
-            }
-        }
-
-        composeTestRule.onNodeWithTag("feedback").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("feedback").assertTextContains("정답입니다!")
-        composeTestRule.runOnIdle {
-            val ui = requireNotNull(viewModel.uiState.value)
-            assertTrue("Complete phase 미도달", ui.isCompleted)
-        }
-    }
-
-    @Test
-    fun test_TwoByTwo_UIFlow() {
-        setDivision(57, 22)
-
-        val scenario = listOf("2", "4", "4", "3", "1")
-        for (i in 0 until scenario.lastIndex) tapAndEnter(scenario[i])
-        tapAndEnter(scenario.last())
-
-        composeTestRule.onNodeWithTag("feedback").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("feedback").assertTextContains("정답입니다!")
-        composeTestRule.runOnIdle {
-            val ui = requireNotNull(viewModel.uiState.value)
-            assertTrue("Complete phase 미도달", ui.isCompleted)
-        }
     }
 
     @Test

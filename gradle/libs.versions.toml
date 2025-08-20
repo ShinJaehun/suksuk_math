@@ -16,6 +16,7 @@ hilt-navigation-compose = "1.2.0"
 room = "2.7.2"
 constraintlayout = "1.0.1"
 turbine = "1.0.0"
+lifecycleProcess = "2.9.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }

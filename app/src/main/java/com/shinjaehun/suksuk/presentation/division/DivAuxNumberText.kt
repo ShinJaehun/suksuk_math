@@ -32,7 +32,7 @@ fun DivAuxNumberText(
 ) {
     val textColor = when (cell.highlight) {
         Highlight.Editing -> Color.Red
-        Highlight.Related -> Color(0xFF1976D2) // 파란색 (Material blue)
+        Highlight.Related -> Color.Blue
         else -> defaultColor
     }
 

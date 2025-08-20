@@ -135,14 +135,11 @@ fun mapDivisionUiState(domain: DivisionDomainState, currentInput: String): Divis
     }
 
     val isComplete = curPhaseStep.phase is DivisionPhase.Complete
-    val feedback = if (isComplete) "정답입니다!" else null
-
 
     return DivisionUiState(
         cells = cells,
         currentStep = currentStepIndex,
         isCompleted = isComplete,
-        feedback = feedback,
         pattern = pattern
     )
 }

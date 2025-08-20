@@ -1,6 +1,7 @@
 package com.shinjaehun.suksuk.multiplication
 
 import androidx.lifecycle.SavedStateHandle
+import com.shinjaehun.suksuk.DummyFeedbackProvider
 import com.shinjaehun.suksuk.TestFactoryBuilders
 import com.shinjaehun.suksuk.domain.multiplication.evaluator.MulPhaseEvaluator
 import com.shinjaehun.suksuk.domain.pattern.MulPattern
@@ -25,7 +26,8 @@ class MultiplicationViewModelTest {
         viewModel = MultiplicationViewModel(
             savedStateHandle = SavedStateHandle(mapOf("autoStart" to false)),
             phaseEvaluator = MulPhaseEvaluator(),
-            domainStateFactory = factory
+            domainStateFactory = factory,
+            feedbackProvider = DummyFeedbackProvider,
         )
     }
 

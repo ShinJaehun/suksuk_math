@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun InputPanel(
-    feedback: String?,
     onDigitInput: (Int) -> Unit,
     onClear: () -> Unit,
     onEnter: () -> Unit,
@@ -29,14 +28,14 @@ fun InputPanel(
             onClear = onClear,
             onEnter = onEnter
         )
-        feedback?.let {
-            Spacer(Modifier.height(16.dp))
-            Text(
-                text = it,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-                    .testTag("feedback")
-            )
-        }
+//        feedback?.let {
+//            Spacer(Modifier.height(16.dp))
+//            Text(
+//                text = it,
+//                color = MaterialTheme.colorScheme.primary,
+//                modifier = Modifier.align(Alignment.CenterHorizontally)
+//                    .testTag("feedback")
+//            )
+//        }
     }
 }

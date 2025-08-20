@@ -1,5 +1,7 @@
 package com.shinjaehun.suksuk.multiplication
 
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertTextContains
@@ -11,11 +13,15 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.lifecycle.SavedStateHandle
+import com.shinjaehun.suksuk.DummyFeedbackProvider
+import com.shinjaehun.suksuk.NoopAudioPlayer
+import com.shinjaehun.suksuk.NoopHaptic
 import com.shinjaehun.suksuk.TestFactoryBuilders
 import com.shinjaehun.suksuk.domain.multiplication.evaluator.MulPhaseEvaluator
 import com.shinjaehun.suksuk.domain.multiplication.sequence.MulPhaseSequenceProvider
 import com.shinjaehun.suksuk.domain.multiplication.sequence.creator.ThreeByTwoMulPhaseSequenceCreator
 import com.shinjaehun.suksuk.domain.multiplication.sequence.creator.TwoByTwoMulPhaseSequenceCreator
+import com.shinjaehun.suksuk.presentation.common.effects.LocalAudioPlayer
 import com.shinjaehun.suksuk.presentation.multiplication.MultiplicationScreen
 import com.shinjaehun.suksuk.presentation.multiplication.MultiplicationViewModel
 import junit.framework.TestCase.assertTrue
@@ -39,60 +45,30 @@ class MultiplicationUiTest {
         viewModel = MultiplicationViewModel(
             savedStateHandle = savedStateHandle,
             phaseEvaluator = MulPhaseEvaluator(),
-            domainStateFactory = factory
+            domainStateFactory = factory,
+            feedbackProvider = DummyFeedbackProvider
         )
     }
 
     // ---- 공통 헬퍼 ----
     private fun setMultiplication(multiplicand: Int, multiplier: Int) {
+        viewModel.startNewProblem(multiplicand, multiplier)
+
         composeTestRule.setContent {
-            MultiplicationScreen(
-                multiplicand = multiplicand,
-                multiplier = multiplier,
-                viewModel = viewModel
-            )
+            CompositionLocalProvider(
+                LocalAudioPlayer provides NoopAudioPlayer,
+                LocalHapticFeedback provides NoopHaptic
+            ) {
+                MultiplicationScreen(
+//                multiplicand = multiplicand,
+//                multiplier = multiplier,
+                    viewModel = viewModel,
+                    onNextProblem = {},
+                    onExit = {}
+                )
+            }
         }
         composeTestRule.waitForIdle()
-    }
-
-    // ---------------------------------------
-    // 1) 전체 플로우: 2×1 (예: 47 × 6)
-    // ---------------------------------------
-    @Test
-    fun test_TwoByOne_FullFlow_ShowsSuccessFeedback() {
-        setMultiplication(47, 16)
-
-        composeTestRule.onNodeWithTag("numpad-4").performClick()
-        composeTestRule.onNodeWithTag("numpad-2").performClick()
-        composeTestRule.onNodeWithTag("numpad-enter").performClick()
-
-        composeTestRule.onNodeWithTag("numpad-2").performClick()
-        composeTestRule.onNodeWithTag("numpad-8").performClick()
-        composeTestRule.onNodeWithTag("numpad-enter").performClick()
-
-        composeTestRule.onNodeWithTag("numpad-7").performClick()
-        composeTestRule.onNodeWithTag("numpad-enter").performClick()
-
-        composeTestRule.onNodeWithTag("numpad-4").performClick()
-        composeTestRule.onNodeWithTag("numpad-enter").performClick()
-
-        composeTestRule.onNodeWithTag("numpad-2").performClick()
-        composeTestRule.onNodeWithTag("numpad-enter").performClick()
-
-        composeTestRule.onNodeWithTag("numpad-1").performClick()
-        composeTestRule.onNodeWithTag("numpad-5").performClick()
-        composeTestRule.onNodeWithTag("numpad-enter").performClick()
-
-        composeTestRule.onNodeWithTag("numpad-7").performClick()
-        composeTestRule.onNodeWithTag("numpad-enter").performClick()
-
-        composeTestRule.onNodeWithTag("feedback").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("feedback").assertTextContains("정답입니다!")
-
-        composeTestRule.runOnIdle {
-            val ui = requireNotNull(viewModel.uiState.value)
-            assertTrue("Complete phase 미도달", ui.isCompleted)
-        }
     }
 
     // ---------------------------------------

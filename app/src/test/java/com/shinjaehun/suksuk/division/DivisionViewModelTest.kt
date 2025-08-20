@@ -1,13 +1,20 @@
 package com.shinjaehun.suksuk.division
 
 import androidx.lifecycle.SavedStateHandle
+import com.shinjaehun.suksuk.DummyFeedbackProvider
 import com.shinjaehun.suksuk.TestFactoryBuilders
 import com.shinjaehun.suksuk.domain.division.evaluator.DivisionPhaseEvaluator
+import com.shinjaehun.suksuk.domain.division.model.DivisionPhase
 import com.shinjaehun.suksuk.domain.pattern.DivisionPattern
+import com.shinjaehun.suksuk.presentation.common.feedback.FeedbackEvent
+import com.shinjaehun.suksuk.presentation.common.feedback.FeedbackProvider
 import com.shinjaehun.suksuk.presentation.division.DivisionViewModel
 import com.shinjaehun.suksuk.presentation.division.model.DivisionUiState
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -23,6 +30,7 @@ class DivisionViewModelTest {
             savedStateHandle = SavedStateHandle(mapOf("autoStart" to false)),
             phaseEvaluator = DivisionPhaseEvaluator(),
             domainStateFactory = factory,
+            feedbackProvider = DummyFeedbackProvider
         )
     }
 
@@ -321,9 +329,10 @@ class DivisionViewModelTest {
 
                 // 마지막 입력이면 feedback이 있어야 한다!
                 if (i == inputs.lastIndex) {
-                    assertEquals("$name: 마지막 입력 후 feedback 불일치", "정답입니다!", state.feedback)
+                    assertTrue("$name: 마지막 입력 후 완료 상태 아님", state.isCompleted)
                 } else {
-                    assertTrue("$name: ${i + 1}번째 입력 오답! (${input})", state.feedback == null)
+                    // 진행 중임을 확인 (예: 현재 단계가 증가했는지, 남은 입력 수 등)
+                    assertFalse("$name: ${i+1}번째 입력에서 잘못 완료 처리됨", state.isCompleted)
                 }
             }
 

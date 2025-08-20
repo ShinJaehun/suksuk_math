@@ -4,7 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.CompositionLocalProvider
 import com.shinjaehun.suksuk.domain.ProblemSessionFactory
+import com.shinjaehun.suksuk.presentation.common.effects.AudioPlayer
+import com.shinjaehun.suksuk.presentation.common.effects.LocalAudioPlayer
 import com.shinjaehun.suksuk.ui.theme.SukSukTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -14,6 +17,8 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var problemFactory: ProblemSessionFactory
+    @Inject
+    lateinit var audioPlayer: AudioPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +36,9 @@ class MainActivity : ComponentActivity() {
 //            DivisionScreen(dividend=610, divisor=13)
 
             SukSukTheme {
-                AppNavHost(problemFactory)
+                CompositionLocalProvider(LocalAudioPlayer provides audioPlayer) {
+                    AppNavHost(problemFactory)
+                }
             }
         }
     }

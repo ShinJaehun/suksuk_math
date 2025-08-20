@@ -27,7 +27,7 @@ fun MulNumberText(
 ) {
     val textColor = when (cell.highlight) {
         Highlight.Editing -> Color.Red
-        Highlight.Related -> MaterialTheme.colorScheme.primary
+        Highlight.Related -> Color.Blue
         else -> defaultColor
     }
 

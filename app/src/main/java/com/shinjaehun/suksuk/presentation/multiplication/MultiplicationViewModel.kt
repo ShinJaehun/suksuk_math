@@ -7,10 +7,14 @@ import com.shinjaehun.suksuk.domain.OpType
 import com.shinjaehun.suksuk.domain.Problem
 import com.shinjaehun.suksuk.domain.multiplication.evaluator.MulPhaseEvaluator
 import com.shinjaehun.suksuk.domain.model.MulDomainState
+import com.shinjaehun.suksuk.presentation.common.feedback.FeedbackEvent
+import com.shinjaehun.suksuk.presentation.common.feedback.FeedbackMessages
+import com.shinjaehun.suksuk.presentation.common.feedback.FeedbackProvider
 import com.shinjaehun.suksuk.presentation.multiplication.model.MulUiState
 import com.shinjaehun.suksuk.presentation.multiplication.model.mapMultiplicationUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
@@ -21,6 +25,7 @@ class MultiplicationViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val phaseEvaluator: MulPhaseEvaluator,
     private val domainStateFactory: DomainStateFactory,
+    private val feedbackProvider: FeedbackProvider
 ): ViewModel() {
 //    private val autoStart: Boolean = savedStateHandle["autoStart"] ?: true
 
@@ -32,18 +37,29 @@ class MultiplicationViewModel @Inject constructor(
 
     private lateinit var domainState: MulDomainState
 
+    val feedbackEvents: SharedFlow<FeedbackEvent> get() = feedbackProvider.events
+
+    private var lastProblem: Problem? = null
+
 //    init {
 //        if(autoStart) {
 //            startNewProblem(12, 34)
 //        }
 //    }
 
-    fun startNewProblem(multiplicand: Int, multiplier: Int) {
-        val ds = domainStateFactory.create(Problem(OpType.Multiplication, multiplicand, multiplier))
+    fun startNewProblem(problem: Problem) {
+        require(problem.type == OpType.Multiplication) { "MulViewModel expects Mul problem, got ${problem.type}" }
+        if (problem == lastProblem) return
+        lastProblem = problem
+        val ds = domainStateFactory.create(problem)
         require(ds is MulDomainState) { "Expected MulDomainState, got ${ds::class.simpleName}" }
         domainState = ds
         _currentInput.value = ""
         emitUiState()
+    }
+
+    fun startNewProblem(multiplicand: Int, multiplier: Int) {
+        startNewProblem(Problem(OpType.Multiplication, multiplicand, multiplier))
     }
 
     fun onDigitInput(digit: Int){
@@ -75,15 +91,22 @@ class MultiplicationViewModel @Inject constructor(
         val eval = phaseEvaluator.evaluate(domainState, inputsForThisStep)
 
         if (!eval.isCorrect) {
+            feedbackProvider.wrong(FeedbackMessages.randomWrong())
             _currentInput.value = ""
             emitUiState()
             return
         }
 
+        feedbackProvider.correct(FeedbackMessages.randomCorrect())
+
         domainState = domainState.copy(
             inputs = domainState.inputs + inputsForThisStep,
             currentStepIndex = eval.nextStepIndex ?: domainState.currentStepIndex
         )
+
+        if (eval.isFinished) {
+            feedbackProvider.phaseCompleted()
+        }
 
         _currentInput.value = ""
         emitUiState()

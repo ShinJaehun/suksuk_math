@@ -12,9 +12,12 @@ import com.shinjaehun.suksuk.domain.pattern.DivisionPattern
 import com.shinjaehun.suksuk.domain.pattern.MulPattern
 import com.shinjaehun.suksuk.presentation.ChallengeScreen
 import com.shinjaehun.suksuk.presentation.MainScreen
+import com.shinjaehun.suksuk.presentation.common.effects.AudioPlayer
 
 @Composable
-fun AppNavHost(problemFactory: ProblemSessionFactory) {
+fun AppNavHost(
+    problemFactory: ProblemSessionFactory,
+) {
     val nav = rememberNavController()
     NavHost(navController = nav, startDestination = Routes.Main) {
 

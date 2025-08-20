@@ -543,7 +543,6 @@ fun PreviewDivisionStageScreen() {
             DivisionInputCell(cellName = cellName, value = "?")
         },
         pattern = DivisionPattern.ThreeByTwo,
-        feedback = null // 또는 "정답입니다!" 등
     )
 
     val newUiState = fakeUiState.copy(
