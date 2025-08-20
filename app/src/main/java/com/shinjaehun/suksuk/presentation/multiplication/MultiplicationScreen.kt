@@ -32,6 +32,7 @@ import com.shinjaehun.suksuk.presentation.common.effects.LocalAudioPlayer
 import com.shinjaehun.suksuk.presentation.common.feedback.CompletionOverlay
 import com.shinjaehun.suksuk.presentation.common.feedback.FeedbackEvent
 import com.shinjaehun.suksuk.presentation.common.feedback.FeedbackOverlay
+import com.shinjaehun.suksuk.presentation.common.layout.DualPaneBoardScaffold
 import com.shinjaehun.suksuk.presentation.component.InputPanel
 
 @Composable
@@ -96,55 +97,176 @@ fun MultiplicationScreen(
 //        )
 //    }
 
-    Box(Modifier.fillMaxSize()) {
-        // ⬅️ 곱셈 보드 렌더
-        MultiplicationBoard(uiState)
+//    Box(Modifier.fillMaxSize()) {
+//        // ⬅️ 곱셈 보드 렌더
+//        MultiplicationBoard(uiState)
+//
+//        // 하단 스택: (피드백) -> 8dp -> (입력패널)
+//        Column(
+//            modifier = Modifier
+//                .align(Alignment.BottomCenter)
+//                .fillMaxWidth(),
+//            horizontalAlignment = Alignment.CenterHorizontally
+//        ) {
+//            FeedbackOverlay(
+//                message = wrongMsg,
+//                color = Color.Red,
+//                onClear = { wrongMsg = null }
+//            )
+//            FeedbackOverlay(
+//                message = correctMsg,
+//                color = Color(0xFF2196F3),
+//                onClear = { correctMsg = null }
+//            )
+//            if (wrongMsg != null || correctMsg != null) Spacer(Modifier.height(4.dp))
+//
+//            InputPanel(
+//                onDigitInput = viewModel::onDigitInput,
+//                onClear = viewModel::onClear,
+//                onEnter = viewModel::onEnter,
+//                modifier = Modifier
+//                    .wrapContentHeight()
+//                    .align(Alignment.CenterHorizontally)
+//                    .padding(horizontal = 16.dp, vertical = 12.dp)
+//            )
+//        }
+//
+//        // 완료 스탬프(입력패널 위): “감싸는 Box + align” 패턴
+//        if (showStamp) {
+//            Box(
+//                modifier = Modifier
+//                    .align(Alignment.BottomCenter)
+//                    .padding(bottom = 16.dp)
+//                    .zIndex(1f)
+//            ) {
+//                CompletionOverlay(
+//                    visible = true,
+//                    onNextProblem = {
+//                        showStamp = false
+//                        onNextProblem()
+//                    }
+//                )
+//            }
+//        }
+//    }
 
-        // 하단 스택: (피드백) -> 8dp -> (입력패널)
-        Column(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            FeedbackOverlay(
-                message = wrongMsg,
-                color = Color.Red,
-                onClear = { wrongMsg = null }
-            )
-            FeedbackOverlay(
-                message = correctMsg,
-                color = Color(0xFF2196F3),
-                onClear = { correctMsg = null }
-            )
-            if (wrongMsg != null || correctMsg != null) Spacer(Modifier.height(4.dp))
+    if(isLandscape) {
+        DualPaneBoardScaffold(
+            designWidth = 360.dp,
+            designHeight = 560.dp,
+            minScale = 0.50f,
+            boardWeight = 2.2f,
+            panelWeight = 1f,
+            contentWidthFraction = 0.78f,
+            maxContentWidth = 1000.dp,
+            outerPadding = 24.dp,
+            innerGutter = 20.dp,
+            board = {
+                // ✅ 보드(스케일+중앙 고정) — 기존 파일 그대로
+                MultiplicationBoard(uiState)
+            },
+            panel = {
+                // ✅ 세로모드와 동일한 하단 스택: [Feedback들] -> [Stamp] -> [InputPanel]
+                Box(Modifier.fillMaxSize()) {
+                    Column(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        FeedbackOverlay(
+                            message = wrongMsg,
+                            color = Color.Red,
+                            onClear = { wrongMsg = null },
+                        )
+                        FeedbackOverlay(
+                            message = correctMsg,
+                            color = Color(0xFF2196F3),
+                            onClear = { correctMsg = null },
+                        )
+                        if (wrongMsg != null || correctMsg != null) {
+                            Spacer(Modifier.height(12.dp))
+                        }
 
-            InputPanel(
-                onDigitInput = viewModel::onDigitInput,
-                onClear = viewModel::onClear,
-                onEnter = viewModel::onEnter,
-                modifier = Modifier
-                    .wrapContentHeight()
-                    .align(Alignment.CenterHorizontally)
-                    .padding(horizontal = 16.dp, vertical = 12.dp)
-            )
-        }
+                        InputPanel(
+                            onDigitInput = viewModel::onDigitInput,
+                            onClear = viewModel::onClear,
+                            onEnter = viewModel::onEnter,
+                            modifier = Modifier.wrapContentHeight()
+                        )
+                    }
 
-        // 완료 스탬프(입력패널 위): “감싸는 Box + align” 패턴
-        if (showStamp) {
-            Box(
+                    if (showStamp) {
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)   // 직계 자식 align
+                                .padding(bottom = 16.dp)
+                                .zIndex(1f)
+                        ) {
+                            CompletionOverlay(
+                                visible = true,
+                                onNextProblem = {
+                                    showStamp = false
+                                    onNextProblem()
+                                }
+                            )
+                        }
+                        Spacer(Modifier.height(8.dp))
+                    }
+                }
+            }
+        )
+    } else {
+        Box(Modifier.fillMaxSize()) {
+            // ⬅️ 곱셈 보드 렌더
+            MultiplicationBoard(uiState)
+
+            // 하단 스택: (피드백) -> 8dp -> (입력패널)
+            Column(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 16.dp)
-                    .zIndex(1f)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                CompletionOverlay(
-                    visible = true,
-                    onNextProblem = {
-                        showStamp = false
-                        onNextProblem()
-                    }
+                FeedbackOverlay(
+                    message = wrongMsg,
+                    color = Color.Red,
+                    onClear = { wrongMsg = null }
                 )
+                FeedbackOverlay(
+                    message = correctMsg,
+                    color = Color(0xFF2196F3),
+                    onClear = { correctMsg = null }
+                )
+                if (wrongMsg != null || correctMsg != null) Spacer(Modifier.height(4.dp))
+
+                InputPanel(
+                    onDigitInput = viewModel::onDigitInput,
+                    onClear = viewModel::onClear,
+                    onEnter = viewModel::onEnter,
+                    modifier = Modifier
+                        .wrapContentHeight()
+                        .align(Alignment.CenterHorizontally)
+                        .padding(horizontal = 16.dp, vertical = 12.dp)
+                )
+            }
+
+            // 완료 스탬프(입력패널 위): “감싸는 Box + align” 패턴
+            if (showStamp) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 16.dp)
+                        .zIndex(1f)
+                ) {
+                    CompletionOverlay(
+                        visible = true,
+                        onNextProblem = {
+                            showStamp = false
+                            onNextProblem()
+                        }
+                    )
+                }
             }
         }
     }
