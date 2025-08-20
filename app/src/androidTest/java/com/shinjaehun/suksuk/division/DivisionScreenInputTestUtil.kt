@@ -91,7 +91,7 @@ fun ComposeContentTestRule.divisionCase(
     ).assertIsDisplayed()
 
     // (선택) 안내 텍스트도 같이 확인
-    onNodeWithText("그림을 누르면 다음 문제!", useUnmergedTree = true)
+    onNodeWithText("다음 문제로!", useUnmergedTree = true)
         .assertIsDisplayed()
 
 }

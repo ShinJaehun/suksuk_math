@@ -32,7 +32,9 @@ import com.shinjaehun.suksuk.presentation.common.effects.LocalAudioPlayer
 import com.shinjaehun.suksuk.presentation.common.feedback.CompletionOverlay
 import com.shinjaehun.suksuk.presentation.common.feedback.FeedbackEvent
 import com.shinjaehun.suksuk.presentation.common.feedback.FeedbackOverlay
+import com.shinjaehun.suksuk.presentation.common.layout.DualPaneBoardScaffold
 import com.shinjaehun.suksuk.presentation.component.InputPanel
+import com.shinjaehun.suksuk.presentation.component.NumberPad
 
 @Composable
 fun DivisionScreen(
@@ -45,6 +47,7 @@ fun DivisionScreen(
 ) {
     val cfg = LocalConfiguration.current
     val isLandscape = cfg.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val smallest = cfg.smallestScreenWidthDp // sw 체크
 
     val haptic = LocalHapticFeedback.current
     val audioPlayer = LocalAudioPlayer.current
@@ -187,22 +190,125 @@ fun DivisionScreen(
 //        FeedbackOverlay(message = correctMsg, color = Color(0xFF2196F3)) { correctMsg = null }
 //    }
 
-    Box(Modifier.fillMaxSize()) {
-        // 보드
-        when (uiState.pattern) {
-            DivisionPattern.TwoByOne,
-            DivisionPattern.TwoByTwo -> DivisionBoard2By1And2By2(uiState, uiState.pattern)
-            DivisionPattern.ThreeByTwo -> DivisionBoard3By2(uiState)
-        }
+//    Box(Modifier.fillMaxSize()) {
+//        // 보드
+//        when (uiState.pattern) {
+//            DivisionPattern.TwoByOne,
+//            DivisionPattern.TwoByTwo -> DivisionBoard2By1And2By2(uiState, uiState.pattern)
+//            DivisionPattern.ThreeByTwo -> DivisionBoard3By2(uiState)
+//        }
+//
+//        // ✅ 하단 스택: (피드백 토스트) → 12dp → (입력 패널)
+//        Column(
+//            modifier = Modifier
+//                .align(Alignment.BottomCenter)
+//                .fillMaxWidth(),   // 부모 Box의 "직계 자식"에 align!
+//            horizontalAlignment = Alignment.CenterHorizontally
+//        ) {
+//            // 오답/정답 토스트들 (있을 때만)
+////            FeedbackToast(
+////                message = wrongMsg,
+////                tint = Color.Red,
+////                onGone = { wrongMsg = null }
+////            )
+////            FeedbackToast(
+////                message = correctMsg,
+////                tint = Color(0xFF2196F3),
+////                onGone = { correctMsg = null }
+////            )
+//            FeedbackOverlay(
+//                message = wrongMsg,
+//                color = Color.Red,
+//                onClear = { wrongMsg = null },
+//                modifier = Modifier // 중앙 정렬은 Column이 해줌
+//            )
+//            FeedbackOverlay(
+//                message = correctMsg,
+//                color = Color(0xFF2196F3),
+//                onClear = { correctMsg = null },
+//                modifier = Modifier
+//            )
+//
+//            // 토스트가 하나라도 있으면 여유 간격
+//            if (wrongMsg != null || correctMsg != null) {
+//                Spacer(Modifier.height(4.dp))
+//            }
+//
+//            // 입력 패널 (wrapContentHeight)
+//            InputPanel(
+//                onDigitInput = viewModel::onDigitInput,
+//                onClear = viewModel::onClear,
+//                onEnter = viewModel::onEnter,
+//                modifier = Modifier
+////                    .fillMaxWidth()
+//                    .wrapContentHeight()
+//                    .padding(horizontal = 16.dp, vertical = 12.dp)
+//                    .align(Alignment.CenterHorizontally)
+//            )
+//        }
+//
+//        // 완료 스탬프는 필요하면 따로(입력 패널 위) — 이미 성공한 패턴대로
+//        if (showStamp) {
+//            Box(
+//                modifier = Modifier
+//                    .align(Alignment.BottomCenter)   // 직계 자식 align
+//                    .padding(bottom = 16.dp)
+//                    .zIndex(1f)
+//            ) {
+//                CompletionOverlay(
+//                    visible = true,
+//                    onNextProblem = {
+//                        showStamp = false
+//                        onNextProblem()
+//                    }
+//                )
+//            }
+//        }
+//    }
+//    if (isLandscape && smallest < 600) { // 작은 폰 가로 전용
+//        CompactLandscapeBoard( // 오버레이/바텀시트 버전
+//            board = { DivisionBoard3By2(uiState) },
+//            inputPanel = { InputPanel(onNumber, onClear, onEnter) }
+//        )
+//    }
+    if(isLandscape) {
+        DualPaneBoardScaffold(
+            designWidth = 360.dp,
+            designHeight = 560.dp,
+            minScale = 0.50f,
+            boardWeight = 2.2f,
+            panelWeight = 1f,
 
-        // ✅ 하단 스택: (피드백 토스트) → 12dp → (입력 패널)
-        Column(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth(),   // 부모 Box의 "직계 자식"에 align!
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            // 오답/정답 토스트들 (있을 때만)
+            contentWidthFraction = 0.78f, // ← 숫자 줄일수록 양쪽이 더 가운데로 모임
+            maxContentWidth = 1000.dp,    // ← 큰 태블릿에서 과도하게 벌어지지 않게
+            outerPadding = 24.dp,         // ← 바깥 여백
+            innerGutter = 20.dp,           // ← 두 패널 사이 간격
+
+            board = {
+                // ✅ 기존 보드 그대로
+                when (uiState.pattern) {
+                    DivisionPattern.TwoByOne,
+                    DivisionPattern.TwoByTwo -> DivisionBoard2By1And2By2(uiState, uiState.pattern)
+                    DivisionPattern.ThreeByTwo -> DivisionBoard3By2(uiState)
+                }
+            },
+
+            panel = {
+                // ✅ 여기서 NumberPad 대신 InputPanel 사용
+//                InputPanel(
+//                    onDigitInput = viewModel::onDigitInput,
+//                    onClear = viewModel::onClear,
+//                    onEnter = viewModel::onEnter,
+//                )
+                Box(Modifier.fillMaxSize()) {
+                    // ✅ 하단 스택: (피드백 토스트) → 12dp → (입력 패널)
+                    Column(
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        // 오답/정답 토스트들 (있을 때만)
 //            FeedbackToast(
 //                message = wrongMsg,
 //                tint = Color.Red,
@@ -213,55 +319,132 @@ fun DivisionScreen(
 //                tint = Color(0xFF2196F3),
 //                onGone = { correctMsg = null }
 //            )
-            FeedbackOverlay(
-                message = wrongMsg,
-                color = Color.Red,
-                onClear = { wrongMsg = null },
-                modifier = Modifier // 중앙 정렬은 Column이 해줌
-            )
-            FeedbackOverlay(
-                message = correctMsg,
-                color = Color(0xFF2196F3),
-                onClear = { correctMsg = null },
-                modifier = Modifier
-            )
+                        FeedbackOverlay(
+                            message = wrongMsg,
+                            color = Color.Red,
+                            onClear = { wrongMsg = null },
+                        )
+                        FeedbackOverlay(
+                            message = correctMsg,
+                            color = Color(0xFF2196F3),
+                            onClear = { correctMsg = null },
+                        )
 
-            // 토스트가 하나라도 있으면 여유 간격
-            if (wrongMsg != null || correctMsg != null) {
-                Spacer(Modifier.height(4.dp))
+                        // 토스트가 하나라도 있으면 여유 간격
+                        if (wrongMsg != null || correctMsg != null) {
+                            Spacer(Modifier.height(12.dp))
+                        }
+
+                        // 입력 패널 (wrapContentHeight)
+                        InputPanel(
+                            onDigitInput = viewModel::onDigitInput,
+                            onClear = viewModel::onClear,
+                            onEnter = viewModel::onEnter,
+                            modifier = Modifier
+                                .wrapContentHeight()
+                        )
+                    }
+
+                    // 완료 스탬프는 필요하면 따로(입력 패널 위) — 이미 성공한 패턴대로
+                    if (showStamp) {
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)   // 직계 자식 align
+                                .padding(bottom = 16.dp)
+                                .zIndex(1f)
+                        ) {
+                            CompletionOverlay(
+                                visible = true,
+                                onNextProblem = {
+                                    showStamp = false
+                                    onNextProblem()
+                                }
+                            )
+                        }
+                    }
+                }
+
+            }
+        )
+    } else {
+        Box(Modifier.fillMaxSize()) {
+            // 보드
+            when (uiState.pattern) {
+                DivisionPattern.TwoByOne,
+                DivisionPattern.TwoByTwo -> DivisionBoard2By1And2By2(uiState, uiState.pattern)
+                DivisionPattern.ThreeByTwo -> DivisionBoard3By2(uiState)
             }
 
-            // 입력 패널 (wrapContentHeight)
-            InputPanel(
-                onDigitInput = viewModel::onDigitInput,
-                onClear = viewModel::onClear,
-                onEnter = viewModel::onEnter,
+            // ✅ 하단 스택: (피드백 토스트) → 12dp → (입력 패널)
+            Column(
                 modifier = Modifier
-//                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(horizontal = 16.dp, vertical = 12.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
-        }
-
-        // 완료 스탬프는 필요하면 따로(입력 패널 위) — 이미 성공한 패턴대로
-        if (showStamp) {
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)   // 직계 자식 align
-                    .padding(bottom = 16.dp)
-                    .zIndex(1f)
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth(),   // 부모 Box의 "직계 자식"에 align!
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                CompletionOverlay(
-                    visible = true,
-                    onNextProblem = {
-                        showStamp = false
-                        onNextProblem()
-                    }
+                // 오답/정답 토스트들 (있을 때만)
+//            FeedbackToast(
+//                message = wrongMsg,
+//                tint = Color.Red,
+//                onGone = { wrongMsg = null }
+//            )
+//            FeedbackToast(
+//                message = correctMsg,
+//                tint = Color(0xFF2196F3),
+//                onGone = { correctMsg = null }
+//            )
+                FeedbackOverlay(
+                    message = wrongMsg,
+                    color = Color.Red,
+                    onClear = { wrongMsg = null },
+                    modifier = Modifier // 중앙 정렬은 Column이 해줌
                 )
+                FeedbackOverlay(
+                    message = correctMsg,
+                    color = Color(0xFF2196F3),
+                    onClear = { correctMsg = null },
+                    modifier = Modifier
+                )
+
+                // 토스트가 하나라도 있으면 여유 간격
+                if (wrongMsg != null || correctMsg != null) {
+                    Spacer(Modifier.height(12.dp))
+                }
+
+                // 입력 패널 (wrapContentHeight)
+                InputPanel(
+                    onDigitInput = viewModel::onDigitInput,
+                    onClear = viewModel::onClear,
+                    onEnter = viewModel::onEnter,
+                    modifier = Modifier
+//                    .fillMaxWidth()
+                        .wrapContentHeight()
+//                        .padding(horizontal = 16.dp, vertical = 12.dp)
+//                        .align(Alignment.CenterHorizontally)
+                )
+            }
+
+            // 완료 스탬프는 필요하면 따로(입력 패널 위) — 이미 성공한 패턴대로
+            if (showStamp) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)   // 직계 자식 align
+                        .padding(bottom = 16.dp)
+                        .zIndex(1f)
+                ) {
+                    CompletionOverlay(
+                        visible = true,
+                        onNextProblem = {
+                            showStamp = false
+                            onNextProblem()
+                        }
+                    )
+                }
             }
         }
     }
+
+
 
     BackHandler { onExit() }
 
