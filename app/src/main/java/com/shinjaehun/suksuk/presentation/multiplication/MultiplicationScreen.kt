@@ -8,11 +8,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,6 +45,9 @@ fun MultiplicationScreen(
     viewModel: MultiplicationViewModel = hiltViewModel(),
     onNextProblem: () -> Unit,
     onExit: () -> Unit,
+    showCompletionOverlay: Boolean = true,
+    autoNextOnComplete: Boolean = false,
+    boardOffsetY: Dp = 0.dp,
     previewAll: Boolean = false
 ) {
     val cfg = LocalConfiguration.current
@@ -53,6 +59,28 @@ fun MultiplicationScreen(
     var wrongMsg by remember { mutableStateOf<String?>(null) }
     var correctMsg by remember { mutableStateOf<String?>(null) }
     var showStamp by remember { mutableStateOf(false) }
+
+    // ✅ 완료 감지 (한 번만 트리거되도록 래치)
+    val ui = viewModel.uiState.collectAsState().value
+    var completedLatched by remember { mutableStateOf(false) }
+
+    LaunchedEffect(ui.isCompleted) {
+        if (ui.isCompleted && !completedLatched) {
+            completedLatched = true
+            if (autoNextOnComplete) {
+                // 스탬프 없이 바로 다음 문제
+                onNextProblem()
+            } else if (showCompletionOverlay) {
+                // 기존 동작: 스탬프 띄우기
+                showStamp = true
+            }
+        }
+        if (!ui.isCompleted && completedLatched) {
+            // 새 문제 시작 시 래치/스탬프 리셋
+            completedLatched = false
+            showStamp = false
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.feedbackEvents.collect { e ->
@@ -217,7 +245,10 @@ fun MultiplicationScreen(
             }
         )
     } else {
-        Box(Modifier.fillMaxSize()) {
+        Box(
+            Modifier.fillMaxSize()
+                .offset(y = boardOffsetY)
+        ) {
             // ⬅️ 곱셈 보드 렌더
             MultiplicationBoard(uiState)
 
@@ -252,7 +283,8 @@ fun MultiplicationScreen(
             }
 
             // 완료 스탬프(입력패널 위): “감싸는 Box + align” 패턴
-            if (showStamp) {
+//            if (showStamp) {
+            if (showCompletionOverlay && showStamp) {
                 Box(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)

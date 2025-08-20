@@ -105,9 +105,8 @@ fun AppNavHost(
             )
         }
 
-
         composable(Routes.Challenge) {
-            ChallengeScreen() // 내부에서 ChallengeSource 사용하도록 구성
+            ChallengeScreen(problemFactory = problemFactory, onExit = { nav.popBackStack() })
         }
     }
 

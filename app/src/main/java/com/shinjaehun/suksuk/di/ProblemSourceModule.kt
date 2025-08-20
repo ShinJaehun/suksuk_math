@@ -1,9 +1,12 @@
 package com.shinjaehun.suksuk.di
 
+import com.shinjaehun.suksuk.data.ChallengeSource
 import com.shinjaehun.suksuk.data.DefaultProblemSessionFactory
 import com.shinjaehun.suksuk.domain.ProblemSessionFactory
+import com.shinjaehun.suksuk.domain.ProblemSource
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
