@@ -99,6 +99,29 @@ fun DivisionScreenEntry(
 //        )
 //    }
 
+    val vm: DivisionViewModel = hiltViewModel()
+
+    // 디버깅 로직
+    if (overrideOperands != null) {
+        val (dividend, divisor) = overrideOperands
+
+        // VM 초기화 (중복 호출 방지용 key로 묶어둠)
+        LaunchedEffect(dividend, divisor) {
+            vm.startNewProblem(dividend, divisor)  // ← 너가 남겨둔 기존 API 재사용
+        }
+
+        // 그냥 이 문제만 풀게 렌더. onNextProblem은 동일 문제 반복 or onExit 중 택1
+        DivisionScreen(
+            onNextProblem = {
+                // 동일 문제 반복이 편하면 아래 유지
+                vm.startNewProblem(dividend, divisor)
+                // 다른 동작 원하면 onExit() 혹은 토스트 등으로 바꿔도 됨
+            },
+            onExit = onExit
+        )
+        return
+    }
+
     val source = remember(mode, pattern, overrideOperands) {
         problemFactory.openSession(
             op = OpType.Division,
@@ -108,7 +131,6 @@ fun DivisionScreenEntry(
         )
     }
 
-    val vm: DivisionViewModel = hiltViewModel()
     val scope = rememberCoroutineScope()
 
     // source 수명 관리
@@ -144,4 +166,5 @@ fun DivisionScreenEntry(
         onNextProblem = { scope.launch { source.requestNext() } },
         onExit = onExit
     )
+
 }

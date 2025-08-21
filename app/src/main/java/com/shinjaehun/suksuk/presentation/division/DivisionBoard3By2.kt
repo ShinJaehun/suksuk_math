@@ -33,7 +33,7 @@ fun DivisionBoard3By2(
     ConstraintLayout(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 30.dp, vertical = 30.dp)
+            .padding(start = 30.dp, end=30.dp, top = 10.dp, bottom = 30.dp)
     ) {
         val (
             divisorTensRef, divisorOnesRef, divisorTensCarryMul1Ref, divisorTensCarryMul2Ref,

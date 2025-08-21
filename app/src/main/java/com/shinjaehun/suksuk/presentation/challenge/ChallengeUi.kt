@@ -1,4 +1,4 @@
-package com.shinjaehun.suksuk.presentation
+package com.shinjaehun.suksuk.presentation.challenge
 
 import com.shinjaehun.suksuk.domain.OpType
 import com.shinjaehun.suksuk.domain.Problem

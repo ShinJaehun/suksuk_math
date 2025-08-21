@@ -36,8 +36,8 @@ fun CompletionOverlay(
                     .size(220.dp)
                     .clickable { onNextProblem() }
             )
-            Spacer(Modifier.height(12.dp))
-            Text("다음 문제로!", fontWeight = FontWeight.Medium)
+//            Spacer(Modifier.height(12.dp))
+//            Text("다음 문제로!", fontWeight = FontWeight.Medium)
         }
     }
 }

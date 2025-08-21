@@ -18,6 +18,7 @@ import com.shinjaehun.suksuk.domain.OpType
 import com.shinjaehun.suksuk.domain.ProblemSessionFactory
 import com.shinjaehun.suksuk.domain.SessionMode
 import com.shinjaehun.suksuk.domain.pattern.MulPattern
+import com.shinjaehun.suksuk.presentation.division.DivisionScreen
 import com.shinjaehun.suksuk.presentation.multiplication.MultiplicationScreen
 import com.shinjaehun.suksuk.presentation.multiplication.MultiplicationViewModel
 import kotlinx.coroutines.launch
@@ -31,6 +32,29 @@ fun MultiplicationScreenEntry(
     onExit: () -> Unit
 ) {
 
+    val vm: MultiplicationViewModel = hiltViewModel()
+
+    // 디버깅 로직
+    if (overrideOperands != null) {
+        val (dividend, divisor) = overrideOperands
+
+        // VM 초기화 (중복 호출 방지용 key로 묶어둠)
+        LaunchedEffect(dividend, divisor) {
+            vm.startNewProblem(dividend, divisor)
+        }
+
+        // 그냥 이 문제만 풀게 렌더. onNextProblem은 동일 문제 반복 or onExit 중 택1
+        DivisionScreen(
+            onNextProblem = {
+                // 동일 문제 반복이 편하면 아래 유지
+                vm.startNewProblem(dividend, divisor)
+                // 다른 동작 원하면 onExit() 혹은 토스트 등으로 바꿔도 됨
+            },
+            onExit = onExit
+        )
+        return
+    }
+
     val source = remember(mode, pattern, overrideOperands) {
         problemFactory.openSession(
             op = OpType.Multiplication,
@@ -39,7 +63,6 @@ fun MultiplicationScreenEntry(
             overrideOperands = overrideOperands
         )
     }
-    val vm: MultiplicationViewModel = hiltViewModel()
     val scope = rememberCoroutineScope()
 
     DisposableEffect(source) { onDispose { source.stop() } }

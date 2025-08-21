@@ -1,4 +1,4 @@
-package com.shinjaehun.suksuk.presentation
+package com.shinjaehun.suksuk.presentation.challenge
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

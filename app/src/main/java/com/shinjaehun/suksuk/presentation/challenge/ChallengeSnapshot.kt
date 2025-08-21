@@ -1,4 +1,4 @@
-package com.shinjaehun.suksuk.presentation
+package com.shinjaehun.suksuk.presentation.challenge
 
 import android.os.Parcelable
 import com.shinjaehun.suksuk.domain.Problem
