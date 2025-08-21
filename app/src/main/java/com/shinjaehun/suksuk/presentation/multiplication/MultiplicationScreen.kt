@@ -190,8 +190,14 @@ fun MultiplicationScreen(
             outerPadding = 24.dp,
             innerGutter = 20.dp,
             board = {
-                // ✅ 보드(스케일+중앙 고정) — 기존 파일 그대로
-                MultiplicationBoard(uiState)
+                Box(
+                    Modifier
+                        .align(Alignment.TopCenter)
+                        .fillMaxWidth()
+//                        .offset(y = boardOffsetY) // ⬅️ 이제 보드에만 적용
+                ) {
+                    MultiplicationBoard(uiState)
+                }
             },
             panel = {
                 // ✅ 세로모드와 동일한 하단 스택: [Feedback들] -> [Stamp] -> [InputPanel]
@@ -247,10 +253,16 @@ fun MultiplicationScreen(
     } else {
         Box(
             Modifier.fillMaxSize()
-                .offset(y = boardOffsetY)
+//                .offset(y = boardOffsetY)
         ) {
-            // ⬅️ 곱셈 보드 렌더
-            MultiplicationBoard(uiState)
+            Box(
+                Modifier
+                    .align(Alignment.TopCenter)
+                    .fillMaxWidth()
+                    .offset(y = boardOffsetY) // ⬅️ 이제 보드에만 적용
+            ) {
+                MultiplicationBoard(uiState)
+            }
 
             // 하단 스택: (피드백) -> 8dp -> (입력패널)
             Column(

@@ -53,7 +53,7 @@ fun ChallengeScreen(problemFactory: ProblemSessionFactory, onExit: () -> Unit = 
     var divCount by remember { mutableStateOf(0) }
 
 //    val lift = if (isLandscape) (-16).dp else (-10).dp   // 기기에 맞춰 취향껏
-    val lift =  (-32).dp
+    val lift =  (-16).dp
 
 
     // 수명 관리
@@ -75,17 +75,6 @@ fun ChallengeScreen(problemFactory: ProblemSessionFactory, onExit: () -> Unit = 
 
     // 렌더
     Column(Modifier.fillMaxSize()) {
-        // 상단 라벨
-        Row(
-            Modifier.fillMaxWidth().padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            val total = mulCount + divCount
-            Text("총 ${total}문제")
-            Text("곱셈 ${mulCount}")
-            Text("나눗셈 ${divCount}")
-        }
-
         // 보드: 현재 문제의 유형에 맞춰 보여주기
         Box(
             Modifier.weight(1f).fillMaxWidth(),
@@ -117,5 +106,18 @@ fun ChallengeScreen(problemFactory: ProblemSessionFactory, onExit: () -> Unit = 
                 else -> CircularProgressIndicator(Modifier.align(Alignment.Center))
             }
         }
+
+        // HUD
+        Row(
+            Modifier.fillMaxWidth().padding(bottom = 16.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            val total = mulCount + divCount
+            Text("총 ${total}문제: ")
+            Text("곱셈 ${mulCount}, ")
+            Text("나눗셈 ${divCount}")
+        }
+
+
     }
 }

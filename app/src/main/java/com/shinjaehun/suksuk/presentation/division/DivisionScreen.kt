@@ -38,6 +38,7 @@ import com.shinjaehun.suksuk.presentation.common.feedback.FeedbackOverlay
 import com.shinjaehun.suksuk.presentation.common.layout.DualPaneBoardScaffold
 import com.shinjaehun.suksuk.presentation.component.InputPanel
 import com.shinjaehun.suksuk.presentation.component.NumberPad
+import com.shinjaehun.suksuk.presentation.multiplication.MultiplicationBoard
 
 @Composable
 fun DivisionScreen(
@@ -313,11 +314,17 @@ fun DivisionScreen(
             innerGutter = 20.dp,           // ← 두 패널 사이 간격
 
             board = {
-                // ✅ 기존 보드 그대로
-                when (uiState.pattern) {
-                    DivisionPattern.TwoByOne,
-                    DivisionPattern.TwoByTwo -> DivisionBoard2By1And2By2(uiState, uiState.pattern)
-                    DivisionPattern.ThreeByTwo -> DivisionBoard3By2(uiState)
+                Box(
+                    Modifier
+                        .align(Alignment.TopCenter)
+                        .fillMaxWidth()
+//                        .offset(y = boardOffsetY) // ⬅️ 이제 보드에만 적용
+                ) {
+                    when (uiState.pattern) {
+                        DivisionPattern.TwoByOne,
+                        DivisionPattern.TwoByTwo -> DivisionBoard2By1And2By2(uiState, uiState.pattern)
+                        DivisionPattern.ThreeByTwo -> DivisionBoard3By2(uiState)
+                    }
                 }
             },
 
@@ -397,14 +404,22 @@ fun DivisionScreen(
     } else {
         Box(Modifier
             .fillMaxSize()
-            .offset(y = boardOffsetY)
+//            .offset(y = boardOffsetY)
         ) {
             // 보드
-            when (uiState.pattern) {
-                DivisionPattern.TwoByOne,
-                DivisionPattern.TwoByTwo -> DivisionBoard2By1And2By2(uiState, uiState.pattern)
-                DivisionPattern.ThreeByTwo -> DivisionBoard3By2(uiState)
+            Box(
+                Modifier
+                    .align(Alignment.TopCenter)
+                    .fillMaxWidth()
+                    .offset(y = boardOffsetY) // ⬅️ 이제 보드에만 적용
+            ) {
+                when (uiState.pattern) {
+                    DivisionPattern.TwoByOne,
+                    DivisionPattern.TwoByTwo -> DivisionBoard2By1And2By2(uiState, uiState.pattern)
+                    DivisionPattern.ThreeByTwo -> DivisionBoard3By2(uiState)
+                }
             }
+
 
             // ✅ 하단 스택: (피드백 토스트) → 12dp → (입력 패널)
             Column(
