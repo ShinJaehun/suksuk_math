@@ -18,6 +18,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,13 +57,13 @@ fun MultiplicationScreen(
     val haptic = LocalHapticFeedback.current
     val audioPlayer = LocalAudioPlayer.current
 
-    var wrongMsg by remember { mutableStateOf<String?>(null) }
-    var correctMsg by remember { mutableStateOf<String?>(null) }
-    var showStamp by remember { mutableStateOf(false) }
+    var wrongMsg by rememberSaveable  { mutableStateOf<String?>(null) }
+    var correctMsg by rememberSaveable  { mutableStateOf<String?>(null) }
+    var showStamp by rememberSaveable  { mutableStateOf(false) }
 
     // ✅ 완료 감지 (한 번만 트리거되도록 래치)
     val ui = viewModel.uiState.collectAsState().value
-    var completedLatched by remember { mutableStateOf(false) }
+    var completedLatched by rememberSaveable  { mutableStateOf(false) }
 
     LaunchedEffect(ui.isCompleted) {
         if (ui.isCompleted && !completedLatched) {
@@ -111,72 +112,6 @@ fun MultiplicationScreen(
         }
         return
     }
-
-//    Box(modifier = Modifier.fillMaxSize()) {
-//        MultiplicationBoard(uiState)
-//
-//        InputPanel(
-//            onDigitInput = viewModel::onDigitInput,
-//            onClear = viewModel::onClear,
-//            onEnter = viewModel::onEnter,
-//            modifier = Modifier
-//                .align(Alignment.BottomCenter)
-//                .padding(bottom = 16.dp)
-//        )
-//    }
-
-//    Box(Modifier.fillMaxSize()) {
-//        // ⬅️ 곱셈 보드 렌더
-//        MultiplicationBoard(uiState)
-//
-//        // 하단 스택: (피드백) -> 8dp -> (입력패널)
-//        Column(
-//            modifier = Modifier
-//                .align(Alignment.BottomCenter)
-//                .fillMaxWidth(),
-//            horizontalAlignment = Alignment.CenterHorizontally
-//        ) {
-//            FeedbackOverlay(
-//                message = wrongMsg,
-//                color = Color.Red,
-//                onClear = { wrongMsg = null }
-//            )
-//            FeedbackOverlay(
-//                message = correctMsg,
-//                color = Color(0xFF2196F3),
-//                onClear = { correctMsg = null }
-//            )
-//            if (wrongMsg != null || correctMsg != null) Spacer(Modifier.height(4.dp))
-//
-//            InputPanel(
-//                onDigitInput = viewModel::onDigitInput,
-//                onClear = viewModel::onClear,
-//                onEnter = viewModel::onEnter,
-//                modifier = Modifier
-//                    .wrapContentHeight()
-//                    .align(Alignment.CenterHorizontally)
-//                    .padding(horizontal = 16.dp, vertical = 12.dp)
-//            )
-//        }
-//
-//        // 완료 스탬프(입력패널 위): “감싸는 Box + align” 패턴
-//        if (showStamp) {
-//            Box(
-//                modifier = Modifier
-//                    .align(Alignment.BottomCenter)
-//                    .padding(bottom = 16.dp)
-//                    .zIndex(1f)
-//            ) {
-//                CompletionOverlay(
-//                    visible = true,
-//                    onNextProblem = {
-//                        showStamp = false
-//                        onNextProblem()
-//                    }
-//                )
-//            }
-//        }
-//    }
 
     if(isLandscape) {
         DualPaneBoardScaffold(

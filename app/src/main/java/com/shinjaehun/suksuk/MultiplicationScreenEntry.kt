@@ -30,76 +30,7 @@ fun MultiplicationScreenEntry(
     overrideOperands: Pair<Int, Int>?,       // (옵션) 디버그/딥링크
     onExit: () -> Unit
 ) {
-//    val source = remember(mode, pattern, overrideOperands) {
-//        problemFactory.openSession(
-//            op = OpType.Multiplication,
-//            mode = mode,
-//            pattern = pattern,
-//            overrideOperands = overrideOperands
-//        )
-//    }
-//
-//    val vm: MultiplicationViewModel = hiltViewModel()
-//
-//    // ⬇️ 현재 문제의 피연산자를 화면 레벨에서 기억 (MultiplicationScreen에 넘기기 위함)
-//    val currentOperands = remember { mutableStateOf<Pair<Int, Int>?>(null) }
-//
-//    // 첫 문제 + 흐름 구독
-//    // 첫 문제 요청 + 스트림 구독 → VM 시작 + 피연산자 기억
-//    LaunchedEffect(source) {
-//        // 1) 먼저 수집 시작 (child coroutine)
-//        launch {
-//            source.problems.collect { p ->
-//                // 화면 전달용 값 업데이트
-//                currentOperands.value = p.a to p.b
-//                // VM 시작
-//                vm.startNewProblem(p.a, p.b)
-//                // (디버깅) Log.d("Source", "Got problem: ${p.op} ${p.a} ${p.b}")
-//            }
-//        }
-//        // 2) 그 다음 첫 문제 요청
-//        source.requestNext()
-//    }
-//
-//    // 완료 감지 → 다음 문제 요청 (events 없을 때 uiState로 처리)
-//    val ui = vm.uiState.collectAsState().value
-//    val wasCompleted = remember { mutableStateOf(false) }
-//    LaunchedEffect(ui.isCompleted) {
-//        if (ui.isCompleted && !wasCompleted.value) {
-//            wasCompleted.value = true
-//            source.requestNext()        // suspend → 코루틴 컨텍스트에서 안전 호출
-//        } else if (!ui.isCompleted && wasCompleted.value) {
-//            // 새 문제로 시작하면 다시 false일 테니 래치 해제
-//            wasCompleted.value = false
-//        }
-//    }
-//
-//    DisposableEffect(source) {
-//        onDispose { source.stop() }
-//    }
-//
-//    // 뒤로가기 핸들
-//    BackHandler {
-//        source.stop()
-//        onExit()
-//    }
-//
-//    // 렌더—네가 쓰는 기존 UI 그대로
-//    // (MultiplicationScreen이 viewModel만 받아도 되고, 기존처럼 값을 받아도 됨)
-//    // ⬇️ MultiplicationScreen이 파라미터를 요구하므로, 값 준비되면 전달
-//    val operands = currentOperands.value
-//    if (operands == null) {
-//        // 간단한 플레이스홀더
-//        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-//            CircularProgressIndicator()
-//        }
-//    } else {
-//        MultiplicationScreen(
-//            multiplicand = operands.first,
-//            multiplier   = operands.second,
-//            viewModel    = vm
-//        )
-//    }
+
     val source = remember(mode, pattern, overrideOperands) {
         problemFactory.openSession(
             op = OpType.Multiplication,
@@ -112,7 +43,41 @@ fun MultiplicationScreenEntry(
     val scope = rememberCoroutineScope()
 
     DisposableEffect(source) { onDispose { source.stop() } }
-    LaunchedEffect(source) { source.requestNext() }
+
+    // 1) Entry에서 복원 먼저 "동기적으로" 결정
+    //    (부작용 호출이긴 하지만, 첫 프레임에서 선행시키는 게 경쟁조건 제거에 가장 간단)
+    val restored = remember {
+        mutableStateOf(false)
+    }
+
+    // ✅ 1) 먼저 "스냅샷 즉시 복원" 시도
+    //    (성공하면 바로 보드가 복원됨. 문제 스트림을 기다릴 필요가 없음)
+//    val restoredAtEntry = remember { mutableStateOf(false) }
+//    LaunchedEffect(Unit) {
+//        restoredAtEntry.value = vm.tryRestoreAtEntry()
+//    }
+    // compose 본문에서 바로 호출해도 되지만, 경고가 거슬리면 SideEffect로 감싸도 됨
+    if (!restored.value) {
+        restored.value = vm.tryRestoreAtEntry()
+    }
+
+
+    // ✅ 2) 스냅샷이 없을 때만 첫 문제를 요청
+    //    LaunchedEffect(source) { source.requestNext() }
+//    LaunchedEffect(source, restoredAtEntry.value) {
+//        if (!restoredAtEntry.value) {
+//            source.requestNext()
+//        }
+//    }
+    // 2) 복원 실패했을 때만 첫 문제 요청
+    LaunchedEffect(source, restored.value) {
+        if (!restored.value) {
+            source.requestNext()
+        }
+    }
+
+    // ✅ 3) 문제 스트림 수신 → ViewModel로 전달
+    //    (복원된 상태에서 동일 문제(p)가 오면, vm.startNewProblem(p)는 내부에서 no-op)
     LaunchedEffect(source) {
         source.problems.collect { p -> vm.startNewProblem(p) }
     }

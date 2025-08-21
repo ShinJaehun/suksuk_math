@@ -18,6 +18,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,13 +60,13 @@ fun DivisionScreen(
     val haptic = LocalHapticFeedback.current
     val audioPlayer = LocalAudioPlayer.current
 
-    var wrongMsg by remember { mutableStateOf<String?>(null) }
-    var correctMsg by remember { mutableStateOf<String?>(null) }
-    var showStamp by remember { mutableStateOf(false) }
+    var wrongMsg by rememberSaveable { mutableStateOf<String?>(null) }
+    var correctMsg by rememberSaveable { mutableStateOf<String?>(null) }
+    var showStamp by rememberSaveable { mutableStateOf(false) }
 
     // ✅ 완료 감지 (한 번만 트리거되도록 래치)
     val ui = viewModel.uiState.collectAsState().value
-    var completedLatched by remember { mutableStateOf(false) }
+    var completedLatched by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(ui.isCompleted) {
         if (ui.isCompleted && !completedLatched) {

@@ -59,3 +59,7 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 # dagger -hilt
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+
+# parcelize
+kotlin-parcelize   = { id = "org.jetbrains.kotlin.plugin.parcelize" }
+

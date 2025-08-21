@@ -11,6 +11,7 @@ import com.shinjaehun.suksuk.domain.SessionMode
 import com.shinjaehun.suksuk.domain.pattern.DivisionPattern
 import com.shinjaehun.suksuk.domain.pattern.MulPattern
 import com.shinjaehun.suksuk.presentation.ChallengeScreen
+import com.shinjaehun.suksuk.presentation.ChallengeScreenHost
 import com.shinjaehun.suksuk.presentation.MainScreen
 import com.shinjaehun.suksuk.presentation.common.effects.AudioPlayer
 
@@ -106,7 +107,8 @@ fun AppNavHost(
         }
 
         composable(Routes.Challenge) {
-            ChallengeScreen(problemFactory = problemFactory, onExit = { nav.popBackStack() })
+//            ChallengeScreen(problemFactory = problemFactory, onExit = { nav.popBackStack() })
+            ChallengeScreenHost(onExit = {nav.popBackStack()})
         }
     }
 

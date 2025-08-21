@@ -116,8 +116,21 @@ fun DivisionScreenEntry(
         onDispose { source.stop() }
     }
 
+    val restored = remember {
+        mutableStateOf(false)
+    }
+
+    if (!restored.value) {
+        restored.value = vm.tryRestoreAtEntry()
+    }
+
     // 첫 문제 요청
-    LaunchedEffect(source) { source.requestNext() }
+//    LaunchedEffect(source) { source.requestNext() }
+    LaunchedEffect(source, restored.value) {
+        if (!restored.value) {
+            source.requestNext()
+        }
+    }
 
     // 문제 스트림을 구독해서 VM에 전달
     LaunchedEffect(source) {

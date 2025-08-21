@@ -5,8 +5,9 @@ import androidx.lifecycle.ViewModel
 import com.shinjaehun.suksuk.domain.DomainStateFactory
 import com.shinjaehun.suksuk.domain.OpType
 import com.shinjaehun.suksuk.domain.Problem
-import com.shinjaehun.suksuk.domain.model.DivisionDomainState
+import com.shinjaehun.suksuk.domain.division.DivPracticeSnapshot
 import com.shinjaehun.suksuk.domain.division.evaluator.DivisionPhaseEvaluator
+import com.shinjaehun.suksuk.domain.model.DivisionDomainState
 import com.shinjaehun.suksuk.presentation.common.feedback.FeedbackEvent
 import com.shinjaehun.suksuk.presentation.common.feedback.FeedbackMessages
 import com.shinjaehun.suksuk.presentation.common.feedback.FeedbackProvider
@@ -39,7 +40,12 @@ class DivisionViewModel @Inject constructor(
 
     val feedbackEvents: SharedFlow<FeedbackEvent> get() = feedbackProvider.events
 
+    private var restoredOnce = false           // ✅ 복원 완료 래치
     private var lastProblem: Problem? = null
+
+    private companion object {
+        const val SNAPSHOT_KEY = "div_practice_snapshot"
+    }
 
 //    init {
 //        if(autoStart){
@@ -139,15 +145,43 @@ class DivisionViewModel @Inject constructor(
 //        emitUiState()
 //    }
 
-    fun startNewProblem(problem: Problem) {
-        require(problem.type == OpType.Division) { "DivisionViewModel expects Division problem, got ${problem.type}" }
-        if (problem == lastProblem) return
+//    fun startNewProblem(problem: Problem) {
+//        require(problem.type == OpType.Division) { "DivisionViewModel expects Division problem, got ${problem.type}" }
+//        if (problem == lastProblem) return
+//        lastProblem = problem
+//        val ds = domainStateFactory.create(problem)
+//        require(ds is DivisionDomainState) { "Expected DivisionDomainState, got ${ds::class.simpleName}" }
+//        domainState = ds
+//        _currentInput.value = ""
+//        emitUiState()
+//    }
+
+    /** ---------- 복원 진입점 ---------- */
+    fun startNewProblem(problem: Problem, force: Boolean = false) {
+        require(problem.type == OpType.Division) { "DivisionViewModel expects Mul problem, got ${problem.type}" }
+
+        // ✅ 같은 문제면 절대 리셋하지 않음
+        if (!force && problem == lastProblem && ::domainState.isInitialized) return
+
+        // ✅ 아직 복원 전이고, 스냅샷이 이 문제라면 복원 우선
+        if (!force && !restoredOnce) {
+            val snap = savedStateHandle.get<DivPracticeSnapshot>(DivisionViewModel.SNAPSHOT_KEY)
+            if (snap != null && snap.problem == problem) {
+                restoreFrom(snap)
+                restoredOnce = true
+                lastProblem = problem
+                return
+            }
+        }
+
         lastProblem = problem
+
         val ds = domainStateFactory.create(problem)
-        require(ds is DivisionDomainState) { "Expected DivisionDomainState, got ${ds::class.simpleName}" }
+        require(ds is DivisionDomainState)
         domainState = ds
         _currentInput.value = ""
         emitUiState()
+        persistSnapshot() // 최초 진입 시점에도 저장
     }
 
     // (기존) 파라미터 버전 유지
@@ -163,6 +197,7 @@ class DivisionViewModel @Inject constructor(
 
         _currentInput.value = (_currentInput.value + digit).takeLast(maxLength)
         emitUiState()
+        persistSnapshot()
 
 //        println("🟢 [onDigitInput] currentInput(after)=${_currentInput.value}")
     }
@@ -172,6 +207,7 @@ class DivisionViewModel @Inject constructor(
         if (_currentInput.value.isEmpty()) return
         submitInput(_currentInput.value)
         _currentInput.value = ""
+        persistSnapshot()
     }
 
     fun submitInput(input: String) {
@@ -189,6 +225,7 @@ class DivisionViewModel @Inject constructor(
         if (inputsForThisStep.size < editableCount || inputsForThisStep.any { it == "?" }) {
             _currentInput.value = ""
             emitUiState()
+            persistSnapshot()
             return
         }
 
@@ -198,6 +235,7 @@ class DivisionViewModel @Inject constructor(
             feedbackProvider.wrong(FeedbackMessages.randomWrong())
             _currentInput.value = ""
             emitUiState()
+            persistSnapshot()
             return
         }
 
@@ -214,12 +252,14 @@ class DivisionViewModel @Inject constructor(
 
         _currentInput.value = ""
         emitUiState()
+        persistSnapshot()
     }
 
     fun onClear() {
 //        println("🟡 [onClear] 기존 currentInput=${_currentInput.value}'")
         _currentInput.value = ""
         emitUiState()
+        persistSnapshot()
     }
 
     private fun emitUiState() {
@@ -228,5 +268,72 @@ class DivisionViewModel @Inject constructor(
             return
         }
         _uiState.value = mapDivisionUiState(domainState, _currentInput.value)
+    }
+
+    /** ---------- 스냅샷 저장 ---------- */
+    private fun persistSnapshot() {
+        if (!::domainState.isInitialized) return
+
+        val prob = lastProblem
+            ?: return  // 문제 정보가 없으면 저장하지 않음(안전장치)
+
+        savedStateHandle[SNAPSHOT_KEY] = DivPracticeSnapshot(
+            problem = prob,
+            stepIndex = domainState.currentStepIndex,
+            confirmedInputs = domainState.inputs,
+            currentInput = _currentInput.value
+        )
+    }
+
+    /** ---------- 스냅샷 복원 ---------- */
+    private fun restoreFrom(snap: DivPracticeSnapshot) {
+        // 옵션1: 항상 리플레이 복원
+        val restored = restoreByReplaying(snap)
+        domainState = restored
+        _currentInput.value = snap.currentInput
+        emitUiState()
+        persistSnapshot()
+    }
+
+    private fun restoreByReplaying(snap: DivPracticeSnapshot): DivisionDomainState {
+        val base = domainStateFactory.create(snap.problem) as DivisionDomainState
+        var ds = base
+        var cursor = 0
+
+        while (cursor < snap.confirmedInputs.size) {
+            val step = ds.phaseSequence.steps[ds.currentStepIndex]
+            val need = step.editableCells.size.coerceAtLeast(1)
+            if (cursor + need > snap.confirmedInputs.size) break
+
+            val chunk = snap.confirmedInputs.subList(cursor, cursor + need)
+            val eval = phaseEvaluator.evaluate(ds, chunk)
+
+            ds = ds.copy(
+                inputs = ds.inputs + chunk,
+                currentStepIndex = eval.nextStepIndex ?: ds.currentStepIndex
+            )
+            cursor += need
+        }
+        return ds
+    }
+
+    fun hasRestorableSnapshot(): Boolean =
+        savedStateHandle.get<DivPracticeSnapshot>(SNAPSHOT_KEY) != null
+
+    fun peekSnapshotProblemOrNull(): Problem? =
+        savedStateHandle.get<DivPracticeSnapshot>(SNAPSHOT_KEY)?.problem
+
+    /**
+     * Entry에서 바로 호출해서, 문제를 기다리지 않고 곧장 복원.
+     * 복원 성공하면 true, 없으면 false.
+     */
+    fun tryRestoreAtEntry(): Boolean {
+        val snap = savedStateHandle.get<DivPracticeSnapshot>(SNAPSHOT_KEY) ?: return false
+        // 이미 복원한 적 있으면 재복원 금지
+        if (restoredOnce) return true
+        restoreFrom(snap)
+        restoredOnce = true                     // ✅ 래치 ON
+        lastProblem = snap.problem
+        return true
     }
 }
