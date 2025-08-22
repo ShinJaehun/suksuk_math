@@ -39,7 +39,7 @@ class SoundEffects @Inject constructor(
     private val soundPool by lazy {
         SoundPool.Builder()
             .setMaxStreams(4)                   // (선택) 동시 재생 여유
-            .setAudioAttributes(attrs)          // ✅ 예전 STREAM_MUSIC에 해당
+            .setAudioAttributes(attrs)          // 예전 STREAM_MUSIC에 해당
             .build()
     }
 
@@ -56,7 +56,7 @@ class SoundEffects @Inject constructor(
 
     fun preload() { ids.size /* touch to load; setOnLoadComplete로 loaded=true 대기 */ }
 
-    override fun playClick() {
+    override fun playBeep() {
         val id = ids["beep"] ?: return
         if (!loaded) return
         soundPool.play(id, /*L*/0.5f, /*R*/0.5f, /*priority*/2, /*loop*/0, /*rate*/1f)

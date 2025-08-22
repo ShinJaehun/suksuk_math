@@ -56,7 +56,7 @@ object DummyFeedbackProvider : FeedbackProvider {
 
 object NoopAudioPlayer : AudioPlayer {
     override fun playTada() {}
-    override fun playClick() {}
+    override fun playBeep() {}
 }
 
 object NoopHaptic : HapticFeedback {

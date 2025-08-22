@@ -4,9 +4,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
@@ -24,6 +27,7 @@ import com.shinjaehun.suksuk.presentation.division.model.SubtractLineType
 @Composable
 fun DivisionBoard3By2(
     uiState: DivisionUiState,
+    modifier: Modifier = Modifier
 ) {
     val cellWidth = 42.dp
     val borrowCellMinWidth = 32.dp
@@ -31,9 +35,10 @@ fun DivisionBoard3By2(
     val bracketStartMargin = 60.dp
 
     ConstraintLayout(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 30.dp, end=30.dp, top = 10.dp, bottom = 30.dp)
+        modifier = modifier
+//            .fillMaxWidth()
+            .wrapContentWidth(Alignment.CenterHorizontally)
+            .padding(horizontal = 30.dp, vertical = 30.dp)
     ) {
         val (
             divisorTensRef, divisorOnesRef, divisorTensCarryMul1Ref, divisorTensCarryMul2Ref,
@@ -176,7 +181,6 @@ fun DivisionBoard3By2(
             )
         }
 
-        // Divisor tens
         uiState.cells[DivisionCell.DivisorTens]?.let { c ->
             DivNumberText(
                 cell = c,
@@ -190,7 +194,6 @@ fun DivisionBoard3By2(
             )
         }
 
-// Carry (M1)
         uiState.cells[DivisionCell.CarryDivisorTensM1]?.let { c ->
             DivAuxNumberText(
                 cell = c,
@@ -204,7 +207,6 @@ fun DivisionBoard3By2(
             )
         }
 
-// Carry (M2)
         uiState.cells[DivisionCell.CarryDivisorTensM2]?.let { c ->
             DivAuxNumberText(
                 cell = c,
@@ -218,7 +220,6 @@ fun DivisionBoard3By2(
             )
         }
 
-// Quotient tens
         uiState.cells[DivisionCell.QuotientTens]?.let { c ->
             DivNumberText(
                 cell = c,
@@ -232,7 +233,6 @@ fun DivisionBoard3By2(
             )
         }
 
-// Quotient ones
         uiState.cells[DivisionCell.QuotientOnes]?.let { c ->
             DivNumberText(
                 cell = c,
@@ -246,7 +246,6 @@ fun DivisionBoard3By2(
             )
         }
 
-// Multiply1 hundreds
         uiState.cells[DivisionCell.Multiply1Hundreds]?.let { c ->
             DivNumberText(
                 cell = c,
@@ -260,7 +259,6 @@ fun DivisionBoard3By2(
             )
         }
 
-// Multiply1 tens
         uiState.cells[DivisionCell.Multiply1Tens]?.let { c ->
             DivNumberText(
                 cell = c,
@@ -274,7 +272,6 @@ fun DivisionBoard3By2(
             )
         }
 
-// Multiply1 ones
         uiState.cells[DivisionCell.Multiply1Ones]?.let { c ->
             DivNumberText(
                 cell = c,
@@ -288,7 +285,6 @@ fun DivisionBoard3By2(
             )
         }
 
-// (조건 유지) Subtraction line 1
         if (uiState.cells.values.any { it.subtractLineType == SubtractLineType.SubtractLine1 }) {
             Image(
                 painter = painterResource(id = R.drawable.ic_horizontal_line),
@@ -305,7 +301,6 @@ fun DivisionBoard3By2(
             )
         }
 
-// Subtract1 hundreds
         uiState.cells[DivisionCell.Subtract1Hundreds]?.let { c ->
             DivNumberText(
                 cell = c,
@@ -319,7 +314,6 @@ fun DivisionBoard3By2(
             )
         }
 
-// Borrow Sub1 hundreds
         uiState.cells[DivisionCell.BorrowSubtract1Hundreds]?.let { c ->
             DivAuxNumberText(
                 cell = c,
@@ -333,7 +327,6 @@ fun DivisionBoard3By2(
             )
         }
 
-// Subtract1 tens
         uiState.cells[DivisionCell.Subtract1Tens]?.let { c ->
             DivNumberText(
                 cell = c,
@@ -347,7 +340,6 @@ fun DivisionBoard3By2(
             )
         }
 
-// Borrowed10 Sub1 tens
         uiState.cells[DivisionCell.Borrowed10Subtract1Tens]?.let { c ->
             DivAuxNumberText(
                 cell = c,
@@ -361,7 +353,6 @@ fun DivisionBoard3By2(
             )
         }
 
-// Borrow Sub1 tens
         uiState.cells[DivisionCell.BorrowSubtract1Tens]?.let { c ->
             DivAuxNumberText(
                 cell = c,
@@ -375,7 +366,6 @@ fun DivisionBoard3By2(
             )
         }
 
-// Subtract1 ones
         uiState.cells[DivisionCell.Subtract1Ones]?.let { c ->
             DivNumberText(
                 cell = c,
@@ -389,7 +379,6 @@ fun DivisionBoard3By2(
             )
         }
 
-// Borrowed10 Sub1 ones
         uiState.cells[DivisionCell.Borrowed10Subtract1Ones]?.let { c ->
             DivAuxNumberText(
                 cell = c,
@@ -404,7 +393,6 @@ fun DivisionBoard3By2(
             )
         }
 
-// Multiply2 hundreds
         uiState.cells[DivisionCell.Multiply2Hundreds]?.let { c ->
             DivNumberText(
                 cell = c,
@@ -418,7 +406,6 @@ fun DivisionBoard3By2(
             )
         }
 
-// Multiply2 tens
         uiState.cells[DivisionCell.Multiply2Tens]?.let { c ->
             DivNumberText(
                 cell = c,
@@ -432,7 +419,6 @@ fun DivisionBoard3By2(
             )
         }
 
-// Multiply2 ones
         uiState.cells[DivisionCell.Multiply2Ones]?.let { c ->
             DivNumberText(
                 cell = c,
@@ -446,7 +432,6 @@ fun DivisionBoard3By2(
             )
         }
 
-// (조건 유지) Subtraction line 2
         if (uiState.cells.values.any { it.subtractLineType == SubtractLineType.SubtractLine2 }) {
             Image(
                 painter = painterResource(id = R.drawable.ic_horizontal_line),
@@ -463,7 +448,6 @@ fun DivisionBoard3By2(
             )
         }
 
-// Subtract2 tens
         uiState.cells[DivisionCell.Subtract2Tens]?.let { c ->
             DivNumberText(
                 cell = c,
@@ -477,7 +461,6 @@ fun DivisionBoard3By2(
             )
         }
 
-// Subtract2 ones
         uiState.cells[DivisionCell.Subtract2Ones]?.let { c ->
             DivNumberText(
                 cell = c,

@@ -4,7 +4,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -22,19 +24,22 @@ import com.shinjaehun.suksuk.presentation.division.model.SubtractLineType
 @Composable
 fun DivisionBoard2By1And2By2(
     uiState: DivisionUiState,
-    pattern: DivisionPattern
+//    pattern: DivisionPattern,
+    modifier: Modifier = Modifier
 ) {
 
     val cellWidth = 42.dp
 
-    val bracketStartMargin = when(pattern) {
-        DivisionPattern.TwoByOne -> 60.dp
-        else -> 90.dp
-    }
+//    val bracketStartMargin = when(pattern) {
+//        DivisionPattern.TwoByOne -> 60.dp
+//        else -> 90.dp
+//    }
+    val bracketStartMargin = 30.dp
 
     ConstraintLayout(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier
+//            .fillMaxWidth()
+            .wrapContentWidth(Alignment.CenterHorizontally)
             .padding(horizontal = 30.dp, vertical = 30.dp)
     ) {
         val (
@@ -141,7 +146,8 @@ fun DivisionBoard2By1And2By2(
                     .padding(horizontal = 8.dp)
                     .constrainAs(divisorTensRef) {
                         end.linkTo(divisorOnesRef.start)
-                        baseline.linkTo(dividendTensRef.baseline)
+//                        baseline.linkTo(dividendTensRef.baseline) // 이거 문제 원인 알아내는데 정말 고생했음...
+                        top.linkTo(divisorOnesRef.top)
                     }
             )
         }

@@ -15,7 +15,7 @@ fun mapMultiplicationUiState(
     val currentStepIndex = domain.currentStepIndex.coerceIn(0, steps.lastIndex)
     val curPhaseStep = steps[currentStepIndex]
 
-    // [0] 입력 인덱스 캐시
+    // 입력 인덱스 캐시
     val inputIndexCache = mutableMapOf<MulCell, Int?>()
     fun inputIndexOf(cell: MulCell): Int? =
         inputIndexCache.getOrPut(cell) {
@@ -35,7 +35,7 @@ fun mapMultiplicationUiState(
         totalLineSet += steps[i].totalLineTargets
     }
 
-    // [1] 모든 셀 빌드
+    // 모든 셀 빌드
     val cells = MulCell.entries.associateWith { cellName ->
         val isHidden = cellName in cleared
 
@@ -47,16 +47,6 @@ fun mapMultiplicationUiState(
         val preview = if (idxInEditables >= 0) currentInput.getOrNull(idxInEditables)?.toString() else null
 
         val rawValue: String? = when {
-//            // 1) 확정 입력
-//            inputIdx != null && !domain.inputs.getOrNull(inputIdx).isNullOrEmpty() ->
-//                domain.inputs[inputIdx]
-//
-//            // 2) 현재 step 편집 중 + 아직 미확정 → currentInput 자리 분배
-//            isEditableRaw && inputIdx != null && domain.inputs.getOrNull(inputIdx).isNullOrEmpty() ->
-//                currentInput.getOrNull(idxInEditables)?.toString() ?: "?"
-//
-//            // 3) 기본값
-//            else -> getDefaultCellValue(domain, cellName)
             committed.isNullOrEmpty() && isEditableRaw -> preview ?: "?"
             !committed.isNullOrEmpty() -> committed
             else -> getDefaultCellValue(domain, cellName)
@@ -92,8 +82,6 @@ fun mapMultiplicationUiState(
         pattern = pattern
     )
 }
-
-// === Helpers ===
 
 /**
  * domain.inputs의 선형 인덱스와 cell을 매핑.

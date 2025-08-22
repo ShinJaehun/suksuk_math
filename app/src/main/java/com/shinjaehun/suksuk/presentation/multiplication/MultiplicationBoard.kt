@@ -4,7 +4,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -28,10 +30,10 @@ fun MultiplicationBoard(
 ) {
     val cellWidth = 42.dp
     val horizPadding = 8.dp
-    val anchorStart = 100.dp           // 곱셈 기호의 시작 마진 (division의 브래킷 기준과 유사) 3x2에서는 60/80이 좋을 거 같음
-    val gapAbove = 16.dp              // X 기준 위(피승수) 거리
-    val gapBelow = 16.dp              // X 기준 아래(승수) 거리
-    val lineTopMargin = 12.dp         // 승수 아래 첫 가로선까지 거리
+    val anchorStart = 100.dp   // 곱셈 기호의 시작 마진 (division의 브래킷 기준과 유사) 3x2에서는 60/80이 좋을 거 같음
+    val gapAbove = 16.dp       // X 기준 위(피승수) 거리
+    val gapBelow = 16.dp       // X 기준 아래(승수) 거리
+    val lineTopMargin = 12.dp  // 승수 아래 첫 가로선까지 거리
 
     val colGap = cellWidth + horizPadding * 2  // 한 열(셀+패딩) 간격
     val row1 = 12.dp
@@ -40,7 +42,8 @@ fun MultiplicationBoard(
 
     ConstraintLayout(
         modifier = Modifier
-            .fillMaxWidth()
+//            .fillMaxWidth()
+            .wrapContentWidth(Alignment.CenterHorizontally)
             .padding(horizontal = 30.dp, vertical = 30.dp)
     ) {
         val (
@@ -67,7 +70,6 @@ fun MultiplicationBoard(
             carrySumTenThousandsRef, carrySumThousandsRef, carrySumHundredsRef
         ) = createRefs()
 
-        // ── 1) 곱셈 기호(X) — parent 기준 앵커 ────────────────────────────────
         Image(
             painter = painterResource(R.drawable.ic_multiply),
             contentDescription = "×",
@@ -80,7 +82,6 @@ fun MultiplicationBoard(
             }
         )
 
-        // ── 2) 피승수(위 줄): X 기준으로 위쪽에 배치 ──────────────────────────
         uiState.cells[MulCell.MultiplicandHundreds]?.let { c ->
             MulNumberText(
                 cell = c,
@@ -89,7 +90,7 @@ fun MultiplicationBoard(
                     .padding(horizontal = horizPadding)
                     .constrainAs(mcHundredsRef) {
                         baseline.linkTo(mcTensRef.baseline)
-                        end.linkTo(mcTensRef.start) // ← X에서 오른쪽으로 적당히
+                        end.linkTo(mcTensRef.start)
                     }
             )
         }
@@ -127,8 +128,8 @@ fun MultiplicationBoard(
                     .width(cellWidth)
                     .padding(horizontal = horizPadding)
                     .constrainAs(mcTensRef) {
-                        bottom.linkTo(timesRef.top, margin = 15.dp) // ← X를 기준으로 '위'
-                        start.linkTo(timesRef.end, margin = 40.dp) // ← X에서 오른쪽으로 적당히
+                        bottom.linkTo(timesRef.top, margin = 15.dp)
+                        start.linkTo(timesRef.end, margin = 40.dp)
                     }
             )
         }
@@ -172,7 +173,6 @@ fun MultiplicationBoard(
             )
         }
 
-        // ── 3) 승수(아래 줄): X 기준으로 아래쪽에 배치 ─────────────────────────
         uiState.cells[MulCell.MultiplierTens]?.let { c ->
             MulNumberText(
                 cell = c,
@@ -199,7 +199,6 @@ fun MultiplicationBoard(
             )
         }
 
-        // ── 4) 가로선 (ic_horizontal_line.xml) — 승수 아래 기준선 ─────────────
         Image(
             painter = painterResource(id = R.drawable.ic_horizontal_line_long),
             contentDescription = "mul-line",
@@ -207,18 +206,13 @@ fun MultiplicationBoard(
             modifier = Modifier
                 .constrainAs(mulLineRef) {
                     top.linkTo(timesRef.bottom, margin = lineTopMargin)
-                    start.linkTo(timesRef.start, margin = (-20).dp) // division과 동일한 느낌의 좌측 여백
-                    width = Dimension.value(200.dp)                  // 리소스 길이에 맞춰 조정
+                    start.linkTo(timesRef.start, margin = (-20).dp) 
+                    width = Dimension.value(200.dp)
                     height = Dimension.value(4.dp)
                 }
                 .semantics { testTag = "mul-line1" }
         )
 
-        // ─────────────────────────────
-        // 부분곱 1 (ones × multiplicand)
-        //   Hundreds  Tens  Ones
-        //   (T-1col)  (T)   (O)
-        // ─────────────────────────────
         uiState.cells[MulCell.P1TenThousands]?.let { c ->
             MulNumberText(
                 cell = c,
@@ -227,7 +221,7 @@ fun MultiplicationBoard(
                     .padding(horizontal = horizPadding)
                     .constrainAs(p1TenThousandsRef) {
                         baseline.linkTo(p1TensRef.baseline)
-                        end.linkTo(p1ThousandsRef.start) // Hundreds = T - 1col
+                        end.linkTo(p1ThousandsRef.start)
                     }
             )
         }
@@ -240,7 +234,7 @@ fun MultiplicationBoard(
                     .padding(horizontal = horizPadding)
                     .constrainAs(p1ThousandsRef) {
                         baseline.linkTo(p1TensRef.baseline)
-                        end.linkTo(p1HundredsRef.start) // Hundreds = T - 1col
+                        end.linkTo(p1HundredsRef.start)
                     }
             )
         }
@@ -266,7 +260,7 @@ fun MultiplicationBoard(
                     .padding(horizontal = horizPadding)
                     .constrainAs(p1HundredsRef) {
                         baseline.linkTo(p1TensRef.baseline)
-                        end.linkTo(p1TensRef.start) // Hundreds = T - 1col
+                        end.linkTo(p1TensRef.start)
                     }
             )
         }
@@ -310,11 +304,6 @@ fun MultiplicationBoard(
             )
         }
 
-        // ─────────────────────────────
-        // 부분곱 2 (tens × multiplicand, 1칸 시프트)
-        //   Thousands  Hundreds  Tens
-        //   (T-2col)   (T-1col)  (T)
-        // ─────────────────────────────
         uiState.cells[MulCell.P2TenThousands]?.let { c ->
             MulNumberText(
                 cell = c,
@@ -323,7 +312,7 @@ fun MultiplicationBoard(
                     .padding(horizontal = horizPadding)
                     .constrainAs(p2TenThousandsRef) {
                         baseline.linkTo(p2TensRef.baseline)
-                        end.linkTo(p2ThousandsRef.start) // Thousands = T - 2col
+                        end.linkTo(p2ThousandsRef.start)
                     }
             )
         }
@@ -349,7 +338,7 @@ fun MultiplicationBoard(
                     .padding(horizontal = horizPadding)
                     .constrainAs(p2ThousandsRef) {
                         baseline.linkTo(p2TensRef.baseline)
-                        end.linkTo(p2HundredsRef.start) // Thousands = T - 2col
+                        end.linkTo(p2HundredsRef.start)
                     }
             )
         }
@@ -362,7 +351,7 @@ fun MultiplicationBoard(
                     .padding(horizontal = horizPadding)
                     .constrainAs(p2HundredsRef) {
                         baseline.linkTo(p2TensRef.baseline)
-                        end.linkTo(p2TensRef.start)     // Hundreds = T - 1col
+                        end.linkTo(p2TensRef.start)
                     }
             )
         }
@@ -374,7 +363,7 @@ fun MultiplicationBoard(
                     .padding(horizontal = horizPadding)
                     .constrainAs(p2TensRef) {
                         top.linkTo(p1TensRef.bottom, margin = 10.dp)
-                        start.linkTo(mcTensRef.start)                        // Tens
+                        start.linkTo(mcTensRef.start)
                     }
             )
         }
@@ -387,19 +376,14 @@ fun MultiplicationBoard(
                 modifier = Modifier
                     .constrainAs(totalLineRef) {
                         top.linkTo(timesRef.bottom, margin = 160.dp)
-                        start.linkTo(timesRef.start, margin = (-20).dp) // division과 동일한 느낌의 좌측 여백
-                        width = Dimension.value(200.dp)                  // 리소스 길이에 맞춰 조정
+                        start.linkTo(timesRef.start, margin = (-20).dp)
+                        width = Dimension.value(200.dp)
                         height = Dimension.value(4.dp)
                     }
                     .semantics { testTag = "total-line" }
             )
         }
 
-        // ─────────────────────────────
-        // 최종 합계
-        //   Thousands  Hundreds  Tens  Ones
-        //   (T-2col)   (T-1col)  (T)   (O)
-        // ─────────────────────────────
         uiState.cells[MulCell.SumTenThousands]?.let { c ->
             MulNumberText(
                 cell = c,
@@ -461,38 +445,30 @@ fun MultiplicationBoard(
 @Preview(showBackground = true)
 @Composable
 fun PreviewMultiplicationBoard2x2() {
-    // 2×2에서 주로 쓰일 셀들 모음
     val allCells = listOf(
-        // 피승수(위)
         MulCell.MultiplicandHundreds,
         MulCell.MultiplicandTens,
         MulCell.MultiplicandOnes,
 
-        // 승수(아래)
         MulCell.MultiplierTens,
         MulCell.MultiplierOnes,
 
-        // 부분곱 1 (ones × multiplicand)
         MulCell.P1Thousands,
         MulCell.P1Hundreds,
         MulCell.P1Tens,
         MulCell.P1Ones,
 
-        // 부분곱 2 (tens × multiplicand, 한 칸 시프트)
         MulCell.P2TenThousands,
         MulCell.P2Thousands,
         MulCell.P2Hundreds,
         MulCell.P2Tens,
-        // 필요 시 MulCellName.Product2Ones 도 포함 가능
 
-        // 최종 합계
         MulCell.SumTenThousands,
         MulCell.SumThousands,
         MulCell.SumHundreds,
         MulCell.SumTens,
         MulCell.SumOnes,
 
-        // 캐리(보조 숫자) 쓰면 여기 추가: CarryP1Tens, CarryP1Hundreds, CarryP2Hundreds 등
         MulCell.CarryP1Tens,
         MulCell.CarryP1Hundreds,
 
@@ -501,7 +477,6 @@ fun PreviewMultiplicationBoard2x2() {
         MulCell.CarrySumHundreds
     )
 
-    // 기본은 "?"로 채운 가짜 상태
     val fakeUiState = MulUiState(
         cells = allCells.associateWith { name ->
             MulInputCell(cellName = name, value = "?")
@@ -510,17 +485,14 @@ fun PreviewMultiplicationBoard2x2() {
         feedback = null
     )
 
-    // 미리보기용으로 몇 개 값만 실제 숫자로 보이게 세팅
     val previewUiState = fakeUiState.copy(
         cells = fakeUiState.cells.toMutableMap().apply {
-            // 피승수/승수
             this[MulCell.MultiplicandHundreds]  = MulInputCell(MulCell.MultiplicandHundreds,  value = "9")
             this[MulCell.MultiplicandTens]  = MulInputCell(MulCell.MultiplicandTens,  value = "4")
             this[MulCell.MultiplicandOnes]  = MulInputCell(MulCell.MultiplicandOnes,  value = "8")
             this[MulCell.MultiplierTens]    = MulInputCell(MulCell.MultiplierTens,    value = "3")
             this[MulCell.MultiplierOnes]    = MulInputCell(MulCell.MultiplierOnes,    value = "6")
 
-            // 부분곱(예시)
             this[MulCell.P1TenThousands]  = MulInputCell(MulCell.P1TenThousands,  value = "1")
             this[MulCell.P1Thousands]  = MulInputCell(MulCell.P1Thousands,  value = "1")
             this[MulCell.P1Hundreds]      = MulInputCell(MulCell.P1Hundreds,      value = "2")
@@ -532,7 +504,6 @@ fun PreviewMultiplicationBoard2x2() {
             this[MulCell.P2Hundreds]  = MulInputCell(MulCell.P2Hundreds,  value = "1")
             this[MulCell.P2Tens]      = MulInputCell(MulCell.P2Tens,      value = "4")
 
-            // 합계(예시)
             this[MulCell.SumTenThousands]    = MulInputCell(MulCell.SumTenThousands,    value = "9")
             this[MulCell.SumThousands]    = MulInputCell(MulCell.SumThousands,    value = "1")
             this[MulCell.SumHundreds]        = MulInputCell(MulCell.SumHundreds,        value = "7")

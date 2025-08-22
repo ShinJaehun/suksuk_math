@@ -22,14 +22,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DivisionViewModel @Inject constructor(
-//    savedStateHandle: SavedStateHandle = SavedStateHandle(),
     private val savedStateHandle: SavedStateHandle,
     private val phaseEvaluator: DivisionPhaseEvaluator,
     private val domainStateFactory: DomainStateFactory,
     private val feedbackProvider: FeedbackProvider
 ): ViewModel() {
-//    private val autoStart: Boolean = savedStateHandle["autoStart"] ?: true
-
     private val _uiState = MutableStateFlow(DivisionUiState())
     val uiState: StateFlow<DivisionUiState> = _uiState.asStateFlow()
 
@@ -40,130 +37,21 @@ class DivisionViewModel @Inject constructor(
 
     val feedbackEvents: SharedFlow<FeedbackEvent> get() = feedbackProvider.events
 
-    private var restoredOnce = false           // ✅ 복원 완료 래치
+    private var restoredOnce = false           // 복원 완료 래치
     private var lastProblem: Problem? = null
 
     private companion object {
         const val SNAPSHOT_KEY = "div_practice_snapshot"
     }
 
-//    init {
-//        if(autoStart){
-//            startNewProblem(68, 34) //TwoByTwo_NoCarry_NoBorrow_1DigitRem
-//            startNewProblem(57, 22) //TwoByTwo_NoCarry_NoBorrow_2DigitRem
-//            startNewProblem(50, 22) //TwoByTwo_NoCarry_Borrow_1DigitRem
-//            startNewProblem(50, 13) //TwoByTwo_NoCarry_Borrow_2DigitRem
-//            startNewProblem(96, 12) //TwoByTwo_Carry_NoBorrow_1DigitRem
-//            startNewProblem(95, 28) //TwoByTwo_Carry_NoBorrow_2DigitRem
-//            startNewProblem(81, 12) //TwoByTwo_Carry_Borrow_1DigitRem
-//            startNewProblem(70, 18) //TwoByTwo_Carry_Borrow_2DigitRem
-//            startNewProblem(72, 6) // TwoByOne_TensQuotient_NoBorrow_2DigitMul
-//            startNewProblem(46, 3) // TwoByOne_TensQuotient_NoBorrow_2DigitMul
-//            startNewProblem(50, 3) // TwoByOne_TensQuotient_Borrow_2DigitMul
-//            startNewProblem(70, 6) // TwoByOne_TensQuotient_SkipBorrow_1DigitMul
-//            startNewProblem(71, 6) // TwoByOne_TensQuotient_SkipBorrow_1DigitMul (11-6 skip borrow 괜찮은거지?)
-//            startNewProblem(89, 8) // TwoByOne_TensQuotient_SkipBorrow_1DigitMul (empty subtract1tens)
-//            startNewProblem(87, 8) // TwoByOne_TensQuotient_SkipMul2Sub2 <------------ new
-//            startNewProblem(62, 7) // TwoByOne_OnesQuotient_Borrow_2DigitMul
-//            startNewProblem(81, 9) // TwoByOne_OnesQuotient_NoBorrow_2DigitMul
-
-//            startNewProblem(131, 11) // ThreeByTwo_TensQuotient_NCM1_NBS1_NCM2_NBS2_2DR
-//            startNewProblem(682, 31) // ThreeByTwo_TensQuotient_NCM1_NBM1_NCM2_NBM2_1DR
-
-//            startNewProblem(604, 11) // ThreeByTwo_TensQuotient_NCM1_BM1_NCM2_NBM2_2DR
-//            startNewProblem(517, 47) // ThreeByTwo_TensQuotient_NCM1_BS1_NCM2_NBS2_1DR
-
-//            startNewProblem(180, 14) // ThreeByTwo_TensQuotient_NCM1_NBS1_NCM2_BS2_2DR
-//            startNewProblem(280, 25) // ThreeByTwo_TensQuotient_NCM1_NBS1_NCM2_BS2_1DR
-
-//            startNewProblem(710, 21) // ThreeByTwo_TensQuotient_NCM1_BM1_NCM2_BM2_2DR
-//            startNewProblem(911, 43) // ThreeByTwo_TensQuotient_NCM1_BM1_NCM2_BM2_1DR
-
-//            startNewProblem(446, 14) // ThreeByTwo_TensQuotient_CM1_NBS1_NCM2_NBS2_2DR
-//            startNewProblem(568, 27) // ThreeByTwo_TensQuotient_CM1_NBS1_NCM2_NBS2_1DR
-
-//            startNewProblem(619, 29) // ThreeByTwo_TensQuotient_CM1_BS1_NCM2_NBS2_2DR
-//            startNewProblem(819, 39) // ThreeByTwo_TensQuotient_CM1_BS1_NCM2_NBS2_1DR
-
-//            startNewProblem(654, 14) // ThreeByTwo_TensQuotient_CM1_BS1_CM2_NBS2_2DR
-//            startNewProblem(632, 14) // ThreeByTwo_TensQuotient_CM1_BS1_CM2_NBS2_1DR
-
-//            startNewProblem(624, 14) // ThreeByTwo_TensQuotient_CM1_BS1_CM2_BS2_1DR
-//            startNewProblem(610, 13) // ThreeByTwo_TensQuotient_CM1_BS1_CM2_BS2_2DR
-
-//            startNewProblem(700, 13) // ThreeByTwo_TensQuotient_CM1_BS1_NCM2_BS2_2DR
-//            startNewProblem(800, 13) // ThreeByTwo_TensQuotient_CM1_BS1_NCM2_BS2_1DR
-//            startNewProblem(680, 12) // ThreeByTwo_TensQuotient_CM1_NBS1_CM2_BS2_1DR
-//            startNewProblem(670, 12) // ThreeByTwo_TensQuotient_CM1_NBS1_CM2_BS2_2DR
-//            startNewProblem(660, 12) // ThreeByTwo_TensQuotient_CM1_NBS1_CM2_NBS2_1DR
-
-//            startNewProblem(610, 13) // ThreeByTwo_TensQuotient_2DS1_2DM2
-//            startNewProblem(632, 14) //
-//            startNewProblem(700, 13) //
-//            startNewProblem(619, 29) //
-//            startNewProblem(670, 12) //
-//            startNewProblem(595, 13) //
-//            startNewProblem(460, 14) //
-//            startNewProblem(475, 15) //
-//            startNewProblem(220, 13) //
-//            startNewProblem(202, 12) //
-//            startNewProblem(710, 21) //
-//            startNewProblem(517, 47) //
-//            startNewProblem(190, 13) //
-//            startNewProblem(190,12) //
-//            startNewProblem(280,25) //
-//            startNewProblem(682,31) //
-//            startNewProblem(610,15) //
-//            startNewProblem(236,13) // ThreeByTwo_TensQuotient_3DS1_3DM2
-//            startNewProblem(419,21) //
-//            startNewProblem(230,12) //
-//            startNewProblem(210,11) //
-//            startNewProblem(710,60) //
-//            startNewProblem(219,11) //
-//            startNewProblem(198,22) //ThreeByTwo_OnesQuotient
-//            startNewProblem(230,27) //
-//            startNewProblem(205,23) //
-//            startNewProblem(342,49) //
-//            startNewProblem(234,25) //
-//            startNewProblem(315,42) //
-//            startNewProblem(107,12) //
-//            startNewProblem(104,12) //
-//            startNewProblem(150,30) //
-//            startNewProblem(109,11) //
-//            startNewProblem(101,51) //
-//            startNewProblem(229,23) //
-//            startNewProblem(214,23) //
-//        }
-//    }
-
-//    fun startNewProblem(dividend: Int, divisor: Int) {
-//        val problem = Problem(OpType.Division, dividend, divisor)
-//        val ds = domainStateFactory.create(problem)
-//        require(ds is DivisionDomainState) { "Expected DivisionDomainState, got ${ds::class.simpleName}" }
-//        domainState = ds
-//        _currentInput.value = ""
-//        emitUiState()
-//    }
-
-//    fun startNewProblem(problem: Problem) {
-//        require(problem.type == OpType.Division) { "DivisionViewModel expects Division problem, got ${problem.type}" }
-//        if (problem == lastProblem) return
-//        lastProblem = problem
-//        val ds = domainStateFactory.create(problem)
-//        require(ds is DivisionDomainState) { "Expected DivisionDomainState, got ${ds::class.simpleName}" }
-//        domainState = ds
-//        _currentInput.value = ""
-//        emitUiState()
-//    }
-
     /** ---------- 복원 진입점 ---------- */
     fun startNewProblem(problem: Problem, force: Boolean = false) {
         require(problem.type == OpType.Division) { "DivisionViewModel expects Mul problem, got ${problem.type}" }
 
-        // ✅ 같은 문제면 절대 리셋하지 않음
+        // 같은 문제면 절대 리셋하지 않음
         if (!force && problem == lastProblem && ::domainState.isInitialized) return
 
-        // ✅ 아직 복원 전이고, 스냅샷이 이 문제라면 복원 우선
+        // 아직 복원 전이고, 스냅샷이 이 문제라면 복원 우선
         if (!force && !restoredOnce) {
             val snap = savedStateHandle.get<DivPracticeSnapshot>(DivisionViewModel.SNAPSHOT_KEY)
             if (snap != null && snap.problem == problem) {
@@ -176,9 +64,9 @@ class DivisionViewModel @Inject constructor(
 
         lastProblem = problem
 
-        val ds = domainStateFactory.create(problem)
-        require(ds is DivisionDomainState)
-        domainState = ds
+        val newDomainState = domainStateFactory.create(problem)
+        require(newDomainState is DivisionDomainState)
+        domainState = newDomainState
         _currentInput.value = ""
         emitUiState()
         persistSnapshot() // 최초 진입 시점에도 저장
@@ -192,8 +80,8 @@ class DivisionViewModel @Inject constructor(
     fun onDigitInput(digit: Int) {
 //        println("🟡 [onDigitInput] 입력: $digit, 기존 currentInput='${_currentInput.value}'")
 
-        val step = domainState.phaseSequence.steps[domainState.currentStepIndex]
-        val maxLength = step.editableCells.size.coerceAtLeast(1)
+        val currentStep = domainState.phaseSequence.steps[domainState.currentStepIndex]
+        val maxLength = currentStep.editableCells.size.coerceAtLeast(1)
 
         _currentInput.value = (_currentInput.value + digit).takeLast(maxLength)
         emitUiState()
@@ -214,9 +102,9 @@ class DivisionViewModel @Inject constructor(
 //        println("🧪 [submitInput] called at step=${domainState.currentStepIndex} phase=${domainState.phaseSequence.steps.getOrNull(domainState.currentStepIndex)?.phase}")
 //        println("🟣 currentStepIndex=${domainState.currentStepIndex}, totalSteps=${domainState.phaseSequence.steps.size}")
 
-        val step = domainState.phaseSequence.steps[domainState.currentStepIndex]
+        val currentStep = domainState.phaseSequence.steps[domainState.currentStepIndex]
 
-        val editableCount = step.editableCells.size
+        val editableCount = currentStep.editableCells.size
 
         val inputsForThisStep: List<String> =
             if (editableCount > 1) input.padStart(editableCount, '?').chunked(1)
@@ -229,9 +117,9 @@ class DivisionViewModel @Inject constructor(
             return
         }
 
-        val eval = phaseEvaluator.evaluate(domainState, inputsForThisStep)
+        val evalResult = phaseEvaluator.evaluate(domainState, inputsForThisStep)
 
-        if (!eval.isCorrect) {
+        if (!evalResult.isCorrect) {
             feedbackProvider.wrong(FeedbackMessages.randomWrong())
             _currentInput.value = ""
             emitUiState()
@@ -243,10 +131,10 @@ class DivisionViewModel @Inject constructor(
 
         domainState = domainState.copy(
             inputs = domainState.inputs + inputsForThisStep,
-            currentStepIndex = eval.nextStepIndex ?: domainState.currentStepIndex
+            currentStepIndex = evalResult.nextStepIndex ?: domainState.currentStepIndex
         )
 
-        if (eval.isFinished) {
+        if (evalResult.isFinished) {
             feedbackProvider.phaseCompleted()
         }
 
@@ -274,11 +162,11 @@ class DivisionViewModel @Inject constructor(
     private fun persistSnapshot() {
         if (!::domainState.isInitialized) return
 
-        val prob = lastProblem
+        val currentProblem = lastProblem
             ?: return  // 문제 정보가 없으면 저장하지 않음(안전장치)
 
         savedStateHandle[SNAPSHOT_KEY] = DivPracticeSnapshot(
-            problem = prob,
+            problem = currentProblem,
             stepIndex = domainState.currentStepIndex,
             confirmedInputs = domainState.inputs,
             currentInput = _currentInput.value
@@ -288,40 +176,34 @@ class DivisionViewModel @Inject constructor(
     /** ---------- 스냅샷 복원 ---------- */
     private fun restoreFrom(snap: DivPracticeSnapshot) {
         // 옵션1: 항상 리플레이 복원
-        val restored = restoreByReplaying(snap)
-        domainState = restored
+        val restoredState = restoreByReplaying(snap)
+        domainState = restoredState
         _currentInput.value = snap.currentInput
         emitUiState()
         persistSnapshot()
     }
 
     private fun restoreByReplaying(snap: DivPracticeSnapshot): DivisionDomainState {
-        val base = domainStateFactory.create(snap.problem) as DivisionDomainState
-        var ds = base
-        var cursor = 0
+        val initialState = domainStateFactory.create(snap.problem) as DivisionDomainState
+        var currentState = initialState
+        var inputIndex = 0
 
-        while (cursor < snap.confirmedInputs.size) {
-            val step = ds.phaseSequence.steps[ds.currentStepIndex]
-            val need = step.editableCells.size.coerceAtLeast(1)
-            if (cursor + need > snap.confirmedInputs.size) break
+        while (inputIndex < snap.confirmedInputs.size) {
+            val currentStep = currentState.phaseSequence.steps[currentState.currentStepIndex]
+            val requiredInputCount = currentStep.editableCells.size.coerceAtLeast(1)
+            if (inputIndex + requiredInputCount > snap.confirmedInputs.size) break
 
-            val chunk = snap.confirmedInputs.subList(cursor, cursor + need)
-            val eval = phaseEvaluator.evaluate(ds, chunk)
+            val inputChunk = snap.confirmedInputs.subList(inputIndex, inputIndex + requiredInputCount)
+            val evalResult = phaseEvaluator.evaluate(currentState, inputChunk)
 
-            ds = ds.copy(
-                inputs = ds.inputs + chunk,
-                currentStepIndex = eval.nextStepIndex ?: ds.currentStepIndex
+            currentState = currentState.copy(
+                inputs = currentState.inputs + inputChunk,
+                currentStepIndex = evalResult.nextStepIndex ?: currentState.currentStepIndex
             )
-            cursor += need
+            inputIndex += requiredInputCount
         }
-        return ds
+        return currentState
     }
-
-    fun hasRestorableSnapshot(): Boolean =
-        savedStateHandle.get<DivPracticeSnapshot>(SNAPSHOT_KEY) != null
-
-    fun peekSnapshotProblemOrNull(): Problem? =
-        savedStateHandle.get<DivPracticeSnapshot>(SNAPSHOT_KEY)?.problem
 
     /**
      * Entry에서 바로 호출해서, 문제를 기다리지 않고 곧장 복원.
@@ -332,7 +214,7 @@ class DivisionViewModel @Inject constructor(
         // 이미 복원한 적 있으면 재복원 금지
         if (restoredOnce) return true
         restoreFrom(snap)
-        restoredOnce = true                     // ✅ 래치 ON
+        restoredOnce = true                     // 래치 ON
         lastProblem = snap.problem
         return true
     }

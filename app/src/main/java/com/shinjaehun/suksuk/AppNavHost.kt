@@ -10,7 +10,7 @@ import com.shinjaehun.suksuk.domain.ProblemSessionFactory
 import com.shinjaehun.suksuk.domain.SessionMode
 import com.shinjaehun.suksuk.domain.pattern.DivisionPattern
 import com.shinjaehun.suksuk.domain.pattern.MulPattern
-import com.shinjaehun.suksuk.presentation.challenge.ChallengeScreenHost
+import com.shinjaehun.suksuk.presentation.challenge.ChallengeScreen
 import com.shinjaehun.suksuk.presentation.MainScreen
 
 @Composable
@@ -69,7 +69,7 @@ fun AppNavHost(
             DivisionScreenEntry(
                 problemFactory = problemFactory,
                 mode = mode,
-                pattern = divPattern,                // ← enum 전달
+                pattern = divPattern,
                 overrideOperands = override,
                 onExit = { nav.popBackStack() }
             )
@@ -98,15 +98,14 @@ fun AppNavHost(
             MultiplicationScreenEntry(
                 problemFactory = problemFactory,
                 mode = mode,
-                pattern = mulPattern,                // ← enum 전달
+                pattern = mulPattern,
                 overrideOperands = override,
                 onExit = { nav.popBackStack() }
             )
         }
 
         composable(Routes.Challenge) {
-//            ChallengeScreen(problemFactory = problemFactory, onExit = { nav.popBackStack() })
-            ChallengeScreenHost(onExit = {nav.popBackStack()})
+            ChallengeScreen(onExit = {nav.popBackStack()})
         }
     }
 

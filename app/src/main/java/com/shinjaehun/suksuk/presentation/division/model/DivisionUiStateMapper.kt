@@ -13,6 +13,7 @@ fun mapDivisionUiState(domain: DivisionDomainState, currentInput: String): Divis
     val currentStepIndex = domain.currentStepIndex.coerceIn(0, steps.lastIndex)
     val curPhaseStep = steps[currentStepIndex]
 
+    // 입력 인덱스 캐시
     val inputIndexCache = mutableMapOf<DivisionCell, Int?>()
     fun inputIndexOf(cell: DivisionCell): Int? =
         inputIndexCache.getOrPut(cell) {
@@ -64,14 +65,12 @@ fun mapDivisionUiState(domain: DivisionDomainState, currentInput: String): Divis
         currentTargets = curPhaseStep.subtractLineTargets
     )
 
+    // 셀 빌드
     val cells = DivisionCell.entries.associateWith { cellName ->
         val isHidden = cellName in cleared
 
-//        val isEditable = curPhaseStep.editableCells.contains(cellName)
         val isEditableRaw = cellName in curPhaseStep.editableCells
-//        val idxInEditables = curPhaseStep.editableCells.indexOf(cellName)
         val idxInEditables = editableIndexCache[cellName] ?: -1
-//        val inputIdx = calculateInputIndexForCell(steps, currentStepIndex, cellName)
         val inputIdx = inputIndexOf(cellName)
 
         val presetValue = when {
@@ -84,22 +83,6 @@ fun mapDivisionUiState(domain: DivisionDomainState, currentInput: String): Divis
 
         val rawValue = when {
             presetValue != null -> presetValue
-//            inputIdx != null -> {
-//                if (isEditable && domain.inputs.getOrNull(inputIdx).isNullOrEmpty()) {
-//                    currentInput.getOrNull(idxInEditables)?.toString() ?: "?"
-//                } else {
-//                    domain.inputs.getOrNull(inputIdx)
-//                }
-//            }
-//            inputIdx != null -> {
-//                val committed = domain.inputs.getOrNull(inputIdx)
-//                if (isEditableRaw && committed.isNullOrEmpty()) {
-//                    // 미확정 → currentInput 프리뷰
-//                    if (idxInEditables >= 0) currentInput.getOrNull(idxInEditables)?.toString() ?: "?"
-//                    else "?"
-//                } else committed
-//            }
-//            else -> getDefaultCellValue(domain, cellName)
             committed.isNullOrEmpty() && isEditableRaw -> preview ?: "?"
             !committed.isNullOrEmpty() -> committed
             else -> getDefaultCellValue(domain, cellName)
@@ -119,7 +102,6 @@ fun mapDivisionUiState(domain: DivisionDomainState, currentInput: String): Divis
         }
 
         val subtractLineType = lineTypes[cellName] ?: SubtractLineType.None
-//        val subtractLineType = assignSubtractLineType(cellName, subtractLineSet, curPhaseStep.subtractLineTargets)
 
 //        println("cell=$cellName, editable=$isEditable, inputIdx=$inputIdx, curInput=$currentInput")
 
@@ -186,6 +168,11 @@ private fun buildSubtractLineTypes(
     return map
 }
 
+/**
+ * domain.inputs의 선형 인덱스와 cell을 매핑.
+ * - 0..stepIndex까지의 step을 순회하며 editableCells를 차례대로 flatten.
+ * - 현재 step의 경우, 이미 확정된 extra editable이 inputs에 있다면 그만큼 소비.
+ */
 private fun calculateInputIndexForCell(
     steps: List<DivisionPhaseStep>,
     stepIndex: Int,
@@ -217,6 +204,9 @@ private fun calculateInputIndexForCell(
     return null
 }
 
+/**
+ * 피연산자(피승수/승수) 고정 숫자 표기.
+  */
 fun getDefaultCellValue(domain: DivisionDomainState, divisionCell: DivisionCell): String? = when (divisionCell) {
     DivisionCell.DivisorTens -> {
         val s = domain.info.divisor.toString().padStart(2, '0')

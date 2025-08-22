@@ -19,9 +19,9 @@ fun FeedbackOverlay(
     message: String?,
     color: Color,
     onClear: () -> Unit,
-    modifier: Modifier = Modifier,       // ← 위치/정렬은 부모가 결정
-//    fontSize: TextUnit = 28.sp           // ← 살짝 작게(원하는대로 조절)
-    fontSize: TextUnit = 32.sp           // ← 살짝 작게(원하는대로 조절)
+    modifier: Modifier = Modifier,
+//    fontSize: TextUnit = 28.sp
+    fontSize: TextUnit = 32.sp
 ) {
     if (message == null) return
     val alpha = remember { Animatable(1f) }
@@ -32,18 +32,14 @@ fun FeedbackOverlay(
         onClear()
     }
 
-    // ⬇️ fillMaxSize 절대 쓰지 않음! (컨텐츠 크기만)
     Text(
         text = message,
         color = color.copy(alpha = alpha.value),
         fontSize = fontSize,
         fontWeight = FontWeight.ExtraBold,
-        modifier = modifier,               // 부모에서 align/padding으로 위치 지정
-//        textAlign = TextAlign.Center,
-//        maxLines = 1,                       // ✅ 한 줄 고정
-//        overflow = TextOverflow.Ellipsis,
+        modifier = modifier,
         textAlign = TextAlign.Center,
-        maxLines = 1,                       // 한 줄 고정
-        overflow = TextOverflow.Visible,    // 말줄임표 대신 보여주기(마키에 맡김)
+        maxLines = 1,
+        overflow = TextOverflow.Visible,
     )
 }

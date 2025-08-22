@@ -2,17 +2,16 @@ package com.shinjaehun.suksuk.presentation.component
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,159 +19,130 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
 import com.shinjaehun.suksuk.presentation.common.effects.AudioPlayer
 import com.shinjaehun.suksuk.presentation.common.effects.LocalAudioPlayer
 
-//@Composable
-//fun InputPanel(
-//    onDigitInput: (Int) -> Unit,
-//    onClear: () -> Unit,
-//    onEnter: () -> Unit,
-//    modifier: Modifier = Modifier
-//) {
-//    Column(
-//        modifier = modifier
-//            .padding(bottom = 32.dp)
-//    ) {
-//        NumberPad(
-//            onNumber = onDigitInput,
-//            onClear = onClear,
-//            onEnter = onEnter
-//        )
-////        feedback?.let {
-////            Spacer(Modifier.height(16.dp))
-////            Text(
-////                text = it,
-////                color = MaterialTheme.colorScheme.primary,
-////                modifier = Modifier.align(Alignment.CenterHorizontally)
-////                    .testTag("feedback")
-////            )
-////        }
-//    }
-//}
-
 @Composable
 fun InputPanel(
     onDigitInput: (Int) -> Unit,
     onClear: () -> Unit,
     onEnter: () -> Unit,
+    buttonSize: Dp,
+    gap: Dp,
     modifier: Modifier = Modifier,
     audioPlayer: AudioPlayer = LocalAudioPlayer.current,
     playOnTap: Boolean = true
 ) {
     val cfg = LocalConfiguration.current
     val isLandscape = cfg.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val isLargeDevice = cfg.smallestScreenWidthDp >= 600   // ✅ sw600 태블릿 판별
 
-    // 튜닝 포인트
-    val desiredGrid = 56.dp   // 숫자 버튼 기준 크기
-    val minGridTri = 44.dp    // 3-존 허용 최소 그리드
-    val gap = 10.dp           // 버튼 간격
-    val gutter = 12.dp        // 숫자와 좌/우 컬럼 사이 여백
-    val a = 1.15f             // clear 크기 비율 (grid*a)
-    val b = 1.60f             // enter 크기 비율 (grid*b)
+    val minButtonForTriZone: Dp = 44.dp
+    val sideGutter: Dp = 12.dp
+    val clearScale: Float = 1.15f
+    val enterScale: Float = 1.60f
 
-    fun tap(action: () -> Unit) {
-        if (playOnTap) {
-            audioPlayer.playClick()
-        }
-        action()
-    }
+    fun tap(action: () -> Unit) { if (playOnTap) audioPlayer.playBeep(); action() }
+
+    val rows = listOf(listOf(1,2,3), listOf(4,5,6), listOf(7,8,9))
 
     BoxWithConstraints(
         modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
-        val w = maxWidth
+        val targetButtonSize = buttonSize
+        val targetGap = gap
 
-        // 정확 수식: (a+b+3)*grid + 2*gap + 2*gutter <= w
-        val gridTri = ((w - 2 * gap - 2 * gutter) / (a + b + 3))
-            .coerceAtMost(desiredGrid)
+        // 기본 크기 산출
+        var gridSize: Dp = targetButtonSize
+        var clearSize: Dp = gridSize * clearScale
+        var enterSize: Dp = gridSize * enterScale
 
-        val triZone = isLandscape && gridTri >= minGridTri
-        val grid = if (triZone) gridTri else ((w - 2 * gap) / 3f).coerceAtMost(desiredGrid)
+        // 폰트는 버튼 크기에서 파생
+        fun numFont(dp: Dp) = (dp * 0.40f).coerceIn(16.dp, 24.dp).value.sp
+        fun sideFont(dp: Dp) = (dp * 0.38f).coerceAtLeast(16.dp).value.sp
+        var fontNum = numFont(gridSize)
+        var fontSide = sideFont(gridSize)
 
-        val clearS = if (triZone) grid * a else grid
-        val enterS = if (triZone) grid * b else grid
+        // triZone 후보 & 필요폭
+        val triZoneCandidate = isLargeDevice || (isLandscape && gridSize >= minButtonForTriZone)
+        val numbersWidth = gridSize * 3 + targetGap * 2
+        val totalNeeded = clearSize + sideGutter + numbersWidth + sideGutter + enterSize
+        val triZoneFits = totalNeeded <= maxWidth
 
-        val fontNum = (grid * 0.40f).coerceIn(16.dp, 24.dp).value.sp
-        val fontSide = (grid * 0.38f).coerceAtLeast(16.dp).value.sp
+        // ✅ 태블릿: triZone을 유지하되, 안 맞으면 살짝 줄여서 맞추기
+        // ✅ 폰: 안 맞으면 통합형으로 폴백
+        val useTriZone = if (isLargeDevice) true else (triZoneCandidate && triZoneFits)
 
-        val rows = listOf(listOf(1,2,3), listOf(4,5,6), listOf(7,8,9))
+        if (useTriZone && !triZoneFits && isLargeDevice) {
+            // 폭에 맞추는 축소 계수 (최대 1f)
+            val fitK = (maxWidth / totalNeeded).coerceAtMost(1f)
+            gridSize *= fitK
+            clearSize *= fitK
+            enterSize *= fitK
+            fontNum = numFont(gridSize)
+            fontSide = sideFont(gridSize)
+        }
+        val isLargePortrait = isLargeDevice && !isLandscape
 
-        if (triZone) {
+        if (useTriZone) {
             // ┌─ Clear ─┬──── Numbers ────┬─ Enter ─┐
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = if (isLargePortrait) Arrangement.Center else Arrangement.Start, // ✅ 큰화면-세로만 중앙
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(
-                    modifier = Modifier.width(clearS),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+                Column(Modifier.width(clearSize), horizontalAlignment = Alignment.CenterHorizontally) {
                     ColorfulCircleButton(
                         label = "⟲",
-                        modifier = Modifier
-                            .size(clearS)
-                            .testTag("numpad-clear"),
+                        modifier = Modifier.size(clearSize).testTag("numpad-clear"),
                         brush = digitBrush(-1),
                         onClick = { tap(onClear) },
-                        size = clearS,
+                        size = clearSize,
                         fontSize = fontSide
                     )
                 }
-
-                Spacer(Modifier.width(gutter))
-
+                Spacer(Modifier.width(sideGutter))
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     rows.forEach { row ->
-                        Row(horizontalArrangement = Arrangement.spacedBy(gap)) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(targetGap)) {
                             row.forEach { n ->
                                 ColorfulCircleButton(
                                     label = n.toString(),
-                                    modifier = Modifier
-                                        .size(grid)
-                                        .testTag("numpad-$n"),
+                                    modifier = Modifier.size(gridSize).testTag("numpad-$n"),
                                     brush = digitBrush(n),
                                     onClick = { tap { onDigitInput(n) } },
-                                    size = grid,
+                                    size = gridSize,
                                     fontSize = fontNum
                                 )
                             }
                         }
-                        Spacer(Modifier.height(gap))
+                        Spacer(Modifier.height(targetGap))
                     }
                     Row {
                         ColorfulCircleButton(
                             label = "0",
-                            modifier = Modifier
-                                .size(grid)
-                                .testTag("numpad-0"),
+                            modifier = Modifier.size(gridSize).testTag("numpad-0"),
                             brush = digitBrush(0),
                             onClick = { tap { onDigitInput(0) } },
-                            size = grid,
+                            size = gridSize,
                             fontSize = fontNum
                         )
                     }
                 }
-
-                Spacer(Modifier.width(gutter))
-
-                Column(
-                    modifier = Modifier.width(enterS),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+                Spacer(Modifier.width(sideGutter))
+                Column(Modifier.width(enterSize), horizontalAlignment = Alignment.CenterHorizontally) {
                     ColorfulCircleButton(
                         label = "↵",
-                        modifier = Modifier
-                            .size(enterS)
-                            .testTag("numpad-enter"),
+                        modifier = Modifier.size(enterSize).testTag("numpad-enter"),
                         brush = digitBrush(-2),
                         onClick = { tap(onEnter) },
-                        size = enterS,
-                        fontSize = (enterS * 0.36f).coerceAtLeast(18.dp).value.sp
+                        size = enterSize,
+                        fontSize = (enterSize * 0.36f).coerceAtLeast(18.dp).value.sp
                     )
                 }
             }
@@ -180,51 +150,43 @@ fun InputPanel(
             // 통합형: 숫자 3×3, 마지막 줄 [Clear, 0, Enter]
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 rows.forEach { row ->
-                    Row(horizontalArrangement = Arrangement.spacedBy(gap)) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(targetGap)) {
                         row.forEach { n ->
                             ColorfulCircleButton(
                                 label = n.toString(),
-                                modifier = Modifier
-                                    .size(grid)
-                                    .testTag("numpad-$n"),
+                                modifier = Modifier.size(gridSize).testTag("numpad-$n"),
                                 brush = digitBrush(n),
                                 onClick = { tap { onDigitInput(n) } },
-                                size = grid,
+                                size = gridSize,
                                 fontSize = fontNum
                             )
                         }
                     }
-                    Spacer(Modifier.height(gap))
+                    Spacer(Modifier.height(targetGap))
                 }
-                Row(horizontalArrangement = Arrangement.spacedBy(gap)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(targetGap)) {
                     ColorfulCircleButton(
                         label = "⟲",
-                        modifier = Modifier
-                            .size(grid)
-                            .testTag("numpad-clear"),
+                        modifier = Modifier.size(gridSize).testTag("numpad-clear"),
                         brush = digitBrush(-1),
                         onClick = { tap(onClear) },
-                        size = grid,
+                        size = gridSize,
                         fontSize = fontSide
                     )
                     ColorfulCircleButton(
                         label = "0",
-                        modifier = Modifier
-                            .size(grid)
-                            .testTag("numpad-0"),
+                        modifier = Modifier.size(gridSize).testTag("numpad-0"),
                         brush = digitBrush(0),
                         onClick = { tap { onDigitInput(0) } },
-                        size = grid,
+                        size = gridSize,
                         fontSize = fontNum
                     )
                     ColorfulCircleButton(
                         label = "↵",
-                        modifier = Modifier
-                            .size(grid)
-                            .testTag("numpad-enter"),
+                        modifier = Modifier.size(gridSize).testTag("numpad-enter"),
                         brush = digitBrush(-2),
                         onClick = { tap(onEnter) },
-                        size = grid,
+                        size = gridSize,
                         fontSize = fontSide
                     )
                 }
