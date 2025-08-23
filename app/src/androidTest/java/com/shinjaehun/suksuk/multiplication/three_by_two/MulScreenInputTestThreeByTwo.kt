@@ -157,4 +157,29 @@ class MulScreenInputTestThreeByTwo {
                 "72","7","72"
             )
         )
+
+    // 특례: 마지막 덧셈에서 받아올림이 있는데 P2에 더할 값이 없을 때 (102×99=10098)
+    @Test
+    fun test_102_mul_99_lastCarry_noP2() =
+        composeTestRule.multiplicationCase(
+            multiplicand = 102,
+            multiplier = 99,
+            inputs = listOf(
+                // P1 (×9) → 918
+                "18",   // [c1=1, P1Ones=8]
+                "01",   // [c2=0, P1Tens=1]
+                "9",    // P1Hundreds=9
+
+                // P2 (×9, shift) → 9180
+                "18",   // [c1=1, P2Tens=8]
+                "01",   // [c2=0, P2Hundreds=1]
+                "9",    // P2Thousands=9
+
+                // SUM (→ 10098)
+                "8",    // SumOnes=8
+                "9",    // SumTens=9
+                "10",   // [CarrySumThousands=1, SumHundreds=0]
+                "10"    // [CarrySumTenThousands=1, SumThousands=0]
+            )
+        )
 }

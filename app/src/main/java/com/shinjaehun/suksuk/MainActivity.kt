@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.CompositionLocalProvider
 import com.shinjaehun.suksuk.domain.ProblemSessionFactory
+import com.shinjaehun.suksuk.domain.SessionMode
 import com.shinjaehun.suksuk.presentation.common.effects.AudioPlayer
 import com.shinjaehun.suksuk.presentation.common.effects.LocalAudioPlayer
 import com.shinjaehun.suksuk.ui.theme.SukSukTheme
@@ -26,8 +27,8 @@ class MainActivity : ComponentActivity() {
         setContent {
 
             SukSukTheme {
-                CompositionLocalProvider(LocalAudioPlayer provides audioPlayer) {
-                    AppNavHost(problemFactory)
+//                CompositionLocalProvider(LocalAudioPlayer provides audioPlayer) {
+//                    AppNavHost(problemFactory)
 
                     // 디버깅 예제
 //                    DivisionScreenEntry(
@@ -37,6 +38,16 @@ class MainActivity : ComponentActivity() {
 //                        overrideOperands = 859 to 32,
 //                        onExit = { /* 뒤로가기 */ }
 //                    )
+
+                CompositionLocalProvider(LocalAudioPlayer provides audioPlayer) {
+                    MultiplicationScreenEntry(
+                        problemFactory = problemFactory,
+                        mode = SessionMode.Practice,
+                        pattern = null,
+//                        overrideOperands = 56 to 19,
+                        overrideOperands = 102 to 99,
+                        onExit = { /* 뒤로가기 */ }
+                    )
                 }
             }
         }

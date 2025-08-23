@@ -11,7 +11,6 @@ import com.shinjaehun.suksuk.domain.OpType
 import com.shinjaehun.suksuk.domain.ProblemSessionFactory
 import com.shinjaehun.suksuk.domain.SessionMode
 import com.shinjaehun.suksuk.domain.pattern.MulPattern
-import com.shinjaehun.suksuk.presentation.division.DivisionScreen
 import com.shinjaehun.suksuk.presentation.multiplication.MultiplicationScreen
 import com.shinjaehun.suksuk.presentation.multiplication.MultiplicationViewModel
 import kotlinx.coroutines.launch
@@ -29,18 +28,18 @@ fun MultiplicationScreenEntry(
 
     // 디버깅 로직
     if (overrideOperands != null) {
-        val (dividend, divisor) = overrideOperands
+        val (multiplicand, multiplier) = overrideOperands
 
         // VM 초기화 (중복 호출 방지용 key로 묶어둠)
-        LaunchedEffect(dividend, divisor) {
-            viewmodel.startNewProblem(dividend, divisor)
+        LaunchedEffect(multiplicand, multiplier) {
+            viewmodel.startNewProblem(multiplicand, multiplier)
         }
 
         // 그냥 이 문제만 풀게 렌더. onNextProblem은 동일 문제 반복 or onExit 중 택1
-        DivisionScreen(
+        MultiplicationScreen(
             onNextProblem = {
                 // 동일 문제 반복이 편하면 아래 유지
-                viewmodel.startNewProblem(dividend, divisor)
+                viewmodel.startNewProblem(multiplicand, multiplier)
             },
             onExit = onExit
         )

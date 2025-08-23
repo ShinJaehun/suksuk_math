@@ -99,4 +99,26 @@ class MulScreenInputTestTwoByTwo {
                 "10"
             )
         )
+
+    // 특례: 마지막 덧셈에서 받아올림이 있는데 P2에 더할 값이 없을 때 (56×19=1064)
+    @Test
+    fun test_56_mul_19_lastCarry_noP2() =
+        composeTestRule.multiplicationCase(
+            multiplicand = 56,
+            multiplier = 19,
+            inputs = listOf(
+                // P1 (×9) -> 504
+                "54",   // [c1=5, P1Ones=4]
+                "50",   // [c2=0, P1Tens=0] (Hundreds=5는 carry 단계에서 반영)
+
+                // P2 (×1, shift) -> 560
+                "6",    // P2Tens=6
+                "5",    // P2Hundreds=5
+
+                // SUM
+                "4",    // SumOnes=4
+                "6",    // SumTens=6
+                "10"    // [c=1, SumHundreds=0]  (carry가 단독으로 SumThousands에 반영됨)
+            )
+        )
 }

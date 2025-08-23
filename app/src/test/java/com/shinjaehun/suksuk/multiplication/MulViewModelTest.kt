@@ -287,6 +287,24 @@ class MultiplicationViewModelTest {
                 )
             ),
 
+            // 특례: 마지막 덧셈에서 받아올림이 있는데 P2에 더할 값이 없을때
+            Triple(
+                "TwoByTwo: 56 × 19",
+                56 to 19,
+                listOf(
+                    // P1 (×9) -> 504
+                    "54",   // [c1=5, P1Ones=4]
+                    "50",   // [c2=0, P1Tens=0]  (Hundreds=5는 carry 단계에서 반영)
+                    // P2 (×1, shift) -> 560
+                    "6",    // P2Tens=6
+                    "5",    // P2Hundreds=5
+                    // SUM
+                    "4",    // SumOnes=4
+                    "6",    // SumTens=6
+                    "10",   // [c=1, SumHundreds=0]
+                )
+            ),
+
             // === 3×2: 123 × 45 = 5535 (대표 예시, 캐리 혼합) ===
             // P1: 123×5 = 615 → P1Ones=5, c1=1; tens: 2×5+1=11→ P1Tens=1, c2=1; hundreds: 1×5+1=6→ P1Hundreds=6
             // P2: 123×4(십의 자리)=4920 → (shift)
@@ -420,6 +438,29 @@ class MultiplicationViewModelTest {
                     "0",
                     // P2 (×9, shift)
                     "72","7","72",
+                )
+            ),
+
+            // 특례: 마지막 덧셈에서 받아올림이 있는데 P2에 더할 값이 없을때
+            Triple(
+                "ThreeByTwo: 102 × 99",
+                102 to 99,
+                listOf(
+                    // P1 (×9) → 918
+                    "18",   // [c1=1, P1Ones=8]
+                    "01",   // [c2=0, P1Tens=1]
+                    "9",    //  P1Hundreds=9
+
+                    // P2 (×9, shift) → 9180
+                    "18",   // [c1=1, P2Tens=8]
+                    "01",   // [c2=0, P2Hundreds=1]
+                    "9",    //  P2Thousands=9
+
+                    // SUM (→ 10098)
+                    "8",    // SumOnes = 8
+                    "9",    // SumTens = 9
+                    "10",   // [CarrySumThousands=1, SumHundreds=0]
+                    "10",   // [CarrySumTenThousands=1, SumThousands=0]
                 )
             )
         )

@@ -150,18 +150,86 @@ class TwoByTwoMulPhaseSequenceCreator @Inject constructor() : MulPhaseSequenceCr
                 )
             }
 
+//            if (info.carrySumThousands > 0) {
+//                steps += MulPhaseStep(
+//                    phase = MulPhase.InputSum,
+//                    editableCells = listOf(MulCell.CarrySumThousands, MulCell.SumHundreds),
+//                    highlightCells = listOf(
+//                        MulCell.P1Hundreds,
+//                        MulCell.P2Hundreds,
+//                        MulCell.CarrySumHundreds
+//                    ),
+//                    needsCarry = true,
+//                    totalLineTargets = setOf(MulCell.SumHundreds)
+//                )
+//            } else {
+//                steps += MulPhaseStep(
+//                    phase = MulPhase.InputSum,
+//                    editableCells = listOf(MulCell.SumHundreds),
+//                    highlightCells = listOf(
+//                        MulCell.P1Hundreds,
+//                        MulCell.P2Hundreds,
+//                        MulCell.CarrySumHundreds
+//                    ),
+//                    totalLineTargets = setOf(MulCell.SumHundreds)
+//                )
+//            }
+//
+//            // Thousands
+//            if (info.sumThousands > 0) {
+//                steps += MulPhaseStep(
+//                    phase = MulPhase.InputSum,
+//                    editableCells = listOf(MulCell.SumThousands),
+//                    highlightCells = listOf(
+//                        MulCell.P1Thousands,
+//                        MulCell.P2Thousands,
+//                        MulCell.CarrySumThousands
+//                    ),
+//                    totalLineTargets = setOf(MulCell.SumThousands)
+//                )
+//            }
+
             if (info.carrySumThousands > 0) {
-                steps += MulPhaseStep(
-                    phase = MulPhase.InputSum,
-                    editableCells = listOf(MulCell.CarrySumThousands, MulCell.SumHundreds),
-                    highlightCells = listOf(
-                        MulCell.P1Hundreds,
-                        MulCell.P2Hundreds,
-                        MulCell.CarrySumHundreds
-                    ),
-                    needsCarry = true,
-                    totalLineTargets = setOf(MulCell.SumHundreds)
-                )
+                if(info.product2Thousands > 0) {
+                    steps += MulPhaseStep(
+                        phase = MulPhase.InputSum,
+                        editableCells = listOf(MulCell.CarrySumThousands, MulCell.SumHundreds),
+                        highlightCells = listOf(
+                            MulCell.P1Hundreds,
+                            MulCell.P2Hundreds,
+                            MulCell.CarrySumHundreds
+                        ),
+                        needsCarry = true,
+                        totalLineTargets = setOf(MulCell.SumHundreds)
+                    )
+
+                    // Thousands
+                    if (info.sumThousands > 0) {
+                        steps += MulPhaseStep(
+                            phase = MulPhase.InputSum,
+                            editableCells = listOf(MulCell.SumThousands),
+                            highlightCells = listOf(
+                                MulCell.P1Thousands,
+                                MulCell.P2Thousands,
+                                MulCell.CarrySumThousands
+                            ),
+                            totalLineTargets = setOf(MulCell.SumThousands)
+                        )
+                    }
+                } else {
+                    steps += MulPhaseStep(
+                        phase = MulPhase.InputSum,
+                        editableCells = listOf(MulCell.SumThousands, MulCell.SumHundreds),
+                        highlightCells = listOf(
+                            MulCell.P1Hundreds,
+                            MulCell.P2Hundreds,
+                            MulCell.CarrySumHundreds
+                        ),
+                        needsCarry = true,
+                        totalLineTargets = setOf(MulCell.SumHundreds)
+                    )
+                }
+
             } else {
                 steps += MulPhaseStep(
                     phase = MulPhase.InputSum,
@@ -173,21 +241,22 @@ class TwoByTwoMulPhaseSequenceCreator @Inject constructor() : MulPhaseSequenceCr
                     ),
                     totalLineTargets = setOf(MulCell.SumHundreds)
                 )
+
+                // Thousands
+                if (info.sumThousands > 0) {
+                    steps += MulPhaseStep(
+                        phase = MulPhase.InputSum,
+                        editableCells = listOf(MulCell.SumThousands),
+                        highlightCells = listOf(
+                            MulCell.P1Thousands,
+                            MulCell.P2Thousands,
+                            MulCell.CarrySumThousands
+                        ),
+                        totalLineTargets = setOf(MulCell.SumThousands)
+                    )
+                }
             }
 
-            // Thousands
-            if (info.sumThousands > 0) {
-                steps += MulPhaseStep(
-                    phase = MulPhase.InputSum,
-                    editableCells = listOf(MulCell.SumThousands),
-                    highlightCells = listOf(
-                        MulCell.P1Thousands,
-                        MulCell.P2Thousands,
-                        MulCell.CarrySumThousands
-                    ),
-                    totalLineTargets = setOf(MulCell.SumThousands)
-                )
-            }
         }
 
 

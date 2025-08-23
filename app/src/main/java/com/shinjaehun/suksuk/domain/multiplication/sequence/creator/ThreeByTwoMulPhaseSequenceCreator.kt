@@ -252,17 +252,78 @@ class ThreeByTwoMulPhaseSequenceCreator @Inject constructor() : MulPhaseSequence
             }
 
             // Thousands (carry into thousands)
+//            if (info.carrySumTenThousands > 0) {
+//                steps += MulPhaseStep(
+//                    phase = MulPhase.InputSum,
+//                    editableCells = listOf(MulCell.CarrySumTenThousands, MulCell.SumThousands),
+//                    highlightCells = listOf(
+//                        MulCell.P1Thousands,
+//                        MulCell.P2Thousands,
+//                        MulCell.CarrySumThousands
+//                    ),
+//                    totalLineTargets = setOf(MulCell.SumThousands)
+//                )
+//            } else {
+//                // TenThousands가 0이면 Thousands에서 종료
+//                steps += MulPhaseStep(
+//                    phase = MulPhase.InputSum,
+//                    editableCells = listOf(MulCell.SumThousands),
+//                    highlightCells = listOf(
+//                        MulCell.P1Thousands,
+//                        MulCell.P2Thousands,
+//                        MulCell.CarrySumThousands
+//                    ),
+//                    totalLineTargets = setOf(MulCell.SumThousands)
+//                )
+//            }
+//
+//            if (info.sumTenThousands > 0) {
+//                steps += MulPhaseStep(
+//                    phase = MulPhase.InputSum,
+//                    editableCells = listOf(MulCell.SumTenThousands),
+//                    highlightCells = listOf(
+//                        MulCell.P2TenThousands,
+//                        MulCell.CarrySumTenThousands
+//                    )
+//                )
+//            }
+
             if (info.carrySumTenThousands > 0) {
-                steps += MulPhaseStep(
-                    phase = MulPhase.InputSum,
-                    editableCells = listOf(MulCell.CarrySumTenThousands, MulCell.SumThousands),
-                    highlightCells = listOf(
-                        MulCell.P1Thousands,
-                        MulCell.P2Thousands,
-                        MulCell.CarrySumThousands
-                    ),
-                    totalLineTargets = setOf(MulCell.SumThousands)
-                )
+                if(info.product2TenThousands > 0) {
+                    steps += MulPhaseStep(
+                        phase = MulPhase.InputSum,
+                        editableCells = listOf(MulCell.CarrySumTenThousands, MulCell.SumThousands),
+                        highlightCells = listOf(
+                            MulCell.P1Thousands,
+                            MulCell.P2Thousands,
+                            MulCell.CarrySumThousands
+                        ),
+                        totalLineTargets = setOf(MulCell.SumThousands)
+                    )
+
+                    if (info.sumTenThousands > 0) {
+                        steps += MulPhaseStep(
+                            phase = MulPhase.InputSum,
+                            editableCells = listOf(MulCell.SumTenThousands),
+                            highlightCells = listOf(
+                                MulCell.P2TenThousands,
+                                MulCell.CarrySumTenThousands
+                            )
+                        )
+                    }
+                } else {
+                    steps += MulPhaseStep(
+                        phase = MulPhase.InputSum,
+                        editableCells = listOf(MulCell.SumTenThousands, MulCell.SumThousands),
+                        highlightCells = listOf(
+                            MulCell.P1Thousands,
+                            MulCell.P2Thousands,
+                            MulCell.CarrySumThousands
+                        ),
+                        totalLineTargets = setOf(MulCell.SumThousands)
+                    )
+                }
+
             } else {
                 // TenThousands가 0이면 Thousands에서 종료
                 steps += MulPhaseStep(
@@ -275,18 +336,19 @@ class ThreeByTwoMulPhaseSequenceCreator @Inject constructor() : MulPhaseSequence
                     ),
                     totalLineTargets = setOf(MulCell.SumThousands)
                 )
+
+                if (info.sumTenThousands > 0) {
+                    steps += MulPhaseStep(
+                        phase = MulPhase.InputSum,
+                        editableCells = listOf(MulCell.SumTenThousands),
+                        highlightCells = listOf(
+                            MulCell.P2TenThousands,
+                            MulCell.CarrySumTenThousands
+                        )
+                    )
+                }
             }
 
-            if (info.sumTenThousands > 0) {
-                steps += MulPhaseStep(
-                    phase = MulPhase.InputSum,
-                    editableCells = listOf(MulCell.SumTenThousands),
-                    highlightCells = listOf(
-                        MulCell.P2TenThousands,
-                        MulCell.CarrySumTenThousands
-                    )
-                )
-            }
         }
 
         steps += MulPhaseStep(phase = MulPhase.Complete)
