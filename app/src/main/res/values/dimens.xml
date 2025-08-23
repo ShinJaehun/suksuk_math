@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="dialog_max_width">320dp</dimen>
+    <dimen name="dialog_max_height">580dp</dimen>
+    <dimen name="dialog_padding">16dp</dimen>
+
+    <dimen name="tile_width">100dp</dimen>
+    <dimen name="tile_height">140dp</dimen>
+    <dimen name="tile_image_size">100dp</dimen>
+    <dimen name="tile_label_height">30dp</dimen>
+    <dimen name="tile_gap">14dp</dimen>
+</resources>

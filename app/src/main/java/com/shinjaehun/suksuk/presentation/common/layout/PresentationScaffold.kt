@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isFinite
+import com.shinjaehun.suksuk.presentation.common.device.LocalDeviceClasses
 import com.shinjaehun.suksuk.presentation.common.notice.LandscapeNotSupportedPanel
 
 //@Composable
@@ -160,7 +161,12 @@ fun PresentationScaffold(
     board: @Composable () -> Unit,
     panel: @Composable () -> Unit
 ) {
-    val (isLarge, isLandscape, isSmallLandscape) = deviceClasses()
+//    val (isLarge, isLandscape, isSmallLandscape) = deviceClasses()
+
+    val dc = LocalDeviceClasses.current
+    val isLarge = dc.isLarge
+    val isLandscape = dc.isLandscape
+    val isSmallLandscape = dc.isSmallLandscape
 
     val outer = 20.dp
     val gutter = 16.dp
@@ -508,15 +514,6 @@ private fun ScaledBoardInSlot(
             )
         }
     }
-}
-
-@Composable
-fun deviceClasses(): Triple<Boolean, Boolean, Boolean> {
-    val cfg = LocalConfiguration.current
-    val isLandscape = cfg.orientation == Configuration.ORIENTATION_LANDSCAPE
-    val isLarge = cfg.smallestScreenWidthDp  >= 600
-    val isSmallLandscape = !isLarge && isLandscape
-    return Triple(isLarge, isLandscape, isSmallLandscape)
 }
 
 @Composable
