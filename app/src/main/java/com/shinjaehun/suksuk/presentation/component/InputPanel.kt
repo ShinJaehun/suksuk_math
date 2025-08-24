@@ -93,7 +93,8 @@ fun InputPanel(
             // ┌─ Clear ─┬──── Numbers ────┬─ Enter ─┐
             Row(
                 Modifier.fillMaxWidth(),
-                horizontalArrangement = if (isLargePortrait) Arrangement.Center else Arrangement.Start, // ✅ 큰화면-세로만 중앙
+//                horizontalArrangement = if (isLargePortrait) Arrangement.Center else Arrangement.Start, // ✅ 큰화면-세로만 중앙
+                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(Modifier.width(clearSize), horizontalAlignment = Alignment.CenterHorizontally) {

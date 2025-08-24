@@ -1,18 +1,17 @@
 package com.shinjaehun.suksuk.presentation.common.layout
 
-import android.util.Log
-import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.Alignment
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
 import com.shinjaehun.suksuk.presentation.common.notice.LandscapeNotSupportedPanel
 
 @Composable
@@ -38,7 +37,7 @@ fun ScaledBoardInSlot(
 
             val base = minOf(scaleX, scaleY).coerceIn(minScale, maxScale)
             val scale = base * shrink
-            Log.d("ScaledBoardInSlot", "scaleX=$scaleX scaleY=$scaleY scale=$scale")
+//            Log.d("ScaledBoardInSlot", "scaleX=$scaleX scaleY=$scaleY scale=$scale")
 
             if (scale < minScale) {
                 LandscapeNotSupportedPanel()

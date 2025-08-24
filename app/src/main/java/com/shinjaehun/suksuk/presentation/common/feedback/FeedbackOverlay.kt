@@ -21,7 +21,7 @@ fun FeedbackOverlay(
     onClear: () -> Unit,
     modifier: Modifier = Modifier,
 //    fontSize: TextUnit = 28.sp
-    fontSize: TextUnit = 32.sp
+    fontSize: TextUnit = 32.sp,
 ) {
     if (message == null) return
     val alpha = remember { Animatable(1f) }

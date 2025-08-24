@@ -9,7 +9,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.shinjaehun.suksuk.presentation.common.feedback.FeedbackOverlay
 
 @Composable
@@ -19,6 +21,7 @@ fun FeedbackArea(
     onClearWrong: () -> Unit,
     onClearCorrect: () -> Unit,
     reservedHeight: Dp = 44.dp, // 한 줄 토스트 기준. 더 길다면 56~64로.
+    fontSize: TextUnit = 32.sp
 ) {
     Box(
         Modifier
@@ -33,14 +36,16 @@ fun FeedbackArea(
                 FeedbackOverlay(
                     message = it,
                     color = Color.Red,
-                    onClear = onClearWrong
+                    onClear = onClearWrong,
+                    fontSize = fontSize
                 )
             }
             correctMsg?.let {
                 FeedbackOverlay(
                     message = it,
                     color = Color(0xFF2196F3),
-                    onClear = onClearCorrect
+                    onClear = onClearCorrect,
+                    fontSize = fontSize
                 )
             }
         }

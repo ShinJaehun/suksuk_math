@@ -1,6 +1,7 @@
 package com.shinjaehun.suksuk.presentation.challenge
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -16,6 +17,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow
@@ -154,6 +156,7 @@ private fun DivisionBoardByPattern(du: DivisionUiState) {
 @Composable
 fun ChallengeHUD(ui: ChallengeUi) {
     Row(
+//        modifier = Modifier.background(color = Color.Red),
         horizontalArrangement = Arrangement.Center,
     ) {
         Text(
