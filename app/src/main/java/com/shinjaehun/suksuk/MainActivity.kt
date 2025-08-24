@@ -5,6 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.shinjaehun.suksuk.domain.ProblemSessionFactory
 import com.shinjaehun.suksuk.domain.SessionMode
 import com.shinjaehun.suksuk.presentation.common.device.ProvideDeviceClasses
@@ -24,7 +27,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
+        enableEdgeToEdge()
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        hideSystemBars()
+
         setContent {
 
             SukSukTheme {
@@ -58,5 +65,25 @@ class MainActivity : ComponentActivity() {
 
             }
         }
+    }
+
+    private fun hideSystemBars() {
+        val controller = WindowCompat.getInsetsController(window, window.decorView)
+        controller.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        // 전부 숨기기(상태바+내비바). 내비만 숨기고 싶으면 Type.navigationBars()만.
+        controller.hide(WindowInsetsCompat.Type.systemBars())
+    }
+
+    // 포커스/IME/다이얼로그 등으로 시스템 바가 다시 나타난 뒤 포커스 복구되면 재적용
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) hideSystemBars()
+    }
+
+    // 필요 시 다시 보이게 할 때
+    private fun showSystemBars() {
+        val controller = WindowCompat.getInsetsController(window, window.decorView)
+        controller.show(WindowInsetsCompat.Type.systemBars())
     }
 }

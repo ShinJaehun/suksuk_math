@@ -15,9 +15,9 @@ android {
 
     defaultConfig {
         applicationId = "com.shinjaehun.suksuk"
-        minSdk = 26
+        minSdk = 29
         targetSdk = 35
-        versionCode = 1
+        versionCode = 10
         versionName = "10.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -25,10 +25,12 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file("gunsmoke.jks")
-            storePassword = project.property("RELEASE_STORE_PASSWORD") as String
-            keyAlias = "suksuk"
-            keyPassword = project.property("RELEASE_KEY_PASSWORD") as String
+            storeFile = file(
+                (findProperty("RELEASE_STORE_FILE") ?: System.getenv("RELEASE_STORE_FILE")) as String
+            )
+            storePassword = (findProperty("RELEASE_STORE_PASSWORD") ?: System.getenv("RELEASE_STORE_PASSWORD")) as String
+            keyAlias = (findProperty("RELEASE_KEY_ALIAS") ?: System.getenv("RELEASE_KEY_ALIAS")) as String
+            keyPassword = (findProperty("RELEASE_KEY_PASSWORD") ?: System.getenv("RELEASE_KEY_PASSWORD")) as String
         }
     }
 
