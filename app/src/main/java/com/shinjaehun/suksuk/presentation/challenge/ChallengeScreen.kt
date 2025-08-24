@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,7 +25,7 @@ import com.shinjaehun.suksuk.domain.OpType
 import com.shinjaehun.suksuk.domain.pattern.DivisionPattern
 import com.shinjaehun.suksuk.presentation.common.feedback.FeedbackEvent
 import com.shinjaehun.suksuk.presentation.common.layout.PanelStack
-import com.shinjaehun.suksuk.presentation.common.layout.PresentationScaffold
+import com.shinjaehun.suksuk.presentation.common.layout.PresentationScaffoldV2
 import com.shinjaehun.suksuk.presentation.common.layout.StampOverlay
 import com.shinjaehun.suksuk.presentation.common.layout.rememberButtonSizes
 import com.shinjaehun.suksuk.presentation.component.InputPanel
@@ -41,12 +40,8 @@ fun ChallengeScreen(
 ) {
     val viewModel: ChallengeViewModel = hiltViewModel()
     LaunchedEffect(Unit) { viewModel.initIfNeeded() }
-//
-    val ui = viewModel.challengeUi.collectAsState().value
 
-//
-//    val cfg = LocalConfiguration.current
-//    val isLandscape = cfg.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val ui = viewModel.challengeUi.collectAsState().value
     val haptic = LocalHapticFeedback.current
 
     // 피드백 토스트 메시지 (회전 보존)
@@ -72,8 +67,7 @@ fun ChallengeScreen(
     }
 
     Box(Modifier.fillMaxSize()) {
-        PresentationScaffold(
-            debugColors = true,
+        PresentationScaffoldV2(
             board = {
                 // 챌린지에서 사용하는 공통 보드(예: 현재 문제 타입에 따라 분기)
                 BoardArea(ui)
@@ -112,43 +106,6 @@ fun ChallengeScreen(
 
     BackHandler { onExit() }
 
-//    Box(Modifier.fillMaxSize()) {
-//        PresentationScaffold(
-//            isLandscape = isLandscape,
-//            board = { BoardArea(ui) },
-//            panel = {
-//                PanelStack(
-//                    wrongMsg = wrongMsg,
-//                    correctMsg = correctMsg,
-//                    onClearWrong = { wrongMsg = null },
-//                    onClearCorrect = { correctMsg = null },
-////                    reservedFeedbackHeight = 60.dp,           // 레이아웃 점프 방지
-////                    horizontalPadding = 12.dp,
-////                    betweenFeedbackAndPad = 12.dp,
-////                    bottomPadding = 24.dp,                    // 하단 여유 통일
-//                    reservedDp = 60.dp,
-//                    reservedFraction = null,
-//
-//                    inputPanel = {
-//                        InputPanel(
-//                            onDigitInput = viewmodel::onDigit,
-//                            onClear = viewmodel::onClear,
-//                            onEnter = viewmodel::onEnter,
-//                        )
-//                    },
-//                    hud = { ChallengeHUD(ui = ui) }           // Challenge 전용 HUD
-//                )
-//            }
-//        )
-//
-//        StampOverlay(
-//            visible = ui.showStamp,
-//            bottomPadding = 50.dp,
-//            onNextProblem = { viewmodel.onNextProblem() }
-//        )
-//    }
-//
-//    BackHandler { onExit() }
 }
 
 @Composable
@@ -195,9 +152,8 @@ private fun DivisionBoardByPattern(du: DivisionUiState) {
 }
 
 @Composable
-fun ChallengeHUD(ui: ChallengeUi, modifier: Modifier = Modifier) {
+fun ChallengeHUD(ui: ChallengeUi) {
     Row(
-        modifier = modifier.padding(bottom = 14.dp),
         horizontalArrangement = Arrangement.Center,
     ) {
         Text(

@@ -40,7 +40,7 @@ fun DivisionBoard2By1And2By2(
         modifier = modifier
 //            .fillMaxWidth()
             .wrapContentWidth(Alignment.CenterHorizontally)
-            .padding(horizontal = 30.dp, vertical = 30.dp)
+//            .padding(horizontal = 30.dp, vertical = 30.dp)
     ) {
         val (
             divisorTensRef, divisorOnesRef, dividendTensRef, dividendOnesRef, divisorTensCarryRef

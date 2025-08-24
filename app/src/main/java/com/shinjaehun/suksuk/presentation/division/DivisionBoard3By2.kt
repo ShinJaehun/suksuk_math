@@ -1,6 +1,7 @@
 package com.shinjaehun.suksuk.presentation.division
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
@@ -38,7 +40,8 @@ fun DivisionBoard3By2(
         modifier = modifier
 //            .fillMaxWidth()
             .wrapContentWidth(Alignment.CenterHorizontally)
-            .padding(horizontal = 30.dp, vertical = 30.dp)
+//            .background(Color.Blue.copy(alpha = 0.2f))
+//            .padding(horizontal = 30.dp, vertical = 30.dp)
     ) {
         val (
             divisorTensRef, divisorOnesRef, divisorTensCarryMul1Ref, divisorTensCarryMul2Ref,

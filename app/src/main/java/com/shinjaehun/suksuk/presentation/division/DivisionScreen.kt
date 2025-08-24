@@ -1,6 +1,5 @@
 package com.shinjaehun.suksuk.presentation.division
 
-import android.content.res.Configuration
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,8 +23,9 @@ import com.shinjaehun.suksuk.domain.pattern.DivisionPattern
 import com.shinjaehun.suksuk.presentation.common.effects.LocalAudioPlayer
 import com.shinjaehun.suksuk.presentation.common.feedback.FeedbackEvent
 import com.shinjaehun.suksuk.presentation.common.layout.PanelStack
-import com.shinjaehun.suksuk.presentation.common.layout.PresentationScaffold
+import com.shinjaehun.suksuk.presentation.common.layout.PresentationScaffoldV2
 import com.shinjaehun.suksuk.presentation.common.layout.StampOverlay
+import com.shinjaehun.suksuk.presentation.common.layout.rememberButtonSizes
 import com.shinjaehun.suksuk.presentation.component.InputPanel
 
 @Composable
@@ -35,9 +35,6 @@ fun DivisionScreen(
     onExit: () -> Unit,
     previewAll: Boolean = false
 ) {
-    val cfg = LocalConfiguration.current
-    val isLandscape = cfg.orientation == Configuration.ORIENTATION_LANDSCAPE
-
     val haptic = LocalHapticFeedback.current
     val audioPlayer = LocalAudioPlayer.current
 
@@ -72,52 +69,8 @@ fun DivisionScreen(
         return
     }
 
-//    Box(Modifier.fillMaxSize()) {
-//        PresentationScaffold(
-//            isLandscape = isLandscape,
-//            board = {
-//                when (ui.pattern) {
-//                    DivisionPattern.TwoByOne,
-//                    DivisionPattern.TwoByTwo -> DivisionBoard2By1And2By2(ui, ui.pattern)
-//                    DivisionPattern.ThreeByTwo -> DivisionBoard3By2(ui)
-//                }
-//            },
-//            panel = {
-//                PanelStack(
-//                    wrongMsg = wrongMsg,
-//                    correctMsg = correctMsg,
-//                    onClearWrong = { wrongMsg = null },
-//                    onClearCorrect = { correctMsg = null },
-////                    reservedFeedbackHeight = 60.dp,     // 점프 방지
-////                    horizontalPadding = 12.dp,
-////                    betweenFeedbackAndPad = 12.dp,
-////                    bottomPadding = 32.dp,
-//                    reservedDp = 60.dp,
-//                    reservedFraction = null,
-//                    inputPanel = {
-//                        InputPanel(
-//                            onDigitInput = viewModel::onDigitInput,
-//                            onClear = viewModel::onClear,
-//                            onEnter = viewModel::onEnter
-//                        )
-//                    },
-//                    hud = null
-//                )
-//            }
-//        )
-//
-//        StampOverlay(
-//            visible = showStamp,
-//            bottomPadding = 50.dp
-//        ) {
-//            showStamp = false
-//            onNextProblem()
-//        }
-//    }
-
     Box(Modifier.fillMaxSize()) {
-        PresentationScaffold(
-            debugColors = true,   // 보드/패널 영역 확인용 (개발 끝나면 false)
+        PresentationScaffoldV2(
             board = {
                 when (ui.pattern) {
                     DivisionPattern.TwoByOne,
@@ -131,14 +84,14 @@ fun DivisionScreen(
                     correctMsg = correctMsg,
                     onClearWrong = { wrongMsg = null },
                     onClearCorrect = { correctMsg = null },
-                    reservedDp = 60.dp,
+                    reservedDp = 60.dp,   // 점프 방지용 예약 높이 유지
                     inputPanel = {
                         val (btnSize, btnGap) = rememberButtonSizes()
                         InputPanel(
                             onDigitInput = viewModel::onDigitInput,
                             onClear = viewModel::onClear,
                             onEnter = viewModel::onEnter,
-                            buttonSize = btnSize,   // ← 화면 크기에 따라 큰/작은 버튼 결정
+                            buttonSize = btnSize,   // 기존처럼 화면 크기에 따라 버튼 크기/간격 적용
                             gap = btnGap,
                             audioPlayer = audioPlayer
                         )
@@ -157,15 +110,5 @@ fun DivisionScreen(
         }
     }
 
-
     BackHandler { onExit() }
-}
-
-@Composable
-private fun rememberButtonSizes(): Pair<Dp, Dp> {
-//    val (isLarge, _, _) = deviceClasses()
-    // (buttonSize, gap)
-    val cfg = LocalConfiguration.current
-    val isLarge = cfg.smallestScreenWidthDp >= 600
-    return if (isLarge) 68.dp to 12.dp else 56.dp to 8.dp
 }
